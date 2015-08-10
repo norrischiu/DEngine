@@ -126,7 +126,7 @@ MeshData::MeshData(const char* filename)
 	char c[256];
 	file.getline(c, 255);
 	file >> m_iNumVerts;
-	Vertex1P* verticesTemp = new Vertex1P[m_iNumVerts - 1]; // needs change memory allocation
+	Vertex1P* verticesTemp = new Vertex1P[m_iNumVerts]; // needs change memory allocation
 	for (unsigned int i = 0; i < m_iNumVerts; i++)
 	{
 		float x, y, z;
@@ -166,8 +166,8 @@ MeshData::MeshData(const char* filename)
 	file.getline(c, 255); // num of vertex of prim (must be 3 for now)
 	file >> m_iNumTri; // num of tri
 	m_iNumIndics = m_iNumTri * 3;
-	UINT* indicesTemp = new UINT[(m_iNumTri - 1) * 3]; // needs change memory allocation
-	for (unsigned int i = 0; i < m_iNumTri * 3; i++)
+	UINT* indicesTemp = new UINT[m_iNumIndics]; // needs change memory allocation
+	for (unsigned int i = 0; i < m_iNumIndics; i++)
 	{
 		unsigned int x;
 		file >> x;
