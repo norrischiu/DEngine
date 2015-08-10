@@ -122,7 +122,7 @@ MeshData::MeshData(const char* filename)
 
 	// Read vertices
 	std::ifstream file;
-	file.open("dragon.bufa");
+	file.open("dragon_vertex.bufa");
 	char c[256];
 	file.getline(c, 255);
 	file >> m_iNumVerts;
@@ -160,7 +160,7 @@ MeshData::MeshData(const char* filename)
 	D3D11Renderer::getInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &vertexOffset);
 
 	// Read indics
-	file.open("index.bufa");
+	file.open("dragon_index.bufa");
 	unsigned int m_iNumTri;
 	file.getline(c, 255); // version
 	file.getline(c, 255); // num of vertex of prim (must be 3 for now)

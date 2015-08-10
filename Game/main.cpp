@@ -2,7 +2,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include "..\Timer\Timer.h"
 #include "..\Graphics\D3D11Renderer.h"
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Name: MsgProc()
@@ -54,15 +56,29 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 
+	/// Timer
+	Timer m_Timer;
+	const float FPS = 30.0f;
+	float elaspedTime = 0.0f;
+
 	// enter the main game loop
 	bool bQuit = false;
 	while (!bQuit)
 	{
-		// Update the game world based on delta time
-		D3D11Renderer::getInstance()->Update();
+		if (elaspedTime >= 1.0 / FPS)
+		{
+			// Update the game world based on delta time
+			D3D11Renderer::getInstance()->Update();
 
-		// Render this frame
-		D3D11Renderer::getInstance()->Render();
+			// Render this frame
+			D3D11Renderer::getInstance()->Render();
+
+			// Debug text
+			std::stringstream str;
+			str << "FPS: " << 1.0f / elaspedTime;
+			SetWindowText(hWnd, str.str().c_str());
+			elaspedTime = 0.0f;
+		}
 
 		MSG msg;
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
@@ -75,6 +91,9 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 				break;
 			}
 		}
+
+		m_Timer.tick();
+		elaspedTime += m_Timer.getDeltaTime();
 	}
 
 	// Cleanup the GameWorld and GraphicsDevice singletons
