@@ -1,7 +1,7 @@
 // MeshData.cpp
 
 #include <MeshData.h>
-#include <..\Math\simdmath.h>
+#include <../Math/simdmath.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <fstream>
@@ -122,11 +122,12 @@ MeshData::MeshData(const char* filename)
 
 	// Read vertices
 	std::ifstream file;
+	std::ifstream file2;
 	file.open("dragon.bufa");
 	char c[256];
 	file.getline(c, 255);
 	file >> m_iNumVerts;
-	Vertex1P* verticesTemp = new Vertex1P[m_iNumVerts - 1]; // needs change memory allocation
+	Vertex1P* verticesTemp = new Vertex1P[m_iNumVerts]; // needs change memory allocation
 	for (unsigned int i = 0; i < m_iNumVerts; i++)
 	{
 		float x, y, z;
@@ -160,14 +161,15 @@ MeshData::MeshData(const char* filename)
 	D3D11Renderer::getInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &vertexOffset);
 
 	// Read indics
+
 	file.open("index.bufa");
 	unsigned int m_iNumTri;
 	file.getline(c, 255); // version
 	file.getline(c, 255); // num of vertex of prim (must be 3 for now)
 	file >> m_iNumTri; // num of tri
 	m_iNumIndics = m_iNumTri * 3;
-	UINT* indicesTemp = new UINT[(m_iNumTri - 1) * 3]; // needs change memory allocation
-	for (unsigned int i = 0; i < m_iNumTri * 3; i++)
+	UINT* indicesTemp = new UINT[m_iNumIndics]; // needs change memory allocation
+	for (unsigned int i = 0; i < m_iNumIndics; i++)
 	{
 		unsigned int x;
 		file >> x;

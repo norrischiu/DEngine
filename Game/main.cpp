@@ -20,9 +20,12 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		ValidateRect(hWnd, NULL);
 		return 0;
+
+	default:
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	return DefWindowProc(hWnd, msg, wParam, lParam);
+	//return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 //-----------------------------------------------------------------------------
@@ -37,22 +40,39 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	WNDCLASSEX wc =
 	{
 		sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
-		GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-		"Game class", NULL
+		hInst, NULL, NULL, NULL, NULL,
+		"window class", NULL
 	};
 	RegisterClassEx(&wc);
 
 	// Create the application's window
-	HWND hWnd = CreateWindow("Game class", "Game Engine",
-		WS_OVERLAPPEDWINDOW, 0, 0, 1024, 768,
-		NULL, NULL, wc.hInstance, NULL);
+	/*HWND hWnd = CreateWindow("Game class", "Game Engine",
+		WS_OVERLAPPEDWINDOW, 0, 0, 320, 240,
+		NULL, NULL, wc.hInstance, NULL); */
+	
+	HWND hWnd = CreateWindowEx(
+		0,                              // Optional window styles.
+		"window class",                     // Window class
+		"Learn to Program Windows",    // Window text
+		WS_OVERLAPPEDWINDOW,            // Window style
 
+										// Size and position
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+
+		NULL,       // Parent window    
+		NULL,       // Menu
+		wc.hInstance,  // Instance handle
+		NULL        // Additional application data
+		);
+						  
 	// Setup our GameWorld and GraphicsDevice singletons
 	D3D11Renderer::getInstance()->ConstructWithWindow(hWnd);
 
 	// Show the window
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	ShowWindow(hWnd, SW_SHOWNORMAL);
 	UpdateWindow(hWnd);
+
+	DWORD str = GetLastError();
 
 	// enter the main game loop
 	bool bQuit = false;
