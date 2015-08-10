@@ -10,12 +10,12 @@ static unsigned int VK_A = 0x41; // A
 static unsigned int VK_S = 0x53; // S
 static unsigned int VK_D = 0x44; // D
 
-Camera::Camera(const Vector3& m_vPos, const Vector3& m_vLookAt, const Vector3& m_vUp)
+Camera::Camera(Vector3 m_vPos, Vector3 m_vLookAt, Vector3 m_vUp)
 	: m_vPos(m_vPos)
 	, m_vLookAt(m_vLookAt)
 	, m_vUp(m_vUp)
 {
-	(const_cast<Vector3&> (m_vLookAt)).Normalize();
+	m_vLookAt.Normalize();
 }
 
 Matrix4 Camera::getViewMatrix()
