@@ -134,6 +134,7 @@
     <ClCompile Include="..\Graphics\MeshInstance.cpp" />
     <ClCompile Include="..\Graphics\MeshManager.cpp" />
     <ClCompile Include="..\Math\simdmath.cpp" />
+    <ClCompile Include="..\Memory\MemoryManager.cpp" />
     <ClCompile Include="..\Object\Camera.cpp" />
     <ClCompile Include="..\Object\GameObject.cpp" />
     <ClCompile Include="GameLoop.cpp" />
@@ -151,7 +152,9 @@
     <ClInclude Include="..\Graphics\MeshInstance.h" />
     <ClInclude Include="..\Graphics\MeshManager.h" />
     <ClInclude Include="..\Math\simdmath.h" />
-    <ClInclude Include="..\Memory\poolmemory.h" />
+    <ClInclude Include="..\Memory\Handle.h" />
+    <ClInclude Include="..\Memory\MemoryManager.h" />
+    <ClInclude Include="..\Memory\MemoryPool.h" />
     <ClInclude Include="..\Object\Camera.h" />
     <ClInclude Include="..\Object\GameObject.h" />
     <ClInclude Include="..\Timer\Timer.h" />

@@ -5,6 +5,7 @@
 #include "..\Timer\Timer.h"
 #include "..\Graphics\D3D11Renderer.h"
 #include <sstream>
+#include "..\Memory\MemoryManager.h" //
 
 //-----------------------------------------------------------------------------
 // Name: MsgProc()
@@ -61,6 +62,9 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	const float FPS = 30.0f;
 	float elaspedTime = 0.0f;
 
+	// Memory
+	//MemoryManager::getInstance()->Construct();
+
 	// enter the main game loop
 	bool bQuit = false;
 	while (!bQuit)
@@ -98,6 +102,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 	// Cleanup the GameWorld and GraphicsDevice singletons
 	D3D11Renderer::getInstance()->DestructandCleanUp();
+	//MemoryManager::getInstance()->Destruct();
 
 	UnregisterClass("Game class", wc.hInstance);
 	return 0;
