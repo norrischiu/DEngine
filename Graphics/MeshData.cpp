@@ -42,47 +42,6 @@ D3D11_INPUT_ELEMENT_DESC vertex1P1DInputDesc[]
 	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
-// temp testing data
-Vertex1P vertices[] =
-{
-	{ Vector3(-0.5f, +0.5f, -0.5f) },
-	{ Vector3(+0.5f, +0.5f, -0.5f) },
-	{ Vector3(-0.5f, -0.5f, -0.5f) },
-	{ Vector3(+0.5f, -0.5f, -0.5f) },
-	{ Vector3(-0.5f, +0.5f, +0.5f) },
-	{ Vector3(+0.5f, +0.5f, +0.5f) },
-	{ Vector3(-0.5f, -0.5f, +0.5f) },
-	{ Vector3(+0.5f, -0.5f, +0.5f) }
-};
-
-// temp testing data
-Vertex1P1D verticesD[] =
-{
-	{ Vector3(-0.5f, +0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-	{ Vector3(+0.5f, +0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-	{ Vector3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-	{ Vector3(+0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-	{ Vector3(-0.5f, +0.5f, +0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-	{ Vector3(+0.5f, +0.5f, +0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-	{ Vector3(-0.5f, -0.5f, +0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-	{ Vector3(+0.5f, -0.5f, +0.5f), DirectX::XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f) }
-};
-
-UINT indices[] = {
-	0, 1, 2,    // side 1
-	2, 1, 3,
-	4, 0, 6,    // side 2
-	6, 0, 2,
-	7, 5, 6,    // side 3
-	6, 5, 4,
-	3, 1, 7,    // side 4
-	7, 1, 5,
-	4, 5, 0,    // side 5
-	0, 5, 1,
-	3, 7, 2,    // side 6
-	2, 7, 6,
-};
-
 struct VS_CONSTANT_BUFFER
 {
 	Matrix4 CameraMat;
@@ -101,13 +60,13 @@ MeshData::MeshData(const char* filename)
 	ID3DBlob* VS;
 	ID3D11VertexShader* pVS;
 	ID3DBlob* error;
-	HRESULT hr = D3DCompileFromFile(L"Shaders/vertex1P.vs", NULL, NULL, "VS_Blue", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &VS, &error);
+	HRESULT hr = D3DCompileFromFile(L"Shaders/vertex1P1D.vs", NULL, NULL, "VS_Blue", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &VS, &error);
 	if (error) compileErrors = (char*)(error->GetBufferPointer());
 	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
 	D3D11Renderer::getInstance()->m_pD3D11Context->VSSetShader(pVS, 0, 0);
 
 	// Initialize input layout
-	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateInputLayout(vertex1PInputDesc, 1, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
+	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateInputLayout(vertex1P1DInputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
 	assert(hr == S_OK);
 	D3D11Renderer::getInstance()->m_pD3D11Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	D3D11Renderer::getInstance()->m_pD3D11Context->IASetInputLayout(inputLayout);
@@ -126,14 +85,14 @@ MeshData::MeshData(const char* filename)
 	char c[256];
 	file.getline(c, 255);
 	file >> m_iNumVerts;
-	Vertex1P* verticesTemp = new Vertex1P[m_iNumVerts]; // needs change memory allocation
+	Vertex1P1D* verticesTemp = new Vertex1P1D[m_iNumVerts]; // needs change memory allocation
 	for (unsigned int i = 0; i < m_iNumVerts; i++)
 	{
 		float x, y, z;
 		file >> x;
 		file >> y;
 		file >> z;
-		verticesTemp[i] = { Vector3(x, y, z) };
+		verticesTemp[i] = { Vector3(x, y, z), DirectX::XMFLOAT4(1.0, 0.0, 0.0, 0.0) };
 	}
 
 	file.close();
@@ -148,14 +107,14 @@ MeshData::MeshData(const char* filename)
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex1P)* m_iNumVerts;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex1P1D)* m_iNumVerts;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 
 	// Create the vertex buffer
 	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &m_pVertexBuffer);
 	assert(hr == S_OK);
-	UINT stride = sizeof(Vertex1P);
+	UINT stride = sizeof(Vertex1P1D);
 	UINT vertexOffset = 0;
 	D3D11Renderer::getInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &vertexOffset);
 
@@ -180,7 +139,7 @@ MeshData::MeshData(const char* filename)
 	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(UINT) * m_iNumVerts * 3;
+	indexBufferDesc.ByteWidth = sizeof(UINT) * m_iNumIndics;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	
