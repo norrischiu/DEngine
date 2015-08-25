@@ -28,7 +28,7 @@ public:
 	}
 
 private:
-	long long m_llCurrTime;
-	long long m_llPrevTime;
-	float m_fSysFreq;
+	long long					m_llCurrTime;
+	long long					m_llPrevTime;
+	float						m_fSysFreq;
 };
