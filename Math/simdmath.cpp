@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "simdmath.h"
 
 // Matrix4 constant declaration

@@ -6,6 +6,7 @@
 #include <smmintrin.h> // intrinics
 #include <math.h> // sin cos
 #include <DirectXMath.h> // DirectX helper methods
+#include "..\Memory\MemoryManager.h"
 
 #define PI 3.1415926535f
 
@@ -307,6 +308,15 @@ public:
 
 	// Default Constructor
 	inline SIMDVector3(){};
+
+	// Overload new with handle
+	void* operator new(size_t size, Handle hle)
+	{
+		return MemoryManager::getInstance()->GetMemoryAddressFromHandle(hle);
+	}
+
+	void operator delete(void* ptr, Handle hle)
+	{}
 
 	// Construct with given float values
 	inline SIMDVector3(float x, float y, float z)

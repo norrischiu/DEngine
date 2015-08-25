@@ -3,14 +3,17 @@
 //	RELEASE: check speed
 //
 
-#include "stdafx.h"
 #include <iostream>
 #include <Windows.h>
 #include "gtest\gtest.h"
 #include "..\Math\simdmath.h"
-#include "..\Memory\poolmemory.h"
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include "..\Memory\MemoryManager.h"
+
+
+#pragma warning(disable : 4996)
 
 // Change typedef name if needed for testing
 typedef SIMDVector3 Vector3;
@@ -20,7 +23,7 @@ typedef SIMDQuaternion Quat;
 #ifdef _DEBUG
 
 /************************************
-	SIMD Functionality test
+SIMD Functionality test
 *************************************/
 
 TEST(Vector, Normalization)
@@ -325,112 +328,13 @@ TEST(Quaternion, Multiplcation)
 	EXPECT_NEAR(0.707f, q.GetX(), 0.01f);
 }
 
-/************************************
-	Pool Memory test
-*************************************/
-typedef PoolMemoryManager<32, 64> SmallPool;
 
-TEST(PoolMemory, AllocateAndFree)
-{
-	SmallPool::Instance()->Construct();
-	char* temp = reinterpret_cast<char*>(SmallPool::Instance()->Allocate(32));
-	EXPECT_FALSE(temp == 0);
-	
-	SmallPool::Instance()->Free(temp);
-	char* temp2 = reinterpret_cast<char*>(SmallPool::Instance()->Allocate(32));
-	EXPECT_EQ(temp, temp2);
-	SmallPool::Instance()->Free(temp2);
-	SmallPool::Instance()->Destruct();
-}
-
-TEST(PoolMemory, Overflow)
-{
-	void* temp;
-	SmallPool::Instance()->Construct();
-	for (int i = 0; i < 64; i++)
-		temp = SmallPool::Instance()->Allocate(32);
-
-	temp = SmallPool::Instance()->Allocate(32);
-	EXPECT_EQ(NULL, temp);
-	SmallPool::Instance()->Destruct();
-}
-
-TEST(PoolMemory, Reuse)
-{
-	void* pointers[64];
-	void* pointers2[64];
-	//void* temp;
-	SmallPool::Instance()->Construct();
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 64; j++)
-			pointers[j] = SmallPool::Instance()->Allocate(32);
-
-		for (int j = 0; j < 64; j++)
-			SmallPool::Instance()->Free(pointers[64 - j - 1]);
-
-		for (int j = 0; j < 64; j++)
-		{
-			pointers2[j] = SmallPool::Instance()->Allocate(32);
-			EXPECT_EQ(pointers[j], pointers2[j]);
-		}
-
-		for (int j = 0; j < 64; j++)
-		{
-			SmallPool::Instance()->Free(pointers[64 - j - 1]);
-		}
-	}
-	SmallPool::Instance()->Destruct();
-}
-
-TEST(PoolMemory, RandomReuse)
-{
-	SmallPool::Instance()->Construct();
-	std::vector<void*> blocks;
-	for (int i = 0; i < 64; i++)
-	{
-		blocks.push_back(SmallPool::Instance()->Allocate(32));
-	}
-
-	std::srand(static_cast<unsigned>(std::time(0)));
-	std::random_shuffle(blocks.begin(), blocks.end());
-	for (int i = 0; i < 32; i++)
-	{
-		void* temp = blocks.back();
-		SmallPool::Instance()->Free(temp);
-		blocks.pop_back();
-	}
-
-	for (int i = 0; i < 32; i++)
-	{
-		void* temp = SmallPool::Instance()->Allocate(32);
-		blocks.push_back(temp);
-		EXPECT_TRUE(*(std::find(blocks.begin(), blocks.end(), temp)) == blocks.back());
-	}
-	SmallPool::Instance()->Destruct();
-}
-
-TEST(PoolMemory, Alignment)
-{
-	SmallPool::Instance()->Construct();
-	printf("Size of Vector3: %i\n", sizeof(Vector3));
-	char* temp = reinterpret_cast<char*>(SmallPool::Instance()->Allocate(sizeof(Vector3)));
-	EXPECT_FALSE(temp == NULL);
-	printf("temp = 0x%x\n", temp);
-	char* temp2 = reinterpret_cast<char*>(SmallPool::Instance()->Allocate(sizeof(Vector3)));
-	printf("temp2 = 0x%x\n", temp2);
-	Vector3* vTemp = new(temp) Vector3(1.0f, 2.0f, 3.0f);
-	Vector3* vTemp2 = new(temp2) Vector3(2.0f, 4.0f, 6.0f);
-	EXPECT_NEAR(28.0f, vTemp->Dot(*vTemp2), 0.01f);
-	printf("result = %f\n", vTemp->Dot(*vTemp2));
-	SmallPool::Instance()->Destruct();
-}
 
 #endif
 #ifdef NDEBUG
 
 /************************************
-	SIMD Speed test
+SIMD Speed test
 *************************************/
 
 void TEST_SPEED_QUAT_MUL()
@@ -440,8 +344,9 @@ void TEST_SPEED_QUAT_MUL()
 	QueryPerformanceFrequency(&freq);
 	freqms = freq.QuadPart / 1000.0f;
 
+	std::cout << "Testing multiplication of quaternion" << '\n';
+
 	// SIMD
-	std::cout << "Testing multiplication of quaternion" << std::endl;
 	QueryPerformanceCounter(&perf_start);
 	Vector3 SIMDqv(1.0f, 2.0f, 3.0f);
 	Quat SIMDq1(SIMDqv, 3);
@@ -473,13 +378,88 @@ void TEST_SPEED_QUAT_MUL()
 	std::cout << "DirectX::XMQuaternionMultiply\n";
 	std::cout << "Total duration for 10000 = " << elapsedDX << "ms\n";
 	std::cout << "Average duration = " << elapsedDX / 10000.0f << "ms\n";
-
 }
 
-int _tmain(int argc, _TCHAR* argv[])
+void TEST_SPEED_FILE_IO()
+{
+	LARGE_INTEGER freq, perf_start, perf_end;
+	float freqms;
+	QueryPerformanceFrequency(&freq);
+	freqms = freq.QuadPart / 1000.0f;
+
+	std::cout << "Testing file read" << '\n';
+
+	// C style
+	FILE* fr = fopen("test.bufa", "r");
+	QueryPerformanceCounter(&perf_start);
+	for (int i = 0; i < 10267 * 3; i++)
+	{
+		float temp;
+		fscanf(fr, "%f", &temp);
+	}
+	QueryPerformanceCounter(&perf_end);
+	float elapsedC = (perf_end.QuadPart - perf_start.QuadPart) / freqms;
+	std::cout << "C style read\n";
+	std::cout << "Total duration = " << elapsedC << "ms\n";
+	fclose(fr);
+
+	// C++ style
+	std::ifstream f;
+	const int N = sizeof(float) * 10267 * 3;
+	char buff[N];
+	f.rdbuf()->pubsetbuf(buff, N);
+	f.open("test.bufa", std::ios::in | std::ios::binary);
+	QueryPerformanceCounter(&perf_start);
+	for (int i = 0; i < 10267 * 3; i++)
+	{
+		float temp;
+		f >> temp;
+	}
+	QueryPerformanceCounter(&perf_end);
+	float elapsedCpp = (perf_end.QuadPart - perf_start.QuadPart) / freqms;
+	std::cout << "C++ style read\n";
+	std::cout << "Total duration = " << elapsedCpp << "ms\n";
+	f.close();
+}
+
+void TEST_POOL_MEMORY()
+{
+	MemoryManager::getInstance()->Construct();
+	MemoryManager::getInstance()->Print();
+
+	Handle hle1 = MemoryManager::getInstance()->Allocate(sizeof(Vector3));
+	Handle hle2 = MemoryManager::getInstance()->Allocate(sizeof(Vector3));
+
+	MemoryManager::getInstance()->Print();
+
+	Vector3* temp1 = new(hle1) Vector3(0, 0, 0);
+	Vector3* temp2 = new(hle2) Vector3(0, 0, 0);
+	std::cout << '\n' << temp1 << " " << temp2 << "\n";
+	//std::cout << "size of pool:" << sizeof(MemoryPool) << "\n";
+	std::cout << "handle 1: " << (uint32_t) hle1 << " ";
+	std::cout << "handle 2: " << (uint32_t) hle2 << "\n";
+
+	MemoryManager::getInstance()->Free(hle1);
+	MemoryManager::getInstance()->Print();
+
+	Handle hle3 = MemoryManager::getInstance()->Allocate(sizeof(Vector3));
+	Vector3* temp3 = new(hle3) Vector3(0, 0, 0);
+
+	MemoryManager::getInstance()->Print();
+
+	std::cout << '\n' << temp3 << " " << temp2 << "\n";
+
+	MemoryManager::getInstance()->Destruct();
+}
+
+int main(int argc, char* argv[])
 {
 	// Quaternion
-	TEST_SPEED_QUAT_MUL();
+	//TEST_SPEED_QUAT_MUL();
+	// File IO
+	//TEST_SPEED_FILE_IO();
+	// Pool memory
+	TEST_POOL_MEMORY();
 
 	std::cin.getline(new char, 1);
 }
