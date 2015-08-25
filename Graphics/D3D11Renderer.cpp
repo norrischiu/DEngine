@@ -40,7 +40,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
 	rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
-	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
 
 	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &m_pRasterizerState);
 	assert(hr == S_OK);
