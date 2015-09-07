@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 #include "..\Memory\MemoryManager.h"
 
 
@@ -388,19 +389,45 @@ void TEST_SPEED_FILE_IO()
 	freqms = freq.QuadPart / 1000.0f;
 
 	std::cout << "Testing file read" << '\n';
+	float arr1[10267 * 3];
+	float arr2[10267 * 3];
+	float arr3[10267 * 3];
+
 
 	// C style
-	FILE* fr = fopen("test.bufa", "r");
 	QueryPerformanceCounter(&perf_start);
+	FILE* fr = fopen("test.bufa", "r");
 	for (int i = 0; i < 10267 * 3; i++)
 	{
 		float temp;
-		fscanf(fr, "%f", &temp);
+		fscanf(fr, "%f", &temp);	
+		arr1[i] = temp;
 	}
 	QueryPerformanceCounter(&perf_end);
 	float elapsedC = (perf_end.QuadPart - perf_start.QuadPart) / freqms;
 	std::cout << "C style read\n";
 	std::cout << "Total duration = " << elapsedC << "ms\n";
+	fclose(fr);
+
+	// C buffer style
+	QueryPerformanceCounter(&perf_start);
+	fr = fopen("test.bufa", "r");
+	fseek(fr, 0, SEEK_END);
+	long lSize = ftell(fr);
+	rewind(fr);
+	char* buffer = (char*)malloc(sizeof(char)*lSize);
+	fread(buffer, 1, lSize, fr);
+	std::stringstream ss(buffer);
+	for (int i = 0; i < 10267 * 3; i++)
+	{
+		float temp;
+		ss >> temp;
+		arr2[i] = temp;
+	}
+	QueryPerformanceCounter(&perf_end);
+	float elapsedCbuf = (perf_end.QuadPart - perf_start.QuadPart) / freqms;
+	std::cout << "C buffer with stringstream style read\n";
+	std::cout << "Total duration = " << elapsedCbuf << "ms\n";
 	fclose(fr);
 
 	// C++ style
@@ -414,6 +441,7 @@ void TEST_SPEED_FILE_IO()
 	{
 		float temp;
 		f >> temp;
+		arr3[i] = temp;
 	}
 	QueryPerformanceCounter(&perf_end);
 	float elapsedCpp = (perf_end.QuadPart - perf_start.QuadPart) / freqms;
@@ -457,9 +485,9 @@ int main(int argc, char* argv[])
 	// Quaternion
 	//TEST_SPEED_QUAT_MUL();
 	// File IO
-	//TEST_SPEED_FILE_IO();
+	TEST_SPEED_FILE_IO();
 	// Pool memory
-	TEST_POOL_MEMORY();
+	//TEST_POOL_MEMORY();
 
 	std::cin.getline(new char, 1);
 }
