@@ -22,7 +22,7 @@ struct VS_OUTPUT
 
 // Our basic vertex shader takes the model space
 // position, and transforms it into screen space.
-VS_OUTPUT VS_Blue(VS_INPUT IN)
+VS_OUTPUT VS(VS_INPUT IN)
 {
     // Clear the output structure.
 	VS_OUTPUT OUT;

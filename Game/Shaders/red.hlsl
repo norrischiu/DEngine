@@ -4,7 +4,7 @@ struct VS_OUTPUT
 	float4 vColor : COLOR;
 };
 
-float4 PS_Blue(VS_OUTPUT IN) : SV_TARGET
+float4 PS(VS_OUTPUT IN) : SV_TARGET
 {
-    return IN.vColor;
+    return float4(1.0, 0.0, 0.0, 1.0);
 }
