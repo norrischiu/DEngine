@@ -4,6 +4,7 @@
 #define GAMEOBJECT_H
 
 #include "../Math/simdmath.h"
+#include "../Graphics/MeshInstance.h"
 
 typedef SIMDQuaternion Quaternion;
 typedef SIMDVector3 Vector3;
@@ -11,11 +12,13 @@ typedef SIMDVector3 Vector3;
 class GameObject
 {
 public:
-	GameObject();
-
-	void Draw();
+	GameObject()
+		:m_pMeshInstance(nullptr)
+	{};
 
 private:
+	
+	MeshInstance*							m_pMeshInstance;
 };
 
 #endif

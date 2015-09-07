@@ -19,13 +19,13 @@ public:
 
 private:
 	// Contains all buffer and shaders data
-	MeshData* m_pMeshData;
+	MeshData*								m_pMeshData;
 
 	// Quaternion
-	Quaternion m_quat;
+	Quaternion								m_quat;
 
 	// Position vector
-	Vector3 m_pos;
+	Vector3									m_pos;
 	
 };
 

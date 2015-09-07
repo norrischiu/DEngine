@@ -19,6 +19,12 @@
     <Filter Include="Object">
       <UniqueIdentifier>{832adf54-193e-41e8-bdc2-48b226afe707}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{e6e6dbae-fc34-4afc-b3ff-dab42dc8feeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{b7aeea8d-c8a4-4b3d-8fd1-4fb9555136fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Object\Camera.cpp">
@@ -47,18 +53,36 @@
     </ClCompile>
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\Graphics\VertexBufferEngine.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\IndexBufferEngine.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\ShaderManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\TextureManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\blue.ps">
+    <None Include="Shaders\texture.hlsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\diffuse.ps">
+    <None Include="Shaders\vertex1P.hlsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\vertex1P.vs">
+    <None Include="Shaders\vertex1P1D.hlsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\vertex1P1D.vs">
+    <None Include="Shaders\vertex1P1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\diffuse.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\red.hlsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -97,5 +121,29 @@
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="..\Graphics\VertexFormat.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Assertion.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\FileSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\VertexBufferEngine.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\IndexBufferEngine.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\ShaderManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\TextureManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

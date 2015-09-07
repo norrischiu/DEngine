@@ -6,7 +6,7 @@
 
 MeshInstance::MeshInstance(const char* filename)
 {
-	m_pMeshData = new MeshData(NULL);
+	m_pMeshData = new MeshData("dragon", eRenderType::STANDARD_MESH);
 }
 
 void MeshInstance::Draw()

@@ -24,16 +24,14 @@ public:
 
 	void DestructandCleanUp()
 	{
+		if (m_pRenderTargetView)
+			m_pRenderTargetView->Release();
+		if (m_pSwapChain)
+			m_pSwapChain->Release();
 		if (m_pD3D11Context)
 			m_pD3D11Context->Release();
 		if (m_pD3D11Device)
 			m_pD3D11Device->Release();
-		if (m_pSwapChain)
-			m_pSwapChain->Release();
-		if (m_pRenderTargetView)
-			m_pRenderTargetView->Release();
-		if (m_pRasterizerState)
-			m_pRasterizerState->Release();
 	}
 
 	void Update();
@@ -48,30 +46,29 @@ public:
 	}
 
 	// Pointer to interface, handles GPU and pipeline
-	ID3D11DeviceContext*				m_pD3D11Context;
+	ID3D11DeviceContext*						m_pD3D11Context;
 
 	// Pointer to device, handles video memory
-	ID3D11Device*						m_pD3D11Device;
+	ID3D11Device*								m_pD3D11Device;
 
 	// Pointer to the double buffer
-	IDXGISwapChain*						m_pSwapChain;
+	IDXGISwapChain*								m_pSwapChain;
 
 	// Pointer to the render target view
-	ID3D11RenderTargetView*				m_pRenderTargetView;
+	ID3D11RenderTargetView*						m_pRenderTargetView;
+
+	ID3D11DepthStencilView*						m_pDepthStencilView;
 
 private:
 	// Singleton instance
-	static D3D11Renderer*				m_pInstance;
+	static D3D11Renderer*						m_pInstance;
 
 	// List of all mesh instance to be drawn
-	std::vector<MeshInstance*>			m_MeshInstaceList;
-
-	// Pointer to rasterizer state
-	ID3D11RasterizerState*				m_pRasterizerState;
+	std::vector<MeshInstance*>					m_MeshInstaceList;
 
 	// Matrics
-	Matrix4								m_CameraMat;
-	Matrix4								m_ProjectionMat;
+	Matrix4										m_CameraMat;
+	Matrix4										m_ProjectionMat;
 };
 
 #endif

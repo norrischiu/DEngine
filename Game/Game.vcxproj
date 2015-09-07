@@ -22,6 +22,7 @@
     <ProjectGuid>{0737A2D5-D585-447E-9AE2-7A8FC3D262EE}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
     <ProjectName>Game</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -67,24 +68,26 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine\Graphics;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Graphics;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;..\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>..\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;..\Graphics;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -95,6 +98,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,6 +112,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,6 +128,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -130,9 +139,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
+    <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="..\Graphics\MeshData.cpp" />
     <ClCompile Include="..\Graphics\MeshInstance.cpp" />
     <ClCompile Include="..\Graphics\MeshManager.cpp" />
+    <ClCompile Include="..\Graphics\ShaderManager.cpp" />
+    <ClCompile Include="..\Graphics\TextureManager.cpp" />
+    <ClCompile Include="..\Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
     <ClCompile Include="..\Object\Camera.cpp" />
@@ -141,24 +154,39 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\blue.ps" />
-    <None Include="Shaders\diffuse.ps" />
-    <None Include="Shaders\vertex1P.vs" />
-    <None Include="Shaders\vertex1P1D.vs" />
+    <None Include="Shaders\red.hlsl" />
+    <None Include="Shaders\diffuse.hlsl" />
+    <None Include="Shaders\texture.hlsl" />
+    <None Include="Shaders\vertex1P.hlsl" />
+    <None Include="Shaders\vertex1P1D.hlsl" />
+    <None Include="Shaders\vertex1P1UV.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
+    <ClInclude Include="..\Graphics\IndexBufferEngine.h" />
     <ClInclude Include="..\Graphics\MeshData.h" />
     <ClInclude Include="..\Graphics\MeshInstance.h" />
     <ClInclude Include="..\Graphics\MeshManager.h" />
+    <ClInclude Include="..\Graphics\ShaderManager.h" />
+    <ClInclude Include="..\Graphics\TextureManager.h" />
+    <ClInclude Include="..\Graphics\VertexBufferEngine.h" />
+    <ClInclude Include="..\Graphics\VertexFormat.h" />
+    <ClInclude Include="..\Light\PointLight.h" />
     <ClInclude Include="..\Math\simdmath.h" />
     <ClInclude Include="..\Memory\Handle.h" />
     <ClInclude Include="..\Memory\MemoryManager.h" />
     <ClInclude Include="..\Memory\MemoryPool.h" />
     <ClInclude Include="..\Object\Camera.h" />
     <ClInclude Include="..\Object\GameObject.h" />
+    <ClInclude Include="..\System\Assertion.h" />
+    <ClInclude Include="..\System\FileSystem.h" />
     <ClInclude Include="..\Timer\Timer.h" />
     <ClInclude Include="GameLoop.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
+      <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
