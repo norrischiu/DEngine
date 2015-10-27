@@ -25,6 +25,9 @@
     <Filter Include="Light">
       <UniqueIdentifier>{b7aeea8d-c8a4-4b3d-8fd1-4fb9555136fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Scene">
+      <UniqueIdentifier>{01a09dcf-8ad2-407c-8729-7c849a330174}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Object\Camera.cpp">
@@ -37,9 +40,6 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="..\Graphics\MeshManager.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Graphics\MeshInstance.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\Graphics\MeshData.cpp">
@@ -65,26 +65,15 @@
     <ClCompile Include="..\Graphics\TextureManager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\texture.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\vertex1P.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\vertex1P1D.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\vertex1P1UV.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\diffuse.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\red.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClCompile Include="..\Graphics\Scene\RootSceneNode.cpp">
+      <Filter>Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Scene\SceneNode.cpp">
+      <Filter>Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\MeshComponent.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Object\GameObject.h">
@@ -97,9 +86,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\Graphics\MeshData.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\MeshInstance.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\Graphics\MeshManager.h">
@@ -145,5 +131,43 @@
     <ClInclude Include="..\Light\PointLight.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\Scene\RootSceneNode.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Scene\SceneNode.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Scene\MeshSceneNode.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\MeshComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\diffuse.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\phong.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\red.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\texture.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\vertex1P.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\vertex1P1D.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\vertex1P1N1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\vertex1P1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

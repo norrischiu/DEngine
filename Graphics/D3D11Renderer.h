@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <vector>
 #include "../Math/simdmath.h"
-#include "MeshInstance.h"
+#include "MeshComponent.h"
 
 #pragma comment (lib, "D3D11")
 
@@ -64,7 +64,7 @@ private:
 	static D3D11Renderer*						m_pInstance;
 
 	// List of all mesh instance to be drawn
-	std::vector<MeshInstance*>					m_MeshInstaceList;
+	std::vector<MeshComponent*>					m_MeshComponentList;
 
 	// Matrics
 	Matrix4										m_CameraMat;

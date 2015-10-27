@@ -6,6 +6,7 @@
 #include "..\Graphics\D3D11Renderer.h"
 #include <sstream>
 #include "..\Memory\MemoryManager.h" //
+#include "GameLoop.h"
 
 //-----------------------------------------------------------------------------
 // Name: MsgProc()
@@ -72,6 +73,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		if (elaspedTime >= 1.0 / FPS)
 		{
 			// Update the game world based on delta time
+			GameLoop::getInstance()->Update(elaspedTime);
 			D3D11Renderer::getInstance()->Update();
 
 			// Render this frame

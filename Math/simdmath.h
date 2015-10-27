@@ -15,7 +15,7 @@ __declspec(align(16)) class SIMDMatrix4
 {
 private:
 	__m128 _rows[4];
-	// row-major matrix
+	// column-major matrix
 public:
 	friend class SIMDVector3;
 
@@ -126,7 +126,7 @@ public:
 		_rows[3] = _mm_sub_ps(_rows[3], other._rows[3]);
 	}
 
-	// Multiply by another matrix, store the result back to this
+	// Pre-Multiply by another matrix, store the result back to this
 	inline void Multiply(const SIMDMatrix4& mat)
 	{
 		__m128 mat_rows0 = mat._rows[0];
@@ -159,10 +159,10 @@ public:
 
 		for (int i = 0; i < 4; ++i)
 		{
-			__m128 x = _mm_dp_ps(_rows[i], mat_rows0, 0xF1);
-			__m128 y = _mm_dp_ps(_rows[i], mat_rows1, 0xF2);
-			__m128 z = _mm_dp_ps(_rows[i], mat_rows2, 0xF4);
-			__m128 w = _mm_dp_ps(_rows[i], mat_rows3, 0xF8);
+			__m128 x = _mm_dp_ps(mat_rows0, _rows[i], 0xF1);
+			__m128 y = _mm_dp_ps(mat_rows1, _rows[i], 0xF2);
+			__m128 z = _mm_dp_ps(mat_rows2, _rows[i], 0xF4);
+			__m128 w = _mm_dp_ps(mat_rows3, _rows[i], 0xF8);
 
 			_rows[i] = _mm_add_ps(x, y);
 			_rows[i] = _mm_add_ps(_rows[i], z);

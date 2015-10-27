@@ -4,21 +4,26 @@
 #define GAMEOBJECT_H
 
 #include "../Math/simdmath.h"
-#include "../Graphics/MeshInstance.h"
+#include "../Graphics/MeshComponent.h"
 
 typedef SIMDQuaternion Quaternion;
 typedef SIMDVector3 Vector3;
+typedef SIMDMatrix4 Matrix4;
 
 class GameObject
 {
 public:
 	GameObject()
-		:m_pMeshInstance(nullptr)
+		:m_pMeshComponent(nullptr)
 	{};
 
 private:
 	
-	MeshInstance*							m_pMeshInstance;
+	Matrix4*								m_pTransform;
+
+	MeshComponent*							m_pMeshComponent;
+
+	// PhysComponent*						m_pPhysComponent;
 };
 
 #endif

@@ -2,18 +2,21 @@
 #include <stdio.h>
 #include "VertexFormat.h"
 
+#define C_STR(string, text)\
+		(string + text).c_str()
+
 // #define _CRT_SECURE_NO_WARNINGS
 
-void VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat)
+void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, unsigned int& stride)
 {
+	std::string sFileNmae(filename);
 	int iNumVerts;
 	HRESULT hr;
 	ID3D11Buffer* pVertexBuffer;
 	void* pVertexData = nullptr;
-	UINT iDataSize;
 
 	// Read vertices
-	pFile = fopen(filename, "r");
+	pFile = fopen(C_STR(sFileNmae, "_vertex.bufa"), "r");
 	char c[256];
 	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%i", &iNumVerts);
@@ -21,12 +24,16 @@ void VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat)
 	switch (vertexFormat)
 	{
 		case eVertexFormat::POSITION_TEXTURE:
-			FillVertexData_POSITION_TEXTURE(iNumVerts, pVertexData);
-			iDataSize = sizeof(Vertex1P1UV);
+			FillVertexData_POSITION_TEXTURE(filename, iNumVerts, pVertexData);
+			stride = sizeof(Vertex1P1UV);
 			break;
 		case eVertexFormat::POSITION:
-			FillVertexData_POSITION(iNumVerts, pVertexData);
-			iDataSize = sizeof(Vertex1P1UV);
+			FillVertexData_POSITION(filename, iNumVerts, pVertexData);
+			stride = sizeof(Vertex1P1UV);
+			break;
+		case eVertexFormat::POSITION_NORMAL_TEXTURE:
+			FillVertexData_POSITION_NORMAL_TEXTURE(filename, iNumVerts, pVertexData);
+			stride = sizeof(Vertex1P1N1UV);
 			break;
 	}
 
@@ -40,23 +47,18 @@ void VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat)
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = iDataSize * iNumVerts;
+	vertexBufferDesc.ByteWidth = stride * iNumVerts;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 
 	// Create the vertex buffer
 	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
 	assert(hr == S_OK);
-	UINT stride = iDataSize;
-	UINT vertexOffset = 0;
-	D3D11Renderer::getInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &vertexOffset);
 	
-	// Release
-	if (pVertexBuffer)
-		pVertexBuffer->Release();
+	return pVertexBuffer;
 }
 
-void VertexBufferEngine::FillVertexData_POSITION(unsigned int vertsNum, void* &pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned int vertsNum, void* &pVertexData)
 {
 	pVertexData = new Vertex1P[vertsNum]; // TODO: needs change memory allocation
 
@@ -71,8 +73,9 @@ void VertexBufferEngine::FillVertexData_POSITION(unsigned int vertsNum, void* &p
 	fclose(pFile);
 }
 
-void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(unsigned int vertsNum, void* &pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData)
 {
+	std::string sFileNmae(filename);
 	pVertexData = new Vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
 
 	for (unsigned int i = 0; i < vertsNum; i++)
@@ -86,7 +89,7 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(unsigned int vertsNum, 
 	fclose(pFile);
 
 	// Read texture coordinates
-	pFile = fopen("dragon_texture.bufa", "r");
+	pFile = fopen(C_STR(sFileNmae, "_texture.bufa"), "r");
 	char c[256];
 	fscanf(pFile, "%s",&c );
 	fscanf(pFile, "%i", &vertsNum);
@@ -97,6 +100,51 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(unsigned int vertsNum, 
 		fscanf(pFile, "%f", &y);
 		((Vertex1P1UV*) pVertexData)[i].m_UV[0] = x;
 		((Vertex1P1UV*) pVertexData)[i].m_UV[1] = y;
+	}
+	fclose(pFile);
+}
+
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* filename, unsigned int vertsNum, void *& pVertexData)
+{
+	std::string sFileNmae(filename);
+	pVertexData = new Vertex1P1N1UV[vertsNum]; // TODO: needs change memory allocation
+
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f", &z);
+		((Vertex1P1N1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
+	}
+	fclose(pFile);
+
+	// Read texture coordinates
+	pFile = fopen(C_STR(sFileNmae, "_texture.bufa"), "r");
+	char c[256];
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		((Vertex1P1N1UV*)pVertexData)[i].m_UV[0] = x;
+		((Vertex1P1N1UV*)pVertexData)[i].m_UV[1] = y;
+	}
+	fclose(pFile);
+
+	// Read precalcuated normal
+	pFile = fopen(C_STR(sFileNmae, "_normal.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f", &z);
+		((Vertex1P1N1UV*)pVertexData)[i].m_norm = Vector3(x, y, z);
 	}
 	fclose(pFile);
 }

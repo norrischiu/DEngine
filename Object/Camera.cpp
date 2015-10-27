@@ -18,31 +18,31 @@ Camera::Camera(const Vector3& m_vPos, const Vector3& m_vLookAt, const Vector3& m
 	(const_cast<Vector3&> (m_vLookAt)).Normalize();
 }
 
-Matrix4 Camera::getViewMatrix()
+Matrix4 Camera::GetViewMatrix()
 {
 	Matrix4 cameraMatrix;
 	cameraMatrix.CreateLookAt(m_vPos, m_vLookAt, m_vUp);
 	return cameraMatrix;
 }
 
-void Camera::update()
+void Camera::Update()
 {
 	// key held
 	if (GetAsyncKeyState(VK_W) && 0x8000)
 	{
-		move(0.05);
+		Move(0.05);
 		OutputDebugString("W pressed");
 	}
 
 	if (GetAsyncKeyState(VK_S) && 0x8000)
 	{
-		move(-0.05);
+		Move(-0.05);
 		OutputDebugString("S pressed");
 	}
 
 }
 
-void Camera::move(float offset)
+void Camera::Move(float offset)
 {
 	m_vPos += (m_vLookAt - m_vPos).Normalize() * offset;
 	

@@ -1,6 +1,7 @@
 // D3D11Renderer.cpp
 
 #include "D3D11Renderer.h"
+#include "Scene\RootSceneNode.h"
 
 D3D11Renderer* D3D11Renderer::m_pInstance;
 
@@ -110,9 +111,6 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	vp.MaxDepth = 1.0f;
 	m_pD3D11Context->RSSetViewports(1, &vp);
 
-	// temp testing
-	m_MeshInstaceList.push_back(new MeshInstance(NULL));
-
 	if (pDepthStencilBuffer)
 		pDepthStencilBuffer->Release();
 	if (pBackBuffer)
@@ -134,8 +132,10 @@ void D3D11Renderer::Render()
 
 	m_pD3D11Context->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
-	for (auto itr = m_MeshInstaceList.begin(); itr != m_MeshInstaceList.end(); ++itr)
-		(*itr)->Draw();
+	//for (auto itr = m_MeshComponentList.begin(); itr != m_MeshComponentList.end(); ++itr)
+	//	(*itr)->Draw();
+
+	RootSceneNode::getInstance()->RenderSubNodes();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);
