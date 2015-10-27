@@ -20,7 +20,6 @@ void SceneNode::Render(bool flag)
 	{
 		//m_mWorldTransform = m_pParent->m_mWorldTransform * m_mWorldTransform;
 		m_mWorldTransform *= m_pParent->m_mWorldTransform;
-		m_bDirtyFlag = false;
 	}
 	m_pMeshData->Render(m_mWorldTransform);
 }
@@ -29,7 +28,8 @@ void SceneNode::RenderSubNodes()
 {
 	for (std::shared_ptr<SceneNode> sn : m_SubNodesList)
 	{
-		sn->RenderSubNodes();
 		sn->Render(m_bDirtyFlag);
+		sn->RenderSubNodes();
 	}
+	m_bDirtyFlag = false;
 }
