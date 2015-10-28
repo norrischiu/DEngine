@@ -1,16 +1,17 @@
-#pragma once
+#ifndef SIMDMATH_H_
+#define SIMDMATH_H_
 
 /** Maths Libraray, defining vector, matrix and quaternion, with Intel SSE4.1 extensions and MSVC++ */
 
 #include <xmmintrin.h> // intrinics
 #include <smmintrin.h> // intrinics
 #include <math.h> // sin cos
-#include <DirectXMath.h> // DirectX helper methods
+#include <DirectXMath.h> // DirectX helper methods (temp)
 #include "..\Memory\MemoryManager.h"
 
 #define PI 3.1415926535f
 
-// 4x4 Matrix with SIMD
+// 4x4 Matrix with SSE
 __declspec(align(16)) class SIMDMatrix4
 {
 private:
@@ -80,13 +81,15 @@ public:
 	}
 
 	// Overload + operator
-	inline SIMDMatrix4& operator+(SIMDMatrix4& other)
+	inline SIMDMatrix4 operator+(SIMDMatrix4& other)
 	{
-		_rows[0] = _mm_add_ps(_rows[0], other._rows[0]);
-		_rows[1] = _mm_add_ps(_rows[1], other._rows[1]);
-		_rows[2] = _mm_add_ps(_rows[2], other._rows[2]);
-		_rows[3] = _mm_add_ps(_rows[3], other._rows[3]);
-		return *this;
+		SIMDMatrix4 result;
+		result._rows[0] = _mm_add_ps(_rows[0], other._rows[0]);
+		result._rows[1] = _mm_add_ps(_rows[1], other._rows[1]);
+		result._rows[2] = _mm_add_ps(_rows[2], other._rows[2]);
+		result._rows[3] = _mm_add_ps(_rows[3], other._rows[3]);
+
+		return result;
 	}
 
 	// Overload += operator
@@ -108,13 +111,15 @@ public:
 	}
 
 	// Overload - operator
-	inline SIMDMatrix4& operator-(SIMDMatrix4& other)
+	inline SIMDMatrix4 operator-(SIMDMatrix4& other)
 	{
-		_rows[0] = _mm_sub_ps(_rows[0], other._rows[0]);
-		_rows[1] = _mm_sub_ps(_rows[1], other._rows[1]);
-		_rows[2] = _mm_sub_ps(_rows[2], other._rows[2]);
-		_rows[3] = _mm_sub_ps(_rows[3], other._rows[3]);
-		return *this;
+		SIMDMatrix4 result;
+		result._rows[0] = _mm_sub_ps(_rows[0], other._rows[0]);
+		result._rows[1] = _mm_sub_ps(_rows[1], other._rows[1]);
+		result._rows[2] = _mm_sub_ps(_rows[2], other._rows[2]);
+		result._rows[3] = _mm_sub_ps(_rows[3], other._rows[3]);
+		
+		return result;
 	}
 
 	// Overload -= operator
@@ -149,7 +154,7 @@ public:
 	}
 
 	// Overload * operator
-	inline SIMDMatrix4& operator*(const SIMDMatrix4& mat)
+	inline SIMDMatrix4 operator*(const SIMDMatrix4& mat)
 	{
 		__m128 mat_rows0 = mat._rows[0];
 		__m128 mat_rows1 = mat._rows[1];
@@ -157,6 +162,7 @@ public:
 		__m128 mat_rows3 = mat._rows[3];
 		_MM_TRANSPOSE4_PS(mat_rows0, mat_rows1, mat_rows2, mat_rows3);
 
+		SIMDMatrix4 result;
 		for (int i = 0; i < 4; ++i)
 		{
 			__m128 x = _mm_dp_ps(mat_rows0, _rows[i], 0xF1);
@@ -164,11 +170,11 @@ public:
 			__m128 z = _mm_dp_ps(mat_rows2, _rows[i], 0xF4);
 			__m128 w = _mm_dp_ps(mat_rows3, _rows[i], 0xF8);
 
-			_rows[i] = _mm_add_ps(x, y);
-			_rows[i] = _mm_add_ps(_rows[i], z);
-			_rows[i] = _mm_add_ps(_rows[i], w);
+			result._rows[i] = _mm_add_ps(x, y);
+			result._rows[i] = _mm_add_ps(result._rows[i], z);
+			result._rows[i] = _mm_add_ps(result._rows[i], w);
 		}
-		return *this;
+		return result;
 	}
 
 	// Overload *= operator
@@ -403,7 +409,7 @@ public:
 	// Overload + operator
 	inline SIMDVector3 operator+(const SIMDVector3& other)
 	{
-		SIMDVector3 result(_data);
+		SIMDVector3 result;
 		result._data = _mm_add_ps(_data, other._data);
 		return result;
 	}
@@ -423,7 +429,7 @@ public:
 	// Overload - operator
 	inline SIMDVector3 operator-(const SIMDVector3& other)
 	{
-		SIMDVector3 result(_data);
+		SIMDVector3 result;
 		result._data = _mm_sub_ps(_data, other._data);
 		return result;
 	}
@@ -444,7 +450,7 @@ public:
 	// Overload * operator
 	inline SIMDVector3 operator*(float scalar)
 	{
-		SIMDVector3 result(_data);
+		SIMDVector3 result;
 		__m128 slr = _mm_set_ps1(scalar);
 		result._data = _mm_mul_ps(_data, slr);
 		return result;
@@ -654,3 +660,4 @@ public:
 	}
 };
 
+#endif
