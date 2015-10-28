@@ -4,6 +4,7 @@
 #include <Windows.h> // get keyboard state
 #include <sstream>
 #include <string>
+#include "../Graphics/Scene/RootSceneNode.h"
 
 static unsigned int VK_W = 0x57; // W
 static unsigned int VK_A = 0x41; // A
@@ -24,7 +25,7 @@ Matrix4 Camera::GetViewMatrix()
 	cameraMatrix.CreateLookAt(m_vPos, m_vLookAt, m_vUp);
 	return cameraMatrix;
 }
-
+static int i = 1;
 void Camera::Update()
 {
 	// key held

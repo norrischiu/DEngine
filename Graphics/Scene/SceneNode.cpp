@@ -13,13 +13,18 @@ void SceneNode::SetTransform(Matrix4 world, Matrix4 local)
 	m_bDirtyFlag = true;
 }
 
+void SceneNode::Transform(Matrix4 local)
+{
+	m_mLocalTransform *= local;
+	m_bDirtyFlag = true;
+}
+
 void SceneNode::Render(bool flag)
 {
 	m_bDirtyFlag |= flag;
 	if (m_bDirtyFlag)
 	{
-		//m_mWorldTransform = m_pParent->m_mWorldTransform * m_mWorldTransform;
-		m_mWorldTransform *= m_pParent->m_mWorldTransform;
+		m_mWorldTransform = m_mLocalTransform * m_pParent->m_mWorldTransform;
 	}
 	m_pMeshData->Render(m_mWorldTransform);
 }

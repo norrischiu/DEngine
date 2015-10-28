@@ -29,8 +29,11 @@ public:
 	// Add a scene node to the children list
 	void AttachSubNode(std::shared_ptr<SceneNode> subNode);
 
-	// Set world and local transform
+	// Assign new world and local transform
 	void SetTransform(Matrix4 world, Matrix4 local);
+
+	// Transform the existing local transformation
+	void Transform(Matrix4 local);
 
 	// Render this node
 	void Render(bool flag);
