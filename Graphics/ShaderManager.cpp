@@ -34,7 +34,7 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 			pVShader = (ID3D11VertexShader*) pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "VS", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateVertexShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pVShader);
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateVertexShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pVShader);
 			pShader = pVShader;
 
 			inputLayout = nullptr;
@@ -47,7 +47,7 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 			pPShader = (ID3D11PixelShader*) pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "PS", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreatePixelShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pPShader);
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreatePixelShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pPShader);
 			pShader = pPShader;
 			break;
 		default:
@@ -113,7 +113,7 @@ void ShaderManager::CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLay
 	}
 
 	// Initialize input layout
-	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateInputLayout(&inputElementDescArray[0], i, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
+	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateInputLayout(&inputElementDescArray[0], i, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
 	assert(hr == S_OK);
 
 	pReflection->Release();

@@ -4,14 +4,19 @@
 #define MESHDATA_H
 
 #include <d3d11.h>
-#include "D3D11Renderer.h" // Renderer instance
 #include "../Object/Camera.h"
+#include "VertexFormat.h"
+#include <vector>
 
 enum eRenderType
 {
 	OUTLINE,
 	STANDARD_MESH,
 	STANDARD_MESH_WITH_SHADOW,
+	V1P,
+	V1P1UV,
+	V1P1N,
+	V1P1N1UV
 };
 
 class MeshData
@@ -19,42 +24,68 @@ class MeshData
 public:
 
 	// Overload default constructor
+	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
+
 	MeshData(const char* filename, int renderType);
+
+	~MeshData();
+
+	void SetUpEnvironment(const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
+
+	void Transform(
+		const float scalar = 1.0f,
+		const Vector3 rotation = Vector3(0.0f, 0.0f, 0.0f),
+		const Vector3 translation = Vector3(0.0f, 0.0f, 0.0f)
+	);
 
 	void Update(Matrix4 transform);
 
+	void Update();
+
 	void Render(Matrix4 transform);
+
+	void Render();
 
 	inline int GetVertexNum()
 	{
 		return m_iNumVerts;
 	}
 
-	// Read buffer
-	void ReadBufferData(){};
-
-	// Destructor
-	~MeshData()
+	inline Vector3 GetVMin()
 	{
-		if (m_pVS)
-			m_pVS->Release();
-		if (m_pPS)
-			m_pPS->Release();
-		if (m_pVertexBuffer)
-			m_pVertexBuffer->Release();
-		if (m_pIndexBuffer)
-			m_pIndexBuffer->Release();
-		if (g_pConstantBuffer)
-			g_pConstantBuffer->Release();
-		if (m_pInputLayout)
-			m_pInputLayout->Release();
-		if (m_pSamplerState)
-			m_pSamplerState->Release();
-		for (auto itr : m_pTexResourceView)
-		{
-			if (itr)
-				itr->Release();
-		}
+		Vector3 vMin = Vector3(
+			0.0f + m_dimension.GetX() / 2,
+			0.0f - m_dimension.GetY() / 2,
+			0.0f + m_dimension.GetZ() / 2
+		);
+		vMin.Transform(m_transformationMat);
+		return vMin;
+	}
+
+	inline Vector3 GetVMax()
+	{
+		Vector3 vMax = Vector3(
+			0.0f - m_dimension.GetX() / 2,
+			0.0f + m_dimension.GetY() / 2,
+			0.0f - m_dimension.GetZ() / 2
+		);
+		vMax.Transform(m_transformationMat);
+		static wchar_t s[64];
+		swprintf(s, 64, L"vMax: %f, %f, %f\n", vMax.GetX(), vMax.GetY(), vMax.GetZ());
+		OutputDebugStringW(s);
+		return vMax;
+	}
+
+	inline Vector3 GetCenter()
+	{
+		Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
+		center.TransformAsVector(m_transformationMat);
+		return center;
+	}
+
+	inline Vector3 GetDimension()
+	{
+		return m_dimension;
 	}
 
 private:
@@ -77,11 +108,11 @@ private:
 	// Pointer to index buffer
 	ID3D11Buffer*							m_pIndexBuffer;
 
-	// Pointer to input layout supply to IA
-	ID3D11InputLayout*						m_pInputLayout;
-
 	// Pointer to constant buffer
 	ID3D11Buffer*							g_pConstantBuffer;
+
+	// Pointer to input layout supply to IA
+	ID3D11InputLayout*						m_pInputLayout;
 
 	// Pointer to resource view array pass to shader
 	std::vector<ID3D11ShaderResourceView*>	m_pTexResourceView;
@@ -92,8 +123,14 @@ private:
 	// Number of shader resource
 	unsigned int							m_iTexResourceNum;
 
+	// Pointer to blend state
+	ID3D11BlendState*						m_pBlendState;
+
 	// Primitive Topology
 	unsigned int							m_iTopology;
+
+	// Render Type
+	eRenderType								m_renderType;
 
 	// Number of vertices
 	unsigned int							m_iNumVerts;
@@ -101,14 +138,18 @@ private:
 	// Number of indics
 	unsigned int							m_iNumIndics;
 
-	// 
-	unsigned int							m_iBaseVertexLocation;
+	// Stride
+	unsigned int							m_stride;
 
-	//
-	const char*								m_cFilename;
+	//Vertex offset
+	unsigned int							m_vertexOffset;
+ 
+	//Start Index Location
+	unsigned int							m_iStartIndexLocation;
 
-	// TEMP: camera
-	Camera									m_camera;
+	Matrix4									m_transformationMat;
+
+	Vector3									m_dimension;
 };
 
 #endif

@@ -9,19 +9,23 @@ class MeshManager
 public:
 	// Default empty constructor
 	MeshManager(){}
-
-	// Construct the manager
-	void Construct(){}
-
-	// Destruct the manager, delete all mesh data
-	void Destruct();
+	~MeshManager() {
+		m_MeshDataMap.clear();
+	}
 
 	// Return singleton instance
-	static MeshManager* getInstance()
+	static MeshManager* GetInstance()
 	{
 		if (!m_pInstance)
 			m_pInstance = new MeshManager;
 		return m_pInstance;
+	}
+
+	static void DestructandCleanUp() {
+		if (m_pInstance) {
+			delete m_pInstance;
+			m_pInstance = NULL;
+		}
 	}
 
 private:

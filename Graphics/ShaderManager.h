@@ -32,11 +32,19 @@ public:
 	void* GetInputLayout(const char* filename);
 
 	// Return singleton instance
-	static ShaderManager* getInstance()
+	static ShaderManager* GetInstance()
 	{
 		if (!m_pInstance)
 			m_pInstance = new ShaderManager();
 		return m_pInstance;
+	}
+
+	static void DestructandCleanUp()
+	{
+		if (m_pInstance) {
+			delete m_pInstance;
+			m_pInstance = NULL;
+		}
 	}
 
 	~ShaderManager()
@@ -48,14 +56,13 @@ public:
 			pS->Release();
 		}
 		m_mapShaders.clear();
+		m_mapInputLayouts.clear();
 	}
 
 private:
 
 	// Singleton instance
 	static ShaderManager*									m_pInstance;
-
-	FILE*													pFile;
 
 	std::unordered_map<std::string, void*>					m_mapShaders;
 	

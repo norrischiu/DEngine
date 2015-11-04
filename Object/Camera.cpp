@@ -6,17 +6,12 @@
 #include <string>
 #include "../Graphics/Scene/RootSceneNode.h"
 
-static unsigned int VK_W = 0x57; // W
-static unsigned int VK_A = 0x41; // A
-static unsigned int VK_S = 0x53; // S
-static unsigned int VK_D = 0x44; // D
-
 Camera::Camera(const Vector3& m_vPos, const Vector3& m_vLookAt, const Vector3& m_vUp)
 	: m_vPos(m_vPos)
 	, m_vLookAt(m_vLookAt)
 	, m_vUp(m_vUp)
 {
-	(const_cast<Vector3&> (m_vLookAt)).Normalize();
+
 }
 
 Matrix4 Camera::GetViewMatrix()
@@ -25,31 +20,58 @@ Matrix4 Camera::GetViewMatrix()
 	cameraMatrix.CreateLookAt(m_vPos, m_vLookAt, m_vUp);
 	return cameraMatrix;
 }
-static int i = 1;
-void Camera::Update()
-{
-	// key held
-	if (GetAsyncKeyState(VK_W) && 0x8000)
-	{
-		Move(0.05);
-		OutputDebugString("W pressed");
+
+void Camera::rotateVPos(const float thetaX, const float thetaY) {
+	Matrix4 transform;
+	m_vPos -= m_vLookAt;
+	transform.CreateRotationX(thetaY);
+	m_vPos.TransformAsVector(transform);
+	transform.CreateRotationY(thetaX);
+	m_vPos.TransformAsVector(transform);
+	m_vPos += m_vLookAt;
 	}
 
-	if (GetAsyncKeyState(VK_S) && 0x8000)
+void Camera::rotateVLookAt(const CameraMove moveType, const float theta)
 	{
-		Move(-0.05);
-		OutputDebugString("S pressed");
+	float sign = (moveType == CameraMove::ROTATE_RIGHT || moveType == CameraMove::ROTATE_UP) ? 1.0f : -1.0f;
+	m_vLookAt -= m_vPos;
+	Matrix4 transform;
+
+	switch (moveType) {
+		case CameraMove::ROTATE_LEFT:
+		case CameraMove::ROTATE_RIGHT:
+			transform.CreateRotationY(sign * theta);
+			break;
+		case CameraMove::ROTATE_UP:
+		case CameraMove::ROTATE_DOWN:
+			transform.CreateRotationX(sign * theta);
+			break;
 	}
 
+	m_vLookAt.TransformAsVector(transform);
+	m_vLookAt += m_vPos;
 }
 
-void Camera::Move(float offset)
+void Camera::move(const CameraMove moveType, const float offset)
 {
-	m_vPos += (m_vLookAt - m_vPos).Normalize() * offset;
+	float sign = (moveType == CameraMove::BACKWARD || moveType == CameraMove::RIGHT) ? 1.0f : -1.0f;
+	Vector3 transform;
+
+	switch (moveType) {
+		case CameraMove::FORWARD:
+		case CameraMove::BACKWARD:
+			transform = (m_vLookAt - m_vPos).Normalize() * (sign * offset);
+			break;
+		case CameraMove::LEFT:
+		case CameraMove::RIGHT:
+			Matrix4 rotation;
+			rotation.CreateRotationY(PI / 2.0f);
+			transform = (m_vLookAt - m_vPos).Normalize();
+			transform.TransformAsVector(rotation);
+			transform = transform * (sign * offset);
+			break;
+	}
 	
-	// debug text
-	std::stringstream ss;
-	ss << m_vPos.GetX() << " " << m_vPos.GetY() << " " << m_vPos.GetZ() << "\n";
-	std::string str(ss.str());
-	OutputDebugString(str.c_str());
+	m_vPos += transform;
+	m_vLookAt += transform;
 }

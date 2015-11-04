@@ -16,7 +16,7 @@ public:
 		m_pParent = nullptr;
 	};
 
-	static RootSceneNode* getInstance()
+	static RootSceneNode* GetInstance()
 	{
 		if (!m_pInstance)
 			m_pInstance = new RootSceneNode();

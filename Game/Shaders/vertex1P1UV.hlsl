@@ -3,6 +3,7 @@ cbuffer VS_CONSTANT_BUFFER
 {
 	matrix CameraMat;
 	matrix ProjectionMat;
+	matrix TransformationMat;
 };
 
 // For now, vertex shader input is only the position
@@ -29,7 +30,8 @@ VS_OUTPUT VS(VS_INPUT IN)
 	
 	// Apply world transform, then view/projection
 	//OUT.vPos = mul(CameraMat, IN.vPos);
-	OUT.vPos = mul(IN.vPos, ProjectionMat);
+	OUT.vPos = mul(IN.vPos, TransformationMat);
+	OUT.vPos = mul(OUT.vPos, ProjectionMat);
 	OUT.vTex = IN.vTex;
 	 
 	// Done--return the output.

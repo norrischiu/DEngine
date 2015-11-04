@@ -1,17 +1,16 @@
-// Let's make this BLUEEEE
-
 // Globals
 cbuffer VS_CONSTANT_BUFFER
 {
 	matrix CameraMat;
 	matrix ProjectionMat;
+	matrix TransformationMat;
 };
 
 // For now, vertex shader input is only the position
 struct VS_INPUT
 {
 	float4 vPos : POSITION;
-	float4 vColor : COLOR;
+	float2 vTex : TEXCOORD;
 };
 
 // For now, our vertex shader only needs to ouput
@@ -19,7 +18,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 vPos : SV_POSITION;
-	float4 vColor : COLOR;
+	float2 vTex : TEXCOORD0;
 };
 
 // Our basic vertex shader takes the model space
@@ -31,8 +30,9 @@ VS_OUTPUT VS(VS_INPUT IN)
 	
 	// Apply world transform, then view/projection
 	//OUT.vPos = mul(CameraMat, IN.vPos);
-	OUT.vPos = mul(IN.vPos, ProjectionMat);
-	OUT.vColor = IN.vColor;
+	OUT.vPos = mul(IN.vPos, TransformationMat);
+	OUT.vPos = mul(OUT.vPos, ProjectionMat);
+	OUT.vTex = IN.vTex;
 	 
 	// Done--return the output.
     return OUT;

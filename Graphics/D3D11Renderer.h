@@ -18,7 +18,7 @@ class D3D11Renderer
 {
 public:
 	// Default empty constructor
-	D3D11Renderer(){};
+	D3D11Renderer();
 
 	void ConstructWithWindow(HWND hWnd);
 
@@ -38,12 +38,15 @@ public:
 
 	void Render();
 
-	static D3D11Renderer* getInstance()
-	{
-		if (!m_pInstance)
-			m_pInstance = new D3D11Renderer();
-		return m_pInstance;
-	}
+	static D3D11Renderer* GetInstance();
+
+	Camera* GetCamera();
+
+	void SetCamera(CameraType cameraType);
+
+	CameraType GetCameraType();
+
+	std::vector<MeshComponent*>& GetMeshComponentList();
 
 	// Pointer to interface, handles GPU and pipeline
 	ID3D11DeviceContext*						m_pD3D11Context;
@@ -66,9 +69,9 @@ private:
 	// List of all mesh instance to be drawn
 	std::vector<MeshComponent*>					m_MeshComponentList;
 
-	// Matrics
-	Matrix4										m_CameraMat;
-	Matrix4										m_ProjectionMat;
+	Camera*										m_camera;
+
+	CameraType									m_currrent_camera_type;
 };
 
 #endif

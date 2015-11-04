@@ -1,7 +1,18 @@
 #include "GameLoop.h"
-#include "../Object/GameObject.h"
 #include "../Graphics/Scene/MeshSceneNode.h"
 #include "../Graphics/Scene/RootSceneNode.h"
+#include "../Graphics/MeshComponent.h"
+#include "..\Debug\Debug.h"
+#include "..\Font\Font.h"
+#include "..\Object\ObjectLoader.h"
+#include "..\Physics\cdSphere.h"
+#include "..\Physics\cdObject.h"
+#include "..\Physics\cdAabb.h"
+#include "..\GameObject\GameObject.h"
+#include "..\GameObject\GameWorld.h"
+
+long GameLoop::cursor_pos[2] = { 0, 0 };
+typedef SIMDVector3 Vector3;
 
 GameLoop* GameLoop::m_pInstance;
 static std::shared_ptr<SceneNode> ptr;
@@ -12,22 +23,150 @@ GameLoop::GameLoop()
 	// or a scene node attach entity
 
 	// attach a mesh component to scene graph
+	/*
 	MeshComponent dragonMC("dragon"); // temp
 	MeshSceneNode dragonSN("Dragon Mesh Scene Node", dragonMC.m_pMeshData);
 	ptr = std::make_shared<SceneNode>(dragonSN);
-	RootSceneNode::getInstance()->AttachSubNode(ptr);
+	RootSceneNode::GetInstance()->AttachSubNode(ptr);
 	
 	MeshComponent soldierMC("soldier"); // temp
 	MeshSceneNode soldierSN("Soldier Mesh Scene Node", soldierMC.m_pMeshData);
 	static std::shared_ptr<SceneNode> ptr2 = std::make_shared<SceneNode>(soldierSN);
 	ptr->AttachSubNode(ptr2);
-
+	*/
 	// create a camera
+
+	float arr[4][4];
+	float arr1[4][4];
+	float arr2[4][4];
+	float arr3[4][4];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			arr[i][j] = 0.0f;
+			arr1[i][j] = 0.0f;
+			arr2[i][j] = 0.0f;
+			arr3[i][j] = 0.0f;
+		}
+	}
+	arr[0][3] = -0.5f;
+	arr1[0][3] = 0.5f;
+	arr2[1][3] = -0.5f;
+	arr3[1][3] = 0.5f;
+
+	Matrix4 transform(arr);
+	Matrix4 transform1(arr1);
+	Matrix4 transform2(arr2);
+	Matrix4 transform3(arr3);
+
+	Vector3 origin1(6.0f, 0.0f, 0.0f);
+	Vector3 origin2(-8.0f, 2.0f, -2.0f);
+	Vector3 origin3(0.0f, 10.0f, 0.0f);
+	Vector3 origin4(0.0f, -4.0f, 0.0f);
+	float radius = 1.0f;
+	Vector3 dimension(2.01f, 2.01f, 2.01f);
+
+	AABB aabb1;
+	AABB aabb2;
+	aabb1.computeAABB(origin1, dimension);
+	aabb2.computeAABB(origin2, dimension);
+	GameObject gameObj1(&aabb1, nullptr, nullptr, transform, 0);
+	GameObject gameObj2(&aabb2, nullptr, nullptr, transform1, 1);
+
+	GameObject gameObj3(&Sphere(origin3, radius), nullptr, nullptr, transform2, 2);
+	GameObject gameObj4(&Sphere(origin4, radius + 0.5f), nullptr, nullptr, transform3, 2);
+
+
+	Debug debug;
+	debug.draw_prism(dimension, Primitives::CONE);
+	debug.draw_prism(dimension, Primitives::RECTANGULAR_PRISM);
+	debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::SPHERE, 30);
+	debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::SPHERE, 30);
+	//
 }
 
 void GameLoop::Update(float deltaTime)
 {
-	Matrix4 temp;
-	temp.CreateTranslation(SIMDVector3(1, 0, 0));
+	//Matrix4 temp;
+	//temp.CreateTranslation(SIMDVector3(1, 0, 0));
 	//ptr->Transform(temp);
+}
+
+void GameLoop::SetCursorPosition(long x, long y) {
+	cursor_pos[0] = x;
+	cursor_pos[1] = y;
+}
+
+void GameLoop::MouseEventHandeler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	static bool firstMove = false;
+	if (!firstMove) {
+		SetCursorPosition(LOWORD(lParam), HIWORD(lParam));
+		firstMove = true;
+		return;
+	}
+
+	if (msg == WM_MOUSEMOVE &&
+		D3D11Renderer::GetInstance()->GetCameraType() == CameraType::DEGREE360_CAMERA &&
+		(GetAsyncKeyState(VK_LBUTTON) || GetAsyncKeyState(VK_RBUTTON))
+		) {
+		D3D11Renderer::GetInstance()->GetCamera()->rotateVPos(
+			(LOWORD(lParam) - cursor_pos[0]) / 150.0f,
+			(HIWORD(lParam) - cursor_pos[1]) / 150.0f
+			);
+	}
+
+	SetCursorPosition(LOWORD(lParam), HIWORD(lParam));
+}
+
+void GameLoop::KeyboardEventHandeler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	if (msg == WM_KEYDOWN) {
+		if (GetAsyncKeyState(VK_1)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::MOVE_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_2)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::DEGREE360_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_3)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::TOP_VIEW_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_4)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::BOTTOM_VIEW_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_5)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::LEFT_VIEW_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_6)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::RIGHT_VIEW_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_7)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::FRONT_VIEW_CAMERA);
+		}
+		else if (GetAsyncKeyState(VK_8)) {
+			D3D11Renderer::GetInstance()->SetCamera(CameraType::BACK_VIEW_CAMERA);
+		}
+
+		if (D3D11Renderer::GetInstance()->GetCameraType() == CameraType::MOVE_CAMERA) {
+			if (GetAsyncKeyState(VK_W) || GetAsyncKeyState(VK_S)) {
+				D3D11Renderer::GetInstance()->GetCamera()->move(
+					GetAsyncKeyState(VK_W) ? CameraMove::FORWARD : CameraMove::BACKWARD, 0.4f
+					);
+			}
+			else if (GetAsyncKeyState(VK_A) || GetAsyncKeyState(VK_D)) {
+				D3D11Renderer::GetInstance()->GetCamera()->move(
+					GetAsyncKeyState(VK_A) ? CameraMove::LEFT : CameraMove::RIGHT, 0.4f
+					);
+			}
+			else if (GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT)) {
+				D3D11Renderer::GetInstance()->GetCamera()->rotateVLookAt(
+					GetAsyncKeyState(VK_LEFT) ? CameraMove::ROTATE_LEFT : CameraMove::ROTATE_RIGHT, 0.03f
+					);
+			}
+			else if (GetAsyncKeyState(VK_UP) || GetAsyncKeyState(VK_DOWN)) {
+				D3D11Renderer::GetInstance()->GetCamera()->rotateVLookAt(
+					GetAsyncKeyState(VK_DOWN) ? CameraMove::ROTATE_DOWN : CameraMove::ROTATE_UP, 0.03f
+					);
+			}
+		}
+	}
 }

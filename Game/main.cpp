@@ -1,4 +1,3 @@
-// main.cpp: entry point
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -14,16 +13,22 @@
 //-----------------------------------------------------------------------------
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg)
-	{
-	// send the quit message when the window is destroyed
-	case WM_DESTROY:
+
+	if (msg == WM_DESTROY) {
 		PostQuitMessage(0);
 		return 0;
-
-	case WM_PAINT:
+	}
+	else if (msg == WM_PAINT) {
 		ValidateRect(hWnd, NULL);
 		return 0;
+	}
+	else{
+		if (msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST)
+			GameLoop::MouseEventHandeler(hWnd, msg, wParam, lParam);
+		else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)
+			GameLoop::KeyboardEventHandeler(hWnd, msg, wParam, lParam);
+
+		InvalidateRect(hWnd, NULL, TRUE);
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -52,7 +57,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		NULL, NULL, wc.hInstance, NULL);
 
 	// Setup our GameWorld and GraphicsDevice singletons
-	D3D11Renderer::getInstance()->ConstructWithWindow(hWnd);
+	D3D11Renderer::GetInstance()->ConstructWithWindow(hWnd);
 
 	// Show the window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
@@ -64,7 +69,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	float elaspedTime = 0.0f;
 
 	// Memory
-	//MemoryManager::getInstance()->Construct();
+	//MemoryManager::GetInstance()->Construct();
 
 	// enter the main game loop
 	bool bQuit = false;
@@ -73,11 +78,11 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		if (elaspedTime >= 1.0 / FPS)
 		{
 			// Update the game world based on delta time
-			GameLoop::getInstance()->Update(elaspedTime);
-			D3D11Renderer::getInstance()->Update();
+			GameLoop::GetInstance()->Update(elaspedTime);
+			D3D11Renderer::GetInstance()->Update();
 
 			// Render this frame
-			D3D11Renderer::getInstance()->Render();
+			D3D11Renderer::GetInstance()->Render();
 
 			// Debug text
 			std::stringstream str;
@@ -103,8 +108,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	}
 
 	// Cleanup the GameWorld and GraphicsDevice singletons
-	D3D11Renderer::getInstance()->DestructandCleanUp();
-	//MemoryManager::getInstance()->Destruct();
+	D3D11Renderer::GetInstance()->DestructandCleanUp();
+	//MemoryManager::GetInstance()->Destruct();
 
 	UnregisterClass("Game class", wc.hInstance);
 	return 0;

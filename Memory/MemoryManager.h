@@ -59,7 +59,7 @@ public:
 	}
 
 	// Return singleton instance
-	static MemoryManager* getInstance()
+	static MemoryManager* GetInstance()
 	{
 		if (!m_pInstance)
 			m_pInstance = new MemoryManager();

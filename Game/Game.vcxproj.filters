@@ -22,11 +22,23 @@
     <Filter Include="System">
       <UniqueIdentifier>{e6e6dbae-fc34-4afc-b3ff-dab42dc8feeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Light">
-      <UniqueIdentifier>{b7aeea8d-c8a4-4b3d-8fd1-4fb9555136fd}</UniqueIdentifier>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{a703c263-ddc4-4086-b43a-11826f062845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{eda0d2c2-7f46-46f7-8264-25b5cb5de030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{76c5dd91-c942-453b-9f07-f55b8f32fc3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{2fda8b27-e146-4ba0-807b-8e93e36e8aaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Scene">
-      <UniqueIdentifier>{01a09dcf-8ad2-407c-8729-7c849a330174}</UniqueIdentifier>
+      <UniqueIdentifier>{2d205e45-52de-43bb-ad87-0d48e8ef3550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{38cdff0b-c507-4832-bb1c-406426808d82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,10 +60,6 @@
     <ClCompile Include="..\Memory\MemoryManager.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Object\GameObject.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Graphics\VertexBufferEngine.cpp">
       <Filter>Graphics</Filter>
@@ -65,20 +73,57 @@
     <ClCompile Include="..\Graphics\TextureManager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="..\Graphics\MeshComponent.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="..\Graphics\Scene\RootSceneNode.cpp">
       <Filter>Graphics\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Graphics\Scene\SceneNode.cpp">
       <Filter>Graphics\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Graphics\MeshComponent.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="..\Physics\cdAabb.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdBody.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdCollide.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdCollisionWorld.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdObject.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdPoint.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdRay.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Physics\cdSphere.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameObject\GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameObject\GameWorld.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Font\font.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Debug\Debug.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Object\ObjectLoader.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Object\GameObject.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="..\Object\Camera.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -106,7 +151,6 @@
     <ClInclude Include="..\Memory\MemoryPool.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="GameLoop.h" />
     <ClInclude Include="..\Graphics\VertexFormat.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -128,30 +172,64 @@
     <ClInclude Include="..\Graphics\TextureManager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\Light\PointLight.h">
-      <Filter>Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\Scene\RootSceneNode.h">
-      <Filter>Graphics\Scene</Filter>
+    <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="..\Graphics\MeshComponent.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\Graphics\Scene\SceneNode.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Scene\RootSceneNode.h">
       <Filter>Graphics\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Graphics\Scene\MeshSceneNode.h">
       <Filter>Graphics\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics\MeshComponent.h">
-      <Filter>Graphics</Filter>
+    <ClInclude Include="..\Light\PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdAabb.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdBody.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdCollide.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdCollisionWorld.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdobject.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdPoint.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdRay.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Physics\cdSphere.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameObject\GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameObject\GameWorld.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Font\font.h">
+      <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Debug\debug.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object\objectloader.h">
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\diffuse.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\phong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\red.hlsl">
+    <FxCompile Include="Shaders\vertex1P1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\texture.hlsl">
@@ -166,7 +244,13 @@
     <FxCompile Include="Shaders\vertex1P1N1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\vertex1P1UV.hlsl">
+    <FxCompile Include="Shaders\red.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\phong.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\diffuse.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

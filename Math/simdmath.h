@@ -318,16 +318,16 @@ public:
 	// Overload new with handle
 	void* operator new(size_t size, Handle hle)
 	{
-		return MemoryManager::getInstance()->GetMemoryAddressFromHandle(hle);
+		return MemoryManager::GetInstance()->GetMemoryAddressFromHandle(hle);
 	}
 
 	void operator delete(void* ptr, Handle hle)
 	{}
 
 	// Construct with given float values
-	inline SIMDVector3(float x, float y, float z)
+	inline SIMDVector3(float x, float y, float z, float w = 1.0f)
 	{
-		_data = _mm_setr_ps(x, y, z, 1.0f);
+		_data = _mm_setr_ps(x, y, z, w);
 	};
 
 	// Construct with given m128 data

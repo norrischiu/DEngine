@@ -5,6 +5,45 @@
 
 D3D11Renderer* D3D11Renderer::m_pInstance;
 
+D3D11Renderer::D3D11Renderer() : m_currrent_camera_type(CameraType::MOVE_CAMERA)
+{
+	const float EPS = std::numeric_limits<float>::epsilon();
+	m_camera = new Camera[8]{
+		{ Vector3(0.0f, 0.0f, -10.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
+		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//DEGREE_360
+		{ Vector3(0.0f, 15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//TOP
+		{ Vector3(0.0f, -15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//BOTTOM
+		{ Vector3(15.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//LEFT
+		{ Vector3(-15.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//RIGHT
+		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//FRONT
+		{ Vector3(0.0f, 0.0f, -15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) }		//BACK
+	};
+}
+
+D3D11Renderer* D3D11Renderer::GetInstance() {
+	if (!m_pInstance)
+		m_pInstance = new D3D11Renderer();
+	return m_pInstance;
+}
+
+Camera* D3D11Renderer::GetCamera() {
+	return &m_camera[m_currrent_camera_type];
+}
+
+CameraType D3D11Renderer::GetCameraType() {
+	return m_currrent_camera_type;
+}
+
+void D3D11Renderer::SetCamera(CameraType cameraType) {
+	if (cameraType >= CameraType::MOVE_CAMERA && cameraType <= CameraType::BACK_VIEW_CAMERA) {
+		m_currrent_camera_type = cameraType;
+	}
+}
+
+std::vector<MeshComponent*>& D3D11Renderer::GetMeshComponentList() {
+	return m_MeshComponentList;
+}
+
 void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 {
 	// Create device and swap chain
@@ -52,12 +91,12 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
 
 	// Depth test parameters
-	dsDesc.DepthEnable = true;
+	dsDesc.DepthEnable = false; // true
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 	// Stencil test parameters
-	dsDesc.StencilEnable = true;
+	dsDesc.StencilEnable = false; // true
 	dsDesc.StencilReadMask = 0xFF;
 	dsDesc.StencilWriteMask = 0xFF;
 
@@ -97,9 +136,9 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	rasterizerDesc.CullMode = D3D11_CULL_BACK;
 
 	ID3D11RasterizerState* pRasterizerState;
-	hr = D3D11Renderer::getInstance()->m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
+	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
 	assert(hr == S_OK);
-	D3D11Renderer::getInstance()->m_pD3D11Context->RSSetState(pRasterizerState);
+	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(pRasterizerState);
 
 	// Set viewport
 	D3D11_VIEWPORT vp;
@@ -132,10 +171,12 @@ void D3D11Renderer::Render()
 
 	m_pD3D11Context->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
-	//for (auto itr = m_MeshComponentList.begin(); itr != m_MeshComponentList.end(); ++itr)
-	//	(*itr)->Draw();
-
-	RootSceneNode::getInstance()->RenderSubNodes();
+	RootSceneNode::GetInstance()->RenderSubNodes();
+	
+	for (MeshComponent* MeshComponent : m_MeshComponentList) {
+		MeshComponent->Draw();
+	}
+	
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);

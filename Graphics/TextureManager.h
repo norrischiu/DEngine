@@ -39,7 +39,21 @@ public:
 		samplerDesc.BorderColor[3] = 0;
 		samplerDesc.MinLOD = 0;
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-		D3D11Renderer::getInstance()->m_pD3D11Device->CreateSamplerState(&samplerDesc, (ID3D11SamplerState**) &m_pSamplerState);
+		D3D11Renderer::GetInstance()->m_pD3D11Device->CreateSamplerState(&samplerDesc, (ID3D11SamplerState**) &m_pSamplerState);
+
+		D3D11_BLEND_DESC blendStateDesc;
+		ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+		blendStateDesc.AlphaToCoverageEnable = FALSE;
+		blendStateDesc.IndependentBlendEnable = FALSE;
+		blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+		blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBlendState(&blendStateDesc, (ID3D11BlendState**) &m_pBlendState);
 	};
 
 	// Return the texture according to the name
@@ -51,12 +65,22 @@ public:
 	// Return sampler state depends on the enum
 	void* GetSamplerState(int samplerStateType);
 
+	void* GetBlendState();
+
 	// Return singleton instance
-	static TextureManager* getInstance()
+	static TextureManager* GetInstance()
 	{
 		if (!m_pInstance)
 			m_pInstance = new TextureManager();
 		return m_pInstance;
+	}
+
+	static void DestructandCleanUp()
+	{
+		if (m_pInstance) {
+			delete m_pInstance;
+			m_pInstance = NULL;
+		}
 	}
 
 	~TextureManager()
@@ -68,6 +92,11 @@ public:
 			pSRView->Release();
 		}
 		m_mapTexture.clear();
+
+		if (m_pBlendState) 
+			delete m_pBlendState;
+		if (m_pSamplerState)
+			delete m_pSamplerState;
 	}
 
 private:
@@ -75,11 +104,11 @@ private:
 	// Singleton instance
 	static TextureManager*									m_pInstance;
 
-	FILE*													pFile;
-
 	std::unordered_map<std::string, void*>					m_mapTexture;
 
 	void*													m_pSamplerState;
+
+	void*													m_pBlendState;
 };
 
 #endif // !TEXTUREMANAGER_H_

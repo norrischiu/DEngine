@@ -1,7 +1,12 @@
 #include "simdmath.h"
 
 // Matrix4 constant declaration
-float identityMatrix[4][4] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+float identityMatrix[4][4] = { 
+	{1.0f, 0.0f, 0.0f, 0.0f},
+	{0.0f, 1.0f, 0.0f, 0.0f},
+	{0.0f, 0.0f, 1.0f, 0.0f},
+	{0.0f, 0.0f, 0.0f, 1.0f}
+};
 const SIMDMatrix4 SIMDMatrix4::Identity(identityMatrix);
 
 // Vector3 constant declaration
