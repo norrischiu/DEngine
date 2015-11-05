@@ -286,6 +286,17 @@ public:
 	// Set a perspective FOV matrix
 	void CreatePerspectiveFOV(float fFOVy, float fAspectRatio, float fNear, float fFar);
 
+	//Set a orthographic projection matrix // temp
+	void CreateOrthographicProj(unsigned int width, unsigned int height, float zNear, float zFar)
+	{
+		DirectX::XMMATRIX result = DirectX::XMMatrixOrthographicLH(width, height, zNear, zFar);
+		_rows[0] = result.r[0];
+		_rows[1] = result.r[1];
+		_rows[2] = result.r[2];
+		_rows[3] = result.r[3];
+		_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
+	}
+
 	// Inverts the matrix, store the result back to this
 	void Invert();
 };
