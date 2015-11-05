@@ -35,54 +35,9 @@ GameLoop::GameLoop()
 	ptr->AttachSubNode(ptr2);
 	*/
 	// create a camera
-
-	float arr[4][4];
-	float arr1[4][4];
-	float arr2[4][4];
-	float arr3[4][4];
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			arr[i][j] = 0.0f;
-			arr1[i][j] = 0.0f;
-			arr2[i][j] = 0.0f;
-			arr3[i][j] = 0.0f;
-		}
-	}
-	arr[0][3] = -0.5f;
-	arr1[0][3] = 0.5f;
-	arr2[1][3] = -0.5f;
-	arr3[1][3] = 0.5f;
-
-	Matrix4 transform(arr);
-	Matrix4 transform1(arr1);
-	Matrix4 transform2(arr2);
-	Matrix4 transform3(arr3);
-
-	Vector3 origin1(6.0f, 0.0f, 0.0f);
-	Vector3 origin2(-8.0f, 2.0f, -2.0f);
-	Vector3 origin3(0.0f, 10.0f, 0.0f);
-	Vector3 origin4(0.0f, -4.0f, 0.0f);
-	float radius = 1.0f;
-	Vector3 dimension(2.01f, 2.01f, 2.01f);
-
-	AABB aabb1;
-	AABB aabb2;
-	aabb1.computeAABB(origin1, dimension);
-	aabb2.computeAABB(origin2, dimension);
-	GameObject gameObj1(&aabb1, nullptr, nullptr, transform, 0);
-	GameObject gameObj2(&aabb2, nullptr, nullptr, transform1, 1);
-
-	GameObject gameObj3(&Sphere(origin3, radius), nullptr, nullptr, transform2, 2);
-	GameObject gameObj4(&Sphere(origin4, radius + 0.5f), nullptr, nullptr, transform3, 2);
-
-
 	Debug debug;
-	debug.draw_prism(dimension, Primitives::CONE);
-	debug.draw_prism(dimension, Primitives::RECTANGULAR_PRISM);
-	debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::SPHERE, 30);
-	debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::SPHERE, 30);
+	MeshComponent* m = debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::CONE, 30);
+	m->m_pMeshData->Transform(0.5f, Vector3(0, 0, 0), Vector3(0, 0, 0));
 	//
 }
 

@@ -138,9 +138,6 @@ private:
 	// Number of indics
 	unsigned int							m_iNumIndics;
 
-	// Stride
-	unsigned int							m_stride;
-
 	//Vertex offset
 	unsigned int							m_vertexOffset;
  

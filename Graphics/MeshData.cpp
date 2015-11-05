@@ -47,21 +47,21 @@ m_dimension(dimension)
 
 	switch (renderType) {
 	case eRenderType::V1P:
-		m_stride = sizeof(Vertex1P);
+		m_iStride = sizeof(Vertex1P);
 		break;
 	case eRenderType::V1P1N:
-		m_stride = sizeof(Vertex1P1N);
+		m_iStride = sizeof(Vertex1P1N);
 		break;
 	case eRenderType::V1P1N1UV:
-		m_stride = sizeof(Vertex1P1N1UV);
+		m_iStride = sizeof(Vertex1P1N1UV);
 		break;
 	case eRenderType::V1P1UV:
-		m_stride = sizeof(Vertex1P1UV);
+		m_iStride = sizeof(Vertex1P1UV);
 		break;
 	}
 
 	// Create vertex buffer
-	m_pVertexBuffer = VertexBufferEngine::GetInstance()->CreateBufferFromRawData(pVertexData, iNumVerts, m_stride);
+	m_pVertexBuffer = VertexBufferEngine::GetInstance()->CreateBufferFromRawData(pVertexData, iNumVerts, m_iStride);
 	// Create index buffer
 	m_iStartIndexLocation = IndexBufferEngine::GetCurrentIndex();
 	m_pIndexBuffer = IndexBufferEngine::GetInstance()->CreateBufferFromRawData(pIndexData, iNumIndics);
@@ -251,6 +251,7 @@ void MeshData::SetUpEnvironment(const eRenderType renderType, const D3D_PRIMITIV
 	case eRenderType::V1P:
 		// Set vertex shader
 		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_iStride = sizeof(Vertex1P);
 		// Set input layout
 		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P.hlsl");
 		// Set pixel shader
