@@ -34,7 +34,7 @@ MeshComponent* Font::write(char* sentence) {
 	float drawY = 0.0f + placeholder_height / 2.0f;
 	Vector3 size = Vector3(placeholder_width, placeholder_height, 0.0f);
 
-	Vertex1P1UV* pVertices = new Vertex1P1UV[iNumVerts];
+	vertex1P1UV* pVertices = new vertex1P1UV[iNumVerts];
 	unsigned int* pIndices = new unsigned int[iNumIndices];
 
 	// Draw each letter onto a quad.
