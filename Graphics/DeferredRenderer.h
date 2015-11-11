@@ -58,14 +58,17 @@ public:
 	// Array of pointer to the render target view
 	ID3D11RenderTargetView*						m_pRenderTargetView[RT_NUM];
 
+	// Array of pointer to shader resources view
+	ID3D11ShaderResourceView*					m_pShaderResourceView[RT_NUM];
+
+	// Array of pointer to texture for deferred use
+	ID3D11Texture2D*							m_pTexture[RT_NUM];
+
 	ID3D11DepthStencilView*						m_pDepthStencilView;
 
 private:
 	// Singleton instance
 	static DeferredRenderer*					m_pInstance;
-
-	// List of all mesh instance to be drawn
-	std::vector<MeshComponent*>					m_MeshComponentList;
 };
 
 #endif

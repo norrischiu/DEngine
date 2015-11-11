@@ -10,8 +10,8 @@ class MeshSceneNode : public SceneNode
 public:
 
 	// Overload constructor
-	MeshSceneNode(const char* dbgname, MeshData* meshData)
-		: SceneNode(dbgname, meshData)
+	MeshSceneNode(const char* dbgname, unsigned int objectID)
+		: SceneNode(dbgname, objectID)
 	{};
 
 private:

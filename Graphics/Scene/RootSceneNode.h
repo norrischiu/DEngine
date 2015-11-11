@@ -11,7 +11,7 @@ public:
 
 	// Default constructor
 	RootSceneNode()
-		: SceneNode("Root Scene Node", nullptr)
+		: SceneNode("Root Scene Node", INT_MAX)
 	{
 		m_pParent = nullptr;
 	};

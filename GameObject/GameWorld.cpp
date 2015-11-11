@@ -9,7 +9,20 @@ GameWorld * GameWorld::GetInstance()
 	return m_pGameWorld;
 }
 
-std::vector<GameObject*>& GameWorld::GetGameObjectList()
+void GameWorld::Update(float deltaTime)
 {
-	return m_GameObjectList;
+	for (auto itr : m_GameObjectList)
+	{
+		itr->Update(deltaTime);
+	}
+}
+
+void GameWorld::AddGameObject(GameObject* gameObj)
+{
+	m_GameObjectList.push_back(gameObj);
+}
+
+GameObject* GameWorld::GetGameObjectAt(unsigned int index)
+{
+	return m_GameObjectList[index];
 }

@@ -14,6 +14,9 @@ public:
 	void FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData);
 
 	void FillVertexData_POSITION_NORMAL_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData);
+
+	void FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData);
+
 	static VertexBufferEngine* GetInstance();
 	static void DestructandCleanUp();
 

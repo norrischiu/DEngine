@@ -1,4 +1,3 @@
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "..\Timer\Timer.h"
@@ -22,7 +21,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		ValidateRect(hWnd, NULL);
 		return 0;
 	}
-	else{
+	else {
 		if (msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST)
 			GameLoop::MouseEventHandeler(hWnd, msg, wParam, lParam);
 		else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)

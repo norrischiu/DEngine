@@ -1,6 +1,7 @@
 // Globals
 cbuffer VS_CONSTANT_BUFFER
 {
+	matrix WorldTransform;
 	matrix Transform;
 };
 
@@ -29,11 +30,8 @@ VS_OUTPUT VS(VS_INPUT IN)
 	VS_OUTPUT OUT;
 
 	// Apply world transform, then view/projection
-	float4 pos = IN.vPos;
-	//OUT.vPos = mul(ProjectionMat, pos);
-	OUT.vPos = mul(pos, Transform);
-	OUT.vNormal = mul(IN.vNormal, Transform);
-	OUT.vNormal = IN.vNormal;
+	OUT.vPos = mul(IN.vPos, Transform);
+	OUT.vNormal = mul(IN.vNormal, WorldTransform);
 	OUT.vTex = IN.vTex;
 
 	// Done--return the output.

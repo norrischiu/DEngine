@@ -15,37 +15,31 @@ long GameLoop::cursor_pos[2] = { 0, 0 };
 typedef SIMDVector3 Vector3;
 
 GameLoop* GameLoop::m_pInstance;
-static std::shared_ptr<SceneNode> ptr;
+
 GameLoop::GameLoop()
 {
-	// create a game object with mesh
-	// GameObject dragon;
-	// or a scene node attach entity
+	MeshComponent* dragonMC = new MeshComponent("dragon"); // temp
+	//MeshComponent* soldierMC = new MeshComponent("soldier"); // temp
 
-	// attach a mesh component to scene graph
-	/*
-	MeshComponent dragonMC("dragon"); // temp
-	MeshSceneNode dragonSN("Dragon Mesh Scene Node", dragonMC.m_pMeshData);
-	ptr = std::make_shared<SceneNode>(dragonSN);
-	RootSceneNode::GetInstance()->AttachSubNode(ptr);
-	
-	MeshComponent soldierMC("soldier"); // temp
-	MeshSceneNode soldierSN("Soldier Mesh Scene Node", soldierMC.m_pMeshData);
-	static std::shared_ptr<SceneNode> ptr2 = std::make_shared<SceneNode>(soldierSN);
-	ptr->AttachSubNode(ptr2);
-	*/
+	GameObject* dragon = new GameObject(nullptr, dragonMC, nullptr, Matrix4::Identity, 0);
+	//GameObject* solider = new GameObject(nullptr, soldierMC, nullptr, Matrix4::Identity, 1);
+	//solider->AttachTo(0);
+
 	// create a camera
-	Debug debug;
-	MeshComponent* m = debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::CONE, 30);
-	m->m_pMeshData->Transform(0.5f, Vector3(0, 0, 0), Vector3(0, 0, 0));
+	//Debug debug;
+	//MeshComponent* m = debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::CONE, 30);
+	//m->m_pMeshData->Transform(0.5f, Vector3(0, 0, 0), Vector3(0, 0, 0));
 	//
 }
 
 void GameLoop::Update(float deltaTime)
 {
-	//Matrix4 temp;
-	//temp.CreateTranslation(SIMDVector3(1, 0, 0));
-	//ptr->Transform(temp);
+	/*
+	Matrix4 temp;
+	temp.CreateTranslation(SIMDVector3(0.01, 0, 0));
+	GameWorld::GetInstance()->GetGameObjectAt(0)->Transform(temp); //
+	GameWorld::GetInstance()->Update(deltaTime);
+	*/
 }
 
 void GameLoop::SetCursorPosition(long x, long y) {

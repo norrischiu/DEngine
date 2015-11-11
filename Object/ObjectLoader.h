@@ -39,12 +39,12 @@ public:
 		m_numVertices = vertices.size();
 	}
 
-	void setVertices(std::vector<Vertex1P1UV>& vertices) {
-		m_vertices = new Vertex1P1UV[vertices.size()];
+	void setVertices(std::vector<vertex1P1UV>& vertices) {
+		m_vertices = new vertex1P1UV[vertices.size()];
 		for (int i = 0; i < vertices.size(); i++) {
-			((Vertex1P1UV*) m_vertices)[i].m_pos = vertices.at(i).m_pos;
-			((Vertex1P1UV*) m_vertices)[i].m_UV[0] = vertices.at(i).m_UV[0];
-			((Vertex1P1UV*) m_vertices)[i].m_UV[1] = vertices.at(i).m_UV[1];
+			((vertex1P1UV*) m_vertices)[i].m_pos = vertices.at(i).m_pos;
+			((vertex1P1UV*) m_vertices)[i].m_UV[0] = vertices.at(i).m_UV[0];
+			((vertex1P1UV*) m_vertices)[i].m_UV[1] = vertices.at(i).m_UV[1];
 		}
 		m_numVertices = vertices.size();
 	}

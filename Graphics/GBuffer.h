@@ -40,6 +40,9 @@ private:
 	// Pointer to constant buffer
 	ID3D11Buffer*								m_pConstantBuffer;
 
+	// Pointer to pixel shader constant buffer
+	ID3D11Buffer*								m_pPSConstantBuffer;
+
 	// Number of indics
 	unsigned int								m_iNumIndics;
 		

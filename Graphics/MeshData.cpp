@@ -29,19 +29,15 @@ struct VS_CONSTANT_BUFFER
 
 struct VS_CONSTANT_BUFFER2
 {
+	Matrix4 WorldTransform;
 	Matrix4 Transform;
 };
 
-struct PS_CONSTANT_BUFFER
-{
-	PointLight testLight;
-};
-
 MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType renderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture)
-:m_pVertexBuffer(nullptr),
-m_pIndexBuffer(nullptr),
-m_transformationMat(Matrix4::Identity),
-m_dimension(dimension)
+	:m_pVertexBuffer(nullptr),
+	m_pIndexBuffer(nullptr),
+	m_transformationMat(Matrix4::Identity),
+	m_dimension(dimension)
 {
 	SetUpEnvironment(renderType, typology, texture);
 
@@ -56,7 +52,7 @@ m_dimension(dimension)
 		m_iStride = sizeof(Vertex1P1N1UV);
 		break;
 	case eRenderType::V1P1UV:
-		m_iStride = sizeof(Vertex1P1UV);
+		m_iStride = sizeof(vertex1P1UV);
 		break;
 	}
 
@@ -77,24 +73,6 @@ MeshData::MeshData(const char* filename, int renderType)
 	HRESULT hr;
 	std::string sFileName(filename);
 
-	PointLight testLight(Vector3(0, 0, 0), 50, Vector4(0.1, 0.1, 0.1), Vector4(1, 1, 1), Vector4(1, 1, 1), 50);
-
-	PS_CONSTANT_BUFFER psConstData;
-	psConstData.testLight = testLight;
-	ID3D11Buffer* gbuff;
-
-	D3D11_BUFFER_DESC psconstBufferDesc;
-	psconstBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	psconstBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	psconstBufferDesc.ByteWidth = sizeof(PS_CONSTANT_BUFFER);
-	psconstBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	psconstBufferDesc.MiscFlags = 0;
-	D3D11_SUBRESOURCE_DATA psconstResourcesData;
-	psconstResourcesData.pSysMem = &psConstData; psconstResourcesData.SysMemPitch = 0; psconstResourcesData.SysMemSlicePitch = 0;
-	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&psconstBufferDesc, &psconstResourcesData, &gbuff);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(0, 1, &gbuff);
-
-
 	VertexBufferEngine vertexEngine;
 	m_iVertexOffset = 0; // temp
 	IndexBufferEngine indexEngine;
@@ -104,9 +82,9 @@ MeshData::MeshData(const char* filename, int renderType)
 	{
 	case eRenderType::OUTLINE:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P.hlsl");
 		// Set pixel shader
 		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/red.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set primitive topology
@@ -117,11 +95,11 @@ MeshData::MeshData(const char* filename, int renderType)
 		break;
 	case eRenderType::STANDARD_MESH:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P1UV.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P1UV.hlsl");
 		// Set pixel shader
-		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
+		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/PS_texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set texture resources view
 		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(C_STR(sFileName, "_texture.dds")));
 		m_iTexResourceNum = 1;
@@ -135,15 +113,14 @@ MeshData::MeshData(const char* filename, int renderType)
 		break;
 	case eRenderType::STANDARD_MESH_WITH_SHADOW:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P1N1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P1N1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P1N1UV.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P1N1UV.hlsl");
 		// Set pixel shader
-		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/phong.hlsl", D3D11_SHVER_PIXEL_SHADER);
+		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/PS_vertex1P1N1UV_deferred.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set texture resources view
 		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(C_STR(sFileName, "_texture.dds")));
-		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(C_STR(sFileName, "_normal.dds")));
-		m_iTexResourceNum = 2;
+		m_iTexResourceNum = 1;
 		// Set shader sampler state
 		m_pSamplerState = (ID3D11SamplerState*)TextureManager::GetInstance()->GetSamplerState(eSamplerState::LINEAR_MIPMAP_MAX_LOD);
 		// Set primitive topology
@@ -151,6 +128,17 @@ MeshData::MeshData(const char* filename, int renderType)
 		// Create vertex buffer
 		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(filename, eVertexFormat::POSITION_NORMAL_TEXTURE, m_iStride);
 
+		break;
+	case eRenderType::STANDARD_MESH_WITH_BUMP:
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P1N1T1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P1N1T1UV.hlsl");
+		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/PS_vertex1P1N1T1UV_deferred.hlsl", D3D11_SHVER_PIXEL_SHADER);
+		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(C_STR(sFileName, "_texture.dds")));
+		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(C_STR(sFileName, "_normal.dds")));
+		m_iTexResourceNum = 2;
+		m_pSamplerState = (ID3D11SamplerState*)TextureManager::GetInstance()->GetSamplerState(eSamplerState::LINEAR_MIPMAP_MAX_LOD);
+		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(filename, eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride);
 		break;
 	}
 
@@ -164,12 +152,7 @@ MeshData::MeshData(const char* filename, int renderType)
 
 	// Set constant subresources data
 	D3D11_SUBRESOURCE_DATA constResourcesData;
-
 	VS_CONSTANT_BUFFER vsConstData;
-	//vsConstData.Transform.CreatePerspectiveFOV(0.785398163f, 1042.0f / 768.0f, 1.0f, 1000.0f);
-	//vsConstData.Transform.Multiply(m_camera.GetViewMatrix());
-	//Matrix4 rotation;
-
 	constResourcesData.pSysMem = &vsConstData;
 	constResourcesData.SysMemPitch = 0;
 	constResourcesData.SysMemSlicePitch = 0;
@@ -213,11 +196,11 @@ void MeshData::SetUpEnvironment(const eRenderType renderType, const D3D_PRIMITIV
 	{
 	case eRenderType::V1P1UV:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P1UV.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P1UV.hlsl");
 		// Set pixel shader
-		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
+		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/PS_texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set texture resources view
 		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(texture));
 		// Set shader sampler state
@@ -227,11 +210,11 @@ void MeshData::SetUpEnvironment(const eRenderType renderType, const D3D_PRIMITIV
 
 	case eRenderType::V1P1N1UV:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P1N1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P1N1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P1UV.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P1UV.hlsl");
 		// Set pixel shader
-		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
+		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/PS_texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set texture resources view
 		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(texture));
 		// Set shader sampler state
@@ -250,10 +233,10 @@ void MeshData::SetUpEnvironment(const eRenderType renderType, const D3D_PRIMITIV
 
 	case eRenderType::V1P:
 		// Set vertex shader
-		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("Shaders/VS_vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		m_iStride = sizeof(Vertex1P);
 		// Set input layout
-		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/vertex1P.hlsl");
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("Shaders/VS_vertex1P.hlsl");
 		// Set pixel shader
 		m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("Shaders/red.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		break;
@@ -280,7 +263,7 @@ void MeshData::SetUpEnvironment(const eRenderType renderType, const D3D_PRIMITIV
 	vsConstData.ProjectionMat.Multiply(vsConstData.CameraMat);
 	Matrix4 rotation;
 	rotation.CreateRotationY(PI); // 180 degree
-	//vsConstData.ProjectionMat.Multiply(rotation);
+								  //vsConstData.ProjectionMat.Multiply(rotation);
 	vsConstData.TransformationMat = Matrix4::Identity;
 
 	constResourcesData.pSysMem = &vsConstData;
@@ -300,7 +283,7 @@ void MeshData::Transform(const float scalar, const Vector3 rotation, const Vecto
 		Transform.CreateScale(scalar);
 		m_transformationMat.Multiply(Transform);
 	}
-	if ((fabs(rotation.GetX()) > EPS) || + (fabs(rotation.GetY()) > EPS) || (fabs(rotation.GetZ()) > EPS)) {
+	if ((fabs(rotation.GetX()) > EPS) || +(fabs(rotation.GetY()) > EPS) || (fabs(rotation.GetZ()) > EPS)) {
 		bool is_rotation_about_origin = fabs(rotation.GetW() - 1.0f) < 0.005f;
 		Vector3 origin(0.0f, 0.0f, 0.0f);
 		origin.TransformAsVector(m_transformationMat);
@@ -326,14 +309,14 @@ void MeshData::Transform(const float scalar, const Vector3 rotation, const Vecto
 			m_transformationMat.Multiply(Transform);
 		}
 
-		if(is_rotation_about_origin) {
+		if (is_rotation_about_origin) {
 			Transform.CreateTranslation(origin);
 			m_transformationMat.Multiply(Transform);
 		}
 	}
 
 	if ((fabs(translation.GetX()) > EPS) || (fabs(translation.GetY()) > EPS) + (fabs(translation.GetZ()) > EPS)) {
-		Transform.CreateTranslation(translation);	
+		Transform.CreateTranslation(translation);
 		m_transformationMat.Multiply(Transform);
 	}
 
@@ -343,7 +326,7 @@ void MeshData::Transform(const float scalar, const Vector3 rotation, const Vecto
 		1042.0f / 768.0f,
 		1.0f,
 		1000.0f
-	);
+		);
 	ProjectionMat.Multiply(D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE mappedResources;
@@ -377,21 +360,21 @@ void MeshData::Update()
 void MeshData::Update(Matrix4 transform)
 {
 	// Set constant buffer description
+	D3D11_MAPPED_SUBRESOURCE mappedResources;
+	D3D11Renderer::GetInstance()->m_pD3D11Context->Map(g_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
+	VS_CONSTANT_BUFFER2* pCBuffer = (VS_CONSTANT_BUFFER2*)mappedResources.pData;
+	pCBuffer->WorldTransform = transform;
 	Matrix4 ProjectionMat;
 	ProjectionMat.CreatePerspectiveFOV(0.785398163f, 1042.0f / 768.0f, 1.0f, 1000.0f);
 	transform = ProjectionMat * D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * transform; // temp
-
-	D3D11_MAPPED_SUBRESOURCE mappedResources;
-	D3D11Renderer::GetInstance()->m_pD3D11Context->Map(g_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
-	VS_CONSTANT_BUFFER2* pCBuffer = (VS_CONSTANT_BUFFER2*) mappedResources.pData;
 	pCBuffer->Transform = transform;
 	D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(g_pConstantBuffer, 0);
 }
 
 void MeshData::Render(Matrix4 transform)
 {
-	Update();
-	
+	Update(transform);
+
 	// Binding
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetInputLayout(m_pInputLayout);
@@ -401,10 +384,11 @@ void MeshData::Render(Matrix4 transform)
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	if (!m_pTexResourceView.empty()) {
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, 1, &m_pTexResourceView[0]);
+	if (!m_pTexResourceView.empty())
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, m_pTexResourceView.size(), m_pTexResourceView.data());
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_pSamplerState);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetBlendState(m_pBlendState, NULL, 0xFFFFFFFF);
+		//D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetBlendState(m_pBlendState, NULL, 0xFFFFFFFF);
 	}
 
 	D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);

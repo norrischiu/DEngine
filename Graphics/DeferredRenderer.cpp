@@ -30,10 +30,13 @@ void DeferredRenderer::ConstructWithWindow(HWND hWnd)
 	assert(hr == S_OK);
 
 	// Create render target view
-	ID3D11Texture2D* pBackBuffer;
-	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	hr = m_pD3D11Device->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView[0]); // get buffer through 2D texture
-	assert(hr == S_OK);
+	//ID3D11Texture2D* pBackBuffer;
+	//m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	for (int i = 0; i < RT_NUM; i++)
+	{
+		hr = m_pD3D11Device->CreateRenderTargetView(m_pTexture[i], NULL, &m_pRenderTargetView[i]); // get buffer through 2D texture
+		assert(hr == S_OK);
+	}
 
 	// Set the depth resource
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
@@ -113,8 +116,8 @@ void DeferredRenderer::ConstructWithWindow(HWND hWnd)
 
 	if (pDepthStencilBuffer)
 		pDepthStencilBuffer->Release();
-	if (pBackBuffer)
-		pBackBuffer->Release();
+	//if (pBackBuffer)
+	//	pBackBuffer->Release();
 	if (pRasterizerState)
 		pRasterizerState->Release();
 }
@@ -123,15 +126,15 @@ void DeferredRenderer::Render()
 {
 	// Cleaning screen
 	float ClearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
-	m_pD3D11Context->ClearRenderTargetView(m_pRenderTargetView[0], ClearColor);
+	for (int i = 0; i < RT_NUM; i++)
+	{
+		m_pD3D11Context->ClearRenderTargetView(m_pRenderTargetView[RT_NUM], ClearColor);
+	}
 	m_pD3D11Context->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	m_pD3D11Context->OMSetRenderTargets(1, &m_pRenderTargetView[0], m_pDepthStencilView);
+	m_pD3D11Context->OMSetRenderTargets(RT_NUM, m_pRenderTargetView, m_pDepthStencilView);
 
-	//for (auto itr = m_MeshComponentList.begin(); itr != m_MeshComponentList.end(); ++itr)
-	//	(*itr)->Draw();
-
-	RootSceneNode::getInstance()->RenderSubNodes();
+	RootSceneNode::GetInstance()->RenderSubNodes();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);

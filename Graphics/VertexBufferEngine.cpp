@@ -32,15 +32,19 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	{
 	case eVertexFormat::POSITION_TEXTURE:
 		FillVertexData_POSITION_TEXTURE(filename, iNumVerts, pVertexData);
-		stride = sizeof(Vertex1P1UV);
+		stride = sizeof(vertex1P1UV);
 		break;
 	case eVertexFormat::POSITION:
 		FillVertexData_POSITION(filename, iNumVerts, pVertexData);
-		stride = sizeof(Vertex1P1UV);
+		stride = sizeof(vertex1P1UV);
 		break;
 	case eVertexFormat::POSITION_NORMAL_TEXTURE:
 		FillVertexData_POSITION_NORMAL_TEXTURE(filename, iNumVerts, pVertexData);
 		stride = sizeof(Vertex1P1N1UV);
+		break;
+	case eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE:
+		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(filename, iNumVerts, pVertexData);
+		stride = sizeof(Vertex1P1N1T1UV);
 		break;
 	}
 
@@ -61,7 +65,6 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	// Create the vertex buffer
 	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
 	assert(hr == S_OK);
-
 
 	return pVertexBuffer;
 }
@@ -117,7 +120,7 @@ void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned 
 void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
+	pVertexData = new vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
@@ -125,7 +128,7 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 		fscanf(pFile, "%f", &x);
 		fscanf(pFile, "%f", &y);
 		fscanf(pFile, "%f", &z);
-		((Vertex1P1UV*) pVertexData)[i].m_pos = Vector3(x, y, z);
+		((vertex1P1UV*) pVertexData)[i].m_pos = Vector3(x, y, z);
 	}
 	fclose(pFile);
 
@@ -139,8 +142,8 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 		float x, y;
 		fscanf(pFile, "%f", &x);
 		fscanf(pFile, "%f", &y);
-		((Vertex1P1UV*) pVertexData)[i].m_UV[0] = x;
-		((Vertex1P1UV*) pVertexData)[i].m_UV[1] = y;
+		((vertex1P1UV*) pVertexData)[i].m_UV[0] = x;
+		((vertex1P1UV*) pVertexData)[i].m_UV[1] = y;
 	}
 	fclose(pFile);
 }
@@ -186,6 +189,65 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* file
 		fscanf(pFile, "%f", &y);
 		fscanf(pFile, "%f", &z);
 		((Vertex1P1N1UV*)pVertexData)[i].m_norm = Vector3(x, y, z);
+	}
+	fclose(pFile);
+}
+
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const char* filename, unsigned int vertsNum, void *& pVertexData)
+{
+	std::string sFileNmae(filename);
+	pVertexData = new Vertex1P1N1T1UV[vertsNum]; // TODO: needs change memory allocation
+
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f", &z);
+		((Vertex1P1N1T1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
+	}
+	fclose(pFile);
+
+	// Read texture coordinates
+	pFile = fopen(C_STR(sFileNmae, "_texture.bufa"), "r");
+	char c[256];
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		((Vertex1P1N1T1UV*)pVertexData)[i].m_UV[0] = x;
+		((Vertex1P1N1T1UV*)pVertexData)[i].m_UV[1] = y;
+	}
+	fclose(pFile);
+
+	// Read precalcuated normal
+	pFile = fopen(C_STR(sFileNmae, "_normal.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f", &z);
+		((Vertex1P1N1T1UV*)pVertexData)[i].m_norm = Vector3(x, y, z, 0);
+	}
+	fclose(pFile);
+
+	// Read precalculated tangent
+	pFile = fopen(C_STR(sFileNmae, "_tangent.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f", &x);
+		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f", &z);
+		((Vertex1P1N1T1UV*)pVertexData)[i].m_tangent = Vector3(x, y, z, 0);
 	}
 	fclose(pFile);
 }

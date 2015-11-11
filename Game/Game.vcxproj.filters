@@ -122,6 +122,12 @@
     <ClCompile Include="..\Object\ObjectLoader.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="..\Graphics\GBuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp">
+      <Filter>Graphics\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Object\Camera.h">
@@ -227,30 +233,60 @@
     <ClInclude Include="..\Object\objectloader.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\GBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\DirectionalLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Scene\SceneGraph.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\vertex1P1UV.hlsl">
+    <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\texture.hlsl">
+    <FxCompile Include="Shaders\VS_vertex1P1N1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\vertex1P.hlsl">
+    <FxCompile Include="Shaders\VS_vertex1P1D.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\vertex1P1D.hlsl">
+    <FxCompile Include="Shaders\VS_vertex1P.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\vertex1P1N1UV.hlsl">
+    <FxCompile Include="Shaders\PS_texture.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\red.hlsl">
+    <FxCompile Include="Shaders\PS_red.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\phong.hlsl">
+    <FxCompile Include="Shaders\PS_phong.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\diffuse.hlsl">
+    <FxCompile Include="Shaders\PS_diffuse.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_bump.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1UV_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_phong_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_texture_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

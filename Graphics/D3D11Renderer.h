@@ -7,11 +7,15 @@
 #include <vector>
 #include "../Math/simdmath.h"
 #include "MeshComponent.h"
+#include "GBuffer.h"
 
 #pragma comment (lib, "D3D11")
 
 typedef SIMDMatrix4 Matrix4;
 typedef SIMDVector3 Vector3;
+
+// Number of render target in G-Buffer
+const static unsigned int					RT_NUM = 2;
 
 // Singleton of the Direct3D 11 rendering device
 class D3D11Renderer
@@ -24,8 +28,12 @@ public:
 
 	void DestructandCleanUp()
 	{
-		if (m_pRenderTargetView)
-			m_pRenderTargetView->Release();
+		for (int i = 0; i < RT_NUM; i++)
+		{
+			if (m_pRenderTargetView[i])
+				m_pRenderTargetView[i]->Release();
+		}
+
 		if (m_pSwapChain)
 			m_pSwapChain->Release();
 		if (m_pD3D11Context)
@@ -57,10 +65,23 @@ public:
 	// Pointer to the double buffer
 	IDXGISwapChain*								m_pSwapChain;
 
-	// Pointer to the render target view
-	ID3D11RenderTargetView*						m_pRenderTargetView;
+	// Array of pointer to the render target view
+	ID3D11RenderTargetView*						m_pRenderTargetView[RT_NUM];
+
+	// Array of pointer to shader resources view
+	ID3D11ShaderResourceView*					m_pShaderResourceView[RT_NUM];
+
+	// Array of pointer to texture for deferred use
+	ID3D11Texture2D*							m_pTexture[RT_NUM];
+
+	//
+	ID3D11RenderTargetView*						m_pBackBufferRTView;
 
 	ID3D11DepthStencilView*						m_pDepthStencilView;
+
+	ID3D11DepthStencilState*					m_pDepthStencilState;
+
+	ID3D11DepthStencilState*					m_pOffDepthStencilState;
 
 private:
 	// Singleton instance
@@ -72,6 +93,8 @@ private:
 	Camera*										m_camera;
 
 	CameraType									m_currrent_camera_type;
+
+	GBuffer*									m_GBuffer;
 };
 
 #endif

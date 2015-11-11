@@ -13,6 +13,7 @@ enum eRenderType
 	OUTLINE,
 	STANDARD_MESH,
 	STANDARD_MESH_WITH_SHADOW,
+	STANDARD_MESH_WITH_BUMP,
 	V1P,
 	V1P1UV,
 	V1P1N,
@@ -27,6 +28,8 @@ public:
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
 
 	MeshData(const char* filename, int renderType);
+
+	MeshData() {};
 
 	~MeshData();
 

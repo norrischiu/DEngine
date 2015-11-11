@@ -11,21 +11,15 @@
 
 typedef SIMDMatrix4 Matrix4;
 typedef SIMDVector3 Vector3;
-// constructor
-// create a game object with physics component and mesh component
-
-// MeshComponent* meshObj = nullptr;
-// ColliableObject* collObj = new ColliableObject(..);
-// GameObject obj(Position/Transform, collObj, meshObj);
-// debug drawing if necessary
 
 class GameObject
 {
 public:
-	GameObject(){}
 
 	GameObject(Body* collObj, MeshComponent* meshObj, Collide* contact, const Matrix4& transform, const int& gameObjID);
-	
+
+	// Empty destructor (ownership at game world)
+	~GameObject() {}
 
 	void		Update(float deltaTime);
 
@@ -40,12 +34,26 @@ public:
 
 	void		setTransform(const Matrix4& transform);
 
-private:
+	void		Transform(const Matrix4& transform);
+
+	const Matrix4& GetTransform() 
+	{
+		return m_Transform;
+	};
+
+	// Hiereachical functionality
+	void AttachTo(unsigned int objectID);
+
 	MeshComponent*			m_pMeshObj;
+
+private:
+	//MeshComponent*		m_pMeshObj;
 	Body*					m_pBody;
 	Collide*				m_pContact;
 	SIMDMatrix4				m_Transform;
 	int						m_GameObjectID;
+	// Hiereachical functionality
+	int						m_parentID;
 };
 
 

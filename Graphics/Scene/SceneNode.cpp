@@ -1,4 +1,5 @@
 #include "SceneNode.h"
+#include "GameObject\GameWorld.h"
 
 void SceneNode::AttachSubNode(std::shared_ptr<SceneNode> subNode)
 {
@@ -26,7 +27,7 @@ void SceneNode::Render(bool flag)
 	{
 		m_mWorldTransform = m_mLocalTransform * m_pParent->m_mWorldTransform;
 	}
-	m_pMeshData->Render(m_mWorldTransform);
+	GameWorld::GetInstance()->GetGameObjectAt(m_iObjectID)->m_pMeshObj->Draw();
 }
 
 void SceneNode::RenderSubNodes()

@@ -17,9 +17,9 @@ public:
 	SceneNode() {};
 
 	// Overload constructor
-	SceneNode(const char* dbgname, MeshData* meshData)
+	SceneNode(const char* dbgname, unsigned int objectID)
 		: m_sDebugName(dbgname)
-		, m_pMeshData(meshData)
+		, m_iObjectID(objectID)
 		, m_bDirtyFlag(false)
 	{
 		m_mLocalTransform = Matrix4::Identity; // temp
@@ -61,10 +61,8 @@ private:
 	// Dirty flag to update transform
 	bool									m_bDirtyFlag;
 
-	// 
-	MeshData*								m_pMeshData;
-
-	// m_ActorId
+	// ID to game object
+	unsigned int							m_iObjectID;
 };
 
 #endif

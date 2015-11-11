@@ -7,13 +7,6 @@
 #include "D3D11Renderer.h" // Renderer instance
 #include "../Object/Camera.h"
 
-enum eRenderType
-{
-	OUTLINE,
-	STANDARD_MESH,
-	STANDARD_MESH_WITH_SHADOW,
-};
-
 class DMeshData
 {
 public:
@@ -106,9 +99,6 @@ private:
 
 	//
 	const char*								m_cFilename;
-
-	// TEMP: camera
-	Camera									m_camera;
 };
 
 #endif

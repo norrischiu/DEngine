@@ -109,7 +109,7 @@ bool ObjectLoader::LoadWaveFrontObject(const char* model_name, const float scale
 	}
 
 	std::vector<Vertex1P> tempVertices1P;
-	std::vector<Vertex1P1UV> tempVertices1P1UV;
+	std::vector<vertex1P1UV> tempVertices1P1UV;
 	std::vector<Vector3> tempVertices;
 	std::vector<Vector3> tempNormals;
 	std::vector<std::vector<float>> tempUVs;
@@ -180,7 +180,7 @@ bool ObjectLoader::LoadWaveFrontObject(const char* model_name, const float scale
 								tempUVs.at(uvIndex[i] - uv_offset - 1).at(0),
 								tempUVs.at(uvIndex[i] - uv_offset - 1).at(1)
 							};
-							tempVertices1P1UV.push_back(Vertex1P1UV{
+							tempVertices1P1UV.push_back(vertex1P1UV{
 								tempVertices.at(vertexIndex[i] - vertex_offset - 1),
 								uv
 							});

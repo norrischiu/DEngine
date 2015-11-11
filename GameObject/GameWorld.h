@@ -13,12 +13,25 @@ public:
 
 	static GameWorld*					GetInstance();
 
-	std::vector<GameObject*>&	GetGameObjectList();
+	void Update(float deltaTime);
+
+	void AddGameObject(GameObject* gameObj);
+	
+	GameObject* GetGameObjectAt(unsigned int index);
+
+	// Destructor
+	~GameWorld()
+	{
+		for (auto itr : m_GameObjectList)
+		{
+			delete itr;
+		}
+	}
 
 private:
 	static GameWorld*					m_pGameWorld;
 
-	std::vector<GameObject*>		m_GameObjectList;
+	std::vector<GameObject*>			m_GameObjectList;
 };
 
 

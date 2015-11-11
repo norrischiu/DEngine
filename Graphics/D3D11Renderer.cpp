@@ -1,7 +1,7 @@
 // D3D11Renderer.cpp
 
 #include "D3D11Renderer.h"
-#include "Scene\RootSceneNode.h"
+#include "Scene\SceneGraph.h"
 
 D3D11Renderer* D3D11Renderer::m_pInstance;
 
@@ -9,7 +9,7 @@ D3D11Renderer::D3D11Renderer() : m_currrent_camera_type(CameraType::MOVE_CAMERA)
 {
 	const float EPS = std::numeric_limits<float>::epsilon();
 	m_camera = new Camera[8]{
-		{ Vector3(0.0f, 0.0f, -10.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
+		{ Vector3(0.0f, 3.0f, -3.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
 		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//DEGREE_360
 		{ Vector3(0.0f, 15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//TOP
 		{ Vector3(0.0f, -15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//BOTTOM
@@ -68,11 +68,47 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 		D3D11_SDK_VERSION, &scData, &m_pSwapChain, &m_pD3D11Device, NULL, &m_pD3D11Context);
 	assert(hr == S_OK);
 
+	// Setup the render target texture description.
+	D3D11_TEXTURE2D_DESC RTTextureDesc;
+	RTTextureDesc.Width = 1024;
+	RTTextureDesc.Height = 768;
+	RTTextureDesc.MipLevels = 1;
+	RTTextureDesc.ArraySize = 1;
+	RTTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTTextureDesc.SampleDesc.Count = 1;
+	RTTextureDesc.SampleDesc.Quality = 0;
+	RTTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	RTTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	RTTextureDesc.CPUAccessFlags = 0;
+	RTTextureDesc.MiscFlags = 0;
+
+	// Setup the description of the render target view.
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = RTTextureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// Setup the description of the shader resource view.
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	shaderResourceViewDesc.Format = RTTextureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
 	// Create render target view
+	for (int i = 0; i < RT_NUM; i++)
+	{
+		hr = m_pD3D11Device->CreateTexture2D(&RTTextureDesc, 0, &m_pTexture[i]);
+		assert(hr == S_OK);
+		hr = m_pD3D11Device->CreateRenderTargetView(m_pTexture[i], &renderTargetViewDesc, &m_pRenderTargetView[i]); // get buffer through 2D texture
+		assert(hr == S_OK);
+		hr = m_pD3D11Device->CreateShaderResourceView(m_pTexture[i], &shaderResourceViewDesc, &m_pShaderResourceView[i]);
+		assert(hr == S_OK);
+	}
 	ID3D11Texture2D* pBackBuffer;
-	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	hr = m_pD3D11Device->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView); // get buffer through 2D texture
-	assert(hr == S_OK);
+	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	hr = m_pD3D11Device->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBufferRTView);
+
 
 	// Set the depth resource
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
@@ -91,12 +127,12 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
 
 	// Depth test parameters
-	dsDesc.DepthEnable = false; // true
+	dsDesc.DepthEnable = true; // true
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 	// Stencil test parameters
-	dsDesc.StencilEnable = false; // true
+	dsDesc.StencilEnable = true; // true
 	dsDesc.StencilReadMask = 0xFF;
 	dsDesc.StencilWriteMask = 0xFF;
 
@@ -113,9 +149,9 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create depth stencil state
-	ID3D11DepthStencilState * pDSState;
-	m_pD3D11Device->CreateDepthStencilState(&dsDesc, &pDSState);
-	m_pD3D11Context->OMSetDepthStencilState(pDSState, 1);
+	m_pD3D11Device->CreateDepthStencilState(&dsDesc, &m_pDepthStencilState);
+	dsDesc.DepthEnable = false;
+	m_pD3D11Device->CreateDepthStencilState(&dsDesc, &m_pOffDepthStencilState);
 
 	/*
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
@@ -156,6 +192,8 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 		pBackBuffer->Release();
 	if (pRasterizerState)
 		pRasterizerState->Release();
+
+	m_GBuffer = new GBuffer;
 }
 
 void D3D11Renderer::Update()
@@ -166,18 +204,21 @@ void D3D11Renderer::Render()
 {
 	// Cleaning screen
 	float ClearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
-	m_pD3D11Context->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
-	m_pD3D11Context->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	m_pD3D11Context->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
-
-	RootSceneNode::GetInstance()->RenderSubNodes();
-	
-	for (MeshComponent* MeshComponent : m_MeshComponentList) {
-		MeshComponent->Draw();
+	for (int i = 0; i < RT_NUM; i++)
+	{
+		m_pD3D11Context->ClearRenderTargetView(m_pRenderTargetView[i], ClearColor);
 	}
-	
+	m_pD3D11Context->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_pD3D11Context->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
+	// Render to texture
+	m_pD3D11Context->OMSetRenderTargets(RT_NUM, m_pRenderTargetView, m_pDepthStencilView);
+	SceneGraph::GetInstance()->Render();
+
+	// Render to screen
+	m_pD3D11Context->OMSetDepthStencilState(m_pOffDepthStencilState, 1);
+	m_pD3D11Context->OMSetRenderTargets(1, &m_pBackBufferRTView, NULL);
+	m_GBuffer->Render();
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);
 }
