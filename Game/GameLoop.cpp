@@ -19,11 +19,11 @@ GameLoop* GameLoop::m_pInstance;
 GameLoop::GameLoop()
 {
 	MeshComponent* dragonMC = new MeshComponent("dragon"); // temp
-	//MeshComponent* soldierMC = new MeshComponent("soldier"); // temp
+	MeshComponent* soldierMC = new MeshComponent("soldier"); // temp
 
-	GameObject* dragon = new GameObject(nullptr, dragonMC, nullptr, Matrix4::Identity, 0);
-	//GameObject* solider = new GameObject(nullptr, soldierMC, nullptr, Matrix4::Identity, 1);
-	//solider->AttachTo(0);
+	GameObject* dragon = new GameObject(nullptr, dragonMC, Matrix4::Identity, 0);
+	GameObject* solider = new GameObject(nullptr, soldierMC, Matrix4::Identity, 1);
+	solider->AttachTo(0);
 
 	// create a camera
 	//Debug debug;
@@ -34,12 +34,12 @@ GameLoop::GameLoop()
 
 void GameLoop::Update(float deltaTime)
 {
-	/*
+	
 	Matrix4 temp;
 	temp.CreateTranslation(SIMDVector3(0.01, 0, 0));
 	GameWorld::GetInstance()->GetGameObjectAt(0)->Transform(temp); //
 	GameWorld::GetInstance()->Update(deltaTime);
-	*/
+	
 }
 
 void GameLoop::SetCursorPosition(long x, long y) {

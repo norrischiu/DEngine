@@ -41,6 +41,6 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 	float4 R = normalize(2.0f * NdotL * normal - L);
 	float4 specular = pow(saturate(dot(R, L)), 0.5);
 
-	return (testLight.vAmbient * 9 + diffuse * 3) * rgb;
+	return (testLight.vAmbient * 9 + diffuse * 2.5) * rgb;
 	//return rgb + testLight.vAmbient + diffuse;
 }

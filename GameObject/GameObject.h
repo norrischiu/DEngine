@@ -16,7 +16,7 @@ class GameObject
 {
 public:
 
-	GameObject(Body* collObj, MeshComponent* meshObj, Collide* contact, const Matrix4& transform, const int& gameObjID);
+	GameObject(Body* collObj, MeshComponent* meshObj, const Matrix4& transform, const int& gameObjID);
 
 	// Empty destructor (ownership at game world)
 	~GameObject() {}
@@ -28,7 +28,6 @@ public:
 	Collide*	getContact();
 
 	Vector3		getTranslate();
-	void		objTranslate();
 
 	bool		isCollided(const GameObject* gameObj);
 
@@ -38,10 +37,15 @@ public:
 
 	const Matrix4& GetTransform() 
 	{
-		return m_Transform;
+		return m_mWorldTransform;
 	};
 
-	// Hiereachical functionality
+	const Matrix4& GetLocalTransform()
+	{
+		return m_mLocalTransform;
+	}
+
+	// hierarchical functionality
 	void AttachTo(unsigned int objectID);
 
 	MeshComponent*			m_pMeshObj;
@@ -50,9 +54,11 @@ private:
 	//MeshComponent*		m_pMeshObj;
 	Body*					m_pBody;
 	Collide*				m_pContact;
-	SIMDMatrix4				m_Transform;
-	int						m_GameObjectID;
-	// Hiereachical functionality
+	Matrix4					m_mWorldTransform;
+	Matrix4					m_mLocalTransform;
+	int						m_iGameObjectID;
+
+	// hierarchical functionality
 	int						m_parentID;
 };
 
