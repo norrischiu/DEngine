@@ -77,12 +77,6 @@
     <ClCompile Include="..\Graphics\MeshComponent.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\Graphics\Scene\RootSceneNode.cpp">
-      <Filter>Graphics\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Graphics\Scene\SceneNode.cpp">
-      <Filter>Graphics\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\Physics\cdAabb.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -182,15 +176,6 @@
     <ClInclude Include="..\Graphics\MeshComponent.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics\Scene\SceneNode.h">
-      <Filter>Graphics\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\Scene\RootSceneNode.h">
-      <Filter>Graphics\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\Scene\MeshSceneNode.h">
-      <Filter>Graphics\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\Light\PointLight.h">
       <Filter>Light</Filter>
     </ClInclude>
@@ -241,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="..\Graphics\Scene\SceneGraph.h">
       <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Material.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

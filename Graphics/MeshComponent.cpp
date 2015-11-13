@@ -6,7 +6,9 @@
 #include "Scene\SceneGraph.h"
 
 MeshComponent::MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eRenderType renderType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture) {
-	//m_pMeshData = new MeshData(pVertexData, iNumVerts, pIndexData, iNumIndices, dimension, renderType, typology, texture);
+	Matrix4* temp = new Matrix4(Matrix4::Identity);
+	m_pTransform = temp;
+	m_pMeshData = new MeshData(pVertexData, iNumVerts, pIndexData, iNumIndices, dimension, renderType, typology, texture);
 }
 
 MeshComponent::MeshComponent(const char* filename)

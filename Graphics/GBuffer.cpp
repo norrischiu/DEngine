@@ -21,7 +21,7 @@ GBuffer::GBuffer()
 	HRESULT hr;
 
 	//PointLight testLight(Vector3(0, 0, 10), 50, Vector4(0.01, 0.01, 0.01), Vector4(1, 1, 1), Vector4(1, 1, 1), 50);
-	DirectionalLight testLight(Vector3(0, 0, 3, 0), Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 50);
+	DirectionalLight testLight(Vector3(0, 0, 3, 0), Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 5);
 
 	PS_DEFERRED_CBUFFER psConstData;
 	psConstData.testLight = testLight;
@@ -138,6 +138,7 @@ GBuffer::GBuffer()
 void GBuffer::Render()
 {
 	// Binding
+	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetInputLayout(m_pInputLayout);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShader(m_pVS, 0, 0);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShader(m_pPS, 0, 0);

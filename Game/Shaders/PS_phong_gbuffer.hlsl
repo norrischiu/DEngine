@@ -35,12 +35,13 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 		return float4(0, 0, 1, 1);
 	}
 
+	float4 ambient = testLight.vAmbient * testLight.fIntensity;
 	float4 L = -testLight.vDir;
 	float NdotL = saturate(dot(normal, L));
 	float4 diffuse = saturate(testLight.vDiffuse * NdotL);
 	float4 R = normalize(2.0f * NdotL * normal - L);
-	float4 specular = pow(saturate(dot(R, L)), 0.5);
+	float4 specular = pow(saturate(dot(R, L)), 1);
 
-	return (testLight.vAmbient * 9 + diffuse * 2.5) * rgb;
+	return (ambient + diffuse * 5) * rgb;
 	//return rgb + testLight.vAmbient + diffuse;
 }

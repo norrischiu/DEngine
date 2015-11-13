@@ -48,10 +48,8 @@ public:
 	// hierarchical functionality
 	void AttachTo(unsigned int objectID);
 
-	MeshComponent*			m_pMeshObj;
-
 private:
-	//MeshComponent*		m_pMeshObj;
+	MeshComponent*			m_pMeshObj;
 	Body*					m_pBody;
 	Collide*				m_pContact;
 	Matrix4					m_mWorldTransform;

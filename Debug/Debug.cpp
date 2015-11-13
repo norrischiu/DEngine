@@ -1,6 +1,7 @@
 #include "Debug.h"
 #include <d2d1.h>
 #include <dwrite.h>
+#include "Graphics\Scene\SceneGraph.h"
 
 #pragma comment (lib, "D2D1")
 #pragma comment (lib, "Dwrite")
@@ -23,7 +24,7 @@ MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_
 	);
 
 	MeshComponent* Meshcomponent = new MeshComponent(vertices, 2, pIndices, 2, dimension, eRenderType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(Meshcomponent);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
@@ -79,8 +80,8 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 		}
 	}
 
-	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eRenderType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(Meshcomponent);
+	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eRenderType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
@@ -148,7 +149,7 @@ MeshComponent* Debug::draw_pyramid(const Vector3& dimension, const int slice, co
 	}
 	
 	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eRenderType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(Meshcomponent);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
@@ -212,7 +213,7 @@ MeshComponent* Debug::draw_prism(const Vector3& dimension, const int slice) {
 	}
 
 	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eRenderType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(Meshcomponent);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }

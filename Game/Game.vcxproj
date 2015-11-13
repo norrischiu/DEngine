@@ -148,9 +148,7 @@
     <ClCompile Include="..\Graphics\MeshData.cpp" />
     <ClCompile Include="..\Graphics\MeshComponent.cpp" />
     <ClCompile Include="..\Graphics\MeshManager.cpp" />
-    <ClCompile Include="..\Graphics\Scene\RootSceneNode.cpp" />
     <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp" />
-    <ClCompile Include="..\Graphics\Scene\SceneNode.cpp" />
     <ClCompile Include="..\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\Graphics\VertexBufferEngine.cpp" />
@@ -177,13 +175,11 @@
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
     <ClInclude Include="..\Graphics\GBuffer.h" />
     <ClInclude Include="..\Graphics\IndexBufferEngine.h" />
+    <ClInclude Include="..\Graphics\Material.h" />
     <ClInclude Include="..\Graphics\MeshData.h" />
     <ClInclude Include="..\Graphics\MeshComponent.h" />
     <ClInclude Include="..\Graphics\MeshManager.h" />
-    <ClInclude Include="..\Graphics\Scene\MeshSceneNode.h" />
-    <ClInclude Include="..\Graphics\Scene\RootSceneNode.h" />
     <ClInclude Include="..\Graphics\Scene\SceneGraph.h" />
-    <ClInclude Include="..\Graphics\Scene\SceneNode.h" />
     <ClInclude Include="..\Graphics\ShaderManager.h" />
     <ClInclude Include="..\Graphics\TextureManager.h" />
     <ClInclude Include="..\Graphics\VertexBufferEngine.h" />

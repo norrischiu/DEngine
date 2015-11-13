@@ -382,6 +382,12 @@ public:
 	{
 		__m128 temp = _mm_set_ss(z);
 		_data = _mm_insert_ps(_data, temp, 0x20);
+	}	
+	
+	inline void SetW(float w)
+	{
+		__m128 temp = _mm_set_ss(w);
+		_data = _mm_insert_ps(_data, temp, 0x30);
 	}
 
 	inline float GetX() const

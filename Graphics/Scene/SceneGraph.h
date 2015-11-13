@@ -19,6 +19,8 @@ public:
 
 	void AddComponent(MeshComponent* meshComponent);
 
+	void ADD_DEBUG_DRAWING(MeshComponent* meshComponent);
+
 	// Destructor
 	~SceneGraph()
 	{
@@ -35,6 +37,9 @@ private:
 
 	// Spatial data structure to store all render component
 	std::vector<MeshComponent*>						m_tree; // temp
+
+	// Temp storage for debug drawing
+	std::vector<MeshComponent*>						DEBUG_DRAWING_TREE; // temp
 
 };
 

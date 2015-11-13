@@ -14,10 +14,9 @@ enum eRenderType
 	STANDARD_MESH,
 	STANDARD_MESH_WITH_SHADOW,
 	STANDARD_MESH_WITH_BUMP,
+	CUSTOM_SHADERS,
 	V1P,
-	V1P1UV,
-	V1P1N,
-	V1P1N1UV
+	V1P1UV
 };
 
 class MeshData
@@ -27,7 +26,7 @@ public:
 	// Overload default constructor
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
 
-	MeshData(const char* filename, int renderType);
+	MeshData(const char* filename, int renderType, const char* VSFilename = nullptr, const char* PSFilename = nullptr);
 
 	MeshData() {};
 
@@ -140,9 +139,6 @@ private:
 
 	// Number of indics
 	unsigned int							m_iNumIndics;
-
-	//Vertex offset
-	unsigned int							m_vertexOffset;
  
 	//Start Index Location
 	unsigned int							m_iStartIndexLocation;
