@@ -1,4 +1,4 @@
-Texture2D shaderTexture[2];
+Texture2D shaderTexture[3];
 SamplerState SampleType;
 
 // cbuffer

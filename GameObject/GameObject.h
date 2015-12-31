@@ -8,10 +8,6 @@
 #include "..\Physics\cdBody.h"
 #include "GameWorld.h"
 
-
-typedef SIMDMatrix4 Matrix4;
-typedef SIMDVector3 Vector3;
-
 class GameObject
 {
 public:

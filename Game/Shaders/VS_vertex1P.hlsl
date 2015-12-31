@@ -2,7 +2,7 @@
 cbuffer VS_CONSTANT_BUFFER
 {
 	matrix WorldTransform;
-	matrix Transform;
+	matrix WVPTransform;
 };
 
 // input
@@ -22,7 +22,7 @@ VS_OUTPUT VS(VS_INPUT IN)
 {
 	VS_OUTPUT OUT;
 
-	OUT.vPos = mul(IN.vPos, Transform);
+	OUT.vPos = mul(IN.vPos, WVPTransform);
 	 
     return OUT;
 }

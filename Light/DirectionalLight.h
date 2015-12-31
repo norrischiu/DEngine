@@ -1,10 +1,7 @@
 // DirectionalLight.h:
 
 #include <DirectXMath.h>
-#include "../Math/simdmath.h"
-
-typedef SIMDVector3 Vector3;
-typedef SIMDVector3 Vector4;
+#include "Math/simdmath.h"
 
 class DirectionalLight
 {

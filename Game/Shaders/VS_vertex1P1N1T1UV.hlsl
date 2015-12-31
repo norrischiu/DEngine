@@ -2,7 +2,7 @@
 cbuffer VS_CONSTANT_BUFFER
 {
 	matrix WorldTransform;
-	matrix Transform;
+	matrix WVPTransform;
 };
 
 // input
@@ -29,7 +29,7 @@ VS_OUTPUT VS(VS_INPUT IN)
 {
 	VS_OUTPUT OUT;
 
-	OUT.vPos = mul(IN.vPos, Transform);
+	OUT.vPos = mul(IN.vPos, WVPTransform);
 	OUT.vNormal = mul(IN.vNormal, WorldTransform);
 	OUT.vTangent = mul(IN.vTangent, WorldTransform);
 	float3 binormal = normalize(cross(IN.vNormal.xyz, IN.vTangent.xyz));

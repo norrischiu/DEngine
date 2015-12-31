@@ -85,7 +85,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Debug text
 			std::stringstream str;
-			str << "FPS: " << 1.0f / elaspedTime;
+			str << "FPS: " << 1.0 / elaspedTime;
 			SetWindowText(hWnd, str.str().c_str());
 			elaspedTime = 0.0f;
 		}

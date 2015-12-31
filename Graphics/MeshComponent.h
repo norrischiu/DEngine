@@ -7,9 +7,6 @@
 #include "VertexFormat.h"
 #include "Scene\MeshSceneNode.h"
 
-typedef SIMDVector3 Vector3;
-typedef SIMDQuaternion Quaternion;
-
 class MeshComponent
 {
 public:

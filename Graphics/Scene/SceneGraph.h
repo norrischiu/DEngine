@@ -10,6 +10,8 @@ public:
 
 	void Render();
 
+	void RENDER_DEBUG_DRAWING();
+
 	static SceneGraph* GetInstance()
 	{
 		if (!m_pInstance)

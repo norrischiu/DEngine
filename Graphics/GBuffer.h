@@ -11,10 +11,12 @@ public:
 	GBuffer();
 
 	void Render();
-	
+
 private:
 	
-	static const unsigned int					RT_NUM = 2;
+	void LightStencilCheck();
+
+	static const unsigned int					RT_NUM = 3;
 
 	// Pointer to vertex buffer
 	ID3D11Buffer*								m_pVertexBuffer;
@@ -24,6 +26,7 @@ private:
 
 	// Pointer to complied to vertex shader
 	ID3D11VertexShader*							m_pVS;
+	ID3D11VertexShader*							m_pLightVS;
 
 	// Pointer to complied to pixel shader
 	ID3D11PixelShader*							m_pPS;
@@ -38,13 +41,16 @@ private:
 	ID3D11SamplerState*							m_pSamplerState;
 
 	// Pointer to constant buffer
-	ID3D11Buffer*								m_pConstantBuffer;
+	ID3D11Buffer*								m_pVSConstantBuffer;
 
 	// Pointer to pixel shader constant buffer
 	ID3D11Buffer*								m_pPSConstantBuffer;
 
 	// Number of indics
 	unsigned int								m_iNumIndics;
+
+	// Depth stencil state for marking stencil pixels
+	ID3D11DepthStencilState*					m_pDSState;
 		
 };
 

@@ -1,10 +1,10 @@
 // PointLight.h:
+#ifndef POINTLIGHT_H_
+#define POINTLIGHT_H_
 
-#include <DirectXMath.h>
-#include "../Math/simdmath.h"
-
-typedef SIMDVector3 Vector3;
-typedef SIMDVector3 Vector4;
+#include "Math/simdmath.h"
+#include "LightManager.h"
+#include <cmath>
 
 class PointLight
 {
@@ -20,7 +20,26 @@ public:
 		, m_vDiffuse(diffuse)
 		, m_vSpecular(specular)
 		, m_fIntesity(intensity)
-	{};
+	{
+		//m_fRadius = std::sqrt(256.0f * intensity);
+		LightManager::GetInstance()->AddLight(this);
+	};
+
+	// Return radius, should be calculated with attenuation later
+	float GetRadius()
+	{
+		return m_fRadius;
+	}
+
+	Vector3 GetPosition()
+	{
+		return m_vPos;
+	}
+
+	void SetPosition(Vector3 pos)
+	{
+		m_vPos = pos;
+	}
 
 private:
 	Vector3								m_vPos;
@@ -30,3 +49,5 @@ private:
 	float								m_fRadius;
 	float								m_fIntesity;
 };
+
+#endif

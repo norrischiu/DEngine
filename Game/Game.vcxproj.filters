@@ -122,6 +122,9 @@
     <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp">
       <Filter>Graphics\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Light\LightManager.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Object\Camera.h">
@@ -230,6 +233,13 @@
     <ClInclude Include="..\Graphics\Material.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\Light\LightManager.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

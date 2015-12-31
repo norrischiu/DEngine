@@ -2,13 +2,11 @@
 #ifndef CDCOLLIDE_H
 #define CDCOLLIDE_H
 
-#include "../Math/simdmath.h"
+#include "Math/simdmath.h"
 #include "cdObject.h"
 #include "cdBody.h"
 
 class Body;
-typedef SIMDVector3 Vector3;
-typedef SIMDMatrix4 Matrix4;
 
 struct Response
 {

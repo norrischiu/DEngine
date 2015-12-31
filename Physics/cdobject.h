@@ -3,11 +3,9 @@
 #define CDOBJECT_H
 
 #include "cdBody.h"
-#include "..\Math\simdmath.h"
+#include "Math\simdmath.h"
 #include "..\Physics\cdCollisionWorld.h"
 
-typedef SIMDVector3 Vector3;
-typedef SIMDMatrix4 Matrix4;
 
 class CollidableObject
 {

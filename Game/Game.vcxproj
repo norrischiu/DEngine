@@ -152,6 +152,7 @@
     <ClCompile Include="..\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\Graphics\VertexBufferEngine.cpp" />
+    <ClCompile Include="..\Light\LightManager.cpp" />
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
     <ClCompile Include="..\Object\Camera.cpp" />
@@ -185,7 +186,9 @@
     <ClInclude Include="..\Graphics\VertexBufferEngine.h" />
     <ClInclude Include="..\Graphics\VertexFormat.h" />
     <ClInclude Include="..\Light\DirectionalLight.h" />
+    <ClInclude Include="..\Light\LightManager.h" />
     <ClInclude Include="..\Light\PointLight.h" />
+    <ClInclude Include="..\Light\SpotLight.h" />
     <ClInclude Include="..\Math\simdmath.h" />
     <ClInclude Include="..\Memory\Handle.h" />
     <ClInclude Include="..\Memory\MemoryManager.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="..\System\FileSystem.h" />
     <ClInclude Include="..\Timer\Timer.h" />
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="GlobalInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">

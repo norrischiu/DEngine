@@ -1,22 +1,20 @@
+// simdmath.h: Maths Libraray, defining vector, matrix and quaternion, with Intel SSE4.1 extensions and MSVC++
 #ifndef SIMDMATH_H_
 #define SIMDMATH_H_
-
-/** Maths Libraray, defining vector, matrix and quaternion, with Intel SSE4.1 extensions and MSVC++ */
 
 #include <xmmintrin.h> // intrinics
 #include <smmintrin.h> // intrinics
 #include <math.h> // sin cos
 #include <DirectXMath.h> // DirectX helper methods (temp)
-#include "..\Memory\MemoryManager.h"
-
-#define PI 3.1415926535f
+#include "Memory\MemoryManager.h"
+#include "Game\GlobalInclude.h"
 
 // 4x4 Matrix with SSE
 __declspec(align(16)) class SIMDMatrix4
 {
 private:
 	__m128 _rows[4];
-	// column-major matrix
+	
 public:
 	friend class SIMDVector3;
 
@@ -279,12 +277,13 @@ public:
 	// Set a rotation transformation given a quaternion
 	// void CreateRotationFromQuaternion(const SIMDQuaternion& q);
 
-	// Set a look-at matrix
-	// vUp MUST be normalized or bad things will happen
+	// Set a look-at matrix (vUp MUST be normalized)
 	void CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp);
+	static SIMDMatrix4& LookAtMatrix(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp);
 
 	// Set a perspective FOV matrix
 	void CreatePerspectiveFOV(float fFOVy, float fAspectRatio, float fNear, float fFar);
+	static SIMDMatrix4& PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar);
 
 	//Set a orthographic projection matrix // temp
 	void CreateOrthographicProj(unsigned int width, unsigned int height, float zNear, float zFar)
@@ -296,6 +295,7 @@ public:
 		_rows[3] = result.r[3];
 		_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
 	}
+	static SIMDMatrix4& OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
 
 	// Inverts the matrix, store the result back to this
 	void Invert();
@@ -310,7 +310,7 @@ private:
 	// _data.m128_f32[1] = y
 	// _data.m128_f32[2] = z
 	// _data.m128_f32[3] = w
-	// row-vector
+	// right side at multiplication
 public:
 	friend class SIMDMatrix4;
 	friend class SIMDQuaternion;
@@ -444,7 +444,7 @@ public:
 	}
 
 	// Overload - operator
-	inline SIMDVector3 operator-(const SIMDVector3& other)
+	inline SIMDVector3 operator-(const SIMDVector3& other) const
 	{
 		SIMDVector3 result;
 		result._data = _mm_sub_ps(_data, other._data);
@@ -505,8 +505,15 @@ public:
 		return sqrtf(length.m128_f32[3]);
 	}
 
+	// Return the normal of a SIMDVector3
+	inline friend SIMDVector3 Normal(const SIMDVector3& vec)
+	{
+		SIMDVector3 result = vec;
+		return result.Normalize();
+	}
+
 	// Return the cross product as SIMDVector3 of two vectors
-	inline friend SIMDVector3 CrossProduct(const SIMDVector3& a, const SIMDVector3& b)
+	inline friend SIMDVector3 Cross(const SIMDVector3& a, const SIMDVector3& b)
 	{
 		__m128 te = _mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1));
 		__m128 result = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1)), _mm_shuffle_ps(b. _data, b._data, _MM_SHUFFLE(3, 1, 0, 2)));
@@ -676,5 +683,10 @@ public:
 		_data = _mm_mul_ps(_data, length);
 	}
 };
+
+typedef SIMDVector3 Vector3;
+typedef SIMDVector3 Vector4;
+typedef SIMDMatrix4 Matrix4;
+typedef SIMDQuaternion Quaternion;
 
 #endif

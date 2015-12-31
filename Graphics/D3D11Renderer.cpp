@@ -9,7 +9,7 @@ D3D11Renderer::D3D11Renderer() : m_currrent_camera_type(CameraType::MOVE_CAMERA)
 {
 	const float EPS = std::numeric_limits<float>::epsilon();
 	m_camera = new Camera[8]{
-		{ Vector3(0.0f, 3.0f, -3.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
+		{ Vector3(0.0f, 3.0f, -5.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
 		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//DEGREE_360
 		{ Vector3(0.0f, 15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//TOP
 		{ Vector3(0.0f, -15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//BOTTOM
@@ -109,60 +109,68 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	hr = m_pD3D11Device->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBufferRTView);
 
-
 	// Set the depth resource
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = 1024;
-	depthStencilDesc.Height = 768;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
+	D3D11_TEXTURE2D_DESC depthStencilTexDesc;
+	depthStencilTexDesc.Width = 1024;
+	depthStencilTexDesc.Height = 768;
+	depthStencilTexDesc.MipLevels = 1;
+	depthStencilTexDesc.ArraySize = 1;
+	depthStencilTexDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	depthStencilTexDesc.SampleDesc.Count = 1;
+	depthStencilTexDesc.SampleDesc.Quality = 0;
+	depthStencilTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	depthStencilTexDesc.CPUAccessFlags = 0;
+	depthStencilTexDesc.MiscFlags = 0;
 
-	D3D11_DEPTH_STENCIL_DESC dsDesc;
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 
 	// Depth test parameters
-	dsDesc.DepthEnable = true; // true
-	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilDesc.DepthEnable = true; // true
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
 	// Stencil test parameters
-	dsDesc.StencilEnable = true; // true
-	dsDesc.StencilReadMask = 0xFF;
-	dsDesc.StencilWriteMask = 0xFF;
-
-	// Stencil operations if pixel is front-facing
-	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-	// Stencil operations if pixel is back-facing
-	dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.StencilEnable = false;
+	depthStencilDesc.StencilReadMask = 0;
+	depthStencilDesc.StencilWriteMask = 0;
 
 	// Create depth stencil state
-	m_pD3D11Device->CreateDepthStencilState(&dsDesc, &m_pDepthStencilState);
-	dsDesc.DepthEnable = false;
-	m_pD3D11Device->CreateDepthStencilState(&dsDesc, &m_pOffDepthStencilState);
+	m_pD3D11Device->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilState);
+	depthStencilDesc.DepthEnable = false;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.StencilEnable = true;
+	depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	depthStencilDesc.StencilWriteMask = 0x00;
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	hr = m_pD3D11Device->CreateDepthStencilState(&depthStencilDesc, &m_pOffDepthStencilState);
+	assert(hr == S_OK);
+	depthStencilDesc.StencilEnable = false;
+	hr = m_pD3D11Device->CreateDepthStencilState(&depthStencilDesc, &m_pOffDepthOffStencilState);
+	assert(hr == S_OK);
 
-	/*
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	descDSV.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0;
-	*/
-
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	depthStencilViewDesc.Flags = 0;
+	
 	ID3D11Texture2D* pDepthStencilBuffer;
-	m_pD3D11Device->CreateTexture2D(&depthStencilDesc, 0, &pDepthStencilBuffer);
-	hr = m_pD3D11Device->CreateDepthStencilView(pDepthStencilBuffer, NULL, &m_pDepthStencilView);
+	hr = m_pD3D11Device->CreateTexture2D(&depthStencilTexDesc, 0, &pDepthStencilBuffer);
+	assert(hr == S_OK);
+	hr = m_pD3D11Device->CreateDepthStencilView(pDepthStencilBuffer, &depthStencilViewDesc, &m_pDepthStencilView);
+	depthStencilViewDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH | D3D11_DSV_READ_ONLY_STENCIL;
+	hr = m_pD3D11Device->CreateDepthStencilView(pDepthStencilBuffer, &depthStencilViewDesc, &m_pDepthStencilReadOnlyView);
+	assert(hr == S_OK);
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	hr = m_pD3D11Device->CreateShaderResourceView(pDepthStencilBuffer, &shaderResourceViewDesc, &m_pShaderResourceView[2]);
 	assert(hr == S_OK);
 
 	// Set rasterizer state
@@ -171,18 +179,23 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_BACK;
 
-	ID3D11RasterizerState* pRasterizerState;
-	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
+	hr = m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &m_pCullBackRSState);
 	assert(hr == S_OK);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(pRasterizerState);
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	hr = m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &m_pCullNoneRSState);
+	assert(hr == S_OK);
+	rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	hr = m_pD3D11Device->CreateRasterizerState(&rasterizerDesc, &m_pFillWireRSState);
+	assert(hr == S_OK);
 
 	// Set viewport
 	D3D11_VIEWPORT vp;
 	ZeroMemory(&vp, sizeof(vp));
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	vp.Height = 768;
-	vp.Width = 1024;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	vp.Height = 768.0f;
+	vp.Width = 1024.0f;
+	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	m_pD3D11Context->RSSetViewports(1, &vp);
 
@@ -190,10 +203,22 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 		pDepthStencilBuffer->Release();
 	if (pBackBuffer)
 		pBackBuffer->Release();
-	if (pRasterizerState)
-		pRasterizerState->Release();
 
 	m_GBuffer = new GBuffer;
+
+	D3D11_BLEND_DESC blendStateDesc;
+	blendStateDesc.AlphaToCoverageEnable = TRUE;
+	blendStateDesc.IndependentBlendEnable = FALSE;
+	blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_COLOR;
+	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_COLOR;
+	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	hr = m_pD3D11Device->CreateBlendState(&blendStateDesc, &m_pBlendState);
+	assert(hr == S_OK);
 }
 
 void D3D11Renderer::Update()
@@ -203,22 +228,31 @@ void D3D11Renderer::Update()
 void D3D11Renderer::Render()
 {
 	// Cleaning screen
-	float ClearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	for (int i = 0; i < RT_NUM; i++)
 	{
 		m_pD3D11Context->ClearRenderTargetView(m_pRenderTargetView[i], ClearColor);
 	}
+	m_pD3D11Context->ClearRenderTargetView(m_pBackBufferRTView, ClearColor);
 	m_pD3D11Context->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	m_pD3D11Context->OMSetDepthStencilState(m_pDepthStencilState, 1);
+	m_pD3D11Context->RSSetState(m_pCullBackRSState);
+	m_pD3D11Context->OMSetBlendState(nullptr, NULL, 0xFFFFFF);
 
 	// Render to texture
-	m_pD3D11Context->OMSetRenderTargets(RT_NUM, m_pRenderTargetView, m_pDepthStencilView);
+	m_pD3D11Context->OMSetRenderTargets(RT_NUM-1, m_pRenderTargetView, m_pDepthStencilView);
 	SceneGraph::GetInstance()->Render();
+	ID3D11ShaderResourceView* null[] = { nullptr, nullptr };
+	m_pD3D11Context->PSSetShaderResources(0, 2, null);
 
 	// Render to screen
-	m_pD3D11Context->OMSetDepthStencilState(m_pOffDepthStencilState, 1);
-	m_pD3D11Context->OMSetRenderTargets(1, &m_pBackBufferRTView, NULL);
+	m_pD3D11Context->OMSetRenderTargets(0, 0, m_pDepthStencilView);
 	m_GBuffer->Render();
+
+#ifdef _DEBUG
+	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
+#endif
+
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);
 }

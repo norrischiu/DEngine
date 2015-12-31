@@ -11,11 +11,8 @@
 
 #pragma comment (lib, "D3D11")
 
-typedef SIMDMatrix4 Matrix4;
-typedef SIMDVector3 Vector3;
-
 // Number of render target in G-Buffer
-const static unsigned int					RT_NUM = 2;
+const static unsigned int					RT_NUM = 3;
 
 // Singleton of the Direct3D 11 rendering device
 class D3D11Renderer
@@ -78,10 +75,21 @@ public:
 	ID3D11RenderTargetView*						m_pBackBufferRTView;
 
 	ID3D11DepthStencilView*						m_pDepthStencilView;
+	ID3D11DepthStencilView*						m_pDepthStencilReadOnlyView;
 
 	ID3D11DepthStencilState*					m_pDepthStencilState;
 
 	ID3D11DepthStencilState*					m_pOffDepthStencilState;
+
+	ID3D11DepthStencilState*					m_pOffDepthOffStencilState;
+
+	ID3D11BlendState*							m_pBlendState;
+
+	ID3D11RasterizerState*						m_pCullBackRSState;
+
+	ID3D11RasterizerState*						m_pCullNoneRSState;
+
+	ID3D11RasterizerState*						m_pFillWireRSState;
 
 private:
 	// Singleton instance

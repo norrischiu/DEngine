@@ -4,10 +4,7 @@
 #define CDBODY_H
 
 #include "cdCollide.h"
-#include "../Math/simdmath.h"
-
-typedef SIMDVector3 Vector3;
-typedef SIMDMatrix4 Matrix4;
+#include "Math/simdmath.h"
 
 enum
 {

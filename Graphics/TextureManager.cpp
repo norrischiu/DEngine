@@ -34,10 +34,10 @@ void* TextureManager::GetSamplerState(int samplerStateType)
 	switch (samplerStateType)
 	{
 		case eSamplerState::NONE:
-			return nullptr;
+			return m_pSamplerState[0];
 			break;
 		case eSamplerState::LINEAR_MIPMAP_MAX_LOD:
-			return m_pSamplerState;
+			return m_pSamplerState[1];
 	}
 }
 

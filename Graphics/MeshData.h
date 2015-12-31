@@ -4,6 +4,7 @@
 #define MESHDATA_H
 
 #include <d3d11.h>
+#include "Math/simdmath.h"
 #include "../Object/Camera.h"
 #include "VertexFormat.h"
 #include <vector>
@@ -111,7 +112,7 @@ private:
 	ID3D11Buffer*							m_pIndexBuffer;
 
 	// Pointer to constant buffer
-	ID3D11Buffer*							g_pConstantBuffer;
+	ID3D11Buffer*							m_pConstantBuffer;
 
 	// Pointer to input layout supply to IA
 	ID3D11InputLayout*						m_pInputLayout;

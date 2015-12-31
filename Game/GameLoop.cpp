@@ -1,35 +1,50 @@
 #include "GameLoop.h"
-#include "../Graphics/Scene/MeshSceneNode.h"
-#include "../Graphics/Scene/RootSceneNode.h"
-#include "../Graphics/MeshComponent.h"
-#include "..\Debug\Debug.h"
-#include "..\Font\Font.h"
-#include "..\Object\ObjectLoader.h"
-#include "..\Physics\cdSphere.h"
-#include "..\Physics\cdObject.h"
-#include "..\Physics\cdAabb.h"
-#include "..\GameObject\GameObject.h"
-#include "..\GameObject\GameWorld.h"
+#include "Graphics/Scene/MeshSceneNode.h"
+#include "Graphics/Scene/RootSceneNode.h"
+#include "Graphics/MeshComponent.h"
+#include "Debug\Debug.h"
+#include "Font\Font.h"
+#include "Object\ObjectLoader.h"
+#include "Physics\cdSphere.h"
+#include "Physics\cdObject.h"
+#include "Physics\cdAabb.h"
+#include "GameObject\GameObject.h"
+#include "GameObject\GameWorld.h"
+#include "Light\PointLight.h"
 
 long GameLoop::cursor_pos[2] = { 0, 0 };
-typedef SIMDVector3 Vector3;
 
 GameLoop* GameLoop::m_pInstance;
 
 GameLoop::GameLoop()
 {
-	//MeshComponent* dragonMC = new MeshComponent("dragon"); // temp
-	MeshComponent* soldierMC = new MeshComponent("soldier"); // temp
+	MeshComponent* dragonMC = new MeshComponent("dragon"); // temp
+	//MeshComponent* face4MC = new MeshComponent("face4"); // temp
 
-	//GameObject* dragon = new GameObject(nullptr, dragonMC, Matrix4::Identity, 0);
-	GameObject* solider = new GameObject(nullptr, soldierMC, Matrix4::Identity, 0);
-	//solider->AttachTo(0);
+	GameObject* dragon = new GameObject(nullptr, dragonMC, Matrix4::Identity, 0);
+	//GameObject* face4 = new GameObject(nullptr, face4MC, Matrix4::Identity, 0);
+	//face4->AttachTo(0);
 
-	// create a camera
+	// create a light
+	PointLight* testPointLight = new PointLight(Vector3(0.0f, 4.0f, 0.5f), 10, Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 1);
+	//PointLight* testPointLight2 = new PointLight(Vector3(0.0f, 4.0f, 3.0f), 2, Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 1);
+	
+	//Camera* cam = new Camera(Vector3(0.0f, 170.0f / 100.0f, -170.0f / 100.0f), Vector3(0.0f, 170.0f / 100.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	
 	Debug debug;
-	MeshComponent* m = debug.draw_ellipsoid(Vector3(2.0f, 2.0f, 2.0f), Primitives::CONE, 30);
-	//m->m_pMeshData->Transform(0.5f, Vector3(0, 0, 0), Vector3(0, 0, 0));
-	//
+	//MeshComponent* m = debug.draw_prism(Vector3(1.0f, 1.0f, 1.0f), Primitives::RECTANGULAR_PRISM);
+	Matrix4 scale;
+	//scale.CreateScale(testPointLight2->GetRadius());
+	Matrix4 trans;
+	//trans.CreateTranslation(testPointLight2->GetPosition());
+	//GameObject* lightSphere2 = new GameObject(nullptr, m, trans * scale, 1);
+	MeshComponent* m2 = debug.draw_prism(Vector3(1.0f, 1.0f, 1.0f), Primitives::RECTANGULAR_PRISM);
+	scale.CreateScale(testPointLight->GetRadius());
+	trans.CreateTranslation(testPointLight->GetPosition());
+	GameObject* lightbox = new GameObject(nullptr, m2, trans * scale, 1);
+	MeshComponent* m3 = debug.draw_ellipsoid(Vector3(0.1f, 0.1f, 0.1f), Primitives::SPHERE, 5);
+	trans.CreateTranslation(testPointLight->GetPosition());
+	GameObject* lightSphere = new GameObject(nullptr, m3, trans, 2);
 }
 
 void GameLoop::Update(float deltaTime)

@@ -1,3 +1,6 @@
+#ifndef DEBUG_H_
+#define DEBUG_H_
+
 #include "D3D11Renderer.h"
 #include "VertexFormat.h"
 
@@ -29,4 +32,12 @@ class Debug {
 		MeshComponent* draw_prism(const Vector3& dimension, const int stack);
 		MeshComponent* draw_ellipsoid(const Vector3& dimension, const int _slice_, const int stack);
 		MeshComponent* draw_line(const Vector3& start_vertex, const Vector3& end_vertex);
+
+		// temp
+		Vertex1P* CreateUnitSphereVertex();
+		unsigned int* CreateUnitSphereIndex();
+
+		~Debug() {};
 };
+
+#endif

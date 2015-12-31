@@ -2,9 +2,7 @@
 #ifndef VERTEXFORMAT_H_
 #define VERTEXFORMAT_H_
 
-#include "../Math/simdmath.h"
-
-typedef SIMDVector3 Vector3;
+#include "Math/simdmath.h"
 
 enum eVertexFormat
 {
