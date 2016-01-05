@@ -457,6 +457,15 @@ public:
 		_data = _mm_sub_ps(_data, other._data);
 	}
 
+	// Return negative
+	inline SIMDVector3 operator-()
+	{
+		SIMDVector3 result;
+		__m128 zero = _mm_set_ss(0.0f);
+		result._data = _mm_sub_ps(zero, _data);
+		return result;
+	}
+
 	// Multiple the vector by a scalar, stire result back to this
 	inline void Multiply(float scalar)
 	{

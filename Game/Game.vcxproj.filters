@@ -10,9 +10,6 @@
     <Filter Include="Memory">
       <UniqueIdentifier>{2e2a5275-6553-4a7f-8f62-65748a8ede2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{211a1078-ca3b-4778-b7ce-65a6e659cc78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Timer">
       <UniqueIdentifier>{d21bad22-ed84-44c2-a36a-0931bb9cac06}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,12 @@
     </Filter>
     <Filter Include="Light">
       <UniqueIdentifier>{38cdff0b-c507-4832-bb1c-406426808d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{6ee89b1c-6803-40fb-a749-3ef020e3a619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{211a1078-ca3b-4778-b7ce-65a6e659cc78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="..\Light\LightManager.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Object\MovementController.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Event\EventQueue.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +249,27 @@
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="GlobalInclude.h" />
+    <ClInclude Include="..\System\WinMsgHandler.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Event\InputEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Event\EventQueue.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Event\Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object\MovementController.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Keyboard.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Mouse.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

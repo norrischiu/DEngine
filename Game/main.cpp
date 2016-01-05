@@ -1,9 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "..\Timer\Timer.h"
-#include "..\Graphics\D3D11Renderer.h"
+#include "Timer\Timer.h"
+#include "Graphics\D3D11Renderer.h"
 #include <sstream>
-#include "..\Memory\MemoryManager.h" //
+#include "Memory\MemoryManager.h" //
+#include "System\WinMsgHandler.h"
+#include "System\Keyboard.h"
 #include "GameLoop.h"
 
 //-----------------------------------------------------------------------------
@@ -13,20 +15,18 @@
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 
-	if (msg == WM_DESTROY) {
+	if (msg == WM_DESTROY) 
+	{
 		PostQuitMessage(0);
 		return 0;
 	}
-	else if (msg == WM_PAINT) {
+	else if (msg == WM_PAINT) 
+	{
 		ValidateRect(hWnd, NULL);
 		return 0;
 	}
-	else {
-		if (msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST)
-			GameLoop::MouseEventHandeler(hWnd, msg, wParam, lParam);
-		else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)
-			GameLoop::KeyboardEventHandeler(hWnd, msg, wParam, lParam);
-
+	else
+	{
 		InvalidateRect(hWnd, NULL, TRUE);
 	}
 
@@ -41,7 +41,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 {
 	UNREFERENCED_PARAMETER(hInst);
 
-	// Register the window class
+	// Register the window class, in unicode
 	WNDCLASSEX wc =
 	{
 		sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
@@ -70,12 +70,31 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	// Memory
 	//MemoryManager::GetInstance()->Construct();
 
-	// enter the main game loop
+	// Main loop
 	bool bQuit = false;
 	while (!bQuit)
 	{
+		MSG msg;
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+			{
+				bQuit = true;
+				break;
+			}
+			WinMsgHandler::Handle(msg.message, msg.wParam, msg.lParam);
+		}
+
+		// Inside one frame
 		if (elaspedTime >= 1.0 / FPS)
 		{
+
+			// send input event by checking state change
+			Keyboard::Update(elaspedTime);
+			Mouse::Update(elaspedTime);
+
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);
 			D3D11Renderer::GetInstance()->Update();
@@ -90,17 +109,6 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 			elaspedTime = 0.0f;
 		}
 
-		MSG msg;
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-			{
-				bQuit = true;
-				break;
-			}
-		}
 
 		m_Timer.tick();
 		elaspedTime += m_Timer.getDeltaTime();

@@ -1,6 +1,4 @@
 #include "GameLoop.h"
-#include "Graphics/Scene/MeshSceneNode.h"
-#include "Graphics/Scene/RootSceneNode.h"
 #include "Graphics/MeshComponent.h"
 #include "Debug\Debug.h"
 #include "Font\Font.h"
@@ -11,8 +9,7 @@
 #include "GameObject\GameObject.h"
 #include "GameObject\GameWorld.h"
 #include "Light\PointLight.h"
-
-long GameLoop::cursor_pos[2] = { 0, 0 };
+#include "Object\MovementController.h"
 
 GameLoop* GameLoop::m_pInstance;
 
@@ -30,7 +27,7 @@ GameLoop::GameLoop()
 	//PointLight* testPointLight2 = new PointLight(Vector3(0.0f, 4.0f, 3.0f), 2, Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 1);
 	
 	//Camera* cam = new Camera(Vector3(0.0f, 170.0f / 100.0f, -170.0f / 100.0f), Vector3(0.0f, 170.0f / 100.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
-	
+
 	Debug debug;
 	//MeshComponent* m = debug.draw_prism(Vector3(1.0f, 1.0f, 1.0f), Primitives::RECTANGULAR_PRISM);
 	Matrix4 scale;
@@ -49,41 +46,11 @@ GameLoop::GameLoop()
 
 void GameLoop::Update(float deltaTime)
 {
-	/*
-	Matrix4 temp;
-	temp.CreateTranslation(SIMDVector3(0.01, 0, 0));
-	GameWorld::GetInstance()->GetGameObjectAt(0)->Transform(temp); //
 	GameWorld::GetInstance()->Update(deltaTime);
-	*/
 }
-
-void GameLoop::SetCursorPosition(long x, long y) {
-	cursor_pos[0] = x;
-	cursor_pos[1] = y;
-}
-
-void GameLoop::MouseEventHandeler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	static bool firstMove = false;
-	if (!firstMove) {
-		SetCursorPosition(LOWORD(lParam), HIWORD(lParam));
-		firstMove = true;
-		return;
-	}
-
-	if (msg == WM_MOUSEMOVE &&
-		D3D11Renderer::GetInstance()->GetCameraType() == CameraType::DEGREE360_CAMERA &&
-		(GetAsyncKeyState(VK_LBUTTON) || GetAsyncKeyState(VK_RBUTTON))
-		) {
-		D3D11Renderer::GetInstance()->GetCamera()->rotateVPos(
-			(LOWORD(lParam) - cursor_pos[0]) / 150.0f,
-			(HIWORD(lParam) - cursor_pos[1]) / 150.0f
-			);
-	}
-
-	SetCursorPosition(LOWORD(lParam), HIWORD(lParam));
-}
-
+/*
 void GameLoop::KeyboardEventHandeler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	
 	if (msg == WM_KEYDOWN) {
 		if (GetAsyncKeyState(VK_1)) {
 			D3D11Renderer::GetInstance()->SetCamera(CameraType::MOVE_CAMERA);
@@ -133,4 +100,5 @@ void GameLoop::KeyboardEventHandeler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 			}
 		}
 	}
-}
+	
+}*/

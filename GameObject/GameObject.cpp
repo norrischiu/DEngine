@@ -6,9 +6,10 @@ GameObject::GameObject(Body * collObj, MeshComponent * meshObj, const Matrix4 & 
 	m_pBody	=			collObj;
 	m_pMeshObj =		meshObj;
 	m_pContact =		nullptr;
+	m_pController =		new MovementController(this); // temp
 	m_mWorldTransform = transform;
 	m_mLocalTransform =	Matrix4::Identity;
-	m_pMeshObj->m_pTransform = &m_mWorldTransform; //
+	m_pMeshObj->m_pTransform = &m_mWorldTransform; // temp
 	m_iGameObjectID =	gameObjID;
 	GameWorld::GetInstance()->AddGameObject(this);
 }
@@ -16,8 +17,12 @@ GameObject::GameObject(Body * collObj, MeshComponent * meshObj, const Matrix4 & 
 void GameObject::Update(float deltaTime)
 {
 	m_mWorldTransform *= m_mLocalTransform;
+	// hierarchical functionality
 	if (m_parentID != -1)
-		m_mWorldTransform *= GameWorld::GetInstance()->GetGameObjectAt(m_parentID)->GetLocalTransform();
+	{
+		m_mWorldTransform *= *GameWorld::GetInstance()->GetGameObjectAt(m_parentID)->GetLocalTransform();
+	}
+	m_pController->Update(deltaTime);
 }
 
 void GameObject::collision(const GameObject * gameObj)
@@ -54,7 +59,7 @@ void GameObject::setTransform(const Matrix4& transform)
 
 void GameObject::Transform(const Matrix4& transform)
 {
-	m_mLocalTransform *= transform;
+	m_mWorldTransform *= transform;
 }
 
 void GameObject::AttachTo(unsigned int objectID)

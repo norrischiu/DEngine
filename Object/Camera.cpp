@@ -71,7 +71,7 @@ void Camera::rotateVLookAt(const CameraMove moveType, const float theta)
 
 void Camera::move(const CameraMove moveType, const float offset)
 {
-	float sign = (moveType == CameraMove::BACKWARD || moveType == CameraMove::RIGHT) ? 1.0f : -1.0f;
+	float sign = (moveType == CameraMove::BACKWARD || moveType == CameraMove::RIGHT) ? -1.0f : 1.0f;
 	Vector3 transform;
 
 	switch (moveType) {

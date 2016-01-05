@@ -7,6 +7,7 @@
 #include "..\Physics\cdCollide.h"
 #include "..\Physics\cdBody.h"
 #include "GameWorld.h"
+#include "Object\MovementController.h"
 
 class GameObject
 {
@@ -31,14 +32,14 @@ public:
 
 	void		Transform(const Matrix4& transform);
 
-	const Matrix4& GetTransform() 
+	inline Matrix4* GetTransform() 
 	{
-		return m_mWorldTransform;
+		return &m_mWorldTransform;
 	};
 
-	const Matrix4& GetLocalTransform()
+	inline Matrix4* GetLocalTransform()
 	{
-		return m_mLocalTransform;
+		return &m_mLocalTransform;
 	}
 
 	// hierarchical functionality
@@ -48,6 +49,7 @@ private:
 	MeshComponent*			m_pMeshObj;
 	Body*					m_pBody;
 	Collide*				m_pContact;
+	MovementController*		m_pController; // temp
 	Matrix4					m_mWorldTransform;
 	Matrix4					m_mLocalTransform;
 	int						m_iGameObjectID;

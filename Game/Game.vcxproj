@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Debug\Debug.cpp" />
+    <ClCompile Include="..\Event\EventQueue.cpp" />
     <ClCompile Include="..\Font\font.cpp" />
     <ClCompile Include="..\GameObject\GameObject.cpp" />
     <ClCompile Include="..\GameObject\GameWorld.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
     <ClCompile Include="..\Object\Camera.cpp" />
+    <ClCompile Include="..\Object\MovementController.cpp" />
     <ClCompile Include="..\Object\ObjectLoader.cpp" />
     <ClCompile Include="..\Physics\cdAabb.cpp" />
     <ClCompile Include="..\Physics\cdBody.cpp" />
@@ -170,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Debug\debug.h" />
+    <ClInclude Include="..\Event\Event.h" />
+    <ClInclude Include="..\Event\EventQueue.h" />
+    <ClInclude Include="..\Event\InputEvent.h" />
     <ClInclude Include="..\Font\font.h" />
     <ClInclude Include="..\GameObject\GameObject.h" />
     <ClInclude Include="..\GameObject\GameWorld.h" />
@@ -194,6 +199,7 @@
     <ClInclude Include="..\Memory\MemoryManager.h" />
     <ClInclude Include="..\Memory\MemoryPool.h" />
     <ClInclude Include="..\Object\Camera.h" />
+    <ClInclude Include="..\Object\MovementController.h" />
     <ClInclude Include="..\Object\objectloader.h" />
     <ClInclude Include="..\Physics\cdAabb.h" />
     <ClInclude Include="..\Physics\cdBody.h" />
@@ -205,6 +211,9 @@
     <ClInclude Include="..\Physics\cdSphere.h" />
     <ClInclude Include="..\System\Assertion.h" />
     <ClInclude Include="..\System\FileSystem.h" />
+    <ClInclude Include="..\System\Keyboard.h" />
+    <ClInclude Include="..\System\Mouse.h" />
+    <ClInclude Include="..\System\WinMsgHandler.h" />
     <ClInclude Include="..\Timer\Timer.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GlobalInclude.h" />

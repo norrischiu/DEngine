@@ -9,7 +9,7 @@ D3D11Renderer::D3D11Renderer() : m_currrent_camera_type(CameraType::MOVE_CAMERA)
 {
 	const float EPS = std::numeric_limits<float>::epsilon();
 	m_camera = new Camera[8]{
-		{ Vector3(0.0f, 3.0f, -5.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
+		{ Vector3(0.0f, 10.0f, -10.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
 		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//DEGREE_360
 		{ Vector3(0.0f, 15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//TOP
 		{ Vector3(0.0f, -15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//BOTTOM
