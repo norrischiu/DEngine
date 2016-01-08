@@ -1,8 +1,8 @@
 
-
 #ifndef CDBODY_H
 #define CDBODY_H
 
+#include "Object\Component.h"
 #include "cdCollide.h"
 #include "Math/simdmath.h"
 
@@ -17,17 +17,22 @@ enum
 	typeCount
 };
 
-class Body
+class Body : public Component
 {
 public:
+
+	static const int ComponentID = ComponentID::RIGIDBODY;
+
 	Body()
 	{
 		m_Type = -1;
+		m_ID = ComponentID;
 	}
 
 	Body(const int type)
 	{
 		m_Type = type;
+		m_ID = ComponentID;
 	}
 
 	int getType() const { return m_Type; }
@@ -37,8 +42,12 @@ public:
 
 	virtual void update(const float deltaTime, const Vector3& translate) {}
 
+	// Inherited via Component
+	void Update(float deltaTime) override;
+
 private:
 	int m_Type;
+
 };
 
 

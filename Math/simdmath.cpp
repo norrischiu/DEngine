@@ -27,6 +27,11 @@ void SIMDMatrix4::CreateTranslation(const SIMDVector3& translation)
 	_rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+SIMDVector3 SIMDMatrix4::GetPosition()
+{
+	return SIMDVector3(_rows[0].m128_f32[3], _rows[1].m128_f32[3], _rows[2].m128_f32[3]);
+}
+
 void SIMDMatrix4::CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp)
 {
 	SIMDVector3 zAxis = (vAt - vEye).Normalize();
@@ -80,4 +85,11 @@ void SIMDMatrix4::Invert()
 	_rows[1] = result.r[1];
 	_rows[2] = result.r[2];
 	_rows[3] = result.r[3];
+}
+
+SIMDMatrix4 & SIMDMatrix4::Inverse()
+{
+	SIMDMatrix4 result = *this;
+	result.Invert();
+	return result;
 }

@@ -3,16 +3,24 @@
 #ifndef MeshComponent_H
 #define MeshComponent_H
 
-#include "MeshData.h"
+#include "Object\Component.h"
 #include "VertexFormat.h"
-#include "Scene\MeshSceneNode.h"
+#include "Graphics\MeshData.h"
 
-class MeshComponent
+class MeshComponent : public Component
 {
+
 public:
+
+	static const int ComponentID = ComponentID::MESH;
+
 	MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eRenderType eRenderType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture = NULL);
-	MeshComponent(const char* filename);
-	MeshComponent() {};
+	MeshComponent(const char* meshName);
+
+	// Inherited via Component
+	void Update(float deltaTime) override
+	{
+	};
 
 	MeshData* GetMeshData();
 
@@ -25,14 +33,9 @@ public:
 	Matrix4*								m_pTransform;
 
 private:
+
 	// Contains all buffer and shaders data
 	//MeshData*								m_pMeshData;
-
-	// Scene node
-	MeshSceneNode*							m_SceneNode;
-
-	// Transform reference
-	//Matrix4*								m_pTransform;
 	
 };
 

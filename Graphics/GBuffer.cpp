@@ -1,7 +1,7 @@
 #include "GBuffer.h"
 #include "Light/LightManager.h"
-#include "Light/PointLight.h"
-#include "Light/DirectionalLight.h"
+#include "Light/PointLightComponent.h"
+//#include "Light/DirectionalLight.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include <DirectXMath.h>
@@ -12,9 +12,18 @@ struct VS_DEFERRED_CBUFFER
 	Matrix4 Transform;
 };
 
+struct PointLightGPU
+{
+	Vector4 vPos;
+	Vector4 vAmbient;
+	Vector4 vDiffuse;
+	Vector4 vSpecular;
+	float fIntensity;
+};
+
 struct PS_DEFERRED_CBUFFER
 {
-	PointLight testLight;
+	PointLightGPU testLight;
 	Matrix4 mProjectionInverse;
 	//DirectionalLight testLight;
 };
@@ -170,7 +179,6 @@ GBuffer::GBuffer()
 
 	D3D11_SUBRESOURCE_DATA constResourcesData;
 	VS_DEFERRED_CBUFFER vsConstData;
-	vsConstData.Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
 	constResourcesData.pSysMem = &vsConstData;
 	constResourcesData.SysMemPitch = 0;
 	constResourcesData.SysMemSlicePitch = 0;
@@ -247,7 +255,8 @@ void GBuffer::Render()
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShader(m_pPS, 0, 0);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(D3D11Renderer::GetInstance()->m_pCullBackRSState);
+	//D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(D3D11Renderer::GetInstance()->m_pCullBackRSState);
+	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(D3D11Renderer::GetInstance()->m_pCullNoneRSState);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_pSamplerState);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetDepthStencilState(D3D11Renderer::GetInstance()->m_pOffDepthStencilState, 1);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, RT_NUM, D3D11Renderer::GetInstance()->m_pShaderResourceView);
@@ -262,7 +271,6 @@ void GBuffer::Render()
 		Matrix4 trans;
 		trans.CreateTranslation(LightManager::GetInstance()->GetLightAt(i)->GetPosition());
 		scale.CreateScale(LightManager::GetInstance()->GetLightAt(i)->GetRadius());
-		//Matrix4 OrthoMat = Matrix4::OrthographicProjection(1024.0f / 100.0f, 768.0f / 100.0f, 1.0f, 100.0f);
 		pVSCBuffer->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * scale;
 		pVSCBuffer->WorldTransform =  D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * scale;
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_pVSConstantBuffer, 0);
@@ -270,13 +278,14 @@ void GBuffer::Render()
 		// Update PS cbuffer
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Map(m_pPSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
 		PS_DEFERRED_CBUFFER* pPSCBuffer = (PS_DEFERRED_CBUFFER*)mappedResources.pData;
-		pPSCBuffer->testLight = *LightManager::GetInstance()->GetLightAt(i);
-		Vector3 pos = pPSCBuffer->testLight.GetPosition();
+		PointLightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
+		pPSCBuffer->testLight.vDiffuse = currLight->GetDiffuse();
+		pPSCBuffer->testLight.vAmbient = currLight->GetAmbient();
+		pPSCBuffer->testLight.fIntensity = currLight->GetIntensity();
+		Vector3 pos = currLight->GetPosition();
 		pos.Transform(D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix());
-		pPSCBuffer->testLight.SetPosition(pos);
-		Matrix4 perspMat = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix();
-		perspMat.Invert();
-		pPSCBuffer->mProjectionInverse = perspMat;
+		pPSCBuffer->testLight.vPos = pos;
+		pPSCBuffer->mProjectionInverse = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix().Inverse();
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_pPSConstantBuffer, 0);
 
 		// Binding

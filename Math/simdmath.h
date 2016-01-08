@@ -274,6 +274,8 @@ public:
 	// Set a translation transformation given a vector
 	void CreateTranslation(const SIMDVector3& translation);
 
+	SIMDVector3 GetPosition();
+
 	// Set a rotation transformation given a quaternion
 	// void CreateRotationFromQuaternion(const SIMDQuaternion& q);
 
@@ -299,6 +301,7 @@ public:
 
 	// Inverts the matrix, store the result back to this
 	void Invert();
+	SIMDMatrix4& Inverse();
 };
 
 // 3D Vector with SIMD

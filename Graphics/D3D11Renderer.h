@@ -5,11 +5,13 @@
 #include <D3D11.h>
 #include <windows.h>
 #include <vector>
-#include "../Math/simdmath.h"
-#include "MeshComponent.h"
+#include "Math\simdmath.h"
 #include "GBuffer.h"
+#include "Object\CameraComponent.h"
 
 #pragma comment (lib, "D3D11")
+
+class MeshComponent;
 
 // Number of render target in G-Buffer
 const static unsigned int					RT_NUM = 3;
@@ -45,9 +47,11 @@ public:
 
 	static D3D11Renderer* GetInstance();
 
-	Camera* GetCamera();
+	CameraComponent* GetCamera();
 
 	void SetCamera(CameraType cameraType);
+
+	void SetCamera(CameraComponent* camera);
 
 	CameraType GetCameraType();
 
@@ -98,7 +102,9 @@ private:
 	// List of all mesh instance to be drawn
 	std::vector<MeshComponent*>					m_MeshComponentList;
 
-	Camera*										m_camera;
+	CameraComponent*							m_camera;
+
+	CameraComponent*							m_renderCamera;
 
 	CameraType									m_currrent_camera_type;
 

@@ -3,13 +3,13 @@
 
 LightManager* LightManager::m_pInstance;
 
-void LightManager::AddLight(PointLight* light)
+void LightManager::AddLight(PointLightComponent* light)
 {
 	m_vLights.push_back(light);
 	m_iNumLight++;
 }
 
-PointLight* LightManager::GetLightAt(int index)
+PointLightComponent* LightManager::GetLightAt(int index)
 {
 	return m_vLights[index];
 }

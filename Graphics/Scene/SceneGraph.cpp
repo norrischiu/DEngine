@@ -1,4 +1,5 @@
 #include "SceneGraph.h"
+#include "Graphics\MeshComponent.h"
 #include "Graphics/D3D11Renderer.h"
 
 SceneGraph* SceneGraph::m_pInstance;

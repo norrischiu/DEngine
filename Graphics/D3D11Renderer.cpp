@@ -8,8 +8,8 @@ D3D11Renderer* D3D11Renderer::m_pInstance;
 D3D11Renderer::D3D11Renderer() : m_currrent_camera_type(CameraType::MOVE_CAMERA)
 {
 	const float EPS = std::numeric_limits<float>::epsilon();
-	m_camera = new Camera[8]{
-		{ Vector3(0.0f, 10.0f, -10.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
+	m_camera = new CameraComponent[8]{
+		{ Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//MOVE
 		{ Vector3(0.0f, 0.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },		//DEGREE_360
 		{ Vector3(0.0f, 15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//TOP
 		{ Vector3(0.0f, -15.0f, EPS), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f) },	//BOTTOM
@@ -26,8 +26,9 @@ D3D11Renderer* D3D11Renderer::GetInstance() {
 	return m_pInstance;
 }
 
-Camera* D3D11Renderer::GetCamera() {
-	return &m_camera[m_currrent_camera_type];
+CameraComponent* D3D11Renderer::GetCamera() {
+	//return &m_camera[m_currrent_camera_type];
+	return m_renderCamera;
 }
 
 CameraType D3D11Renderer::GetCameraType() {
@@ -38,6 +39,11 @@ void D3D11Renderer::SetCamera(CameraType cameraType) {
 	if (cameraType >= CameraType::MOVE_CAMERA && cameraType <= CameraType::BACK_VIEW_CAMERA) {
 		m_currrent_camera_type = cameraType;
 	}
+}
+
+void D3D11Renderer::SetCamera(CameraComponent* camera)
+{
+	m_renderCamera = camera;
 }
 
 std::vector<MeshComponent*>& D3D11Renderer::GetMeshComponentList() {
@@ -227,6 +233,8 @@ void D3D11Renderer::Update()
 
 void D3D11Renderer::Render()
 {
+	assert(m_renderCamera != nullptr);
+
 	// Cleaning screen
 	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	for (int i = 0; i < RT_NUM; i++)

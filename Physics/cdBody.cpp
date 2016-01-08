@@ -20,3 +20,8 @@ Vector3 Body::getCenter() const
 	}
 	return center;
 }
+
+void Body::Update(float deltaTime)
+{
+
+}

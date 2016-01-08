@@ -8,7 +8,6 @@ struct PointLight
 	float4 vAmbient;
 	float4 vDiffuse;
 	float4 vSpecular;
-	float fradius;
 	float fIntensity;
 };
 
@@ -48,10 +47,10 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 	float4 L = testLight.vPos - posVS;
 	float len = length(L.xyz) * length(L.xyz);
 	float NdotL = saturate(dot(normal.xyz, normalize(L).xyz));
-	float4 diffuse = saturate(testLight.vDiffuse * NdotL);
+	float4 diffuse = saturate(testLight.vDiffuse * NdotL) * testLight.fIntensity;
 	float4 R = normalize(2.0f * NdotL * normal - L);
 	float4 specular = pow(saturate(dot(R, L)), 1);
-	float attenuation = 1.0f / len * 10.0f;
+	float attenuation = 1.0f / len;
 	
 	return ambient + rgb * diffuse * attenuation;
 }

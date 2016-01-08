@@ -1,23 +1,25 @@
 #ifndef MOVEMENT_CONTROLLER_H_
 #define MOVEMENT_CONTROLLER_H_
 
+#include "Object\Component.h"
 #include "Event\EventQueue.h"
 #include "Math\SIMDMath.h"
 
-class GameObject;
-
-class MovementController
+class MovementController : public Component
 {
 
 public:
 
-	MovementController(GameObject* ptr)
+	static const int ComponentID = ComponentID::CONTROLLER;
+
+	MovementController()
+		:Component()
 	{
-		m_pOwner = ptr;
 		m_fSpeed = 1.0f;
 	}
 
-	void Update(float deltaTime);
+	// Inherited via Component
+	void Update(float deltaTime) override;
 
 private:
 
@@ -26,7 +28,6 @@ private:
 
 	void Move(Vector3 vTrans);
 
-	GameObject*						m_pOwner;
 	float							m_fSpeed;
 	float							m_fDeltaTime;
 };

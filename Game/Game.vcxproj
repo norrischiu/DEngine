@@ -156,7 +156,7 @@
     <ClCompile Include="..\Light\LightManager.cpp" />
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
-    <ClCompile Include="..\Object\Camera.cpp" />
+    <ClCompile Include="..\Object\CameraComponent.cpp" />
     <ClCompile Include="..\Object\MovementController.cpp" />
     <ClCompile Include="..\Object\ObjectLoader.cpp" />
     <ClCompile Include="..\Physics\cdAabb.cpp" />
@@ -193,12 +193,15 @@
     <ClInclude Include="..\Light\DirectionalLight.h" />
     <ClInclude Include="..\Light\LightManager.h" />
     <ClInclude Include="..\Light\PointLight.h" />
+    <ClInclude Include="..\Light\PointLightComponent.h" />
     <ClInclude Include="..\Light\SpotLight.h" />
     <ClInclude Include="..\Math\simdmath.h" />
     <ClInclude Include="..\Memory\Handle.h" />
     <ClInclude Include="..\Memory\MemoryManager.h" />
     <ClInclude Include="..\Memory\MemoryPool.h" />
     <ClInclude Include="..\Object\Camera.h" />
+    <ClInclude Include="..\Object\CameraComponent.h" />
+    <ClInclude Include="..\Object\Component.h" />
     <ClInclude Include="..\Object\MovementController.h" />
     <ClInclude Include="..\Object\objectloader.h" />
     <ClInclude Include="..\Physics\cdAabb.h" />

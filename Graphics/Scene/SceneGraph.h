@@ -2,7 +2,8 @@
 #define SCENEGRAPH_H_
 
 #include <vector>
-#include "Graphics/MeshComponent.h"
+
+class MeshComponent;
 
 class SceneGraph
 {

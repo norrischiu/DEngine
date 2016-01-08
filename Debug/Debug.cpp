@@ -2,6 +2,7 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include "Graphics\Scene\SceneGraph.h"
+#include "Graphics\MeshComponent.h"
 
 #pragma comment (lib, "D2D1")
 #pragma comment (lib, "Dwrite")

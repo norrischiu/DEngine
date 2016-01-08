@@ -45,9 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Object\Camera.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -134,11 +131,11 @@
     <ClCompile Include="..\Event\EventQueue.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Object\CameraComponent.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Object\Camera.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="..\Graphics\D3D11Renderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -269,6 +266,18 @@
     </ClInclude>
     <ClInclude Include="..\System\Mouse.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object\Component.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object\CameraComponent.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Object\Camera.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\PointLightComponent.h">
+      <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

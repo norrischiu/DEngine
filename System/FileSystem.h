@@ -1,5 +1,7 @@
 // FileSystem.h:
 
+#include <cstdio>
+
 class FileSystem
 {
 public:

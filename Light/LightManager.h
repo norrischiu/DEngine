@@ -1,11 +1,12 @@
 #ifndef LIGHTMANAGER_H_
 #define LIGHTMANAGER_H_
+
 #define MAX_LIGHT 100
 
 #include <vector>
 #include "Debug\debug.h"
 
-class PointLight;
+class PointLightComponent;
 
 class LightManager
 {
@@ -50,9 +51,9 @@ public:
 		return m_pInstance;
 	}
 
-	void AddLight(PointLight* light);
+	void AddLight(PointLightComponent* light);
 
-	PointLight* GetLightAt(int index);
+	PointLightComponent* GetLightAt(int index);
 
 	inline int GetNumLights()
 	{
@@ -72,13 +73,13 @@ public:
 private:
 
 	// Singleton instance
-	static LightManager*						m_pInstance;
+	static LightManager*							m_pInstance;
 
 	// Storage of all lights
-	std::vector<PointLight*>					m_vLights;
+	std::vector<PointLightComponent*>				m_vLights;
 
 	// Number of lights
-	unsigned int								m_iNumLight;
+	unsigned int									m_iNumLight;
 
 	Vertex1P*										m_PointLightVertices;
 	unsigned int*									m_PointLightIndices;

@@ -50,8 +50,8 @@ void MovementController::HandleMouseEvent(Event* pEvt)
 	if (pEvt->m_ID == EventID::Mouse_Move_Event)
 	{
 		Mouse_Move_Event* pMouseEvt = (Mouse_Move_Event*) pEvt;
-		if (pMouseEvt->cursorPosChange[0] != 0 && pMouseEvt->cursorPosChange[1] != 0)
-			D3D11Renderer::GetInstance()->GetCamera()->rotateVPos(pMouseEvt->cursorPosChange[0] / 150.0f, pMouseEvt->cursorPosChange[1] / 150.0f);
+		//if (pMouseEvt->cursorPosChange[0] != 0 && pMouseEvt->cursorPosChange[1] != 0)
+			//D3D11Renderer::GetInstance()->GetCamera()->rotateVPos(pMouseEvt->cursorPosChange[0] / 150.0f, pMouseEvt->cursorPosChange[1] / 150.0f);
 	}
 }
 

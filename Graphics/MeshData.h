@@ -5,7 +5,7 @@
 
 #include <d3d11.h>
 #include "Math/simdmath.h"
-#include "../Object/Camera.h"
+#include "Object/CameraComponent.h"
 #include "VertexFormat.h"
 #include <vector>
 

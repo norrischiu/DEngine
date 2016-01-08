@@ -1,36 +1,54 @@
+// GameObject.h: class for every entity in the game
+#ifndef GAMEOBJECT_H_
+#define GAMEOBJECT_H_
 
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
-#include "..\Graphics\MeshComponent.h"
-#include "..\Physics\cdObject.h"
-#include "..\Math\simdmath.h"
-#include "..\Physics\cdCollide.h"
-#include "..\Physics\cdBody.h"
-#include "GameWorld.h"
+#include "Graphics\MeshComponent.h"
+#include "Physics\cdObject.h"
+#include "Math\simdmath.h"
+#include "Physics\cdCollide.h"
+#include "Physics\cdBody.h"
 #include "Object\MovementController.h"
+#include "GameWorld.h"
+#include <vector>
 
 class GameObject
 {
 public:
 
-	GameObject(Body* collObj, MeshComponent* meshObj, const Matrix4& transform, const int& gameObjID);
+	static int GameObjectID;
 
-	// Empty destructor (ownership at game world)
+	GameObject();
+
+	// Empty destructor: ownership at game world
 	~GameObject() {}
 
 	void		Update(float deltaTime);
 
-	void		collision(const GameObject* gameObj);
+	void		collision(GameObject* gameObj);
 
 	Collide*	getContact();
 
-	Vector3		getTranslate();
-
-	bool		isCollided(const GameObject* gameObj);
+	bool		isCollided(GameObject* gameObj);
 
 	void		setTransform(const Matrix4& transform);
 
 	void		Transform(const Matrix4& transform);
+
+	void		AddComponent(Component* pComponent);
+
+	// Return specific component pointer
+	template<class T>
+	T*			GetComponent()
+	{
+		for (auto itr : m_components)
+		{
+			if (itr->GetID() == T::ComponentID)
+			{
+				return (T*) itr;
+			}
+		}
+		return nullptr;
+	}
 
 	inline Matrix4* GetTransform() 
 	{
@@ -42,24 +60,32 @@ public:
 		return &m_mLocalTransform;
 	}
 
+	Vector3 GetPosition()
+	{
+		return m_mWorldTransform.GetPosition();
+	}
+
+	void SetPosition(Vector3 vPos)
+	{
+		Matrix4 trans;
+		trans.CreateTranslation(vPos);
+		m_mWorldTransform = trans;
+	}
+
 	// hierarchical functionality
 	void AttachTo(unsigned int objectID);
 
-private:
-	MeshComponent*			m_pMeshObj;
-	Body*					m_pBody;
-	Collide*				m_pContact;
-	MovementController*		m_pController; // temp
-	Matrix4					m_mWorldTransform;
-	Matrix4					m_mLocalTransform;
-	int						m_iGameObjectID;
+protected:
+	Collide*					m_pContact;
+
+	Matrix4						m_mWorldTransform;
+	Matrix4						m_mLocalTransform;
+	int							m_iGameObjectID;
+
+	std::vector<Component*>		m_components;
 
 	// hierarchical functionality
-	int						m_parentID;
+	int							m_parentID;
 };
-
-
-
-
 
 #endif
