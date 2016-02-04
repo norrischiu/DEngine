@@ -32,6 +32,16 @@ SIMDVector3 SIMDMatrix4::GetPosition()
 	return SIMDVector3(_rows[0].m128_f32[3], _rows[1].m128_f32[3], _rows[2].m128_f32[3]);
 }
 
+SIMDVector3 SIMDMatrix4::GetForward()
+{
+	return SIMDVector3(_rows[2]);
+}
+
+SIMDVector3 SIMDMatrix4::GetUp()
+{
+	return SIMDVector3(_rows[1]);
+}
+
 void SIMDMatrix4::CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp)
 {
 	SIMDVector3 zAxis = (vAt - vEye).Normalize();

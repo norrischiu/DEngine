@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include <DDSTextureLoader.h>
+#include "D3D11Renderer.h"
 
 TextureManager* TextureManager::m_pInstance;
 
@@ -27,21 +28,4 @@ void TextureManager::LoadTexture(const char* filename)
 	assert(hr == S_OK);
 
 	m_mapTexture[filename] = (void*) pTexResourceView;
-}
-
-void* TextureManager::GetSamplerState(int samplerStateType)
-{
-	switch (samplerStateType)
-	{
-		case eSamplerState::NONE:
-			return m_pSamplerState[0];
-			break;
-		case eSamplerState::LINEAR_MIPMAP_MAX_LOD:
-			return m_pSamplerState[1];
-	}
-}
-
-void* TextureManager::GetBlendState()
-{
-	return m_pBlendState;
 }

@@ -1,4 +1,6 @@
 #include "ObjectLoader.h"
+#include "Graphics\Scene\SceneGraph.h"
+#include "Graphics\VertexFormat.h"
 
 void ObjectLoader::Clear() {
 	m_objects.clear();
@@ -252,7 +254,7 @@ std::vector<MeshComponent*> ObjectLoader::Draw() {
 				);
 
 				meshInstanceList.push_back(meshComponent);
-				D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(meshComponent);
+				SceneGraph::GetInstance()->AddComponent(meshComponent);
 			}
 		}
 	}

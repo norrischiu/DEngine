@@ -12,9 +12,9 @@ class PointLight : public GameObject
 
 public:
 
-	PointLight(Vector3 position, float radius, Vector4 ambient, Vector4 diffuse, Vector4 specular, float intensity)
+	PointLight(Vector3 position, Vector4 color, float radius, float intensity)
 	{
-		AddComponent(new PointLightComponent(position, radius, ambient, diffuse, specular, intensity));
+		AddComponent(new PointLightComponent(position, color, radius, intensity));
 	}
 
 	// Return radius, should be calculated with attenuation later

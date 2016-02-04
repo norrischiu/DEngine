@@ -14,11 +14,10 @@ GameObject::GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-	m_mWorldTransform *= m_mLocalTransform;
 	// hierarchical functionality
 	if (m_parentID != -1)
 	{
-		m_mWorldTransform *= *GameWorld::GetInstance()->GetGameObjectAt(m_parentID)->GetLocalTransform();
+		m_mWorldTransform *= *GameWorld::GetInstance()->GetGameObjectAt(m_parentID)->GetLocalTransform(); // temp
 	}
 	
 	for (auto itr : m_components)
@@ -47,7 +46,7 @@ bool GameObject::isCollided(GameObject * gameObj)
 	return contact.getCollide();
 }
 
-void GameObject::setTransform(const Matrix4& transform)
+void GameObject::SetTransform(const Matrix4 transform)
 {
 	m_mWorldTransform = transform;
 }

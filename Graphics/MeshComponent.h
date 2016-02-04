@@ -1,10 +1,8 @@
 // MeshComponent.h: the class for a mesh instance which contains a mesh data
-
-#ifndef MeshComponent_H
-#define MeshComponent_H
+#ifndef MeshComponent_H_
+#define MeshComponent_H_
 
 #include "Object\Component.h"
-#include "VertexFormat.h"
 #include "Graphics\MeshData.h"
 
 class MeshComponent : public Component
@@ -18,6 +16,7 @@ public:
 	MeshComponent(const char* meshName);
 
 	// Inherited via Component
+	void SetOwner(GameObject* ptr) override;
 	void Update(float deltaTime) override
 	{
 	};
@@ -32,11 +31,14 @@ public:
 	// temp
 	Matrix4*								m_pTransform;
 
+	// Visibility flag
+	bool									m_bVisible;
+
 private:
 
 	// Contains all buffer and shaders data
 	//MeshData*								m_pMeshData;
-	
+
 };
 
-#endif
+#endif // !MeshComponent_H_

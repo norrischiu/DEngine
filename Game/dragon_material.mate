@@ -1,0 +1,10 @@
+MATERIAL
+0.000000 0.000000 0.000000
+1.000000 1.000000 1.000000
+0.300000 0.300000 0.300000
+5.000000
+2
+DiffuseColor
+Dragon20k_Texture.dds
+NormalMap
+Dragon20k_NormalMap.dds

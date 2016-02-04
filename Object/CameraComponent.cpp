@@ -3,17 +3,10 @@
 #include "CameraComponent.h"
 #include "Graphics\D3D11Renderer.h"
 #include "Game/GlobalInclude.h"
+#include "GameObject\GameObject.h"
+#include "Debug\DebugDrawing.h"
 #include <sstream>
 #include <string>
-
-CameraComponent::CameraComponent(const Vector3& m_vPos, const Vector3& m_vLookAt, const Vector3& m_vUp)
-	: Component(nullptr)
-	, m_vPos(m_vPos)
-	, m_vLookAt(m_vLookAt)
-	, m_vUp(m_vUp)
-{
-	m_mPerspectiveProj = Matrix4::PerspectiveProjection(PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
-}
 
 CameraComponent::CameraComponent(const Vector3& vPos, const Vector3& vLookAt, const Vector3& vUp, const float fFov, const float fRatio, const float fZNear, const float fZFar)
 	: Component(nullptr)
@@ -33,7 +26,10 @@ void CameraComponent::SetAsRendererCamera()
 
 Matrix4 CameraComponent::GetViewMatrix()
 {
-	return Matrix4::LookAtMatrix(m_vPos, m_vLookAt, m_vUp);
+	Vector3 pos = m_vPos, lookat = m_vLookAt;
+	//pos.Transform(*m_pOwner->GetTransform());
+	//lookat.Transform(*m_pOwner->GetTransform());
+	return Matrix4::LookAtMatrix(pos, lookat, m_vUp);
 }
 
 Matrix4 CameraComponent::GetPerspectiveMatrix()
@@ -44,6 +40,10 @@ Matrix4 CameraComponent::GetPerspectiveMatrix()
 Matrix4 CameraComponent::GetPVMatrix()
 {
 	return m_mPerspectiveProj * GetViewMatrix();
+}
+
+void CameraComponent::Update(float deltaTime)
+{
 }
 
 void CameraComponent::rotateVPos(const float thetaX, const float thetaY) {

@@ -3,11 +3,10 @@
 #ifndef SHADERMANAGER_H_
 #define SHADERMANAGER_H_
 
-
+#include <D3D11.h>
 #include <stdio.h>
 #include <unordered_map>
 #include <string>
-#include "D3D11Renderer.h"
 #include <d3d11shader.h>
 
 class ShaderManager
@@ -39,7 +38,7 @@ public:
 		return m_pInstance;
 	}
 
-	static void DestructandCleanUp()
+	void DestructandCleanUp()
 	{
 		if (m_pInstance) {
 			delete m_pInstance;

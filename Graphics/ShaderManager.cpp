@@ -1,6 +1,7 @@
 #include "ShaderManager.h"
 #include <d3dcompiler.h>
 #include <vector>
+#include "D3D11Renderer.h"
 
 ShaderManager* ShaderManager::m_pInstance;
 

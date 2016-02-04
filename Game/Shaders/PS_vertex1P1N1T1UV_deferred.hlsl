@@ -1,6 +1,21 @@
 Texture2D shaderTexture[2];
 SamplerState SampleType;
 
+// cbuffer
+struct Material
+{
+	float4		vEmissive;
+	float4		vDiffuse;
+	float4		vSpecular;
+	float		vShininess;
+};
+
+cbuffer PS_CONSTANT_BUFFER : register(b0)
+{
+	Material	material;
+};
+
+// input
 struct VS_OUTPUT
 {
 	float4 vPos : SV_POSITION;
@@ -10,12 +25,14 @@ struct VS_OUTPUT
 	float2 vTex : TEXCOORD0;
 };
 
+// output
 struct PS_OUTPUT
 {
 	float4 color : SV_Target0;
 	float4 normal : SV_Target1;
 };
 
+// function
 PS_OUTPUT PS(VS_OUTPUT IN) : SV_TARGET
 {
 	PS_OUTPUT OUT;
@@ -28,5 +45,10 @@ PS_OUTPUT PS(VS_OUTPUT IN) : SV_TARGET
 		IN.vNormal.x, IN.vNormal.y, IN.vNormal.z
 	};
 	OUT.normal = normalize(float4(mul(bump.xyz, TBN), 0));
+
+	// pack specular factor and shininess into gbuffer
+	OUT.color.a = material.vSpecular.x;
+	OUT.normal.a = material.vShininess;
+
 	return OUT;
 }

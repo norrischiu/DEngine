@@ -43,6 +43,12 @@
     <Filter Include="Math">
       <UniqueIdentifier>{211a1078-ca3b-4778-b7ce-65a6e659cc78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{e505a7ab-4aba-4135-bf3f-c3146fb8bd46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render">
+      <UniqueIdentifier>{2f646138-12e4-464d-8984-a915019657bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp">
@@ -133,6 +139,39 @@
     </ClCompile>
     <ClCompile Include="..\Object\CameraComponent.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Material.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\RenderPass.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\RenderTechnique.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\State.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\VSPerObjectCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\CBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\PSPerMaterialCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\PSPerLightCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\PostProcessEffect.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Light\LightComponent.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +318,51 @@
     <ClInclude Include="..\Light\PointLightComponent.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\Utilities\Geometry.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Debug\DebugDrawing.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Math\Frustum.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Math\Plane.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\SpotLightComponent.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Light\LightComponent.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\RenderTechnique.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\RenderPass.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\State.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\Texture.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\CBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\VSPerObjectCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\PSPerMaterialCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\PSPerLightCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\PostProcessEffect.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
@@ -326,5 +410,19 @@
     <FxCompile Include="Shaders\VS_vertex1P1N1T1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\PS_SSReflection_ppe.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_BlurV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_BlurH.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\cbuffer.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

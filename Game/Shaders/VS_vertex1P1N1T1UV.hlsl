@@ -1,8 +1,8 @@
-// gbuffer
-cbuffer VS_CONSTANT_BUFFER
+// cbuffer
+cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
-	matrix WorldTransform;
-	matrix WVPTransform;
+	matrix		WorldTransform;
+	matrix		WVPTransform;
 };
 
 // input

@@ -4,10 +4,10 @@
 #define MESHDATA_H
 
 #include <d3d11.h>
-#include "Math/simdmath.h"
-#include "Object/CameraComponent.h"
-#include "VertexFormat.h"
 #include <vector>
+#include "Math\simdmath.h"
+#include "Material.h"
+#include "Physics\cdAABB.h"
 
 enum eRenderType
 {
@@ -26,8 +26,10 @@ public:
 
 	// Overload default constructor
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
+	
+	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics);
 
-	MeshData(const char* filename, int renderType, const char* VSFilename = nullptr, const char* PSFilename = nullptr);
+	MeshData(const char* filename, int renderType);
 
 	MeshData() {};
 
@@ -41,13 +43,13 @@ public:
 		const Vector3 translation = Vector3(0.0f, 0.0f, 0.0f)
 	);
 
-	void Update(Matrix4 transform);
-
 	void Update();
 
-	void Render(Matrix4 transform);
-
 	void Render();
+
+	void RenderUsingPassAt(int index);
+
+	void RenderUsingPass(RenderPass* pass);
 
 	inline int GetVertexNum()
 	{
@@ -91,13 +93,15 @@ public:
 		return m_dimension;
 	}
 
-private:
+	inline AABB GetBoundingBox()
+	{
+		return m_BoundingBox;
+	}
 
-	// Pointer to complied to vertex shader
-	ID3D11VertexShader*						m_pVS;
-	
-	// Pointer to complied to pixel shader
-	ID3D11PixelShader*						m_pPS;
+	// Mesh material
+	Material								m_Material;
+
+private:
 
 	// Pointer to vertex buffer
 	ID3D11Buffer*							m_pVertexBuffer;
@@ -110,27 +114,6 @@ private:
 
 	// Pointer to index buffer
 	ID3D11Buffer*							m_pIndexBuffer;
-
-	// Pointer to constant buffer
-	ID3D11Buffer*							m_pConstantBuffer;
-
-	// Pointer to input layout supply to IA
-	ID3D11InputLayout*						m_pInputLayout;
-
-	// Pointer to resource view array pass to shader
-	std::vector<ID3D11ShaderResourceView*>	m_pTexResourceView;
-
-	// Pointer to sampler state
-	ID3D11SamplerState*						m_pSamplerState;
-
-	// Number of shader resource
-	unsigned int							m_iTexResourceNum;
-
-	// Pointer to blend state
-	ID3D11BlendState*						m_pBlendState;
-
-	// Primitive Topology
-	unsigned int							m_iTopology;
 
 	// Render Type
 	eRenderType								m_renderType;
@@ -147,6 +130,12 @@ private:
 	Matrix4									m_transformationMat;
 
 	Vector3									m_dimension;
+
+	// Simple bounding box for camera frustum culling
+	AABB									m_BoundingBox;
+
+	// Mesh material
+	//Material								m_Material;
 };
 
 #endif

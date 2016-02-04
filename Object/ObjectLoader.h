@@ -2,6 +2,7 @@
 #include <vector>
 #include "D3D11Renderer.h"
 #include "MeshComponent.h"
+#include "Graphics\VertexFormat.h"
 
 #define MODEL_PATH "../GameContent/3DModel/"
 

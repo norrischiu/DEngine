@@ -30,7 +30,7 @@ public:
 
 	bool		isCollided(GameObject* gameObj);
 
-	void		setTransform(const Matrix4& transform);
+	void		SetTransform(const Matrix4 transform);
 
 	void		Transform(const Matrix4& transform);
 
@@ -76,10 +76,16 @@ public:
 	void AttachTo(unsigned int objectID);
 
 protected:
+
 	Collide*					m_pContact;
 
+	// Local to world transform
 	Matrix4						m_mWorldTransform;
+
+	// World to local transform
 	Matrix4						m_mLocalTransform;
+
+	// temp
 	int							m_iGameObjectID;
 
 	std::vector<Component*>		m_components;

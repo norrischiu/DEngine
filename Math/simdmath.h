@@ -21,7 +21,10 @@ public:
 	static const SIMDMatrix4 Identity;
 
 	// Default constructor
-	inline SIMDMatrix4(){};
+	inline SIMDMatrix4()
+	{
+		*this = SIMDMatrix4::Identity;
+	};
 
 	// Construct with given value
 	inline SIMDMatrix4(float other[4][4])
@@ -274,7 +277,10 @@ public:
 	// Set a translation transformation given a vector
 	void CreateTranslation(const SIMDVector3& translation);
 
+	// Extract elements from matrix
 	SIMDVector3 GetPosition();
+	SIMDVector3 GetForward();
+	SIMDVector3 GetUp();
 
 	// Set a rotation transformation given a quaternion
 	// void CreateRotationFromQuaternion(const SIMDQuaternion& q);
@@ -295,7 +301,7 @@ public:
 		_rows[1] = result.r[1];
 		_rows[2] = result.r[2];
 		_rows[3] = result.r[3];
-		_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
+		//_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
 	}
 	static SIMDMatrix4& OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
 
@@ -685,6 +691,12 @@ public:
 	inline void MultiplyDX(const SIMDQuaternion& other)
 	{
 		_data = DirectX::XMQuaternionMultiply(_data, other._data);
+	}
+
+	SIMDMatrix4 GetRotationMatrix()
+	{
+		DirectX::XMMATRIX result = DirectX::XMMatrixRotationQuaternion(_data);
+		return SIMDMatrix4(result.r);
 	}
 
 	// Normalize the quaternion, store the result to this

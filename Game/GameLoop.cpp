@@ -1,3 +1,6 @@
+/* Debug Include */
+#include "Debug\DebugDrawing.h"
+
 #include "GameLoop.h"
 #include "Graphics\MeshComponent.h"
 #include "Debug\Debug.h"
@@ -6,10 +9,11 @@
 #include "GameObject\GameObject.h"
 #include "GameObject\GameWorld.h"
 #include "Light\PointLight.h"
+#include "Light\SpotLightComponent.h"
 #include "Object\MovementController.h"
 #include "Object\Camera.h"
 
-GameLoop* GameLoop::m_pInstance;
+GameLoop* GameLoop::m_pInstance = nullptr;
 
 GameLoop::GameLoop()
 { 
@@ -17,39 +21,48 @@ GameLoop::GameLoop()
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
 	GameObject* dragon = new GameObject;
-	//dragon->AddComponent(new MovementController());
 	dragon->AddComponent(new MeshComponent("dragon"));
 	dragon->AddComponent(new Body(typeAABB));
-	//dragon->AddComponent(new CameraComponent(Vector3(0.0f, 10.0f, -10.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
+	dragon->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	Matrix4 s;
+	s.CreateScale(2);
+	dragon->Transform(s);
+	Matrix4 rot;
+	rot.CreateRotationY(PI);
+	dragon->Transform(rot);
+	dragon->AddComponent(new MovementController());
+	//dragon->AddComponent(new CameraComponent(Vector3(0.0f, 4.0f, -5.0f), Vector3(0.0f, 0.0f, 1000.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 	//dragon->GetComponent<CameraComponent>()->SetAsRendererCamera();
 
 	GameObject* floor = new GameObject;
 	floor->AddComponent(new MeshComponent("floor"));
 
-	Camera* cam = new Camera(Vector3(0.0f, 10.0f, 8.0f), Vector3(0.0f, 1.7f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	Camera* cam = new Camera(Vector3(0.0f, 8.0f, 9.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	cam->SetAsRendererCamera();
+	//cam->AddComponent(new MovementController());
 
 	GameObject* pointlight = new GameObject;
-	pointlight->SetPosition(Vector3(0.0f, 5.0f, 5.0f));
-	pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), 10, Vector4(0.1, 0.1, 0.1), Vector4(0.5, 0.5, 0.5), Vector4(1, 1, 1), 80));
-	pointlight->AddComponent(new CameraComponent(pointlight->GetPosition(), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
-	
-	/*
-	* Use this function to set the camera from the light perspective,
-	* or in any other file, use:
-	* GameObject* pointlight = LightManager::GetInstance()->GetLightAt(0)->GetOwner();
-	* pointLight->GetComponent<CameraComponent>()->SetAsRendererCamera();
-	*/
-	pointlight->GetComponent<CameraComponent>()->SetAsRendererCamera();
+	pointlight->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
+	//pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.5), 5, 5));
+
+	GameObject* spotlight = new GameObject;
+	spotlight->SetPosition(Vector3(0.0f, 5.0f, 5.0f));
+	spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, -10.0), PI / 4, PI / 3, Vector4(1.0, 0.0, 0.0), 20, 3, true));
+	spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0f, 0.0f, -10.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
+
+	//DEBUG_DRAWING::DRAW_AABB(dragon->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());
+	//DEBUG_DRAWING::DRAW_AABB(floor->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());
 
 	// temp
+	/*
 	Debug debug;
 	Matrix4 trans;
 	MeshComponent* m3 = debug.draw_ellipsoid(Vector3(0.1f, 0.1f, 0.1f), Primitives::SPHERE, 5);
 	trans.CreateTranslation(pointlight->GetComponent<PointLightComponent>()->GetPosition());
 	GameObject* lightSphere = new GameObject();
 	lightSphere->AddComponent(m3);
-	lightSphere->setTransform(trans);
+	lightSphere->SetTransform(trans);
+	*/
 }
 
 void GameLoop::Update(float deltaTime)

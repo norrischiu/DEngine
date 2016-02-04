@@ -146,13 +146,24 @@
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="..\Graphics\GBuffer.cpp" />
     <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
+    <ClCompile Include="..\Graphics\Material.cpp" />
     <ClCompile Include="..\Graphics\MeshData.cpp" />
     <ClCompile Include="..\Graphics\MeshComponent.cpp" />
     <ClCompile Include="..\Graphics\MeshManager.cpp" />
+    <ClCompile Include="..\Graphics\PostProcessEffect.cpp" />
+    <ClCompile Include="..\Graphics\Render\CBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Render\PSPerMaterialCBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Render\RenderPass.cpp" />
+    <ClCompile Include="..\Graphics\Render\RenderTechnique.cpp" />
+    <ClCompile Include="..\Graphics\Render\State.cpp" />
+    <ClCompile Include="..\Graphics\Render\Texture.cpp" />
+    <ClCompile Include="..\Graphics\Render\PSPerLightCBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="..\Graphics\ShaderManager.cpp" />
     <ClCompile Include="..\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\Graphics\VertexBufferEngine.cpp" />
+    <ClCompile Include="..\Light\LightComponent.cpp" />
     <ClCompile Include="..\Light\LightManager.cpp" />
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
@@ -172,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Debug\debug.h" />
+    <ClInclude Include="..\Debug\DebugDrawing.h" />
     <ClInclude Include="..\Event\Event.h" />
     <ClInclude Include="..\Event\EventQueue.h" />
     <ClInclude Include="..\Event\InputEvent.h" />
@@ -185,16 +197,29 @@
     <ClInclude Include="..\Graphics\MeshData.h" />
     <ClInclude Include="..\Graphics\MeshComponent.h" />
     <ClInclude Include="..\Graphics\MeshManager.h" />
+    <ClInclude Include="..\Graphics\PostProcessEffect.h" />
+    <ClInclude Include="..\Graphics\Render\CBuffer.h" />
+    <ClInclude Include="..\Graphics\Render\PSPerLightCBuffer.h" />
+    <ClInclude Include="..\Graphics\Render\PSPerMaterialCBuffer.h" />
+    <ClInclude Include="..\Graphics\Render\RenderPass.h" />
+    <ClInclude Include="..\Graphics\Render\RenderTechnique.h" />
+    <ClInclude Include="..\Graphics\Render\State.h" />
+    <ClInclude Include="..\Graphics\Render\Texture.h" />
+    <ClInclude Include="..\Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="..\Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="..\Graphics\ShaderManager.h" />
     <ClInclude Include="..\Graphics\TextureManager.h" />
     <ClInclude Include="..\Graphics\VertexBufferEngine.h" />
     <ClInclude Include="..\Graphics\VertexFormat.h" />
     <ClInclude Include="..\Light\DirectionalLight.h" />
+    <ClInclude Include="..\Light\LightComponent.h" />
     <ClInclude Include="..\Light\LightManager.h" />
     <ClInclude Include="..\Light\PointLight.h" />
     <ClInclude Include="..\Light\PointLightComponent.h" />
     <ClInclude Include="..\Light\SpotLight.h" />
+    <ClInclude Include="..\Light\SpotLightComponent.h" />
+    <ClInclude Include="..\Math\Frustum.h" />
+    <ClInclude Include="..\Math\Plane.h" />
     <ClInclude Include="..\Math\simdmath.h" />
     <ClInclude Include="..\Memory\Handle.h" />
     <ClInclude Include="..\Memory\MemoryManager.h" />
@@ -218,6 +243,7 @@
     <ClInclude Include="..\System\Mouse.h" />
     <ClInclude Include="..\System\WinMsgHandler.h" />
     <ClInclude Include="..\Timer\Timer.h" />
+    <ClInclude Include="..\Utilities\Geometry.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GlobalInclude.h" />
   </ItemGroup>
@@ -227,7 +253,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\PS_PPE_BlurH.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\PS_bump.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_BlurV.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_SSReflection_ppe.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -316,6 +363,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\cbuffer.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

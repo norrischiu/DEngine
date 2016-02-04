@@ -1,8 +1,8 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#include "D3D11Renderer.h"
 #include "VertexFormat.h"
+class MeshComponent;
 
 #define PI 3.14159265358979323846
 

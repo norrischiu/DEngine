@@ -1,27 +1,27 @@
 // D3D11Renderer.h: the class for Direct3D 11 renderer
-#ifndef D3D11RENDERER_H
-#define D3D11RENDERER_H
+#ifndef D3D11RENDERER_H_
+#define D3D11RENDERER_H_
 
 #include <D3D11.h>
 #include <windows.h>
-#include <vector>
-#include "Math\simdmath.h"
 #include "GBuffer.h"
+#include "PostProcessEffect.h"
+#include "Render\Texture.h"
 #include "Object\CameraComponent.h"
 
 #pragma comment (lib, "D3D11")
 
-class MeshComponent;
-
 // Number of render target in G-Buffer
-const static unsigned int					RT_NUM = 3;
+const static unsigned int					RT_NUM = 2;
 
 // Singleton of the Direct3D 11 rendering device
 class D3D11Renderer
 {
+
 public:
+
 	// Default empty constructor
-	D3D11Renderer();
+	D3D11Renderer() {};
 
 	void ConstructWithWindow(HWND hWnd);
 
@@ -29,8 +29,8 @@ public:
 	{
 		for (int i = 0; i < RT_NUM; i++)
 		{
-			if (m_pRenderTargetView[i])
-				m_pRenderTargetView[i]->Release();
+			//if (m_pRenderTargetView[i])
+			//	m_pRenderTargetView[i]->Release();
 		}
 
 		if (m_pSwapChain)
@@ -45,17 +45,35 @@ public:
 
 	void Render();
 
-	static D3D11Renderer* GetInstance();
+	static D3D11Renderer* GetInstance() 
+	{
+		if (m_pInstance == nullptr)
+		{
+			m_pInstance = new D3D11Renderer();
+		}
+		return m_pInstance;
+	}
 
-	CameraComponent* GetCamera();
+	CameraComponent* GetCamera()
+	{
+		return m_RendererCamera;
+	}
 
-	void SetCamera(CameraType cameraType);
+	void SetCamera(CameraComponent* camera)
+	{
+		m_RendererCamera = camera;
+	}
 
-	void SetCamera(CameraComponent* camera);
+	void UnbindRenderTargets()
+	{
+		m_pD3D11Context->OMSetRenderTargets(0, nullptr, nullptr);
+	}
 
-	CameraType GetCameraType();
-
-	std::vector<MeshComponent*>& GetMeshComponentList();
+	void UnbindPSShaderResources(int num)
+	{
+		ID3D11ShaderResourceView* null[5] = { nullptr };
+		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, num, null);
+	}
 
 	// Pointer to interface, handles GPU and pipeline
 	ID3D11DeviceContext*						m_pD3D11Context;
@@ -67,48 +85,32 @@ public:
 	IDXGISwapChain*								m_pSwapChain;
 
 	// Array of pointer to the render target view
-	ID3D11RenderTargetView*						m_pRenderTargetView[RT_NUM];
+	ID3D11RenderTargetView*						m_pRTVArray[RT_NUM];
 
 	// Array of pointer to shader resources view
-	ID3D11ShaderResourceView*					m_pShaderResourceView[RT_NUM];
+	ID3D11ShaderResourceView*					m_pSRVArray[RT_NUM+1];
 
 	// Array of pointer to texture for deferred use
-	ID3D11Texture2D*							m_pTexture[RT_NUM];
+	Texture*									m_textures[RT_NUM]; // Gbuffer RTV, SRV
 
-	//
-	ID3D11RenderTargetView*						m_pBackBufferRTView;
+	Texture*									m_LightingAccumBuffer;
 
-	ID3D11DepthStencilView*						m_pDepthStencilView;
-	ID3D11DepthStencilView*						m_pDepthStencilReadOnlyView;
+	Texture*									m_backbuffer; // RTV
 
-	ID3D11DepthStencilState*					m_pDepthStencilState;
+	Texture*									m_depth; // DSV, SRV
 
-	ID3D11DepthStencilState*					m_pOffDepthStencilState;
-
-	ID3D11DepthStencilState*					m_pOffDepthOffStencilState;
-
-	ID3D11BlendState*							m_pBlendState;
-
-	ID3D11RasterizerState*						m_pCullBackRSState;
-
-	ID3D11RasterizerState*						m_pCullNoneRSState;
-
-	ID3D11RasterizerState*						m_pFillWireRSState;
+	Texture*									m_depthReadOnly; // DSV
 
 private:
+
 	// Singleton instance
 	static D3D11Renderer*						m_pInstance;
 
-	// List of all mesh instance to be drawn
-	std::vector<MeshComponent*>					m_MeshComponentList;
-
-	CameraComponent*							m_camera;
-
-	CameraComponent*							m_renderCamera;
-
-	CameraType									m_currrent_camera_type;
+	CameraComponent*							m_RendererCamera;
 
 	GBuffer*									m_GBuffer;
+
+	PostProcessEffect* m_PPE;
 };
 
 #endif

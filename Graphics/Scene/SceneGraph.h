@@ -2,6 +2,9 @@
 #define SCENEGRAPH_H_
 
 #include <vector>
+#include "Object\CameraComponent.h"
+#include "Render\VSPerObjectCBuffer.h"
+#include "Render\PSPerMaterialCBuffer.h"
 
 class MeshComponent;
 
@@ -9,7 +12,13 @@ class SceneGraph
 {
 public:
 
+	SceneGraph();
+
+	void FrustumCulling(Frustum frustum);
+
 	void Render();
+
+	void ShadowMapGeneration();
 
 	void RENDER_DEBUG_DRAWING();
 
@@ -31,6 +40,10 @@ public:
 		{
 			delete itr;
 		}
+		for (auto itr : DEBUG_DRAWING_TREE)
+		{
+			delete itr;
+		}
 	}
 
 private:
@@ -43,6 +56,10 @@ private:
 
 	// Temp storage for debug drawing
 	std::vector<MeshComponent*>						DEBUG_DRAWING_TREE; // temp
+
+	VSPerObjectCBuffer*								m_pVSCBuffer;
+
+	PSPerMaterialCBuffer*							m_pPSCBuffer;
 
 };
 

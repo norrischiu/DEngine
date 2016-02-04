@@ -3,13 +3,77 @@
 
 LightManager* LightManager::m_pInstance;
 
-void LightManager::AddLight(PointLightComponent* light)
+LightManager::LightManager()
+	: m_iNumLight(0)
+{
+	//Debug geometry;
+	Vector3* pPointLightVertices = new Vector3[8];
+	Vector3* pSpotLightVertices = new Vector3[5];
+	unsigned int pPointLightIndices[36] =
+	{ 
+		0, 1, 2, // side 1
+		2, 1, 3,
+		4, 0, 6, // side 2
+		6, 0, 2,
+		7, 5, 6, // side 3
+		6, 5, 4,
+		3, 1, 7, // side 4
+		7, 1, 5,
+		4, 5, 0, // side 5
+		0, 5, 1,
+		3, 7, 2, // side 6
+		2, 7, 6 
+	};
+	pPointLightVertices[0] = Vector3(-0.5, 0.5, -0.5);
+	pPointLightVertices[1] = Vector3(0.5, 0.5, -0.5);
+	pPointLightVertices[2] = Vector3(-0.5, -0.5, -0.5);
+	pPointLightVertices[3] = Vector3(0.5, -0.5, -0.5);
+	pPointLightVertices[4] = Vector3(-0.5, 0.5, 0.5);
+	pPointLightVertices[5] = Vector3(0.5, 0.5, 0.5);
+	pPointLightVertices[6] = Vector3(-0.5, -0.5, 0.5);
+	pPointLightVertices[7] = Vector3(0.5, -0.5, 0.5);
+	m_PointLightVertices = pPointLightVertices;
+	for (int i = 0; i < 36; ++i)
+	{
+		m_PointLightIndices[i] = pPointLightIndices[i];
+	}
+	//m_PointLightVertices = geometry.CreateUnitSphereVertex();
+	//m_PointLightIndices = geometry.CreateUnitSphereIndex();
+
+	unsigned int pSpotLightIndices[18] =
+	{
+		0, 1, 2, // top
+		0, 2, 3,
+		0, 3, 4,  
+		0, 4, 1,
+		1, 4, 3, // base
+		3, 2, 1,
+	};
+	pSpotLightVertices[0] = Vector3(0.0f, 0.5f, 0.0f);
+	pSpotLightVertices[1] = Vector3(-0.5f, -0.5f, -0.5f);
+	pSpotLightVertices[2] = Vector3(-0.5f, -0.5f, 0.5f);
+	pSpotLightVertices[3] = Vector3(0.5f, -0.5f, 0.5f);
+	pSpotLightVertices[4] = Vector3(0.5f, -0.5f, -0.5f);
+	m_SpotLightVertices = pSpotLightVertices;
+	for (int i = 0; i < 18; ++i)
+	{
+		m_SpotLightIndices[i] = pSpotLightIndices[i];
+	}
+}
+
+void LightManager::AddLight(LightComponent* light)
 {
 	m_vLights.push_back(light);
 	m_iNumLight++;
 }
 
-PointLightComponent* LightManager::GetLightAt(int index)
+int LightManager::CreateShadowMap()
+{
+	m_ShadowMaps.push_back(new Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES));
+	return m_ShadowMaps.size() - 1;
+}
+
+LightComponent* LightManager::GetLightAt(int index)
 {
 	return m_vLights[index];
 }

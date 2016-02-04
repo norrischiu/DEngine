@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include "font.h"
+#include "Graphics\Scene\SceneGraph.h"
 
 Font::Font()
 {
@@ -101,10 +102,10 @@ MeshComponent* Font::write(char* sentence) {
 		pIndices[i++] = j++;
 	}
 
-	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, size, eRenderType::V1P1UV, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, "../Font/font.dds");
-	D3D11Renderer::GetInstance()->GetMeshComponentList().push_back(Meshcomponent);
+	MeshComponent* meshComponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, size, eRenderType::V1P1UV, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, "../Font/font.dds");
+	SceneGraph::GetInstance()->AddComponent(meshComponent);
 
-	return Meshcomponent;
+	return meshComponent;
 }
 
 bool Font::LoadFontData(char* filename) {

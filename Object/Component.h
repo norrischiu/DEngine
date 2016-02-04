@@ -12,7 +12,8 @@ namespace ComponentID
 		CAMERA,
 		CONTROLLER,
 		RIGIDBODY,
-		POINTLIGHT
+		POINTLIGHT,
+		SPOTLIGHT
 	};
 }
 
@@ -36,7 +37,7 @@ public:
 	virtual void Update(float deltaTime) = 0;
 
 	// Set game object owner
-	void SetOwner(GameObject* ptr)
+	virtual void SetOwner(GameObject* ptr)
 	{
 		m_pOwner = ptr;
 	}

@@ -1,6 +1,7 @@
 #include "VertexBufferEngine.h"
 #include <stdio.h>
 #include "VertexFormat.h"
+#include "Utilities\Geometry.h"
 
 #define C_STR(string, text)\
 		(string + text).c_str()
@@ -8,6 +9,7 @@
 // #define _CRT_SECURE_NO_WARNINGS
 
 VertexBufferEngine* VertexBufferEngine::m_pInstance;
+
 VertexBufferEngine* VertexBufferEngine::GetInstance() {
 	if (!m_pInstance)
 		m_pInstance = new VertexBufferEngine();
@@ -109,10 +111,14 @@ void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P*) pVertexData)[i].m_pos = Vector3(x, y, z);
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
 	}
 	fclose(pFile);
 }
@@ -125,10 +131,14 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((vertex1P1UV*) pVertexData)[i].m_pos = Vector3(x, y, z);
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
 	}
 	fclose(pFile);
 
@@ -140,8 +150,7 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f %f", &x, &y);
 		((vertex1P1UV*) pVertexData)[i].m_UV[0] = x;
 		((vertex1P1UV*) pVertexData)[i].m_UV[1] = y;
 	}
@@ -156,10 +165,14 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* file
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
 	}
 	fclose(pFile);
 
@@ -171,8 +184,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* file
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f %f", &x, &y);
 		((Vertex1P1N1UV*)pVertexData)[i].m_UV[0] = x;
 		((Vertex1P1N1UV*)pVertexData)[i].m_UV[1] = y;
 	}
@@ -185,9 +197,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* file
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1UV*)pVertexData)[i].m_norm = Vector3(x, y, z);
 	}
 	fclose(pFile);
@@ -201,10 +211,14 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
 	}
 	fclose(pFile);
 
@@ -216,8 +230,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
+		fscanf(pFile, "%f %f", &x, &y);
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_UV[0] = x;
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_UV[1] = y;
 	}
@@ -230,9 +243,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_norm = Vector3(x, y, z, 0);
 	}
 	fclose(pFile);
@@ -244,9 +255,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
-		fscanf(pFile, "%f", &x);
-		fscanf(pFile, "%f", &y);
-		fscanf(pFile, "%f", &z);
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_tangent = Vector3(x, y, z, 0);
 	}
 	fclose(pFile);

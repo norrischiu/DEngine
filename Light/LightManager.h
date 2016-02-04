@@ -4,45 +4,15 @@
 #define MAX_LIGHT 100
 
 #include <vector>
-#include "Debug\debug.h"
-
-class PointLightComponent;
+#include "LightComponent.h"
+#include "Math\simdmath.h"
+#include "Graphics\Render\Texture.h"
 
 class LightManager
 {
 public:
 
-	LightManager()
-		: m_iNumLight(0)
-	{
-		Debug geometry;
-		Vertex1P* pVertices = new Vertex1P[8];
-		UINT pIndices[36] =
-		{ 0, 1, 2,    // side 1
-			2, 1, 3,
-			4, 0, 6,    // side 2
-			6, 0, 2,
-			7, 5, 6,    // side 3
-			6, 5, 4,
-			3, 1, 7,    // side 4
-			7, 1, 5,
-			4, 5, 0,    // side 5
-			0, 5, 1,
-			3, 7, 2,    // side 6
-			2, 7, 6};
-		pVertices[0].m_pos = Vector3(-0.5, 0.5, -0.5);
-		pVertices[1].m_pos = Vector3(0.5, 0.5, -0.5);
-		pVertices[2].m_pos = Vector3(-0.5, -0.5, -0.5);
-		pVertices[3].m_pos = Vector3(0.5, -0.5, -0.5);
-		pVertices[4].m_pos = Vector3(-0.5, 0.5, 0.5);
-		pVertices[5].m_pos = Vector3(0.5, 0.5, 0.5);
-		pVertices[6].m_pos = Vector3(-0.5, -0.5, 0.5);
-		pVertices[7].m_pos = Vector3(0.5, -0.5, 0.5);
-		m_PointLightVertices = pVertices;
-		m_PointLightIndices = pIndices;
-		//m_PointLightVertices = geometry.CreateUnitSphereVertex();
-		//m_PointLightIndices = geometry.CreateUnitSphereIndex();
-	};
+	LightManager();
 
 	static LightManager* GetInstance()
 	{
@@ -51,9 +21,11 @@ public:
 		return m_pInstance;
 	}
 
-	void AddLight(PointLightComponent* light);
+	void AddLight(LightComponent* light);
 
-	PointLightComponent* GetLightAt(int index);
+	int CreateShadowMap();
+
+	LightComponent* GetLightAt(int index);
 
 	inline int GetNumLights()
 	{
@@ -65,9 +37,24 @@ public:
 		return m_PointLightVertices;
 	}	
 	
+	void* GetSpotLightVertices()
+	{
+		return m_SpotLightVertices;
+	}
+
 	void* GetPointLightIndices()
 	{
 		return m_PointLightIndices;
+	}
+
+	void* GetSpotLightIndices()
+	{
+		return m_SpotLightIndices;
+	}
+
+	Texture* GetShadowMap(int index)
+	{
+		return m_ShadowMaps[index];
 	}
 
 private:
@@ -76,13 +63,19 @@ private:
 	static LightManager*							m_pInstance;
 
 	// Storage of all lights
-	std::vector<PointLightComponent*>				m_vLights;
+	std::vector<LightComponent*>					m_vLights;
+
+	// Storage of all shadow maps
+	std::vector<Texture*>							m_ShadowMaps;
 
 	// Number of lights
 	unsigned int									m_iNumLight;
 
-	Vertex1P*										m_PointLightVertices;
-	unsigned int*									m_PointLightIndices;
+	Vector3*										m_PointLightVertices;
+	unsigned int									m_PointLightIndices[36];
+
+	Vector3*										m_SpotLightVertices;
+	unsigned int									m_SpotLightIndices[18];
 
 };
 
