@@ -61,6 +61,8 @@ private:
 
 	PSPerMaterialCBuffer*							m_pPSCBuffer;
 
+	RenderPass* shadowPass;
+
 };
 
 #endif

@@ -54,16 +54,24 @@ void GBuffer::LightStencilCheck()
 
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
 		Matrix4 scale, trans, rot;
+		scale.CreateScale(currLight->GetRadius());
+		trans.CreateTranslation(currLight->GetPosition());
 		if (currLight->GetType() == LightComponent::SPOT)
 		{
+			SpotLightComponent* currSpotlight = (SpotLightComponent*) currLight;
+			Matrix4 scaleX, scaleY, scaleZ, transY;
+			scaleX.CreateScaleX(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
+			scaleY.CreateScaleY(currLight->GetRadius());
+			scaleZ.CreateScaleZ(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
+			scale = scaleZ * scaleY * scaleX;
+			transY.CreateTranslation(Vector3(0.0f, -currLight->GetRadius() / 2.0f, 0.0f));
+			trans *= transY;
 			Vector3 dir = currLight->GetDirection();
 			dir.Normalize();
 			Vector3 axis = Cross(dir, Vector3::NegativeUnitY);
 			Quaternion quat(axis, asinf(axis.Length()));
 			rot = quat.GetRotationMatrix();
 		}
-		trans.CreateTranslation(currLight->GetPosition());
-		scale.CreateScale(currLight->GetRadius() * 2.0f);
 		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
 		m_pVSCBuffer->Update();
 
@@ -94,16 +102,24 @@ void GBuffer::Render()
 		// Update VS cbuffer
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
 		Matrix4 scale, trans, rot;
+		scale.CreateScale(currLight->GetRadius());
+		trans.CreateTranslation(currLight->GetPosition());
 		if (currLight->GetType() == LightComponent::SPOT)
 		{
+			SpotLightComponent* currSpotlight = (SpotLightComponent*)currLight;
+			Matrix4 scaleX, scaleY, scaleZ, transY;
+			scaleX.CreateScaleX(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
+			scaleY.CreateScaleY(currLight->GetRadius());
+			scaleZ.CreateScaleZ(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
+			scale = scaleZ * scaleY * scaleX;
+			transY.CreateTranslation(Vector3(0.0f, -currLight->GetRadius() / 2.0f, 0.0f));
+			trans *= transY;
 			Vector3 dir = currLight->GetDirection();
 			dir.Normalize();
 			Vector3 axis = Cross(dir, Vector3::NegativeUnitY);
 			Quaternion quat(axis, asinf(axis.Length()));
 			rot = quat.GetRotationMatrix();
 		}
-		trans.CreateTranslation(currLight->GetPosition());
-		scale.CreateScale(currLight->GetRadius() * 2.0f);
 		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
 		m_pVSCBuffer->Update();
 
@@ -153,6 +169,6 @@ void GBuffer::Render()
 	}
 
 	// Unbind the resources
-	D3D11Renderer::GetInstance()->UnbindPSShaderResources(3);
+	D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);
 	D3D11Renderer::GetInstance()->UnbindRenderTargets();
 }

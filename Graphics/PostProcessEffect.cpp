@@ -77,12 +77,12 @@ void PostProcessEffect::Render()
 	ptr2->mViewToClip = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix();
 	m_pPSCBuffer->Update();
 
-//	fullscreenQuadMesh->RenderUsingPassAt(0);
+	fullscreenQuadMesh->RenderUsingPassAt(0);
 	D3D11Renderer::GetInstance()->UnbindPSShaderResources(3);
 	D3D11Renderer::GetInstance()->UnbindRenderTargets();
-//	fullscreenQuadMesh->RenderUsingPassAt(1);
+	fullscreenQuadMesh->RenderUsingPassAt(1);
 	D3D11Renderer::GetInstance()->UnbindRenderTargets();
-//	fullscreenQuadMesh->RenderUsingPassAt(2);
+	fullscreenQuadMesh->RenderUsingPassAt(2);
 	
 	// Unbind the resources
 	D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);

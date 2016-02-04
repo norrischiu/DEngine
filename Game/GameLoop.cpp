@@ -37,18 +37,18 @@ GameLoop::GameLoop()
 	GameObject* floor = new GameObject;
 	floor->AddComponent(new MeshComponent("floor"));
 
-	Camera* cam = new Camera(Vector3(0.0f, 8.0f, 9.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	Camera* cam = new Camera(Vector3(0.0f, 3.0f, 12.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	cam->SetAsRendererCamera();
 	//cam->AddComponent(new MovementController());
 
 	GameObject* pointlight = new GameObject;
 	pointlight->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
-	//pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.5), 5, 5));
+	//pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.5), 8, 8));
 
 	GameObject* spotlight = new GameObject;
-	spotlight->SetPosition(Vector3(0.0f, 5.0f, 5.0f));
-	spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, -10.0), PI / 4, PI / 3, Vector4(1.0, 0.0, 0.0), 20, 3, true));
-	spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0f, 0.0f, -10.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
+	spotlight->SetPosition(Vector3(0.0f, 10.0f, 8.0f));
+	spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 4, PI / 1.5f, Vector4(1.0, 1.0, 1.0), 15, 8, true));
+	spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 
 	//DEBUG_DRAWING::DRAW_AABB(dragon->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());
 	//DEBUG_DRAWING::DRAW_AABB(floor->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());

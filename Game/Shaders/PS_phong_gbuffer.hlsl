@@ -121,7 +121,7 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 			float4 shadowMapL = light.vPosVS - posSMVS;
 
 			// shadowing
-			isShadow = (length(L.xyz) - 0.1f > length(shadowMapL.xyz) ? 0.0f : 1.0f);
+			isShadow = (length(L.xyz) - 0.05f > length(shadowMapL.xyz) ? 0.0f : 1.0f);
 		}
 	}
 

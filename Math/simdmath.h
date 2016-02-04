@@ -212,6 +212,39 @@ public:
 		_rows[3] = _mm_insert_ps(_rows[3], _rows[3], 0x07);
 	}
 
+	inline void CreateScaleX(float scalar)
+	{
+		__m128 scale = _mm_set_ps1(scalar);
+		__m128 identity = _mm_set_ps1(1.0f);
+
+		_rows[0] = _mm_insert_ps(_rows[0], scale, 0x0E);
+		_rows[1] = _mm_insert_ps(_rows[1], identity, 0x5D);
+		_rows[2] = _mm_insert_ps(_rows[2], identity, 0xAB);
+		_rows[3] = _mm_insert_ps(identity, identity, 0x07);
+	}
+
+	inline void CreateScaleY(float scalar)
+	{
+		__m128 scale = _mm_set_ps1(scalar);
+		__m128 identity = _mm_set_ps1(1.0f);
+
+		_rows[0] = _mm_insert_ps(_rows[0], identity, 0x0E);
+		_rows[1] = _mm_insert_ps(_rows[1], scale, 0x5D);
+		_rows[2] = _mm_insert_ps(_rows[2], identity, 0xAB);
+		_rows[3] = _mm_insert_ps(_rows[3], identity, 0x07);
+	}
+
+	inline void CreateScaleZ(float scalar)
+	{
+		__m128 scale = _mm_set_ps1(scalar);
+		__m128 identity = _mm_set_ps1(1.0f);
+
+		_rows[0] = _mm_insert_ps(_rows[0], identity, 0x0E);
+		_rows[1] = _mm_insert_ps(_rows[1], identity, 0x5D);
+		_rows[2] = _mm_insert_ps(_rows[2], scale, 0xAB);
+		_rows[3] = _mm_insert_ps(_rows[3], identity, 0x07);
+	}
+
 	// Set a rotation transformation about the X axis given an angle in radian
 	inline void CreateRotationX(float radian)
 	{

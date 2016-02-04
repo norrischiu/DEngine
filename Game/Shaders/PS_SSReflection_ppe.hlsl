@@ -1,4 +1,4 @@
-Texture2D shaderTexture[4];
+Texture2D shaderTexture[3];
 
 // cbuffer
 
@@ -10,6 +10,8 @@ static matrix mClipToTex =
 
 struct Light
 {
+	matrix		mWorldToLightClip;
+	matrix		mLightClipToView;
 	float4		vPosVS;
 	float4		vDirVS;
 	float4		vColor;
@@ -18,6 +20,7 @@ struct Light
 	float		fOuterAngle;
 	float		fRadius;
 	int			iType;
+	bool		bIsCastShadow;
 };
 
 cbuffer PS_CONSTANT_BUFFER : register(b1)
@@ -25,6 +28,7 @@ cbuffer PS_CONSTANT_BUFFER : register(b1)
 	Light		light;
 	Matrix		mClipToView;
 	Matrix		mViewToClip;
+	Matrix		mViewToWorld;
 };
 
 // input

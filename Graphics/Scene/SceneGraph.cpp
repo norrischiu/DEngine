@@ -14,6 +14,12 @@ SceneGraph::SceneGraph()
 {
 	m_pVSCBuffer = new VSPerObjectCBuffer;
 	m_pPSCBuffer = new PSPerMaterialCBuffer;
+
+	shadowPass = new RenderPass;
+	shadowPass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV.hlsl");
+	shadowPass->SetPixelShader(nullptr);
+	shadowPass->SetBlendState(State::NULL_STATE);
+	shadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 }
 
 void SceneGraph::FrustumCulling(Frustum frustum)
@@ -62,8 +68,7 @@ void SceneGraph::Render()
 	swprintf(s, 64, L"Drawing: %i\n", count);
 	OutputDebugStringW(s);
 
-	ID3D11ShaderResourceView* null[2] = { nullptr };
-	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, 2, null);
+	D3D11Renderer::GetInstance()->UnbindPSShaderResources(2);
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -77,20 +82,11 @@ void SceneGraph::ShadowMapGeneration()
 			for (auto itr : m_tree)
 			{
 				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
-				ptr->WorldTransform = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
 				ptr->Transform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
 				m_pVSCBuffer->Update();
 
-				RenderPass* shadowPass = new RenderPass;
-				shadowPass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV.hlsl");
-				shadowPass->SetPixelShader(nullptr);
-				shadowPass->SetBlendState(State::NULL_STATE);
 				shadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
-				shadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-
 				itr->m_pMeshData->RenderUsingPass(shadowPass);
-
-				delete shadowPass;
 			}
 		}
 	}

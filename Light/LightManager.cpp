@@ -24,6 +24,7 @@ LightManager::LightManager()
 		3, 7, 2, // side 6
 		2, 7, 6 
 	};
+	/*
 	pPointLightVertices[0] = Vector3(-0.5, 0.5, -0.5);
 	pPointLightVertices[1] = Vector3(0.5, 0.5, -0.5);
 	pPointLightVertices[2] = Vector3(-0.5, -0.5, -0.5);
@@ -32,6 +33,15 @@ LightManager::LightManager()
 	pPointLightVertices[5] = Vector3(0.5, 0.5, 0.5);
 	pPointLightVertices[6] = Vector3(-0.5, -0.5, 0.5);
 	pPointLightVertices[7] = Vector3(0.5, -0.5, 0.5);
+	*/
+	pPointLightVertices[0] = Vector3(-1.0, 1.0, -1.0);
+	pPointLightVertices[1] = Vector3(1.0, 1.0, -1.0);
+	pPointLightVertices[2] = Vector3(-1.0, -1.0, -1.0);
+	pPointLightVertices[3] = Vector3(1.0, -1.0, -1.0);
+	pPointLightVertices[4] = Vector3(-1.0, 1.0, 1.0);
+	pPointLightVertices[5] = Vector3(1.0, 1.0, 1.0);
+	pPointLightVertices[6] = Vector3(-1.0, -1.0, 1.0);
+	pPointLightVertices[7] = Vector3(1.0, -1.0, 1.0);
 	m_PointLightVertices = pPointLightVertices;
 	for (int i = 0; i < 36; ++i)
 	{
@@ -49,11 +59,11 @@ LightManager::LightManager()
 		1, 4, 3, // base
 		3, 2, 1,
 	};
-	pSpotLightVertices[0] = Vector3(0.0f, 0.5f, 0.0f);
-	pSpotLightVertices[1] = Vector3(-0.5f, -0.5f, -0.5f);
-	pSpotLightVertices[2] = Vector3(-0.5f, -0.5f, 0.5f);
-	pSpotLightVertices[3] = Vector3(0.5f, -0.5f, 0.5f);
-	pSpotLightVertices[4] = Vector3(0.5f, -0.5f, -0.5f);
+	pSpotLightVertices[0] = Vector3(0.0f, 1.0f, 0.0f);
+	pSpotLightVertices[1] = Vector3(-1.0f, -1.0f, -1.0f);
+	pSpotLightVertices[2] = Vector3(-1.0f, -1.0f, 1.0f);
+	pSpotLightVertices[3] = Vector3(1.0f, -1.0f, 1.0f);
+	pSpotLightVertices[4] = Vector3(1.0f, -1.0f, -1.0f);
 	m_SpotLightVertices = pSpotLightVertices;
 	for (int i = 0; i < 18; ++i)
 	{

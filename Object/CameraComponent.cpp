@@ -27,8 +27,8 @@ void CameraComponent::SetAsRendererCamera()
 Matrix4 CameraComponent::GetViewMatrix()
 {
 	Vector3 pos = m_vPos, lookat = m_vLookAt;
-	//pos.Transform(*m_pOwner->GetTransform());
-	//lookat.Transform(*m_pOwner->GetTransform());
+	pos.Transform(*m_pOwner->GetTransform());
+	lookat.Transform(*m_pOwner->GetTransform());
 	return Matrix4::LookAtMatrix(pos, lookat, m_vUp);
 }
 
