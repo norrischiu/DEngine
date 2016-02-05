@@ -218,24 +218,66 @@ void Collide::raySphereCollide(const Body * ray_, const Body * sphere_)
 {
 	Ray *ray = (Ray*)ray_;
 	Sphere *sphere = (Sphere*)sphere_;
-	Vector3 vec = ray->getStart() - sphere->getCenter();
-	setCollide(true);
-	setDistance(0.0f);
-	float fB = vec.Dot(ray->getDir());
-	float fC = vec.Dot(vec) - sphere->getRadius()*sphere->getRadius();
-	if (fC > 0.0f && fB > 0.0f)
-		setCollide(false);
-	float fDisc = fB*fB - fC;
-	if (fDisc < 0.0f)
-		setCollide(false);
 
-	// compute the response vectors
-	Vector3 responseObject1 = ray_->getCenter()- sphere_->getCenter();
-	Vector3 responseObject2 = sphere_->getCenter() - ray_->getCenter();
-	setResponseObject1(responseObject1);
-	setResponseObject2(responseObject2);
+	float distance = pow((ray->getStart().GetX() + ray->getDir().GetX() - sphere->getCenter().GetX()), 2) +
+		pow((ray->getStart().GetY() + ray->getDir().GetY() - sphere->getCenter().GetY()), 2) +
+		pow((ray->getStart().GetZ() + ray->getDir().GetZ() - sphere->getCenter().GetZ()), 2);
+	setCollide(sqrt(distance) <= sphere->getRadius());
+	setDistance(sqrt(distance) - sphere->getRadius());
+
+
+	Vector3 resp1 = ray->getStart() - sphere->getCenter();
+	Vector3 resp2 = sphere->getCenter() - ray->getStart();
+	setResponseObject1(resp1);
+	setResponseObject2(resp2);
 }
 
-void Collide::rayBoxCollide(const Body * ray, const Body * box)
+void Collide::rayBoxCollide(const Body * p_Ray, const Body * p_Box)
 {
+
+	float tNear, tFar, t1, t2;
+	bool collideResult = true;
+	Ray* ray = (Ray*)p_Ray;
+	AABB* aabb = (AABB*)p_Box;
+
+	float raydir[3], rayOrigin[3], min[3], max[3];
+	raydir[0] = ray->getDir().GetX();
+	raydir[1] = ray->getDir().GetY();
+	raydir[2] = ray->getDir().GetZ();
+	rayOrigin[0] = ray->getStart().GetX();
+	rayOrigin[1] = ray->getStart().GetY();
+	rayOrigin[2] = ray->getStart().GetZ();
+	min[0] = aabb->getMin().GetX();
+	min[1] = aabb->getMin().GetY();
+	min[2] = aabb->getMin().GetZ();
+	max[0] = aabb->getMax().GetX();
+	max[1] = aabb->getMax().GetY();
+	max[2] = aabb->getMax().GetZ();
+
+	for (int i = 0; i < 3; i++)
+	{
+		tNear = -std::numeric_limits<float>::max();
+		tFar = std::numeric_limits<float>::max();
+
+		t1 = (min[i] - rayOrigin[i]) / raydir[i];
+		t2 = (max[i] - rayOrigin[i]) / raydir[i];
+		if (t1 > t2)
+		{
+			float temp = t1;
+			t1 = t2;
+			t2 = temp;
+		}
+		if (t1 > tNear)
+			tNear = t1;
+		if (t2 < tFar)
+			tFar = t2;
+		if (tNear > tFar || tFar < 0)
+		{
+			collideResult = false;
+		}
+	}
+
+	setCollide(collideResult);
+	setDistance(0.0f);
+
 }

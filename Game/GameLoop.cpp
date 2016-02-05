@@ -1,5 +1,5 @@
 /* Debug Include */
-#include "Debug\DebugDrawing.h"
+//#include "Debug\DebugDrawing.h"
 
 #include "GameLoop.h"
 #include "Graphics\MeshComponent.h"

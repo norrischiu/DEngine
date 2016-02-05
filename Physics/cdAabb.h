@@ -28,7 +28,7 @@ public:
 	// check does two AABBs intersect? return an IntersectData
 //	IntersectData collision(const Body& other);
 
-	void Transform(Matrix4 transform)
+	void Transform(Matrix4& transform)
 	{
 		Vector3 m_vMaxXYZ(FLT_MIN, FLT_MIN, FLT_MIN);
 		Vector3 m_vMinXYZ(FLT_MAX, FLT_MAX, FLT_MAX);

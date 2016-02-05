@@ -4,7 +4,7 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Game/GlobalInclude.h"
 #include "GameObject\GameObject.h"
-#include "Debug\DebugDrawing.h"
+//#include "Debug\DebugDrawing.h"
 #include <sstream>
 #include <string>
 
