@@ -38,6 +38,11 @@ int SkeletonNode::getNumChildren() const
 	return m_children.size();
 }
 
+void SkeletonNode::setChildren(const std::vector<SkeletonNode>& children)
+{
+	m_children = children;
+}
+
 SkeletonNode::~SkeletonNode()
 {
 

@@ -7,14 +7,14 @@
 class AnimationSet
 {
 public:
-	AnimationSet();
 	AnimationSet(const float currTime, const bool active = true);
 	~AnimationSet();
 
 	void addAnimation(const std::string name, const Animation& animation);
 	void removeAnimation(const std::string name);
-	Animation* findAnimation(const std::string name);
 	std::unordered_map<std::string, Animation>* getAnimations();
+	Animation* getAnimation(const std::string name);
+	
 	int getNumAnimations() const;
 
 	float getCurrTime() const;

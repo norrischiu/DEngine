@@ -15,6 +15,7 @@ public:
 	Joint* getJoint();
 	void setJoint(const Joint& joint);
 	std::vector<SkeletonNode>* getChildren();
+	void setChildren(const std::vector<SkeletonNode>& children);
 	int getNumChildren() const;
 
 private:

@@ -20,6 +20,11 @@ void Animation::addAnimationMatrix(const std::vector<Matrix4>& matrices)
 	m_animationMatrices.insert(m_animationMatrices.end(), matrices.begin(), matrices.end());
 }
 
+std::vector<Matrix4>& Animation::getAnimationMatrices()
+{
+	return m_animationMatrices;
+}
+
 void Animation::setAnimationMatrices(const std::vector<Matrix4>& matrices)
 {
 	m_animationMatrices = matrices;

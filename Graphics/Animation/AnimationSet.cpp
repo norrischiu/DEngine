@@ -1,10 +1,5 @@
 #include "AnimationSet.h"
 
-AnimationSet::AnimationSet()
-{
-}
-
-
 AnimationSet::AnimationSet(const float currTime, const bool active) :
 	m_currTime(currTime), m_active(active)
 {
@@ -26,23 +21,23 @@ void AnimationSet::removeAnimation(const std::string name)
 	m_animations.erase(name);
 }
 
+std::unordered_map<std::string, Animation>* AnimationSet::getAnimations()
+{
+	return &m_animations;
+}
 
-Animation* AnimationSet::findAnimation(const std::string name)
+Animation* AnimationSet::getAnimation(const std::string name)
 {
 	auto t = m_animations.find(name);
 
 	if (t == m_animations.end()) {
 		return nullptr;
-	} else {
+	}
+	else {
 		return &t->second;
 	}
 
 	return nullptr;
-}
-
-std::unordered_map<std::string, Animation>* AnimationSet::getAnimations()
-{
-	return &m_animations;
 }
 
 int AnimationSet::getNumAnimations() const

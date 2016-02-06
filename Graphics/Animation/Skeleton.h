@@ -15,9 +15,13 @@ public:
 	void updateSkeletonNode(SkeletonNode* skeletonNode, const Matrix4& matrix);
 	void updateSkeletonNode(const std::string name, const Matrix4& matrix);
 
+	std::unordered_map<std::string, SkeletonNode>* getSkeletonTree();
+	void setSkeletonTree(const std::unordered_map<std::string, SkeletonNode>& skeletonTree);
+
 	int getNumSkeletonNodes() const;
+	void setNumSkeletonNodes(const int num);
 
 private:
-	std::unordered_map<std::string, SkeletonNode> m_tree;
+	std::unordered_map<std::string, SkeletonNode> m_skeletonTree;
 	int m_numSkeletonNodes;
 };

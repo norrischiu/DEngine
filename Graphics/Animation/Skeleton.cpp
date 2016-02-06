@@ -12,19 +12,19 @@ Skeleton::~Skeleton()
 void Skeleton::addSkeletonNode(const std::string name, const SkeletonNode& skeletonNode)
 {
 	std::pair <std::string, SkeletonNode> node = std::make_pair(name, skeletonNode);
-	m_tree.insert(node);
+	m_skeletonTree.insert(node);
 }
 
 void Skeleton::removeSkeletonNode(const std::string name)
 {
-	m_tree.erase(name);
+	m_skeletonTree.erase(name);
 }
 
 SkeletonNode* Skeleton::findSkeletonNode(const std::string name)
 {
-	auto t = m_tree.find(name);
+	auto t = m_skeletonTree.find(name);
 
-	if (t == m_tree.end()) {
+	if (t == m_skeletonTree.end()) {
 		return nullptr;
 	}
 	else {
@@ -55,7 +55,22 @@ void Skeleton::updateSkeletonNode(const std::string name, const Matrix4& matrix)
 	}
 }
 
+std::unordered_map<std::string, SkeletonNode>* Skeleton::getSkeletonTree()
+{
+	return &m_skeletonTree;
+}
+
+void Skeleton::setSkeletonTree(const std::unordered_map<std::string, SkeletonNode>& skeletonTree)
+{
+	m_skeletonTree = skeletonTree;
+}
+
 int Skeleton::getNumSkeletonNodes() const
 {
 	return m_numSkeletonNodes;
+}
+
+void Skeleton::setNumSkeletonNodes(const int num)
+{
+	m_numSkeletonNodes = num;
 }

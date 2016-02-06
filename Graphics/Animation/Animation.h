@@ -13,6 +13,8 @@ public:
 
 	void addAnimationMatrix(const Matrix4& matrix);
 	void addAnimationMatrix(const std::vector<Matrix4>& matrices);
+
+	std::vector<Matrix4>& getAnimationMatrices();
 	void setAnimationMatrices(const std::vector<Matrix4>& matrices);
 	
 	std::string getNodeName() const;
