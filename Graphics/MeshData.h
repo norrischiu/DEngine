@@ -47,8 +47,6 @@ public:
 
 	void Render();
 
-	void RenderUsingPassAt(int index);
-
 	void RenderUsingPass(RenderPass* pass);
 
 	inline int GetVertexNum()

@@ -2,7 +2,9 @@
 #define EVENT_QUEUE_H
 
 #include "Event.h"
+#include "Memory\Handle.h"
 #include <queue>
+#include <assert.h>
 
 enum EventQueueType
 {
@@ -14,24 +16,25 @@ class EventQueue
 {
 
 public:
-	void Add(Event* evt)
+	void Add(Handle evt)
 	{
 		m_inputQueue.push(evt);
 	}
 
-	Event* Front()
+	Handle Front()
 	{
-		if (!m_inputQueue.empty())
-		{
-			Event* pEvt = m_inputQueue.front();
-			return pEvt;
-		}
-		return nullptr;
+		return m_inputQueue.front();
 	}
 
 	void Pop()
 	{
+		m_inputQueue.front().Free();
 		m_inputQueue.pop();
+	}
+
+	bool Empty()
+	{
+		return m_inputQueue.empty();
 	}
 
 	static EventQueue* GetInstance()
@@ -46,9 +49,9 @@ public:
 private:
 	static EventQueue*					m_pInstance;
 
-	std::queue<Event*>					m_inputQueue;
+	std::queue<Handle>					m_inputQueue;
 
-	std::queue<Event*>					m_gameQueue;
+	std::queue<Handle>					m_gameQueue;
 };
 
 #endif // !EVENT_QUEUE

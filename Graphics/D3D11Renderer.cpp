@@ -15,7 +15,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	scData.BufferDesc.Height = 768;
 	scData.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scData.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scData.BufferDesc.RefreshRate.Numerator = 30;
+	scData.BufferDesc.RefreshRate.Numerator = 60;
 	scData.BufferDesc.RefreshRate.Denominator = 1;
 	scData.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	scData.OutputWindow = hWnd;

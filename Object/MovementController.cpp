@@ -6,13 +6,13 @@
 void MovementController::Update(float deltaTime)
 {
 	m_fDeltaTime = deltaTime;
-	Event* pEvt = EventQueue::GetInstance()->Front();
-	while (pEvt != nullptr)
+	while (!EventQueue::GetInstance()->Empty())
 	{
+		Handle hEvt = EventQueue::GetInstance()->Front();
+		Event* pEvt = (Event*)hEvt.Raw();
 		HandleKeyboardEvent(pEvt);
 		HandleMouseEvent(pEvt);
 		EventQueue::GetInstance()->Pop();
-		pEvt = EventQueue::GetInstance()->Front();
 	}
 }
 

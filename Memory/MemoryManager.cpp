@@ -1,10 +1,11 @@
 // MemoryManager.cpp
 
 #include "MemoryManager.h"
+#include "Handle.h"
 
 MemoryManager* MemoryManager::m_pInstance;
 
-void MemoryManager::Construct()
+void MemoryManager::ConstructDefaultPool()
 {
 	unsigned int heapSize = 0;
 
@@ -53,6 +54,12 @@ Handle MemoryManager::Allocate(size_t size)
 void MemoryManager::Free(Handle hle)
 {
 	unsigned int index = m_pPool[hle.m_poolIndex]->m_iFreeBlockNum++;
+}
+
+// Get the raw address stored with reference to handle
+void* MemoryManager::GetMemoryAddressFromHandle(Handle hle)
+{
+	return (void*)((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 3 + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex);
 }
 
 // Return a aligned address according to the alignment

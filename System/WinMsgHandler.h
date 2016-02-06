@@ -38,13 +38,6 @@ struct WinMsgHandler
 					Keyboard::SetInputKey(wParam, false);
 			}
 		}
-		/*
-			else if (wParam == 's')
-			{
-			}
-		}
-		*/
-
 	}
 };
 

@@ -36,11 +36,6 @@ GBuffer::GBuffer()
 	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[0]);
 	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[1]);
 	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
-
-	//pointLightMesh->m_Material.AddPassToTechnique(StencilingPass);
-	//pointLightMesh->m_Material.AddPassToTechnique(LightingPass);
-	//spotLightMesh->m_Material.AddPassToTechnique(StencilingPass);
-	//spotLightMesh->m_Material.AddPassToTechnique(LightingPass);
 }
 
 void GBuffer::LightStencilCheck()
@@ -147,9 +142,7 @@ void GBuffer::Render()
 		{
 			CameraComponent* lightCamera = currLight->GetOwner()->GetComponent<CameraComponent>();
 			ptr2->light.mWorldToLightClip = lightCamera->GetPVMatrix();
-			Matrix4 temp = lightCamera->GetPVMatrix().Inverse();
-			ptr2->light.mLightClipToView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * temp;
-			//ptr2->mViewToWorld = lightCamera->GetViewMatrix();
+			ptr2->light.mLightClipToView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * lightCamera->GetPVMatrix().Inverse();
 			ptr2->mViewToWorld = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix().Inverse();
 			LightingPass->AddTexture(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex()));
 		}
@@ -165,7 +158,9 @@ void GBuffer::Render()
 				break;
 		}
 		if (currLight->IsCastShadow())
+		{
 			LightingPass->PopTexture();
+		}
 	}
 
 	// Unbind the resources

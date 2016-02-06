@@ -12,7 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include "..\Memory\MemoryManager.h"
-
+#include "..\Math\SQT.h"
 
 #pragma warning(disable : 4996)
 
@@ -105,7 +105,7 @@ TEST(Vector, CrossProduct)
 {
 	Vector3 v1(3.0f, 2.0f, 5.0f);
 	Vector3 v2(4.0f, 6.0f, 1.0f);
-	Vector3 v3 = CrossProduct(v1, v2);
+	Vector3 v3 = Cross(v1, v2);
 	EXPECT_NEAR(10.0f, v3.GetZ(), 0.01f);
 }
 
@@ -450,6 +450,7 @@ void TEST_SPEED_FILE_IO()
 	f.close();
 }
 
+/*
 void TEST_POOL_MEMORY()
 {
 	MemoryManager::getInstance()->Construct();
@@ -479,15 +480,21 @@ void TEST_POOL_MEMORY()
 
 	MemoryManager::getInstance()->Destruct();
 }
-
+*/
 int main(int argc, char* argv[])
 {
 	// Quaternion
 	//TEST_SPEED_QUAT_MUL();
 	// File IO
-	TEST_SPEED_FILE_IO();
+	//TEST_SPEED_FILE_IO();
 	// Pool memory
 	//TEST_POOL_MEMORY();
+
+	Quaternion quat(Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f);
+	Vector3 trans(1.0f, 1.0f, 1.0f);
+	float scale = 2.0f;
+	SQT temp(quat, trans, scale);
+	Matrix4 result = temp.Matrix();
 
 	std::cin.getline(new char, 1);
 }

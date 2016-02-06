@@ -214,7 +214,6 @@ void MeshData::Update()
 
 void MeshData::Render()
 {
-	//m_Material.BindToRenderer();
 	RenderTechnique* technique = m_Material.GetRenderTechnique();
 	for (auto pass : technique->m_vRenderPasses)
 	{
@@ -223,17 +222,10 @@ void MeshData::Render()
 		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
 		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);
+
+		D3D11Renderer::GetInstance()->UnbindPSShaderResources(pass->GetTextureCount());
+		D3D11Renderer::GetInstance()->UnbindRenderTargets();
 	}
-}
-
-void MeshData::RenderUsingPassAt(int index)
-{
-	//m_Material.BindToRenderer();
-	m_Material.GetRenderTechnique()->m_vRenderPasses[index]->BindToRenderer();
-
-	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);
 }
 
 void MeshData::RenderUsingPass(RenderPass * pass)

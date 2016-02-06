@@ -363,6 +363,9 @@
     <ClInclude Include="..\Graphics\PostProcessEffect.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\Math\SQT.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
@@ -417,6 +420,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PS_PPE_BlurH.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1UV4J.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV4J_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

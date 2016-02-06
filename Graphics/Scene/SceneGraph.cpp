@@ -62,13 +62,11 @@ void SceneGraph::Render()
 		ptr2->material.fShininess = itr->m_pMeshData->m_Material.GetShininess();
 		m_pPSCBuffer->Update();
 
-		itr->m_pMeshData->RenderUsingPassAt(0);
+		itr->Draw();
 	}
 	static wchar_t s[64];
 	swprintf(s, 64, L"Drawing: %i\n", count);
 	OutputDebugStringW(s);
-
-	D3D11Renderer::GetInstance()->UnbindPSShaderResources(2);
 }
 
 void SceneGraph::ShadowMapGeneration()

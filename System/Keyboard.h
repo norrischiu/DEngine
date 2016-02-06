@@ -43,39 +43,45 @@ struct Keyboard
 			{
 				if (itr.first == VK_W)
 				{
-					Key_W_Hold_Event* evt = new Key_W_Hold_Event;
-					EventQueue::GetInstance()->Add(evt);
-				}				
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Hold_Event));
+					new (hEvt) Key_W_Hold_Event;
+					EventQueue::GetInstance()->Add(hEvt);
+				}
 				if (itr.first == VK_S)
 				{
-					Key_S_Hold_Event* evt = new Key_S_Hold_Event;
-					EventQueue::GetInstance()->Add(evt);
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Hold_Event));
+					new (hEvt) Key_S_Hold_Event;
+					EventQueue::GetInstance()->Add(hEvt);
 				}
 				if (itr.first == VK_A)
 				{
-					Key_A_Hold_Event* evt = new Key_A_Hold_Event;
-					EventQueue::GetInstance()->Add(evt);
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_A_Hold_Event));
+					new (hEvt) Key_A_Hold_Event;
+					EventQueue::GetInstance()->Add(hEvt);
 				}
 				if (itr.first == VK_D)
 				{
-					Key_D_Hold_Event* evt = new Key_D_Hold_Event;
-					EventQueue::GetInstance()->Add(evt);
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_D_Hold_Event));
+					new (hEvt) Key_D_Hold_Event;
+					EventQueue::GetInstance()->Add(hEvt);
 				}
 			}
 			if (itr.second & !m_lastState.Keys[itr.first])
 			{
 				if (itr.first == VK_W)
 				{
-					Key_W_Press_Event* evt = new Key_W_Press_Event;
-					EventQueue::GetInstance()->Add(evt);
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Press_Event));
+					new (hEvt) Key_W_Press_Event;
+					EventQueue::GetInstance()->Add(hEvt);
 				}
 			}
 			if (!itr.second & m_lastState.Keys[itr.first])
 			{
 				if (itr.first == VK_W)
 				{
-					Key_W_Release_Event* evt = new Key_W_Release_Event;
-					EventQueue::GetInstance()->Add(evt);
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Release_Event));
+					new (hEvt) Key_W_Release_Event;
+					EventQueue::GetInstance()->Add(hEvt);
 				}
 			}
 			m_lastState = m_currState;

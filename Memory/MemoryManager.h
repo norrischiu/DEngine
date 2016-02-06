@@ -3,10 +3,10 @@
 #define MEMORYMANAGER_H_
 
 #include "MemoryPool.h"
-#include "Handle.h"
 #include <iostream>
+class Handle;
 
-const unsigned int MEMORY_POOL_NUM = 23;
+const unsigned int MEMORY_POOL_NUM = 22;
 const unsigned int MEMORY_POOL_CONFIG[][2] = 
 {
 	// already 16-byte aligned
@@ -38,9 +38,10 @@ const unsigned int MEMORY_POOL_CONFIG[][2] =
 
 class MemoryManager
 {
+
 public:
 	
-	void Construct();
+	void ConstructDefaultPool();
 	
 	void Defragment();
 
@@ -53,10 +54,7 @@ public:
 	void Free(Handle hle);
 
 	// Get the raw address stored with reference to handle
-	inline void* GetMemoryAddressFromHandle(Handle hle)
-	{
-		return (void*) ((uint32_t) m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 3 + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex);
-	}
+	void* GetMemoryAddressFromHandle(Handle hle);
 
 	// Return singleton instance
 	static MemoryManager* GetInstance()

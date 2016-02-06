@@ -56,15 +56,15 @@ private:
 	{
 		Vector3 corners[8]; // clockwise from bottom left
 							// top
-		corners[0] = Vector3(-fZNear * tanf(fFov / 2.0), fZNear * tanf(fFov / 2.0), fZNear);
-		corners[1] = Vector3(-fZFar * tanf(fFov / 2.0), fZFar * tanf(fFov / 2.0), fZFar);
-		corners[2] = Vector3(fZFar * tanf(fFov / 2.0), fZFar * tanf(fFov / 2.0), fZFar);
-		corners[3] = Vector3(fZNear * tanf(fFov / 2.0), fZNear * tanf(fFov / 2.0), fZNear);
+		corners[0] = Vector3(-fZNear * tanf(fFov / 2.0f), fZNear * tanf(fFov / 2.0f), fZNear);
+		corners[1] = Vector3(-fZFar * tanf(fFov / 2.0f), fZFar * tanf(fFov / 2.0f), fZFar);
+		corners[2] = Vector3(fZFar * tanf(fFov / 2.0f), fZFar * tanf(fFov / 2.0f), fZFar);
+		corners[3] = Vector3(fZNear * tanf(fFov / 2.0f), fZNear * tanf(fFov / 2.0f), fZNear);
 		// bottom
-		corners[4] = Vector3(-fZNear * tanf(fFov / 2.0), -fZNear * tanf(fFov / 2.0), fZNear);
-		corners[5] = Vector3(-fZFar * tanf(fFov / 2.0), -fZFar * tanf(fFov / 2.0), fZFar);
-		corners[6] = Vector3(fZFar * tanf(fFov / 2.0), -fZFar * tanf(fFov / 2.0), fZFar);
-		corners[7] = Vector3(fZNear * tanf(fFov / 2.0), -fZNear * tanf(fFov / 2.0), fZNear);
+		corners[4] = Vector3(-fZNear * tanf(fFov / 2.0f), -fZNear * tanf(fFov / 2.0f), fZNear);
+		corners[5] = Vector3(-fZFar * tanf(fFov / 2.0f), -fZFar * tanf(fFov / 2.0f), fZFar);
+		corners[6] = Vector3(fZFar * tanf(fFov / 2.0f), -fZFar * tanf(fFov / 2.0f), fZFar);
+		corners[7] = Vector3(fZNear * tanf(fFov / 2.0f), -fZNear * tanf(fFov / 2.0f), fZNear);
 
 		m_planes[0] = Plane(corners[3], corners[0], corners[4]); // near
 		m_planes[1] = Plane(corners[1], corners[2], corners[6]);

@@ -15,10 +15,11 @@ public:
 
 	static void Update(float deltaTime)
 	{
-		Mouse_Move_Event* evt = new Mouse_Move_Event;
+		hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Mouse_Move_Event));
+		Mouse_Move_Event* evt = new (hEvt) Mouse_Move_Event;
 		evt->cursorPosChange[0] = m_currState.cursorPos[0] - m_lastState.cursorPos[0];
 		evt->cursorPosChange[1] = m_currState.cursorPos[1] - m_lastState.cursorPos[1];
-		EventQueue::GetInstance()->Add(evt);
+		EventQueue::GetInstance()->Add(hEvt);
 		m_lastState = m_currState;
 	}
 
@@ -30,9 +31,12 @@ public:
 
 	static State m_currState;
 	static State m_lastState;
+
+	static Handle hEvt;
 };
 
 Mouse::State Mouse::m_currState;
 Mouse::State Mouse::m_lastState;
+Handle Mouse::hEvt;
 
 #endif // !KEYBOARD_H_

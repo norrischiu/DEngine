@@ -82,6 +82,11 @@ public:
 		m_vSamplerState.pop_back();
 	}
 
+	int GetTextureCount()
+	{
+		return m_vTextureSRVs.size();
+	}
+
 	void BindToRenderer();
 
 private:

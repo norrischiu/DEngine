@@ -3,7 +3,7 @@
 #include "Timer\Timer.h"
 #include "Graphics\D3D11Renderer.h"
 #include <sstream>
-#include "Memory\MemoryManager.h" //
+#include "Memory\MemoryManager.h"
 #include "System\WinMsgHandler.h"
 #include "System\Keyboard.h"
 #include "GameLoop.h"
@@ -55,7 +55,10 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		WS_OVERLAPPEDWINDOW, 0, 0, 1024, 768,
 		NULL, NULL, wc.hInstance, NULL);
 
-	// Setup our GameWorld and GraphicsDevice singletons
+	// Memory
+	MemoryManager::GetInstance()->ConstructDefaultPool();
+
+	// Setup GraphicsDevice singletons
 	D3D11Renderer::GetInstance()->ConstructWithWindow(hWnd);
 
 	// Show the window
@@ -64,11 +67,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 	/// Timer
 	Timer m_Timer;
-	const float FPS = 30.0f;
+	const float FPS = 60.0f;
 	float elaspedTime = 0.0f;
-
-	// Memory
-	//MemoryManager::GetInstance()->Construct();
 
 	// Main loop
 	bool bQuit = false;

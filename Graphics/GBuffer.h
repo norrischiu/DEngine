@@ -45,8 +45,8 @@ private:
 	MeshData*									pointLightMesh;
 	MeshData*									spotLightMesh;
 
-	RenderPass* StencilingPass;
-	RenderPass* LightingPass;
+	RenderPass*									StencilingPass;
+	RenderPass*									LightingPass;
 };
 
 #endif // !GBUFFER_H_
