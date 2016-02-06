@@ -53,6 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Jackhui\Source\Repos\Game-Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -69,6 +70,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Jackhui\Source\Repos\Game-Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,6 +82,14 @@
   <ItemGroup>
     <ClCompile Include="..\Math\simdmath.cpp" />
     <ClCompile Include="..\Memory\MemoryManager.cpp" />
+    <ClCompile Include="..\Physics\cdAabb.cpp" />
+    <ClCompile Include="..\Physics\cdBody.cpp" />
+    <ClCompile Include="..\Physics\cdCollide.cpp" />
+    <ClCompile Include="..\Physics\cdCollisionWorld.cpp" />
+    <ClCompile Include="..\Physics\cdObject.cpp" />
+    <ClCompile Include="..\Physics\cdPoint.cpp" />
+    <ClCompile Include="..\Physics\cdRay.cpp" />
+    <ClCompile Include="..\Physics\cdSphere.cpp" />
     <ClCompile Include="UnitTest.cpp" />
   </ItemGroup>
   <ItemGroup>

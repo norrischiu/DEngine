@@ -12,7 +12,12 @@
 #include <fstream>
 #include <sstream>
 #include "..\Memory\MemoryManager.h"
-#include "..\Math\SQT.h"
+#include "Physics\cdAabb.h"
+#include "Physics\cdCollide.h"
+#include "Physics\cdCollisionWorld.h"
+#include "Physics\cdRay.h"
+#include "Physics\cdSphere.h"
+
 
 #pragma warning(disable : 4996)
 
@@ -20,6 +25,7 @@
 typedef SIMDVector3 Vector3;
 typedef SIMDMatrix4 Matrix4;
 typedef SIMDQuaternion Quat;
+
 
 #ifdef _DEBUG
 
@@ -100,15 +106,15 @@ TEST(Vector, Length)
 	Vector3 v(3.0f, 0.0f, 4.0f);
 	EXPECT_NEAR(5.0f, v.Length(), 0.01f);
 }
-
+/**
 TEST(Vector, CrossProduct)
 {
 	Vector3 v1(3.0f, 2.0f, 5.0f);
 	Vector3 v2(4.0f, 6.0f, 1.0f);
-	Vector3 v3 = Cross(v1, v2);
+	Vector3 v3 = CrossProduct(v1, v2);
 	EXPECT_NEAR(10.0f, v3.GetZ(), 0.01f);
 }
-
+*/
 TEST(Vector, LERP)
 {
 	Vector3 v1(1.0f, 10.0f, 100.0f);
@@ -329,6 +335,31 @@ TEST(Quaternion, Multiplcation)
 	EXPECT_NEAR(0.707f, q.GetX(), 0.01f);
 }
 
+TEST(physics, raySphereCollide)
+{
+	Vector3 dir(4.0f, 0.0f, 0.0f);
+	Vector3 cen(0.0f, 0.0f, 0.0f);
+	Vector3 cen2(5.0f, 0.0f, 0.0f);
+	Ray ray(dir, cen);
+	Sphere sphere(cen2, 1.0f);
+	Collide collide;
+	collide.raySphereCollide(&ray, &sphere);
+	EXPECT_TRUE(collide.getCollide());
+}
+
+TEST(physics, rayBoxCollide)
+{
+	Vector3 dir(-0.09f, -0.09f, -0.09f);
+	Vector3 cen(2.0f, 2.0f, 2.0f);
+	Vector3 m_min(0.0f, 0.0f, 0.0f);
+	Vector3 m_max(1.0f, 1.0f, 1.0f);
+
+	AABB aabb(m_min, m_max);
+	Ray ray(dir, cen);
+	Collide collide;
+	collide.rayBoxCollide(&ray, &aabb);
+	EXPECT_TRUE(collide.getCollide());
+}
 
 
 #endif
@@ -450,7 +481,6 @@ void TEST_SPEED_FILE_IO()
 	f.close();
 }
 
-/*
 void TEST_POOL_MEMORY()
 {
 	MemoryManager::getInstance()->Construct();
@@ -480,21 +510,15 @@ void TEST_POOL_MEMORY()
 
 	MemoryManager::getInstance()->Destruct();
 }
-*/
+
 int main(int argc, char* argv[])
 {
 	// Quaternion
 	//TEST_SPEED_QUAT_MUL();
 	// File IO
-	//TEST_SPEED_FILE_IO();
+	TEST_SPEED_FILE_IO();
 	// Pool memory
 	//TEST_POOL_MEMORY();
-
-	Quaternion quat(Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f);
-	Vector3 trans(1.0f, 1.0f, 1.0f);
-	float scale = 2.0f;
-	SQT temp(quat, trans, scale);
-	Matrix4 result = temp.Matrix();
 
 	std::cin.getline(new char, 1);
 }
