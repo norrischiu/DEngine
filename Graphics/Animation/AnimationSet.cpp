@@ -5,7 +5,7 @@ AnimationSet::AnimationSet()
 }
 
 
-AnimationSet::AnimationSet(const float currTime, const bool active = true) :
+AnimationSet::AnimationSet(const float currTime, const bool active) :
 	m_currTime(currTime), m_active(active)
 {
 

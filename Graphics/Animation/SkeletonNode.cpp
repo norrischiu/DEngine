@@ -28,6 +28,11 @@ Joint* SkeletonNode::getJoint()
 	return &m_joint;
 }
 
+void SkeletonNode::setJoint(const Joint& joint)
+{
+	m_joint = joint;
+}
+
 int SkeletonNode::getNumChildren() const
 {
 	return m_children.size();

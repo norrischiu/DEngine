@@ -148,6 +148,7 @@
     <ClCompile Include="..\Graphics\Animation\AnimationSet.cpp" />
     <ClCompile Include="..\Graphics\Animation\Joint.cpp" />
     <ClCompile Include="..\Graphics\Animation\Skeleton.cpp" />
+    <ClCompile Include="..\Graphics\Animation\SkeletonNode.cpp" />
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="..\Graphics\GBuffer.cpp" />
     <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\Graphics\Animation\AnimationSet.h" />
     <ClInclude Include="..\Graphics\Animation\Joint.h" />
     <ClInclude Include="..\Graphics\Animation\Skeleton.h" />
+    <ClInclude Include="..\Graphics\Animation\SkeletonNode.h" />
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
     <ClInclude Include="..\Graphics\GBuffer.h" />
     <ClInclude Include="..\Graphics\IndexBufferEngine.h" />

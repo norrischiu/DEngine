@@ -13,6 +13,7 @@ public:
 	void addChildren(const std::vector<Joint>& joints);
 
 	Joint* getJoint();
+	void setJoint(const Joint& joint);
 	std::vector<SkeletonNode>* getChildren();
 	int getNumChildren() const;
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unordered_map>
 #include <string>
 #include "Math\simdmath.h"
@@ -6,7 +8,7 @@
 class Animation
 {
 public:
-	Animation(const std::string node_name, int frame = 1);
+	Animation(const std::string node_name, const int frame = 1);
 	~Animation();
 
 	void addAnimationMatrix(const Matrix4& matrix);

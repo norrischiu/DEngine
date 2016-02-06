@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <unordered_map>
 #include "Animation.h"
@@ -6,7 +8,7 @@ class AnimationSet
 {
 public:
 	AnimationSet();
-	AnimationSet(const float currTime, const bool looping = true);
+	AnimationSet(const float currTime, const bool active = true);
 	~AnimationSet();
 
 	void addAnimation(const std::string name, const Animation& animation);

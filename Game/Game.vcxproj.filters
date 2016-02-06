@@ -191,6 +191,9 @@
     <ClCompile Include="..\Graphics\Animation\Skeleton.cpp">
       <Filter>Graphics\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\SkeletonNode.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Graphics\D3D11Renderer.h">
@@ -397,6 +400,9 @@
       <Filter>Graphics\Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\Graphics\Animation\Skeleton.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\SkeletonNode.h">
       <Filter>Graphics\Animation</Filter>
     </ClInclude>
   </ItemGroup>

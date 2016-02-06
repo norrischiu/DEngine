@@ -1,7 +1,6 @@
 #include "Animation.h"
 
-
-Animation::Animation(const std::string node_name, const int frame = 0) :
+Animation::Animation(const std::string node_name, const int frame) :
 	m_node_name(node_name), m_currKeyframe(frame)
 {
 
@@ -56,11 +55,9 @@ const Matrix4& Animation::getCurrentMatrix() const
 
 void Animation::update(const float delta_time)
 {
-	int newFrame = ((int) (m_currKeyframe + (delta_time / (1.0f / 30.0f))));
-	if (newFrame < 0) {
-		newFrame = 30 - ((-newFrame) % 30);
-	} else {
-		newFrame = newFrame % 30;
+	int newFrame = (m_currKeyframe + ((int) (delta_time / (1.0f / 30.0f)))) % 30;
+	if (newFrame <= 0) {
+		newFrame = 30 - (-newFrame);
 	}
 
 	setCurrentKeyframe(newFrame);
