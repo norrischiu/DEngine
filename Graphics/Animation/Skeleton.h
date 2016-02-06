@@ -1,20 +1,23 @@
 #pragma once
 
 #include <unordered_map>
-#include "Joint.h"
+#include "SkeletonNode.h"
 
 class Skeleton
 {
 public:
-	Skeleton();
+	Skeleton(const int num);
 	~Skeleton();
 
-	void addJoint(const std::string name, const Joint& joint);
-	void removeJoint(const std::string name);
-	Joint* findJoint(const std::string name);
+	void addSkeletonNode(const std::string name, const SkeletonNode& skeletonNode);
+	void removeSkeletonNode(const std::string name);
+	SkeletonNode* findSkeletonNode(const std::string name);
+	void updateSkeletonNode(SkeletonNode* skeletonNode, const Matrix4& matrix);
+	void updateSkeletonNode(const std::string name, const Matrix4& matrix);
 
-	int getNumJoints() const;
+	int getNumSkeletonNodes() const;
 
 private:
-	std::unordered_map<std::string, Joint> m_joints;
+	std::unordered_map<std::string, SkeletonNode> m_tree;
+	int m_numSkeletonNodes;
 };

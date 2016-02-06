@@ -1,7 +1,7 @@
 #include "Skeleton.h"
 #include <utility>
 
-Skeleton::Skeleton()
+Skeleton::Skeleton(const int num) : m_numSkeletonNodes(num)
 {
 }
 
@@ -9,22 +9,22 @@ Skeleton::~Skeleton()
 {
 }
 
-void Skeleton::addJoint(const std::string name, const Joint& joint)
+void Skeleton::addSkeletonNode(const std::string name, const SkeletonNode& skeletonNode)
 {
-	std::pair <std::string, Joint> t_joint = std::make_pair(name, joint);
-	m_joints.insert(t_joint);
+	std::pair <std::string, SkeletonNode> node = std::make_pair(name, skeletonNode);
+	m_tree.insert(node);
 }
 
-void Skeleton::removeJoint(const std::string name)
+void Skeleton::removeSkeletonNode(const std::string name)
 {
-	m_joints.erase(name);
+	m_tree.erase(name);
 }
 
-Joint* Skeleton::findJoint(const std::string name)
+SkeletonNode* Skeleton::findSkeletonNode(const std::string name)
 {
-	auto t = m_joints.find(name);
+	auto t = m_tree.find(name);
 
-	if (t == m_joints.end()) {
+	if (t == m_tree.end()) {
 		return nullptr;
 	}
 	else {
@@ -34,7 +34,28 @@ Joint* Skeleton::findJoint(const std::string name)
 	return nullptr;
 }
 
-int Skeleton::getNumJoints() const
+void Skeleton::updateSkeletonNode(SkeletonNode* skeletonNode, const Matrix4& matrix)
 {
-	return m_joints.size();
+	skeletonNode->getJoint()->setCurrMatrix(matrix);
+
+	for (SkeletonNode node : *(skeletonNode->getChildren())) {
+		updateSkeletonNode(&node, matrix);
+	}
+}
+
+void Skeleton::updateSkeletonNode(const std::string name, const Matrix4& matrix)
+{
+	//Get joints in the sub tree of by the name of the root joint of the sub tree
+	//Apply the matrix to each joint
+
+	SkeletonNode* skeletonNode = findSkeletonNode(name);
+
+	if (skeletonNode) {
+		updateSkeletonNode(skeletonNode, matrix);
+	}
+}
+
+int Skeleton::getNumSkeletonNodes() const
+{
+	return m_numSkeletonNodes;
 }

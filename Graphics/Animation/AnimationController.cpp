@@ -11,6 +11,11 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 	m_animationSets.insert(t_animationSet);
 }
 
+void AnimationController::setAnimationSet(const std::unordered_map<std::string, AnimationSet>& animationSet)
+{
+	m_animationSets = animationSet;
+}
+
 void AnimationController::removeAnimationSet(const std::string name)
 {
 	m_animationSets.erase(name);
@@ -65,17 +70,14 @@ bool AnimationController::isAnimationSetActive(const std::string name)
 	return animationSet->isActive();
 }
 
-bool AnimationController::triggerAnimation(const std::string set_name, const std::string animaton_name)
+bool AnimationController::triggerAnimation(const std::string set_name, const float currTime)
 {
 	AnimationSet* animationSet = findAnimationSet(set_name);
 	Animation* animation = nullptr;
 
-	if (animationSet) {
-		animation = animationSet->findAnimation(animaton_name);
-		if (animation) {
-			animation->animate(m_skeleton, animationSet->getCurrTime());
-			return true;
-		}
+	if (animationSet && !animationSet->isActive()) {
+		animationSet->setActive(true);
+		animationSet->setCurrTime(currTime);
 	}
 
 	return false;
@@ -101,14 +103,25 @@ int AnimationController::getNumAnimations(const std::string name)
 	return animationSet->getNumAnimations();
 }
 
-void AnimationController::update(const float time)
+void AnimationController::update(const float delta_time)
 {
 	for (
-		std::unordered_map<std::string, AnimationSet>::iterator it = m_animationSets.begin();
-		it != m_animationSets.end();
-		++it
+		std::unordered_map<std::string, AnimationSet>::iterator it_s = m_animationSets.begin();
+		it_s != m_animationSets.end();
+		++it_s
 	) {
-		it->second.update(time);
+		it_s->second.update(delta_time);		//update delta time first, then animate
+		
+		std::unordered_map<std::string, Animation>* animations = it_s->second.getAnimations();
+
+		for (
+			std::unordered_map<std::string, Animation>::iterator it_a = animations->begin();
+			it_a != animations->end();
+			++it_a
+		) {
+			const Animation& animation = it_a->second;
+			m_skeleton->updateSkeletonNode(animation.getNodeName(), animation.getCurrentMatrix());
+		}
 	}
 }
 

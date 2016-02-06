@@ -49,6 +49,9 @@
     <Filter Include="Graphics\Render">
       <UniqueIdentifier>{2f646138-12e4-464d-8984-a915019657bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Animation">
+      <UniqueIdentifier>{85f8f357-38cd-4baf-9ed5-9a7df66d7273}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp">
@@ -172,6 +175,21 @@
     </ClCompile>
     <ClCompile Include="..\Light\LightComponent.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\Animation.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\AnimationController.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\AnimationSet.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\Joint.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Animation\Skeleton.cpp">
+      <Filter>Graphics\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,6 +383,21 @@
     </ClInclude>
     <ClInclude Include="..\Math\SQT.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\Animation.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\AnimationController.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\AnimationSet.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\Joint.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Animation\Skeleton.h">
+      <Filter>Graphics\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

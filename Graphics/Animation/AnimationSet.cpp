@@ -40,19 +40,60 @@ Animation* AnimationSet::findAnimation(const std::string name)
 	return nullptr;
 }
 
-void AnimationSet::update(const float time)
+std::unordered_map<std::string, Animation>* AnimationSet::getAnimations()
 {
-	m_currTime = time;
-}
-
-float AnimationSet::getCurrTime()
-{
-	return m_currTime;
+	return &m_animations;
 }
 
 int AnimationSet::getNumAnimations() const
 {
 	return m_animations.size();
+}
+
+void AnimationSet::update(const float delta_time)
+{
+	m_currTime = m_currTime + delta_time;
+
+	for (
+		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
+		it != m_animations.end();
+		++it
+	) {
+		it->second.update(delta_time);
+	}
+
+	if (m_currTime > m_duration) {
+		m_active = false;
+	}
+}
+
+float AnimationSet::getCurrTime() const
+{
+	return m_currTime;
+}
+
+void AnimationSet::setCurrTime(const float currTime)
+{
+	const int delta_time = currTime - m_currTime;
+	m_currTime = currTime;
+
+	for (
+		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
+		it != m_animations.end();
+		++it
+	) {
+		it->second.update(delta_time);
+	}
+}
+
+float AnimationSet::getDuration() const
+{
+	return m_duration;
+}
+
+void AnimationSet::setDuration(const float duration)
+{
+	m_duration = duration;
 }
 
 bool AnimationSet::isActive() const

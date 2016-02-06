@@ -21,7 +21,7 @@ GameLoop::GameLoop()
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
 	GameObject* dragon = new GameObject;
-	dragon->AddComponent(new MeshComponent("Ganfaul_M_Aure1"));
+	dragon->AddComponent(new MeshComponent("dragon"));
 	dragon->AddComponent(new Body(typeAABB));
 	dragon->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	Matrix4 s;
