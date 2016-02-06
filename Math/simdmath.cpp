@@ -27,6 +27,17 @@ void SIMDMatrix4::CreateTranslation(const SIMDVector3& translation)
 	_rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+void SIMDMatrix4::TranslateXYZ(const SIMDVector3 & translation)
+{
+	__m128 trans[3];
+	trans[0] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetX());
+	trans[1] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetY());
+	trans[2] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetZ());
+	_rows[0] = _mm_add_ps(_rows[0], trans[0]);
+	_rows[1] = _mm_add_ps(_rows[1], trans[1]);
+	_rows[2] = _mm_add_ps(_rows[2], trans[2]);
+}
+
 SIMDVector3 SIMDMatrix4::GetPosition()
 {
 	return SIMDVector3(_rows[0].m128_f32[3], _rows[1].m128_f32[3], _rows[2].m128_f32[3]);
@@ -97,7 +108,7 @@ void SIMDMatrix4::Invert()
 	_rows[3] = result.r[3];
 }
 
-SIMDMatrix4 & SIMDMatrix4::Inverse()
+SIMDMatrix4 SIMDMatrix4::Inverse()
 {
 	SIMDMatrix4 result = *this;
 	result.Invert();

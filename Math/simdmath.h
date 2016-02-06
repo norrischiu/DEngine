@@ -8,6 +8,7 @@
 #include <DirectXMath.h> // DirectX helper methods (temp)
 #include "Memory\MemoryManager.h"
 #include "Game\GlobalInclude.h"
+class SQT;
 
 // 4x4 Matrix with SSE
 __declspec(align(16)) class SIMDMatrix4
@@ -245,6 +246,24 @@ public:
 		_rows[3] = _mm_insert_ps(_rows[3], identity, 0x07);
 	}
 
+	inline void ScaleXYZ(float scalar)
+	{
+		__m128 scale = _mm_set_ps1(scalar);
+		__m128 sum[4];
+		sum[0] = _mm_set_ps1(1.0f);
+		sum[0] = _mm_mul_ps(_rows[0], scale);
+		_rows[0] = _mm_insert_ps(_rows[0], sum[0], 0x0E);
+		sum[1] = _mm_set_ps1(1.0f);
+		sum[1] = _mm_mul_ps(_rows[1], scale);
+		_rows[1] = _mm_insert_ps(_rows[1], sum[1], 0x5D);
+		sum[2] = _mm_set_ps1(1.0f);
+		sum[2] = _mm_mul_ps(_rows[2], scale);
+		_rows[2] = _mm_insert_ps(_rows[0], sum[2], 0xAB);
+		sum[3] = _mm_set_ps1(1.0f);
+		sum[3] = _mm_mul_ps(_rows[3], scale);
+		_rows[3] = _mm_insert_ps(_rows[3], sum[3], 0x07);
+	}
+
 	// Set a rotation transformation about the X axis given an angle in radian
 	inline void CreateRotationX(float radian)
 	{
@@ -310,6 +329,8 @@ public:
 	// Set a translation transformation given a vector
 	void CreateTranslation(const SIMDVector3& translation);
 
+	void TranslateXYZ(const SIMDVector3& translation);
+
 	// Extract elements from matrix
 	SIMDVector3 GetPosition();
 	SIMDVector3 GetForward();
@@ -340,7 +361,7 @@ public:
 
 	// Inverts the matrix, store the result back to this
 	void Invert();
-	SIMDMatrix4& Inverse();
+	SIMDMatrix4 Inverse();
 };
 
 // 3D Vector with SIMD
@@ -356,6 +377,7 @@ private:
 public:
 	friend class SIMDMatrix4;
 	friend class SIMDQuaternion;
+	friend class SQT;
 
 	static const SIMDVector3 Zero;
 	static const SIMDVector3 UnitX;
@@ -367,15 +389,6 @@ public:
 
 	// Default Constructor
 	inline SIMDVector3(){};
-
-	// Overload new with handle
-	void* operator new(size_t size, Handle hle)
-	{
-		return MemoryManager::GetInstance()->GetMemoryAddressFromHandle(hle);
-	}
-
-	void operator delete(void* ptr, Handle hle)
-	{}
 
 	// Construct with given float values
 	inline SIMDVector3(float x, float y, float z, float w = 1.0f)
@@ -726,6 +739,11 @@ public:
 		_data = DirectX::XMQuaternionMultiply(_data, other._data);
 	}
 
+	SIMDQuaternion operator+(const SIMDQuaternion other)
+	{
+		// TODO
+	}
+
 	SIMDMatrix4 GetRotationMatrix()
 	{
 		DirectX::XMMATRIX result = DirectX::XMMatrixRotationQuaternion(_data);
@@ -738,6 +756,16 @@ public:
 		__m128 length = _mm_dp_ps(_data, _data, 0x77);
 		length = _mm_rsqrt_ps(length);
 		_data = _mm_mul_ps(_data, length);
+	}
+
+	// TODO: switch to utility function in namespace
+	static SIMDQuaternion Lerp(SIMDQuaternion a, SIMDQuaternion b, float t)
+	{
+		SIMDQuaternion result;
+		__m128 aFactor = _mm_set_ps1(1.0f - t);
+		__m128 bFactor = _mm_set_ps1(t);
+		result._data = _mm_mul_ps(aFactor, a._data);
+		result._data = _mm_add_ps(result._data, _mm_mul_ps(bFactor, b._data));
 	}
 };
 
