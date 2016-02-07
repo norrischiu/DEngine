@@ -143,6 +143,11 @@
     <ClCompile Include="..\Font\font.cpp" />
     <ClCompile Include="..\GameObject\GameObject.cpp" />
     <ClCompile Include="..\GameObject\GameWorld.cpp" />
+    <ClCompile Include="..\Graphics\Animation\Animation.cpp" />
+    <ClCompile Include="..\Graphics\Animation\AnimationController.cpp" />
+    <ClCompile Include="..\Graphics\Animation\AnimationSet.cpp" />
+    <ClCompile Include="..\Graphics\Animation\Joint.cpp" />
+    <ClCompile Include="..\Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="..\Graphics\GBuffer.cpp" />
     <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
@@ -158,6 +163,7 @@
     <ClCompile Include="..\Graphics\Render\State.cpp" />
     <ClCompile Include="..\Graphics\Render\Texture.cpp" />
     <ClCompile Include="..\Graphics\Render\PSPerLightCBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Render\VSMatrixPaletteCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="..\Graphics\ShaderManager.cpp" />
@@ -190,6 +196,11 @@
     <ClInclude Include="..\Font\font.h" />
     <ClInclude Include="..\GameObject\GameObject.h" />
     <ClInclude Include="..\GameObject\GameWorld.h" />
+    <ClInclude Include="..\Graphics\Animation\Animation.h" />
+    <ClInclude Include="..\Graphics\Animation\AnimationController.h" />
+    <ClInclude Include="..\Graphics\Animation\AnimationSet.h" />
+    <ClInclude Include="..\Graphics\Animation\Joint.h" />
+    <ClInclude Include="..\Graphics\Animation\Skeleton.h" />
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
     <ClInclude Include="..\Graphics\GBuffer.h" />
     <ClInclude Include="..\Graphics\IndexBufferEngine.h" />
@@ -205,6 +216,7 @@
     <ClInclude Include="..\Graphics\Render\RenderTechnique.h" />
     <ClInclude Include="..\Graphics\Render\State.h" />
     <ClInclude Include="..\Graphics\Render\Texture.h" />
+    <ClInclude Include="..\Graphics\Render\VSMatrixPaletteCBuffer.h" />
     <ClInclude Include="..\Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="..\Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="..\Graphics\ShaderManager.h" />

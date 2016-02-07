@@ -65,6 +65,9 @@ MeshData::MeshData(const char* filename, int renderType)
 		case eRenderType::STANDARD_MESH_WITH_BUMP:		
 			m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(filename, eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride);
 			break;
+		case eRenderType::SKELETAL_MESH:
+			m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(filename, eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS, m_iStride);
+			break;
 	}
 
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());

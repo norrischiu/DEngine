@@ -10,7 +10,8 @@ enum eVertexFormat
 	POSITION_COLOR,
 	POSITION_TEXTURE,
 	POSITION_NORMAL_TEXTURE,
-	POSITION_NORMAL_TANGENT_TEXTURE
+	POSITION_NORMAL_TANGENT_TEXTURE,
+	POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS
 };
 
 // Vertex: Position
@@ -80,8 +81,8 @@ struct Vertex1P1N1T1UV4J
 	Vector3								m_norm; // 16-byte offset
 	Vector3								m_tangent; // 32-btye offset
 	float								m_UV[2]; // 48-byte offset
-	int									m_jointIndex[4]; //56-byte offset
-	Vector4								m_jointWeight; // m_jointWeight[3] = 1 - m_jointWeight[0..2]
+	uint8_t								m_jointIndex[4]; //56-byte offset
+	Vector4								m_skinWeight; // 60-byte offset
 };
 
 #endif

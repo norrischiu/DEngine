@@ -1,5 +1,4 @@
 #include "VSPerObjectCBuffer.h"
-#include "D3D11Renderer.h"
 
 const size_t VSPerObjectCBuffer::sizeVS = sizeof(VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER);
 

@@ -21,6 +21,8 @@ public:
 
 	void FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData);
 
+	void FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, void* &pVertexData);
+
 	Vector3 GetMaxXYZ()
 	{
 		Vector3 result = m_vMaxXYZ;

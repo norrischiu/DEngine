@@ -48,6 +48,10 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(filename, iNumVerts, pVertexData);
 		stride = sizeof(Vertex1P1N1T1UV);
 		break;
+	case eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS:
+		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(filename, iNumVerts, pVertexData);
+		stride = sizeof(Vertex1P1N1T1UV4J);
+		break;
 	}
 
 	// Set vertex subresources data
@@ -257,6 +261,82 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 		float x, y, z;
 		fscanf(pFile, "%f %f %f", &x, &y, &z);
 		((Vertex1P1N1T1UV*)pVertexData)[i].m_tangent = Vector3(x, y, z, 0);
+	}
+	fclose(pFile);
+}
+
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, void *& pVertexData)
+{
+	std::string sFileNmae(filename);
+	pVertexData = new Vertex1P1N1T1UV4J[vertsNum]; // TODO: needs change memory allocation
+
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_pos = Vector3(x, y, z);
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
+	}
+	fclose(pFile);
+
+	// Read texture coordinates
+	pFile = fopen(C_STR(sFileNmae, "_texture.bufa"), "r");
+	char c[256];
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y;
+		fscanf(pFile, "%f %f", &x, &y);
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_UV[0] = x;
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_UV[1] = y;
+	}
+	fclose(pFile);
+
+	// Read precalcuated normal
+	pFile = fopen(C_STR(sFileNmae, "_normal.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_norm = Vector3(x, y, z, 0);
+	}
+	fclose(pFile);
+
+	// Read precalculated tangent
+	pFile = fopen(C_STR(sFileNmae, "_tangent.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z;
+		fscanf(pFile, "%f %f %f", &x, &y, &z);
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_tangent = Vector3(x, y, z, 0);
+	}
+	fclose(pFile);
+
+	// Read skin weighting and joint index
+	pFile = fopen(C_STR(sFileNmae, "_weight.bufa"), "r");
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%i", &vertsNum);
+	for (unsigned int i = 0; i < vertsNum; i++)
+	{
+		float x, y, z, w;
+		int index;
+		fscanf(pFile, "%f %f %f %f", &x, &y, &z, &w);
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_skinWeight = Vector3(x, y, z, w);
+		for (int j = 0; j < 4; j++)
+		{
+			fscanf(pFile, "%i", &index);
+			((Vertex1P1N1T1UV4J*)pVertexData)[i].m_jointIndex[j] = index;
+		}
 	}
 	fclose(pFile);
 }
