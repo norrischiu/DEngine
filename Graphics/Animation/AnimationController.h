@@ -38,7 +38,7 @@ public:
 	bool isAnimationSetActive(const std::string name);
 	void setActiveAnimationSet(const std::string name, const bool active);
 	
-	std::vector<AnimationSet*>& getActiveAnimationSets();
+	std::vector<AnimationSet*>* getActiveAnimationSets();
 	
 	bool triggerAnimation(const std::string set_name, const float currTime);
 

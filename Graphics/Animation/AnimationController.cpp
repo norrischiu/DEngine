@@ -162,9 +162,9 @@ int AnimationController::getNumAnimations(const std::string name)
 	return animationSet->getNumAnimations();
 }
 
-std::vector<AnimationSet*>& AnimationController::getActiveAnimationSets()
+std::vector<AnimationSet*>* AnimationController::getActiveAnimationSets()
 {
-	std::vector<AnimationSet*> activeAnimationSets;
+	std::vector<AnimationSet*>* activeAnimationSets = new std::vector<AnimationSet*>;
 
 	for (
 		std::unordered_map<std::string, AnimationSet>::iterator it = m_animationSets.begin();
@@ -172,7 +172,7 @@ std::vector<AnimationSet*>& AnimationController::getActiveAnimationSets()
 		++it
 	) {
 		if (it->second.isActive()) {
-			activeAnimationSets.push_back(&it->second);
+			activeAnimationSets->push_back(&it->second);
 		}
 	}
 
@@ -181,7 +181,7 @@ std::vector<AnimationSet*>& AnimationController::getActiveAnimationSets()
 
 void AnimationController::Update(float deltaTime)
 {
-	std::vector<AnimationSet*> activeAnimationSets = getActiveAnimationSets();
+	std::vector<AnimationSet*> activeAnimationSets = *getActiveAnimationSets();
 
 	for (
 		std::vector<AnimationSet*>::iterator it_s = activeAnimationSets.begin();
@@ -200,7 +200,7 @@ void AnimationController::Update(float deltaTime)
 			) {
 			Animation& animation = it_a->second;
 			//m_skeleton->updateSkeletonNode(animation.getNodeName(), animation.getCurrentMatrix());
-			m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vJoints[i]->m_mBindPoseInv * animation.GetCurrentPose().Matrix();
+			m_skeleton->m_vGlobalPose[i] = animation.GetCurrentPose().Matrix() * m_skeleton->m_vJoints[i]->m_mBindPoseInv;
 			i++;
 		}
 	}

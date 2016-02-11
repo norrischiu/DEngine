@@ -1,6 +1,7 @@
 #include "SceneGraph.h"
 #include "Graphics\MeshComponent.h"
 #include "Graphics\Animation\Skeleton.h"
+#include "Graphics\Animation\AnimationController.h"
 #include "Object\CameraComponent.h"
 #include "Light\LightManager.h"
 #include "GameObject\GameObject.h"
@@ -62,12 +63,17 @@ void SceneGraph::Render()
 		m_pVSCBuffer->Update();
 
 		Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
+		AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
+		int index = 0;
 		if (skel != nullptr)
 		{
 			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->VS.m_data;
-			for (int i = 0; i < skel->GetJointsCount(); ++i)
+			for (auto itr_s : *anim->getActiveAnimationSets())
 			{
-				palette->mSkinning[i] = skel->GetGlobalPoseAt(i);
+				for (auto itr_a : *(itr_s->getAnimations())) {
+					palette->mSkinning[index] = skel->GetGlobalPoseAt(index);
+					index++;
+				}
 			}
 			m_pMatrixPalette->Update();
 		}
