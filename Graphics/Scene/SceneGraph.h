@@ -5,6 +5,7 @@
 #include "Object\CameraComponent.h"
 #include "Render\VSPerObjectCBuffer.h"
 #include "Render\PSPerMaterialCBuffer.h"
+#include "Render\VSMatrixPaletteCBuffer.h"
 
 class MeshComponent;
 
@@ -60,6 +61,8 @@ private:
 	VSPerObjectCBuffer*								m_pVSCBuffer;
 
 	PSPerMaterialCBuffer*							m_pPSCBuffer;
+
+	VSMatrixPaletteCBuffer*							m_pMatrixPalette;
 
 	RenderPass* shadowPass;
 

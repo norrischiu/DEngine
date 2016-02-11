@@ -1,5 +1,6 @@
 #include "SceneGraph.h"
 #include "Graphics\MeshComponent.h"
+#include "Graphics\Animation\Skeleton.h"
 #include "Object\CameraComponent.h"
 #include "Light\LightManager.h"
 #include "GameObject\GameObject.h"
@@ -7,6 +8,7 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Render\VSPerObjectCBuffer.h"
 #include "Render\PSPerMaterialCBuffer.h"
+#include "Render\VSMatrixPaletteCBuffer.h"
 
 SceneGraph* SceneGraph::m_pInstance;
 
@@ -14,6 +16,7 @@ SceneGraph::SceneGraph()
 {
 	m_pVSCBuffer = new VSPerObjectCBuffer;
 	m_pPSCBuffer = new PSPerMaterialCBuffer;
+	m_pMatrixPalette = new VSMatrixPaletteCBuffer;
 
 	shadowPass = new RenderPass;
 	shadowPass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV.hlsl");
@@ -45,6 +48,7 @@ void SceneGraph::Render()
 	// TODO: update per frame cbuffer
 
 	m_pVSCBuffer->BindToRenderer();
+	m_pMatrixPalette->BindToRenderer();
 	m_pPSCBuffer->BindToRenderer();
 
 	int count = 0; //
@@ -56,6 +60,17 @@ void SceneGraph::Render()
 		ptr->WorldTransform = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
 		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
 		m_pVSCBuffer->Update();
+
+		Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
+		if (skel != nullptr)
+		{
+			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->VS.m_data;
+			for (int i = 0; i < skel->GetJointsCount(); ++i)
+			{
+				palette->mSkinning[i] = skel->GetGlobalPoseAt(i);
+			}
+			m_pMatrixPalette->Update();
+		}
 
 		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->PS.m_data;
 		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();

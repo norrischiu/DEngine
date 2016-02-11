@@ -328,15 +328,15 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOI
 	fscanf(pFile, "%i", &vertsNum);
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
-		float x, y, z, w;
+		float vec[4];
 		int index;
-		fscanf(pFile, "%f %f %f %f", &x, &y, &z, &w);
-		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_skinWeight = Vector3(x, y, z, w);
 		for (int j = 0; j < 4; j++)
 		{
 			fscanf(pFile, "%i", &index);
-			((Vertex1P1N1T1UV4J*)pVertexData)[i].m_jointIndex[j] = index;
+			((Vertex1P1N1T1UV4J*)pVertexData)[i].m_jointIndex[j] = (uint8_t) index;
+			fscanf(pFile, "%f", &vec[j]);
 		}
+		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_skinWeight = Vector3(vec[0], vec[1], vec[2], vec[3]);
 	}
 	fclose(pFile);
 }

@@ -4,17 +4,17 @@
 #include "CBuffer.h"
 #include "Math\simdmath.h"
 
-class VSMatrixPalatteCBuffer : public CBuffer
+class VSMatrixPaletteCBuffer : public CBuffer
 {
 
 public:
 
-	struct VS_MATRIX_PALATTE_CBUFFER
+	struct VS_MATRIX_PALETTE_CBUFFER
 	{
 		Matrix4			mSkinning[256];
 	};
 
-	VSMatrixPalatteCBuffer();
+	VSMatrixPaletteCBuffer();
 
 	void Update()
 	{

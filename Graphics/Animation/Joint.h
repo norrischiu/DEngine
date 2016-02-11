@@ -6,13 +6,13 @@
 class Joint
 {
 public:
-	Joint(const Matrix4& matrix);
+	Joint(const Matrix4& matrix, const int parentIndex);
 	~Joint();
 
-	void setCurrMatrix(const Matrix4& matrix);
 	const Matrix4& getCurrMatrix() const;
+	void setCurrMatrix(const Matrix4& matrix);
 
-private:
-	Matrix4 m_currMatrix;
+	Matrix4 m_mBindPoseInv;
+	uint8_t m_iParent;
 };
 

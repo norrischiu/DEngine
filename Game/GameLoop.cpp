@@ -11,6 +11,8 @@
 #include "Light\PointLight.h"
 #include "Light\SpotLightComponent.h"
 #include "Object\MovementController.h"
+#include "Graphics\Animation\AnimationController.h"
+#include "Graphics\Animation\Skeleton.h"
 #include "Object\Camera.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
@@ -21,16 +23,22 @@ GameLoop::GameLoop()
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
 	GameObject* dragon = new GameObject;
-	dragon->AddComponent(new MeshComponent("Ganfaul_M_Aure1"));
+	dragon->AddComponent(new MeshComponent("dragon", eRenderType::SKELETAL_MESH));
 	dragon->AddComponent(new Body(typeAABB));
 	dragon->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-	Matrix4 s;
-	s.CreateScale(2);
-	dragon->Transform(s);
-	Matrix4 rot;
-	rot.CreateRotationY(PI);
-	dragon->Transform(rot);
+//	Matrix4 s;
+//	s.CreateScale(2);
+//	dragon->Transform(s);
+//	Matrix4 rot;
+//	rot.CreateRotationY(PI);
+//	dragon->Transform(rot);
 	dragon->AddComponent(new MovementController());
+	Skeleton* skel = new Skeleton("dragon");
+	AnimationController* anim = new AnimationController(skel);
+	anim->CreateAnimationSets("dragon_jump");
+	dragon->AddComponent(skel);
+	dragon->AddComponent(anim);
+	dragon->GetComponent<AnimationController>()->setActiveAnimationSet("dragon_jump", true);
 	//dragon->AddComponent(new CameraComponent(Vector3(0.0f, 4.0f, -5.0f), Vector3(0.0f, 0.0f, 1000.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 	//dragon->GetComponent<CameraComponent>()->SetAsRendererCamera();
 

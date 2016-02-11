@@ -1,11 +1,6 @@
 #include "AnimationSet.h"
 
-AnimationSet::AnimationSet()
-{
-}
-
-
-AnimationSet::AnimationSet(const float currTime, const bool active = true) :
+AnimationSet::AnimationSet(const float currTime, const bool active) :
 	m_currTime(currTime), m_active(active)
 {
 
@@ -21,38 +16,85 @@ void AnimationSet::addAnimation(const std::string name, const Animation& animati
 	m_animations.insert(t_animation);
 }
 
+void AnimationSet::addAnimation(const Animation& animation)
+{
+	std::pair <std::string, Animation> t_animation = std::make_pair(animation.getNodeName(), animation);
+	m_animations.insert(t_animation);
+}
+
 void AnimationSet::removeAnimation(const std::string name)
 {
 	m_animations.erase(name);
 }
 
+std::unordered_map<std::string, Animation>* AnimationSet::getAnimations()
+{
+	return &m_animations;
+}
 
-Animation* AnimationSet::findAnimation(const std::string name)
+Animation* AnimationSet::getAnimation(const std::string name)
 {
 	auto t = m_animations.find(name);
 
 	if (t == m_animations.end()) {
 		return nullptr;
-	} else {
+	}
+	else {
 		return &t->second;
 	}
 
 	return nullptr;
 }
 
-void AnimationSet::update(const float time)
+int AnimationSet::getNumAnimations() const
 {
-	m_currTime = time;
+	return m_animations.size();
 }
 
-float AnimationSet::getCurrTime()
+void AnimationSet::update(const float delta_time)
+{
+	m_currTime = m_currTime + delta_time;
+
+	for (
+		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
+		it != m_animations.end();
+		++it
+	) {
+		it->second.update(delta_time);
+	}
+
+	if (m_currTime > m_duration) {
+		m_active = false;
+	}
+}
+
+float AnimationSet::getCurrTime() const
 {
 	return m_currTime;
 }
 
-int AnimationSet::getNumAnimations() const
+void AnimationSet::setCurrTime(const float currTime)
 {
-	return m_animations.size();
+	const int delta_time = currTime - m_currTime;
+	m_currTime = currTime;
+
+	for (
+		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
+		it != m_animations.end();
+		++it
+	) {
+		it->second.update(delta_time);
+	}
+}
+
+float AnimationSet::getDuration() const
+{
+	return m_duration;
+}
+
+void AnimationSet::setDuration(const float duration)
+{
+	m_duration = duration;
 }
 
 bool AnimationSet::isActive() const

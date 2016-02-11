@@ -13,7 +13,7 @@ public:
 	static const int ComponentID = ComponentID::MESH;
 
 	MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eRenderType eRenderType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture = NULL);
-	MeshComponent(const char* meshName);
+	MeshComponent(const char* meshName, int type = eRenderType::STANDARD_MESH_WITH_BUMP);
 
 	// Inherited via Component
 	void SetOwner(GameObject* ptr) override;

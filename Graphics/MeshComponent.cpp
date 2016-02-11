@@ -14,13 +14,13 @@ MeshComponent::MeshComponent(void* pVertexData, const int iNumVerts, unsigned in
 	m_pMeshData = new MeshData(pVertexData, iNumVerts, pIndexData, iNumIndices, dimension, renderType, typology, texture);
 }
 
-MeshComponent::MeshComponent(const char* meshName)
+MeshComponent::MeshComponent(const char* meshName, int type)
 	: Component()
 	, m_pTransform(new Matrix4())
 	, m_bVisible(true)
 {
 	*m_pTransform = Matrix4::Identity;
-	m_pMeshData = new MeshData(meshName, eRenderType::STANDARD_MESH_WITH_BUMP);
+	m_pMeshData = new MeshData(meshName, type);
 	SceneGraph::GetInstance()->AddComponent(this);
 }
 

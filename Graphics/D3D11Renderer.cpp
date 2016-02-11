@@ -84,13 +84,13 @@ void D3D11Renderer::Render()
 	// Render to texture
 	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
 	SceneGraph::GetInstance()->Render();
-	SceneGraph::GetInstance()->ShadowMapGeneration();
+//	SceneGraph::GetInstance()->ShadowMapGeneration();
 
 	// Render to screen
 	m_GBuffer->Render();
 
 	// Post process effect
-	m_PPE->Render();
+//	m_PPE->Render();
 
 	// Debug drawing
 	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();

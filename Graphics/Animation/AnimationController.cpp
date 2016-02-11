@@ -1,8 +1,14 @@
 #include "AnimationController.h"
+#include "Math\SQT.h"
+#include "Math\simdmath.h"
+#include <stdio.h>
+
+#define C_STR(string, text)\
+		(string + text).c_str()
 
 AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skeleton)
 {
-
+	m_ID = ComponentID;
 }
 
 void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet)
@@ -11,12 +17,55 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 	m_animationSets.insert(t_animationSet);
 }
 
+void AnimationController::CreateAnimationSets(const char* fileName)
+{
+	std::string sFileName(fileName);
+	FILE* pFile = fopen(C_STR(sFileName, "_animation.bufa"), "r");
+	char c[256], clipName[256];
+	int iNumJoints, iNumFrames;
+	float quat[4], trans[3];
+	float scale;
+	fscanf(pFile, "%s", &c);
+	fscanf(pFile, "%s", &clipName);
+	fscanf(pFile, "%i", &iNumJoints);
+	fscanf(pFile, "%i", &iNumFrames);
+	AnimationSet* animSet = new AnimationSet(0);
+	for (int i = 0; i < iNumJoints; ++i)
+	{
+		fscanf(pFile, "%s", &c);
+		Animation* anim = new Animation(c);
+		for (int j = 0; j < iNumFrames; ++j)
+		{
+			fscanf(pFile, "%f %f %f %f", &quat[0], &quat[1], &quat[2], &quat[3]);
+			fscanf(pFile, "%f %f %f", &trans[0], &trans[1], &trans[2]);
+			fscanf(pFile, "%f", &scale);
+			Quaternion q(quat);
+			Vector3 t(trans[0], trans[1], trans[2]);
+			SQT sqt(q, t, scale);
+			anim->AddPose(sqt);
+		}
+		animSet->addAnimation(*anim);
+		addAnimationSet(clipName, *animSet);
+	}
+	fclose(pFile);
+}
+
 void AnimationController::removeAnimationSet(const std::string name)
 {
 	m_animationSets.erase(name);
 }
 
-AnimationSet* AnimationController::findAnimationSet(const std::string name)
+std::unordered_map<std::string, AnimationSet>* AnimationController::getAnimationSets()
+{
+	return &m_animationSets;
+}
+
+void AnimationController::setAnimationSet(const std::unordered_map<std::string, AnimationSet>& animationSets)
+{
+	m_animationSets = animationSets;
+}
+
+AnimationSet* AnimationController::getAnimationSet(const std::string name)
 {
 	auto t = m_animationSets.find(name);
 
@@ -29,30 +78,36 @@ AnimationSet* AnimationController::findAnimationSet(const std::string name)
 	return nullptr;
 }
 
-Animation* AnimationController::findAnimation(const std::string set_name, const std::string animaton_name)
+std::unordered_map<std::string, Animation>* AnimationController::getAnimations(const std::string set_name)
 {
-	AnimationSet* animationSet = findAnimationSet(set_name);
+	AnimationSet* animationSet = getAnimationSet(set_name);
+	return animationSet->getAnimations();
+}
+
+Animation* AnimationController::getAnimation(const std::string set_name, const std::string animaton_name)
+{
+	AnimationSet* animationSet = getAnimationSet(set_name);
 
 	if (animationSet) {
-		return animationSet->findAnimation(animaton_name);
+		return animationSet->getAnimation(animaton_name);
 	}
 
 	return nullptr;
 }
 
-
-void AnimationController::setActiveAnimationSet(const std::string name, const bool active)
+Skeleton* AnimationController::getSkeleton()
 {
-	AnimationSet* animationSet = findAnimationSet(name);
+	return m_skeleton;
+}
 
-	if (animationSet) {
-		animationSet->setActive(active);
-	}
+void AnimationController::setSkeleton(Skeleton* const skeleton)
+{
+	m_skeleton = skeleton;
 }
 
 bool AnimationController::isAnimationSetActive(const std::string name)
 {
-	AnimationSet* animationSet = findAnimationSet(name);
+	AnimationSet* animationSet = getAnimationSet(name);
 
 	/*
 	if (animationSet) {
@@ -65,17 +120,23 @@ bool AnimationController::isAnimationSetActive(const std::string name)
 	return animationSet->isActive();
 }
 
-bool AnimationController::triggerAnimation(const std::string set_name, const std::string animaton_name)
+void AnimationController::setActiveAnimationSet(const std::string name, const bool active)
 {
-	AnimationSet* animationSet = findAnimationSet(set_name);
-	Animation* animation = nullptr;
+	AnimationSet* animationSet = getAnimationSet(name);
 
 	if (animationSet) {
-		animation = animationSet->findAnimation(animaton_name);
-		if (animation) {
-			animation->animate(m_skeleton, animationSet->getCurrTime());
-			return true;
-		}
+		animationSet->setActive(active);
+	}
+}
+
+bool AnimationController::triggerAnimation(const std::string set_name, const float currTime)
+{
+	AnimationSet* animationSet = getAnimationSet(set_name);
+	Animation* animation = nullptr;
+
+	if (animationSet && !animationSet->isActive()) {
+		animationSet->setActive(true);
+		animationSet->setCurrTime(currTime);
 	}
 
 	return false;
@@ -88,7 +149,7 @@ int AnimationController::getNumAnimationSets() const
 
 int AnimationController::getNumAnimations(const std::string name)
 {
-	AnimationSet* animationSet = findAnimationSet(name);
+	AnimationSet* animationSet = getAnimationSet(name);
 
 	/*
 	if (animationSet) {
@@ -101,15 +162,49 @@ int AnimationController::getNumAnimations(const std::string name)
 	return animationSet->getNumAnimations();
 }
 
-void AnimationController::update(const float time)
+std::vector<AnimationSet*>& AnimationController::getActiveAnimationSets()
 {
+	std::vector<AnimationSet*> activeAnimationSets;
+
 	for (
 		std::unordered_map<std::string, AnimationSet>::iterator it = m_animationSets.begin();
 		it != m_animationSets.end();
 		++it
 	) {
-		it->second.update(time);
+		if (it->second.isActive()) {
+			activeAnimationSets.push_back(&it->second);
+		}
 	}
+
+	return activeAnimationSets;
+}
+
+void AnimationController::Update(float deltaTime)
+{
+	std::vector<AnimationSet*> activeAnimationSets = getActiveAnimationSets();
+
+	for (
+		std::vector<AnimationSet*>::iterator it_s = activeAnimationSets.begin();
+		it_s != activeAnimationSets.end();
+		++it_s
+		) {
+		(*it_s)->update(deltaTime);		//update delta time first, then animate
+
+		std::unordered_map<std::string, Animation>* animations = (*it_s)->getAnimations();
+
+		int i = 0;
+		for (
+			std::unordered_map<std::string, Animation>::iterator it_a = animations->begin();
+			it_a != animations->end();
+			++it_a
+			) {
+			Animation& animation = it_a->second;
+			//m_skeleton->updateSkeletonNode(animation.getNodeName(), animation.getCurrentMatrix());
+			m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vJoints[i]->m_mBindPoseInv * animation.GetCurrentPose().Matrix();
+			i++;
+		}
+	}
+
 }
 
 AnimationController::~AnimationController()

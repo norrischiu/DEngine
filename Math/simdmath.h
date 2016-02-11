@@ -36,6 +36,15 @@ public:
 		_rows[3] = _mm_setr_ps(other[3][0], other[3][1], other[3][2], other[3][3]);
 	}
 
+	// Construct with given value
+	inline SIMDMatrix4(float other[16])
+	{
+		_rows[0] = _mm_setr_ps(other[0], other[1], other[2], other[3]);
+		_rows[1] = _mm_setr_ps(other[4], other[5], other[6], other[7]);
+		_rows[2] = _mm_setr_ps(other[8], other[9], other[10], other[11]);
+		_rows[3] = _mm_setr_ps(other[12], other[13], other[14], other[15]);
+	}
+
 	// Construct with given m128 data
 	inline SIMDMatrix4(__m128 data[4])
 	{
@@ -678,6 +687,12 @@ public:
 		axis.Normalize();
 		_data = _mm_mul_ps(axis._data, sinTheta);
 		_data = _mm_insert_ps(_data, cosTheta, 0xF0);
+	}
+
+	// Construct with direct data
+	SIMDQuaternion(float data[4])
+	{
+		_data = _mm_set_ps(data[0], data[1], data[2], data[3]);
 	}
 
 	// Copy constructor
