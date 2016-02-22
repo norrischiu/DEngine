@@ -248,7 +248,7 @@ std::vector<MeshComponent*> ObjectLoader::Draw() {
 					object.getVertexIndices()->data(),
 					object.getVertexIndices()->size(),
 					object.getObjectDimension(),
-					object.hasUV() ? eRenderType::V1P1UV : eRenderType::V1P,
+					object.hasUV() ? eMeshType::V1P1UV : eMeshType::V1P,
 					D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 					object.hasUV() ? texture_path.c_str() : NULL
 				);

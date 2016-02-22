@@ -36,11 +36,10 @@ public:
 
 	void Update()
 	{
-		CBuffer::Update(NULL, sizePS);
+		CBuffer::Update(size);
 	}
 
-	static const size_t						sizeVS;
-	static const size_t						sizePS;
+	static const size_t						size;
 };
 
 

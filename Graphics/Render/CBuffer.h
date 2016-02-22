@@ -10,52 +10,32 @@ public:
 
 	enum type
 	{
-		VS_ONLY,
-		PS_ONLY,
-		VS_PS
+		VertexShader,
+		GeometryShader,
+		PixelShader,
 	};
 
-	CBuffer(int type, size_t sizeVS = NULL, size_t sizePS = NULL);
+	CBuffer(int type, size_t size);
 
-	void BindToRenderer();
+	// Set constant buffer to GPU, override this if need behavior different from default
+	virtual void BindToRenderer();
 
-	virtual void Update(size_t sizeVS = NULL, size_t sizePS = NULL);
+	void Update(size_t size);
 
 	struct CPU_GPU_MEMORY
 	{
-		void*							m_data;
+		void*							_data;
 
 		// Pointer to vertex shader constant buffer
-		ID3D11Buffer*					m_pConstantBuffer;
+		ID3D11Buffer*					_buffer;
 	};
 
-	CPU_GPU_MEMORY						VS, PS;
+	CPU_GPU_MEMORY						m_Memory;
 
-	int									m_type;
+	int									m_iType;
 
 	// Register ID in GPU
 	int									m_iSlotID;
 };
-
-
-/*
-struct LightGPU
-{
-	Vector3		vPos;
-	Vector3		vDir;
-	Vector4		vColor;
-	float		fIntensity;
-	float		fInnerAngle;
-	float		fOuterAngle;
-	float		fRadius;
-	int			iType;
-};
-
-struct PS_PER_OBJECT_CBUFFER_LIGHTING
-{
-	LightGPU	light;
-	Matrix4		mClipToView; // to compute view space position from screen space
-};
-*/
 
 #endif // !CBUFFER_H_

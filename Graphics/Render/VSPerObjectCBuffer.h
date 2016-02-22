@@ -12,18 +12,17 @@ public:
 	struct VS_PER_OBJECT_CBUFFER
 	{
 		Matrix4			WorldTransform;
-		Matrix4			Transform;
+		Matrix4			WVPTransform;
 	};
 
 	VSPerObjectCBuffer();
 
 	void Update()
 	{
-		CBuffer::Update(sizeVS, NULL);
+		CBuffer::Update(size);
 	}
 
-	static const size_t						sizeVS;
-	static const size_t						sizePS;
+	static const size_t						size;
 };
 
 #endif // !VS_PER_OBJECT_CBUFFER_H_

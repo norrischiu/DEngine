@@ -1,5 +1,5 @@
 // gbuffer
-cbuffer VS_CONSTANT_BUFFER : register(b0)
+cbuffer VS_CONSTANT_BUFFER : register(b1)
 {
 	matrix			WorldTransform;
 	matrix			WVPTransform;

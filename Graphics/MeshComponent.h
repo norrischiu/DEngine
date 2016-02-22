@@ -12,8 +12,13 @@ public:
 
 	static const int ComponentID = ComponentID::MESH;
 
-	MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eRenderType eRenderType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture = NULL);
-	MeshComponent(const char* meshName, int type = eRenderType::STANDARD_MESH_WITH_BUMP);
+	MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eMeshType eMeshType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture = NULL);
+	
+	// Overload constructor: create with given mesh data
+	MeshComponent(MeshData* meshData);
+	
+	// Overload constructor: create with given mesh file name
+	MeshComponent(const char* meshName, int type = eMeshType::STANDARD_MESH);
 
 	// Inherited via Component
 	void SetOwner(GameObject* ptr) override;

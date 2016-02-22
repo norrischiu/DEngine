@@ -4,14 +4,14 @@
 #include "font.h"
 #include "Graphics\Scene\SceneGraph.h"
 
-Font::Font()
+TextHelper::TextHelper()
 {
 	if (!m_Font && !LoadFontData("../Font/font_data.txt")) {
 		OutputDebugStringW(L"Load font data error");
 	}
 }
 
-MeshComponent* Font::write(char* sentence) {
+MeshData* TextHelper::CreateTextMeshData(const char* sentence) {
 	// Get the number of letters in the sentence.
 	const int iNumLetters = (int) strlen(sentence);
 	const int iNumVerts = iNumLetters * 6;
@@ -102,13 +102,18 @@ MeshComponent* Font::write(char* sentence) {
 		pIndices[i++] = j++;
 	}
 
-	MeshComponent* meshComponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, size, eRenderType::V1P1UV, D3D_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, "../Font/font.dds");
-	SceneGraph::GetInstance()->AddComponent(meshComponent);
+	MeshData* meshData = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices, sizeof(vertex1P1UV));
+	RenderPass* textPass = new RenderPass;
+	textPass->SetVertexShader("Shaders/VS_vertex1P1UV.hlsl");
+	textPass->SetPixelShader("Shaders/PS_texture.hlsl");
+	textPass->SetBlendState(State::ALPHA_BS);
+	textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "../Font/font.dds"));
+	meshData->m_Material.AddPassToTechnique(textPass);
 
-	return meshComponent;
+	return meshData;
 }
 
-bool Font::LoadFontData(char* filename) {
+bool TextHelper::LoadFontData(char* filename) {
 	std::ifstream fin;
 	int i;
 	char temp;
@@ -152,7 +157,7 @@ bool Font::LoadFontData(char* filename) {
 	return true;
 }
 
-Font::~Font()
+TextHelper::~TextHelper()
 {
 	delete m_Font;
 }

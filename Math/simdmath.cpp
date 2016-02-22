@@ -27,15 +27,15 @@ void SIMDMatrix4::CreateTranslation(const SIMDVector3& translation)
 	_rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void SIMDMatrix4::TranslateXYZ(const SIMDVector3 & translation)
+void SIMDMatrix4::SetPosition(const SIMDVector3 & translation)
 {
-	__m128 trans[3];
-	trans[0] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetX());
-	trans[1] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetY());
-	trans[2] = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetZ());
-	_rows[0] = _mm_add_ps(_rows[0], trans[0]);
-	_rows[1] = _mm_add_ps(_rows[1], trans[1]);
-	_rows[2] = _mm_add_ps(_rows[2], trans[2]);
+	__m128 transX = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetX());
+	__m128 transY = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetY());
+	__m128 transZ = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetZ());
+
+	_rows[0] = _mm_add_ps(_rows[0], transX);
+	_rows[1] = _mm_add_ps(_rows[1], transY);
+	_rows[2] = _mm_add_ps(_rows[2], transZ);
 }
 
 SIMDVector3 SIMDMatrix4::GetPosition()

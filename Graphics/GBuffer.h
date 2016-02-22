@@ -25,8 +25,6 @@ public:
 	void Render();
 
 private:
-	
-	void LightStencilCheck();
 
 	static const unsigned int					RT_NUM = 3;
 

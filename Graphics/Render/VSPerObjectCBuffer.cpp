@@ -1,9 +1,9 @@
 #include "VSPerObjectCBuffer.h"
 
-const size_t VSPerObjectCBuffer::sizeVS = sizeof(VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER);
+const size_t VSPerObjectCBuffer::size = sizeof(VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER);
 
 VSPerObjectCBuffer::VSPerObjectCBuffer()
-	: CBuffer(type::VS_ONLY, sizeVS, NULL)
+	: CBuffer(type::VertexShader, size)
 {
-	m_iSlotID = 0;
+	m_iSlotID = 1;
 }

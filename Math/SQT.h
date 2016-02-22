@@ -20,10 +20,11 @@ __declspec(align(16)) struct SQT
 
 	SIMDMatrix4 Matrix()
 	{
-		SIMDMatrix4 result;
-		result.ScaleXYZ(m_fScale);
-		result *= m_qQuat.GetRotationMatrix();
-		result.TranslateXYZ(m_vTrans);
+		SIMDMatrix4 result = m_qQuat.GetRotationMatrix();
+		SIMDMatrix4 scale;
+		scale.CreateScale(m_fScale);
+		result *= scale;
+		result.SetPosition(m_vTrans);
 		return result;
 	}
 
@@ -35,6 +36,7 @@ __declspec(align(16)) struct SQT
 		result.m_vTrans = Lerp(a.m_vTrans, b.m_vTrans, t);
 		return result;
 	}
+
 };
 
 #endif // !SQT_H_

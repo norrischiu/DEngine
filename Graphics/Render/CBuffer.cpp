@@ -2,8 +2,8 @@
 #include "Math\simdmath.h"
 #include "D3D11Renderer.h"
 
-CBuffer::CBuffer(int type, size_t sizeVS, size_t sizePS)
-	:m_type(type)
+CBuffer::CBuffer(int type, size_t size)
+	:m_iType(type)
 {
 	HRESULT hr;
 
@@ -19,47 +19,34 @@ CBuffer::CBuffer(int type, size_t sizeVS, size_t sizePS)
 	constResourcesData.SysMemSlicePitch = 0;
 
 	// Create the constant buffer
-	if (m_type == VS_ONLY || m_type == VS_PS)
-	{
-		constBufferDesc.ByteWidth = sizeVS;
-		VS.m_data = malloc(sizeVS);
-		constResourcesData.pSysMem = VS.m_data;
-		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&constBufferDesc, &constResourcesData, &VS.m_pConstantBuffer);
-		assert(hr == S_OK);
-	}
-	if (m_type == PS_ONLY || m_type == VS_PS)
-	{
-		constBufferDesc.ByteWidth = sizePS;
-		PS.m_data = malloc(sizePS);
-		constResourcesData.pSysMem = PS.m_data;
-		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&constBufferDesc, &constResourcesData, &PS.m_pConstantBuffer);
-		assert(hr == S_OK);
-	}
+	constBufferDesc.ByteWidth = size;
+	m_Memory._data = malloc(size);
+	constResourcesData.pSysMem = m_Memory._data;
+	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&constBufferDesc, &constResourcesData, &m_Memory._buffer);
+	assert(hr == S_OK);
 }
 
 void CBuffer::BindToRenderer()
 {
-	if (m_type == VS_ONLY || m_type == VS_PS)
-		D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetConstantBuffers(m_iSlotID, 1, &VS.m_pConstantBuffer);
-	if (m_type == PS_ONLY || m_type == VS_PS)
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &PS.m_pConstantBuffer);
+	if (m_iType == VertexShader)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	}
+	if (m_iType == GeometryShader)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	}
+	if (m_iType == PixelShader)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	}
 }
 
-void CBuffer::Update(size_t sizeVS, size_t sizePS)
+void CBuffer::Update(size_t size)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResources;
-	if (sizeVS != NULL)
-	{
-		D3D11Renderer::GetInstance()->m_pD3D11Context->Map(VS.m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
-		memcpy(mappedResources.pData, VS.m_data, sizeVS);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(VS.m_pConstantBuffer, 0);
-	}
-	if (sizePS != NULL)
-	{
-		D3D11Renderer::GetInstance()->m_pD3D11Context->Map(PS.m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
-		memcpy(mappedResources.pData, PS.m_data, sizePS);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(PS.m_pConstantBuffer, 0);
-	}
-
+	D3D11Renderer::GetInstance()->m_pD3D11Context->Map(m_Memory._buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
+	memcpy(mappedResources.pData, m_Memory._data, size);
+	D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_Memory._buffer, 0);
 }
 

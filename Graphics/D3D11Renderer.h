@@ -69,6 +69,13 @@ public:
 		m_pD3D11Context->OMSetRenderTargets(0, nullptr, nullptr);
 	}
 
+	void UnBindStreamOutTargets()
+	{
+		ID3D11Buffer* null[1] = { nullptr };
+		const unsigned int offset = 0;
+		m_pD3D11Context->SOSetTargets(1, null, &offset);
+	}
+
 	void UnbindPSShaderResources(int num)
 	{
 		ID3D11ShaderResourceView* null[5] = { nullptr };

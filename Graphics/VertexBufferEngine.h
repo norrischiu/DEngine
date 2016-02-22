@@ -10,7 +10,7 @@ public:
 	{
 	};
 
-	ID3D11Buffer* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize);
+	ID3D11Buffer* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut = false);
 	void* CreateBuffer(const char* filename, int vertexFormat, unsigned int& stride);
 
 	void FillVertexData_POSITION(const char* filename, unsigned int vertsNum, void* &pVertexData);

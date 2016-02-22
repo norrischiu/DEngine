@@ -36,13 +36,21 @@ public:
 		_rows[3] = _mm_setr_ps(other[3][0], other[3][1], other[3][2], other[3][3]);
 	}
 
-	// Construct with given value
+	// Construct with given value, assume input is row major matrix
 	inline SIMDMatrix4(float other[16])
 	{
-		_rows[0] = _mm_setr_ps(other[0], other[1], other[2], other[3]);
-		_rows[1] = _mm_setr_ps(other[4], other[5], other[6], other[7]);
-		_rows[2] = _mm_setr_ps(other[8], other[9], other[10], other[11]);
-		_rows[3] = _mm_setr_ps(other[12], other[13], other[14], other[15]);
+		_rows[0] = _mm_setr_ps(other[0], other[4], other[8], other[12]);
+		_rows[1] = _mm_setr_ps(other[1], other[5], other[9], other[13]);
+		_rows[2] = _mm_setr_ps(other[2], other[6], other[10], other[14]);
+		_rows[3] = _mm_setr_ps(other[3], other[7], other[11], other[15]);
+	}
+
+	inline SIMDMatrix4(double other[16])
+	{
+		_rows[0] = _mm_setr_ps(other[0], other[4], other[8], other[12]);
+		_rows[1] = _mm_setr_ps(other[1], other[5], other[9], other[13]);
+		_rows[2] = _mm_setr_ps(other[2], other[6], other[10], other[14]);
+		_rows[3] = _mm_setr_ps(other[3], other[7], other[11], other[15]);
 	}
 
 	// Construct with given m128 data
@@ -257,20 +265,12 @@ public:
 
 	inline void ScaleXYZ(float scalar)
 	{
-		__m128 scale = _mm_set_ps1(scalar);
-		__m128 sum[4];
-		sum[0] = _mm_set_ps1(1.0f);
-		sum[0] = _mm_mul_ps(_rows[0], scale);
-		_rows[0] = _mm_insert_ps(_rows[0], sum[0], 0x0E);
-		sum[1] = _mm_set_ps1(1.0f);
-		sum[1] = _mm_mul_ps(_rows[1], scale);
-		_rows[1] = _mm_insert_ps(_rows[1], sum[1], 0x5D);
-		sum[2] = _mm_set_ps1(1.0f);
-		sum[2] = _mm_mul_ps(_rows[2], scale);
-		_rows[2] = _mm_insert_ps(_rows[0], sum[2], 0xAB);
-		sum[3] = _mm_set_ps1(1.0f);
-		sum[3] = _mm_mul_ps(_rows[3], scale);
-		_rows[3] = _mm_insert_ps(_rows[3], sum[3], 0x07);
+		__m128 scaleX = _mm_setr_ps(scalar, 1.0f, 1.0f, 1.0f);
+		__m128 scaleY = _mm_setr_ps(1.0f, scalar, 1.0f, 1.0f);
+		__m128 scaleZ = _mm_setr_ps(1.0f, 1.0f, scalar, 1.0f);
+		_rows[0] = _mm_mul_ps(_rows[0], scaleX);
+		_rows[1] = _mm_mul_ps(_rows[1], scaleY);
+		_rows[2] = _mm_mul_ps(_rows[2], scaleZ);
 	}
 
 	// Set a rotation transformation about the X axis given an angle in radian
@@ -338,7 +338,7 @@ public:
 	// Set a translation transformation given a vector
 	void CreateTranslation(const SIMDVector3& translation);
 
-	void TranslateXYZ(const SIMDVector3& translation);
+	void SetPosition(const SIMDVector3& translation);
 
 	// Extract elements from matrix
 	SIMDVector3 GetPosition();
@@ -692,7 +692,7 @@ public:
 	// Construct with direct data
 	SIMDQuaternion(float data[4])
 	{
-		_data = _mm_set_ps(data[0], data[1], data[2], data[3]);
+		_data = _mm_setr_ps(data[0], data[1], data[2], data[3]);
 	}
 
 	// Copy constructor
@@ -761,8 +761,28 @@ public:
 
 	SIMDMatrix4 GetRotationMatrix()
 	{
-		DirectX::XMMATRIX result = DirectX::XMMatrixRotationQuaternion(_data);
-		return SIMDMatrix4(result.r);
+		//DirectX::XMMATRIX result = DirectX::XMMatrixRotationQuaternion(_data);
+		//result = DirectX::XMMatrixTranspose(result);
+		//return SIMDMatrix4(result.r);
+
+		float x, y, z, w;
+		x = _data.m128_f32[0];
+		y = _data.m128_f32[1];
+		z = _data.m128_f32[2];
+		w = _data.m128_f32[3];
+
+		__m128 rows[4];
+		//rows[0] = _mm_setr_ps(1 - 2 * (y * y + z * z), 2 * (x * y + w * z), 2 * (x * z - w * y), 0.0f);
+		//rows[1] = _mm_setr_ps(2 * (x * y - w * z), 1 - 2 * (x * x + z * z), 2 * (y * z + w * x), 0.0f);
+		//rows[2] = _mm_setr_ps(2 * (x * z + w * y), 2 * (y * z - w * x), 1 - 2 * (x * x + y * y), 0.0f);
+		//rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+
+		rows[0] = _mm_setr_ps(1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y), 0.0f);
+		rows[1] = _mm_setr_ps(2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x), 0.0f);
+		rows[2] = _mm_setr_ps(2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y), 0.0f);
+		rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+
+		return SIMDMatrix4(rows);
 	}
 
 	// Normalize the quaternion, store the result to this

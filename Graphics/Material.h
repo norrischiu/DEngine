@@ -25,7 +25,7 @@ public:
 	{
 	}
 
-	void ReadFromFile(const char* filename);
+	void ReadFromFile(const char* filename, int meshType);
 
 	void UseDefault();
 

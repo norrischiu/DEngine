@@ -6,10 +6,6 @@
 #define C_STR(string, text)\
 		(string + text).c_str()
 
-Skeleton::Skeleton(const int num) : m_numSkeletonNodes(num)
-{
-}
-
 Skeleton::Skeleton(const char* name)
 {
 	m_ID = ComponentID;
@@ -21,6 +17,7 @@ Skeleton::Skeleton(const char* name)
 	float transform[16];
 	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%i", &iNumJoints);
+	m_vGlobalPose.resize(iNumJoints, Matrix4::Identity);
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
@@ -30,7 +27,6 @@ Skeleton::Skeleton(const char* name)
 		}
 		fscanf(pFile, "%i", &parentIndex);
 		m_vJoints.push_back(new Joint(transform, parentIndex));
-		m_vGlobalPose.push_back(Matrix4::Identity);
 	}
 	fclose(pFile);
 }
@@ -94,7 +90,7 @@ void Skeleton::setSkeletonTree(const std::unordered_map<std::string, SkeletonNod
 {
 	m_skeletonTree = skeletonTree;
 }
-*/
+
 int Skeleton::getNumSkeletonNodes() const
 {
 	return m_numSkeletonNodes;
@@ -104,7 +100,7 @@ void Skeleton::setNumSkeletonNodes(const int num)
 {
 	m_numSkeletonNodes = num;
 }
-
+*/
 void Skeleton::Update(float deltaTime)
 {
 }

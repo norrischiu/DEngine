@@ -24,16 +24,6 @@ LightManager::LightManager()
 		3, 7, 2, // side 6
 		2, 7, 6 
 	};
-	/*
-	pPointLightVertices[0] = Vector3(-0.5, 0.5, -0.5);
-	pPointLightVertices[1] = Vector3(0.5, 0.5, -0.5);
-	pPointLightVertices[2] = Vector3(-0.5, -0.5, -0.5);
-	pPointLightVertices[3] = Vector3(0.5, -0.5, -0.5);
-	pPointLightVertices[4] = Vector3(-0.5, 0.5, 0.5);
-	pPointLightVertices[5] = Vector3(0.5, 0.5, 0.5);
-	pPointLightVertices[6] = Vector3(-0.5, -0.5, 0.5);
-	pPointLightVertices[7] = Vector3(0.5, -0.5, 0.5);
-	*/
 	pPointLightVertices[0] = Vector3(-1.0, 1.0, -1.0);
 	pPointLightVertices[1] = Vector3(1.0, 1.0, -1.0);
 	pPointLightVertices[2] = Vector3(-1.0, -1.0, -1.0);
@@ -47,8 +37,6 @@ LightManager::LightManager()
 	{
 		m_PointLightIndices[i] = pPointLightIndices[i];
 	}
-	//m_PointLightVertices = geometry.CreateUnitSphereVertex();
-	//m_PointLightIndices = geometry.CreateUnitSphereIndex();
 
 	unsigned int pSpotLightIndices[18] =
 	{

@@ -10,12 +10,9 @@ public:
 	AnimationSet(const float currTime, const bool active = true);
 	~AnimationSet();
 
-	void addAnimation(const std::string name, const Animation& animation);
-
-	void addAnimation(const Animation& animation);
+	void AddAnimation(Animation* animation);
 
 	void removeAnimation(const std::string name);
-	std::unordered_map<std::string, Animation>* getAnimations();
 	Animation* getAnimation(const std::string name);
 	
 	int getNumAnimations() const;
@@ -29,8 +26,10 @@ public:
 
 	void update(const float delta_time);
 
+	std::vector<Animation*> m_vAnimations;
+
 private:
-	std::unordered_map<std::string, Animation> m_animations;
+	std::unordered_map<std::string, Animation*> m_animations;
 	float m_currTime;
 	float m_duration;
 	bool m_active;

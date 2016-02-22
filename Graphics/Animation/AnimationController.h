@@ -26,7 +26,6 @@ public:
 	
 	std::unordered_map<std::string, AnimationSet>* getAnimationSets();
 	AnimationSet* getAnimationSet(const std::string name);
-	std::unordered_map<std::string, Animation>* getAnimations(const std::string set_name);
 	Animation* getAnimation(const std::string set_name, const std::string animation_name);
 
 	Skeleton* getSkeleton();
@@ -38,14 +37,11 @@ public:
 	bool isAnimationSetActive(const std::string name);
 	void setActiveAnimationSet(const std::string name, const bool active);
 	
-	std::vector<AnimationSet*>* getActiveAnimationSets();
-	
 	bool triggerAnimation(const std::string set_name, const float currTime);
 
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
-private:
 	std::unordered_map<std::string, AnimationSet> m_animationSets;
 	Skeleton* m_skeleton;
 };

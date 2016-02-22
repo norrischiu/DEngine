@@ -12,7 +12,10 @@ public:
 	const Matrix4& getCurrMatrix() const;
 	void setCurrMatrix(const Matrix4& matrix);
 
-	Matrix4 m_mBindPoseInv;
-	uint8_t m_iParent;
+	// Inverse bind pose, i.e. joint space to model space transform
+	Matrix4							m_mBindPoseInv;
+
+	// Array index to parent joint (max: 255)
+	int8_t							m_iParent;
 };
 

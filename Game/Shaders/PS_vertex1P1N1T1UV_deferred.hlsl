@@ -10,7 +10,7 @@ struct Material
 	float		vShininess;
 };
 
-cbuffer PS_CONSTANT_BUFFER : register(b0)
+cbuffer PS_CONSTANT_BUFFER : register(b1)
 {
 	Material	material;
 };

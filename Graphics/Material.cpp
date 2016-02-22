@@ -4,7 +4,7 @@
 #include "Render\Texture.h"
 #include "D3D11Renderer.h"
 
-void Material::ReadFromFile(const char * filename)
+void Material::ReadFromFile(const char * filename, int meshType)
 {
 	FILE* pFile = fopen(filename, "r");
 	RenderPass* pass = new RenderPass;
@@ -43,9 +43,20 @@ void Material::ReadFromFile(const char * filename)
 	fclose(pFile);
 
 	// decide which technique to use
+	switch (meshType)
+	{
+		case eMeshType::OUTLINE:
+			pass->SetVertexShader("Shaders/VS_vertex1P.hlsl");			
+			break;
+		case eMeshType::STANDARD_MESH:
+			pass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV.hlsl");			
+			break;
+		case eMeshType::SKELETAL_MESH:
+			pass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV4J.hlsl");			
+			break;
+	}
 	if (m_TexFlag & (DIFFUSE | NORMAL))
 	{
-		pass->SetVertexShader("Shaders/VS_vertex1P1N1T1UV.hlsl");
 		pass->SetPixelShader("Shaders/PS_vertex1P1N1T1UV_deferred.hlsl");
 		pass->SetBlendState(State::NULL_STATE);
 		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
@@ -61,10 +72,4 @@ void Material::UseDefault()
 	m_vDiffuse = Vector3(1.0f, 1.0f, 1.0f);
 	m_vSpecular = Vector3::Zero;
 	m_fShininess = 1.0f;
-
-	//RenderPass* pass = new RenderPass;
-	//pass->SetVertexShader("Shaders/VS_vertex1P.hlsl");
-	//pass->SetPixelShader("Shaders/PS_vertex1P1N1T1UV_deferred.hlsl");
-	//pass->SetBlendState(State::NULL_STATE);
-	//m_pRenderTechnique->AddPass(pass);
 }

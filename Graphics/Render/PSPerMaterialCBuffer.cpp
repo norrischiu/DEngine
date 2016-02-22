@@ -1,9 +1,9 @@
 #include "PSPerMaterialCBuffer.h"
 
-const size_t PSPerMaterialCBuffer::sizePS = sizeof(PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER);
+const size_t PSPerMaterialCBuffer::size = sizeof(PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER);
 
 PSPerMaterialCBuffer::PSPerMaterialCBuffer()
-	: CBuffer(type::PS_ONLY, NULL, sizePS)
+	: CBuffer(type::PixelShader, size)
 {
-	m_iSlotID = 0;
+	m_iSlotID = 1;
 }

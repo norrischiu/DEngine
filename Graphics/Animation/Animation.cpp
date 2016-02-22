@@ -10,29 +10,9 @@ Animation::~Animation()
 {
 }
 
-void Animation::addAnimationMatrix(const Matrix4& matrix)
-{
-	m_animationMatrices.push_back(matrix);
-}
-
-void Animation::addAnimationMatrix(const std::vector<Matrix4>& matrices)
-{
-	m_animationMatrices.insert(m_animationMatrices.end(), matrices.begin(), matrices.end());
-}
-
 void Animation::AddPose(SQT sqt)
 {
 	m_Poses.push_back(sqt);
-}
-
-std::vector<Matrix4>& Animation::getAnimationMatrices()
-{
-	return m_animationMatrices;
-}
-
-void Animation::setAnimationMatrices(const std::vector<Matrix4>& matrices)
-{
-	m_animationMatrices = matrices;
 }
 
 std::string Animation::getNodeName() const
@@ -57,12 +37,7 @@ void Animation::setCurrentKeyframe(const int frame)
 	}
 }
 
-const Matrix4& Animation::getCurrentMatrix() const
-{
-	return m_animationMatrices.at(getCurrentKeyframe() - 1);
-}
-
-SQT Animation::GetCurrentPose()
+SQT& Animation::GetCurrentPose()
 {
 	return m_Poses[m_currKeyframe - 1];
 }

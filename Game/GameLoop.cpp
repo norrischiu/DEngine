@@ -1,5 +1,5 @@
 /* Debug Include */
-//#include "Debug\DebugDrawing.h"
+#include "Debug\DEBUG_RENDERER.h"
 
 #include "GameLoop.h"
 #include "Graphics\MeshComponent.h"
@@ -23,7 +23,8 @@ GameLoop::GameLoop()
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
 	GameObject* dragon = new GameObject;
-	dragon->AddComponent(new MeshComponent("dragon", eRenderType::SKELETAL_MESH));
+	dragon->AddComponent(new MeshComponent("test1", eMeshType::SKELETAL_MESH));
+	//dragon->AddComponent(new MeshComponent("Ganfaul_M_Aure1"));
 	dragon->AddComponent(new Body(typeAABB));
 	dragon->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 //	Matrix4 s;
@@ -32,34 +33,34 @@ GameLoop::GameLoop()
 //	Matrix4 rot;
 //	rot.CreateRotationY(PI);
 //	dragon->Transform(rot);
-	dragon->AddComponent(new MovementController());
-	Skeleton* skel = new Skeleton("dragon");
+//	dragon->AddComponent(new MovementController());
+	Skeleton* skel = new Skeleton("test1");
 	AnimationController* anim = new AnimationController(skel);
-	anim->CreateAnimationSets("dragon_jump");
+	anim->CreateAnimationSets("test1");
 	dragon->AddComponent(skel);
 	dragon->AddComponent(anim);
-	dragon->GetComponent<AnimationController>()->setActiveAnimationSet("dragon_jump", true);
+	//dragon->GetComponent<AnimationController>()->triggerAnimation("dragon_jump", 0);
 	//dragon->AddComponent(new CameraComponent(Vector3(0.0f, 4.0f, -5.0f), Vector3(0.0f, 0.0f, 1000.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 	//dragon->GetComponent<CameraComponent>()->SetAsRendererCamera();
 
-	GameObject* floor = new GameObject;
-	floor->AddComponent(new MeshComponent("floor"));
+	//GameObject* floor = new GameObject;
+	//floor->AddComponent(new MeshComponent("floor"));
 
-	Camera* cam = new Camera(Vector3(0.0f, 3.0f, 12.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	Camera* cam = new Camera(Vector3(0.0f, 2.0f, -5.0f), Vector3(0.0f, 2.0f, 3.0f), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	cam->SetAsRendererCamera();
+	cam->AddComponent(new MovementController());
 	//cam->AddComponent(new MovementController());
 
 	GameObject* pointlight = new GameObject;
-	pointlight->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
-	//pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.5), 8, 8));
+	pointlight->SetPosition(Vector3(0.0f, 3.0f, -3.0f));
+	pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.0), 5, 5));
 
-	GameObject* spotlight = new GameObject;
-	spotlight->SetPosition(Vector3(0.0f, 10.0f, 8.0f));
-	spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 4, PI / 1.5f, Vector4(1.0, 1.0, 1.0), 15, 8, true));
-	spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
+	//GameObject* spotlight = new GameObject;
+	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
+	//spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 10.0f, PI / 18.0f, Vector4(1.0, 1.0, 1.0), 2, 8, false));
+	//spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 
-	//DEBUG_DRAWING::DRAW_AABB(dragon->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());
-	//DEBUG_DRAWING::DRAW_AABB(floor->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox());
+	DEBUG_RENDERER::GetInstance()->DRAW_2D_TEXT("Test", 0, 0);
 
 	// temp
 	/*

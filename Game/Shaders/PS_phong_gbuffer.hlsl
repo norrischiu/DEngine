@@ -26,7 +26,7 @@ struct Light
 	bool		bIsCastShadow;
 };
 
-cbuffer PS_CONSTANT_BUFFER : register(b1)
+cbuffer PS_CONSTANT_BUFFER : register(b2)
 {
 	Light		light;
 	Matrix		mClipToView;

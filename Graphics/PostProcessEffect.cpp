@@ -67,12 +67,12 @@ void PostProcessEffect::Render()
 	m_pVSCBuffer->BindToRenderer();
 
 	// Update VS cbuffer
-	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
-	ptr->Transform = Matrix4::OrthographicProjection(1024.0f, 768.0f, 0.0f, 1.0f);
+	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+	ptr->WVPTransform = Matrix4::OrthographicProjection(1024.0f, 768.0f, 0.0f, 1.0f);
 	m_pVSCBuffer->Update();
 
 	// Update PS cbuffer
-	PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->PS.m_data;
+	PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->m_Memory._data;
 	ptr2->mClipToView = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix().Inverse();
 	ptr2->mViewToClip = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix();
 	m_pPSCBuffer->Update();

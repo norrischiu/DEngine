@@ -6,10 +6,19 @@ void RenderPass::BindToRenderer()
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetInputLayout(m_pInputLayout);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShader(m_pVS, 0, 0);
+	if (m_pGS)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetShader(m_pGS, 0, 0);
+	}
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShader(m_pPS, 0, 0);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState(m_pRS);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetDepthStencilState(m_pDSS, 1);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetBlendState(m_pBS, NULL, 0xFFFFFF);
+	if (m_pSOTarget)
+	{
+		const unsigned int offset = 0;
+		D3D11Renderer::GetInstance()->m_pD3D11Context->SOSetTargets(1, &m_pSOTarget, &offset);
+	}
 	if (m_iRTVNum > 0)
 	{
 		D3D11Renderer::GetInstance()->UnbindRenderTargets();
