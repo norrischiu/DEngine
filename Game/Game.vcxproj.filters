@@ -52,6 +52,9 @@
     <Filter Include="Graphics\Animation">
       <UniqueIdentifier>{df1eb073-1fef-4821-990f-6675dee38011}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\HUD">
+      <UniqueIdentifier>{1cf23c42-1bc2-4d50-81a9-1e7b75efca39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp">
@@ -193,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\Render\VSMatrixPaletteCBuffer.cpp">
       <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUD.cpp">
+      <Filter>Graphics\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\TextEngine.cpp">
+      <Filter>Graphics\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\TextBox.cpp">
+      <Filter>Graphics\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,6 +416,15 @@
     </ClInclude>
     <ClInclude Include="..\Graphics\Render\VSMatrixPaletteCBuffer.h">
       <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUD.h">
+      <Filter>Graphics\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\TextEngine.h">
+      <Filter>Graphics\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\TextBox.h">
+      <Filter>Graphics\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
