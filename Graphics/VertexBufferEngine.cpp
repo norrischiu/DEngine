@@ -82,7 +82,7 @@ void VertexBufferEngine::DestructandCleanUp() {
 	}
 }
 
-ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize)
+ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut)
 {
 	HRESULT hr;
 	ID3D11Buffer* pVertexBuffer;
@@ -96,6 +96,10 @@ ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, con
 	// Set vertex buffer description
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	if (streamOut)
+	{
+		vertexBufferDesc.BindFlags |= D3D11_BIND_STREAM_OUTPUT;
+	}
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = iDataSize * iNumVerts;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -333,7 +337,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOI
 		for (int j = 0; j < 4; j++)
 		{
 			fscanf(pFile, "%i", &index);
-			((Vertex1P1N1T1UV4J*)pVertexData)[i].m_jointIndex[j] = (uint8_t) index;
+			((Vertex1P1N1T1UV4J*)pVertexData)[i].m_jointIndex[j] = index;
 			fscanf(pFile, "%f", &vec[j]);
 		}
 		((Vertex1P1N1T1UV4J*)pVertexData)[i].m_skinWeight = Vector3(vec[0], vec[1], vec[2], vec[3]);

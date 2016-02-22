@@ -86,9 +86,10 @@ void GBuffer::LightStencilCheck()
 
 void GBuffer::Render()
 {
-	LightStencilCheck();
+	//LightStencilCheck();
 
 	m_pPSCBuffer->BindToRenderer();
+	m_pVSCBuffer->BindToRenderer();
 
 	for (int i = 0; i < LightManager::GetInstance()->GetNumLights(); i++)
 	{
@@ -151,10 +152,18 @@ void GBuffer::Render()
 		switch (currLight->GetType())
 		{
 			case LightComponent::POINT:
+				pointLightMesh->RenderUsingPass(StencilingPass);
+				D3D11Renderer::GetInstance()->UnbindRenderTargets();
 				pointLightMesh->RenderUsingPass(LightingPass);
+				D3D11Renderer::GetInstance()->m_pD3D11Context->ClearDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
+				D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);
 				break;
 			case LightComponent::SPOT:
+				spotLightMesh->RenderUsingPass(StencilingPass);
+				D3D11Renderer::GetInstance()->UnbindRenderTargets();
 				spotLightMesh->RenderUsingPass(LightingPass);
+				D3D11Renderer::GetInstance()->m_pD3D11Context->ClearDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV(), D3D11_CLEAR_STENCIL, 1.0f, 0);
+				D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);
 				break;
 		}
 		if (currLight->IsCastShadow())

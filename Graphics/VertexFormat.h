@@ -80,9 +80,9 @@ struct Vertex1P1N1T1UV4J
 	Vector3								m_pos;
 	Vector3								m_norm; // 16-byte offset
 	Vector3								m_tangent; // 32-btye offset
-	float								m_UV[2]; // 48-byte offset
-	uint8_t								m_jointIndex[4]; //56-byte offset
+	int									m_jointIndex[4]; //56-byte offset
 	Vector4								m_skinWeight; // 60-byte offset
+	float								m_UV[2]; // 48-byte offset
 };
 
 #endif

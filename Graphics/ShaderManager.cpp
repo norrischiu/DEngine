@@ -51,6 +51,14 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreatePixelShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pPShader);
 			pShader = pPShader;
 			break;
+		case D3D11_SHVER_GEOMETRY_SHADER:
+			ID3D11GeometryShader* pGShader;
+			pGShader = (ID3D11GeometryShader*)pShader;
+			hr = D3DCompileFromFile(pName, NULL, NULL, "GS", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
+			if (error) compileErrors = (char*)(error->GetBufferPointer());
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pGShader);
+			pShader = pGShader;
+			break;
 		default:
 			// TODO: not yet implemented
 			assert(false);

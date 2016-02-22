@@ -39,6 +39,23 @@ public:
 		}
 	}
 
+	void SetGeometryShader(const char* filename)
+	{
+		if (filename == nullptr)
+		{
+			m_pGS = nullptr;
+		}
+		else
+		{
+			m_pGS = (ID3D11GeometryShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_GEOMETRY_SHADER);
+		}
+	}
+
+	void SetStreamOutTargets(ID3D11Buffer* SOBuffer)
+	{
+		m_pSOTarget = SOBuffer;
+	}
+
 	void SetRasterizerState(int stateID)
 	{
 		m_pRS = (ID3D11RasterizerState*) State::GetState(stateID);
@@ -91,10 +108,13 @@ public:
 
 private:
 
-	// Pointer to complied to vertex shader
+	// Pointer to complied vertex shader
 	ID3D11VertexShader*						m_pVS;
 
-	// Pointer to complied to pixel shader
+	// Pointer to complied geometry shader
+	ID3D11GeometryShader*					m_pGS;
+
+	// Pointer to complied pixel shader
 	ID3D11PixelShader*						m_pPS;
 
 	// Primitive Topology
@@ -115,6 +135,8 @@ private:
 	ID3D11DepthStencilView*					m_pDSV;
 
 	ID3D11RenderTargetView**				m_pRTVs;
+
+	ID3D11Buffer*							m_pSOTarget;
 
 	int										m_iRTVNum;
 

@@ -19,7 +19,7 @@ public:
 
 	void Update()
 	{
-		CBuffer::Update(sizeVS, NULL);
+		CBuffer::Update(sizeVS, NULL, NULL);
 	}
 
 	static const size_t						sizeVS;

@@ -36,7 +36,7 @@ public:
 
 	void Update()
 	{
-		CBuffer::Update(NULL, sizePS);
+		CBuffer::Update(NULL, NULL, sizePS);
 	}
 
 	static const size_t						sizeVS;

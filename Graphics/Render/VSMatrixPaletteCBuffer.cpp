@@ -5,5 +5,5 @@ const size_t VSMatrixPaletteCBuffer::sizeVS = sizeof(VSMatrixPaletteCBuffer::VS_
 VSMatrixPaletteCBuffer::VSMatrixPaletteCBuffer()
 	: CBuffer(type::VS_ONLY, sizeVS, NULL)
 {
-	m_iSlotID = 1;
+	m_iSlotID = 2;
 }

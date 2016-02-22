@@ -5,5 +5,5 @@ const size_t VSPerObjectCBuffer::sizeVS = sizeof(VSPerObjectCBuffer::VS_PER_OBJE
 VSPerObjectCBuffer::VSPerObjectCBuffer()
 	: CBuffer(type::VS_ONLY, sizeVS, NULL)
 {
-	m_iSlotID = 0;
+	m_iSlotID = 1;
 }

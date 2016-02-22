@@ -9,11 +9,10 @@
 #include "Material.h"
 #include "Physics\cdAABB.h"
 
-enum eRenderType
+enum eMeshType
 {
 	OUTLINE,
 	STANDARD_MESH,
-	STANDARD_MESH_WITH_BUMP,
 	SKELETAL_MESH,
 	V1P,
 	V1P1UV
@@ -24,17 +23,17 @@ class MeshData
 public:
 
 	// Overload default constructor
-	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
+	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eMeshType eMeshType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
 	
-	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics);
+	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, unsigned int stride = 16, bool streamOut = false);
 
-	MeshData(const char* filename, int renderType);
+	MeshData(const char* filename, int meshType);
 
 	MeshData() {};
 
 	~MeshData();
 
-	void SetUpEnvironment(const eRenderType eRenderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
+	void SetUpEnvironment(const eMeshType eMeshType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
 
 	void Transform(
 		const float scalar = 1.0f,
@@ -113,7 +112,7 @@ private:
 	ID3D11Buffer*							m_pIndexBuffer;
 
 	// Render Type
-	eRenderType								m_renderType;
+	eMeshType								m_renderType;
 
 	// Number of vertices
 	unsigned int							m_iNumVerts;
@@ -124,15 +123,15 @@ private:
 	//Start Index Location
 	unsigned int							m_iStartIndexLocation;
 
+	// Flag whether it is stream out result
+	bool									m_bStreamOut;
+
 	Matrix4									m_transformationMat;
 
 	Vector3									m_dimension;
 
 	// Simple bounding box for camera frustum culling
 	AABB									m_BoundingBox;
-
-	// Mesh material
-	//Material								m_Material;
 };
 
 #endif

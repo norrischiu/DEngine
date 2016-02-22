@@ -2,7 +2,7 @@
 #include "Math\simdmath.h"
 #include "D3D11Renderer.h"
 
-CBuffer::CBuffer(int type, size_t sizeVS, size_t sizePS)
+CBuffer::CBuffer(int type, size_t sizeVS, size_t sizeGS, size_t sizePS)
 	:m_type(type)
 {
 	HRESULT hr;
@@ -27,6 +27,14 @@ CBuffer::CBuffer(int type, size_t sizeVS, size_t sizePS)
 		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&constBufferDesc, &constResourcesData, &VS.m_pConstantBuffer);
 		assert(hr == S_OK);
 	}
+	if (m_type == GS_ONLY || m_type == VS_GS_PS)
+	{
+		constBufferDesc.ByteWidth = sizeGS;
+		GS.m_data = malloc(sizeGS);
+		constResourcesData.pSysMem = GS.m_data;
+		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&constBufferDesc, &constResourcesData, &GS.m_pConstantBuffer);
+		assert(hr == S_OK);
+	}
 	if (m_type == PS_ONLY || m_type == VS_PS)
 	{
 		constBufferDesc.ByteWidth = sizePS;
@@ -39,13 +47,21 @@ CBuffer::CBuffer(int type, size_t sizeVS, size_t sizePS)
 
 void CBuffer::BindToRenderer()
 {
-	if (m_type == VS_ONLY || m_type == VS_PS)
+	if (m_type == VS_ONLY || m_type == VS_PS || m_type == VS_GS_PS)
+	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetConstantBuffers(m_iSlotID, 1, &VS.m_pConstantBuffer);
-	if (m_type == PS_ONLY || m_type == VS_PS)
+	}
+	if (m_type == GS_ONLY || m_type == VS_GS_PS)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetConstantBuffers(m_iSlotID, 1, &GS.m_pConstantBuffer);
+	}
+	if (m_type == PS_ONLY || m_type == VS_PS || m_type == VS_GS_PS)
+	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &PS.m_pConstantBuffer);
+	}
 }
 
-void CBuffer::Update(size_t sizeVS, size_t sizePS)
+void CBuffer::Update(size_t sizeVS, size_t sizeGS, size_t sizePS)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResources;
 	if (sizeVS != NULL)
@@ -54,12 +70,17 @@ void CBuffer::Update(size_t sizeVS, size_t sizePS)
 		memcpy(mappedResources.pData, VS.m_data, sizeVS);
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(VS.m_pConstantBuffer, 0);
 	}
+	if (sizeGS != NULL)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->Map(GS.m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
+		memcpy(mappedResources.pData, GS.m_data, sizeGS);
+		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(GS.m_pConstantBuffer, 0);
+	}
 	if (sizePS != NULL)
 	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Map(PS.m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
 		memcpy(mappedResources.pData, PS.m_data, sizePS);
 		D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(PS.m_pConstantBuffer, 0);
 	}
-
 }
 
