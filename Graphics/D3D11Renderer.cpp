@@ -93,7 +93,7 @@ void D3D11Renderer::Render()
 //	m_PPE->Render();
 
 	// Debug drawing
-//	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
+	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);

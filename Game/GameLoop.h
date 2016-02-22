@@ -1,9 +1,7 @@
 // GameLoop.h: the class of main game loop
-
 #ifndef GAMELOOP_H
 #define GAMELOOP_H
 
-#include <windows.h>
 
 class GameLoop
 {

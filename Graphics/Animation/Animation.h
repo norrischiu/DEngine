@@ -10,16 +10,10 @@ class Animation
 {
 
 public:
-	Animation(const std::string node_name, const int frame = 1);
+	Animation(const std::string node_name, const int frame = 0);
 	~Animation();
 
-	void addAnimationMatrix(const Matrix4& matrix);
-	void addAnimationMatrix(const std::vector<Matrix4>& matrices);
-
 	void AddPose(SQT sqt);
-
-	std::vector<Matrix4>& getAnimationMatrices();
-	void setAnimationMatrices(const std::vector<Matrix4>& matrices);
 	
 	std::string getNodeName() const;
 	void setNodeName(const std::string node_name);
@@ -27,18 +21,14 @@ public:
 	int getCurrentKeyframe() const;
 	void setCurrentKeyframe(const int frame);
 
-	const Matrix4& getCurrentMatrix() const;
-
-	SQT GetCurrentPose();
+	SQT& GetCurrentPose();
 
 	void update(const float delta_time);
 
-private:
-	std::vector<Matrix4> m_animationMatrices;
+//private:
 	std::string m_node_name;
 	int m_currKeyframe;
 
 	std::vector<SQT>					m_Poses;
-	int									m_iNumFrame;
 };
 

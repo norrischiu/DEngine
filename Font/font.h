@@ -10,13 +10,13 @@ struct FontType
 	int size;
 };
 
-class Font
+class TextHelper
 {
 	public:
-		Font();
-		~Font();
+		TextHelper();
+		~TextHelper();
 
-		MeshComponent* write(char* sentence);
+		MeshData* CreateTextMeshData(const char* sentence);
 
 	private:
 		bool LoadFontData(char*);

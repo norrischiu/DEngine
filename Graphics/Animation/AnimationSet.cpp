@@ -10,26 +10,14 @@ AnimationSet::~AnimationSet()
 {
 }
 
-void AnimationSet::addAnimation(const std::string name, const Animation& animation)
+void AnimationSet::AddAnimation(Animation* animation)
 {
-	std::pair <std::string, Animation> t_animation = std::make_pair(name, animation);
-	m_animations.insert(t_animation);
-}
-
-void AnimationSet::addAnimation(const Animation& animation)
-{
-	std::pair <std::string, Animation> t_animation = std::make_pair(animation.getNodeName(), animation);
-	m_animations.insert(t_animation);
+	m_animations.insert(std::make_pair(animation->getNodeName(), animation));
 }
 
 void AnimationSet::removeAnimation(const std::string name)
 {
 	m_animations.erase(name);
-}
-
-std::unordered_map<std::string, Animation>* AnimationSet::getAnimations()
-{
-	return &m_animations;
 }
 
 Animation* AnimationSet::getAnimation(const std::string name)
@@ -40,7 +28,7 @@ Animation* AnimationSet::getAnimation(const std::string name)
 		return nullptr;
 	}
 	else {
-		return &t->second;
+		return t->second;
 	}
 
 	return nullptr;
@@ -55,16 +43,13 @@ void AnimationSet::update(const float delta_time)
 {
 	m_currTime = m_currTime + delta_time;
 
-	for (
-		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
-		it != m_animations.end();
-		++it
-	) {
-		it->second.update(delta_time);
+	for (auto itr : m_vAnimations)
+	{
+		itr->update(delta_time);
 	}
 
 	if (m_currTime > m_duration) {
-		m_active = false;
+		//m_active = false;
 	}
 }
 
@@ -79,11 +64,11 @@ void AnimationSet::setCurrTime(const float currTime)
 	m_currTime = currTime;
 
 	for (
-		std::unordered_map<std::string, Animation>::iterator it = m_animations.begin();
+		std::unordered_map<std::string, Animation*>::iterator it = m_animations.begin();
 		it != m_animations.end();
 		++it
 	) {
-		it->second.update(delta_time);
+		it->second->update(delta_time);
 	}
 }
 

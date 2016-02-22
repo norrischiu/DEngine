@@ -2,6 +2,7 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Event\InputEvent.h"
 #include "GameObject\GameObject.h"
+#include "Graphics\Animation\AnimationController.h" //temp
 
 void MovementController::Update(float deltaTime)
 {

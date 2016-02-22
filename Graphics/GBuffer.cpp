@@ -38,56 +38,8 @@ GBuffer::GBuffer()
 	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
 }
 
-void GBuffer::LightStencilCheck()
-{	
-	m_pVSCBuffer->BindToRenderer();
-
-	// Set stencil buffer
-	for (int i = 0; i < LightManager::GetInstance()->GetNumLights(); i++)
-	{
-		LightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
-
-		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
-		Matrix4 scale, trans, rot;
-		scale.CreateScale(currLight->GetRadius());
-		trans.CreateTranslation(currLight->GetPosition());
-		if (currLight->GetType() == LightComponent::SPOT)
-		{
-			SpotLightComponent* currSpotlight = (SpotLightComponent*) currLight;
-			Matrix4 scaleX, scaleY, scaleZ, transY;
-			scaleX.CreateScaleX(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
-			scaleY.CreateScaleY(currLight->GetRadius());
-			scaleZ.CreateScaleZ(2.0f * currLight->GetRadius() * sin(currSpotlight->GetOuterAngle() / 2.0f));
-			scale = scaleZ * scaleY * scaleX;
-			transY.CreateTranslation(Vector3(0.0f, -currLight->GetRadius() / 2.0f, 0.0f));
-			trans *= transY;
-			Vector3 dir = currLight->GetDirection();
-			dir.Normalize();
-			Vector3 axis = Cross(dir, Vector3::NegativeUnitY);
-			Quaternion quat(axis, asinf(axis.Length()));
-			rot = quat.GetRotationMatrix();
-		}
-		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
-		m_pVSCBuffer->Update();
-
-		switch (currLight->GetType())
-		{
-			case LightComponent::POINT:
-				pointLightMesh->RenderUsingPass(StencilingPass);
-				break;
-			case LightComponent::SPOT:
-				spotLightMesh->RenderUsingPass(StencilingPass);
-				break;
-		}
-	}
-
-	D3D11Renderer::GetInstance()->UnbindRenderTargets();
-}
-
 void GBuffer::Render()
 {
-	//LightStencilCheck();
-
 	m_pPSCBuffer->BindToRenderer();
 	m_pVSCBuffer->BindToRenderer();
 
@@ -96,7 +48,7 @@ void GBuffer::Render()
 		LightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
 
 		// Update VS cbuffer
-		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
+		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
 		Matrix4 scale, trans, rot;
 		scale.CreateScale(currLight->GetRadius());
 		trans.CreateTranslation(currLight->GetPosition());
@@ -116,11 +68,11 @@ void GBuffer::Render()
 			Quaternion quat(axis, asinf(axis.Length()));
 			rot = quat.GetRotationMatrix();
 		}
-		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
+		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
 		m_pVSCBuffer->Update();
 
 		// Update PS cbuffer
-		PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->PS.m_data;
+		PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->m_Memory._data;
 		ptr2->light.vColor = currLight->GetColor();
 		ptr2->light.fIntensity = currLight->GetIntensity();
 		ptr2->light.fRadius = currLight->GetRadius();

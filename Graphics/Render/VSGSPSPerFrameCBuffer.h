@@ -16,14 +16,14 @@ public:
 
 	VSGSPSPerFrameCBuffer();
 
+	void BindToRenderer() override;
+
 	void Update()
 	{
-		CBuffer::Update(sizeVS, sizeGS, sizePS);
-	}
+		CBuffer::Update(size);
+	};
 
-	static const size_t						sizeVS;
-	static const size_t						sizeGS;
-	static const size_t						sizePS;
+	static const size_t						size;
 };
 
 #endif // !VSGSPS_PER_FRAME_CBUFFER_H_

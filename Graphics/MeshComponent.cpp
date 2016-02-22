@@ -21,7 +21,7 @@ MeshComponent::MeshComponent(MeshData* meshData)
 	, m_pMeshData(meshData)
 {
 	*m_pTransform = Matrix4::Identity;
-	SceneGraph::GetInstance()->AddComponent(this);
+	//SceneGraph::GetInstance()->AddComponent(this);
 }
 
 MeshComponent::MeshComponent(const char* meshName, int type)

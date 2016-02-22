@@ -57,28 +57,30 @@ void SceneGraph::Render()
 	{
 		if (itr->m_bVisible) count++; //
 
-		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
+		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
 		ptr->WorldTransform = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
-		ptr->Transform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
+		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
 		m_pVSCBuffer->Update();
 
-		Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
 		AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
-		int index = 0;
-		if (skel != nullptr)
+		if (anim != nullptr)
 		{
-			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->VS.m_data;
-			for (auto itr_s : *anim->getActiveAnimationSets())
+			Skeleton* skel = anim->m_skeleton;
+			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
+			for (auto itr : anim->m_animationSets)
 			{
-				for (auto itr_a : *(itr_s->getAnimations())) {
-					palette->mSkinning[index] = skel->GetGlobalPoseAt(index);
-					index++;
+				if (itr.second.isActive())
+				{
+					for (int index = 0; index < itr.second.m_vAnimations.size(); ++index)
+					{
+						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index]->m_mBindPoseInv;
+					}
 				}
 			}
 			m_pMatrixPalette->Update();
 		}
 
-		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->PS.m_data;
+		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->m_Memory._data;
 		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();
 		ptr2->material.fShininess = itr->m_pMeshData->m_Material.GetShininess();
 		m_pPSCBuffer->Update();
@@ -100,8 +102,8 @@ void SceneGraph::ShadowMapGeneration()
 			D3D11Renderer::GetInstance()->m_pD3D11Context->ClearDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 			for (auto itr : m_tree)
 			{
-				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->VS.m_data;
-				ptr->Transform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
+				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+				ptr->WVPTransform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
 				m_pVSCBuffer->Update();
 
 				shadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
@@ -114,12 +116,28 @@ void SceneGraph::ShadowMapGeneration()
 void SceneGraph::RENDER_DEBUG_DRAWING()
 {
 #ifdef _DEBUG
-	D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetDepthStencilState((ID3D11DepthStencilState*) State::GetState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS), 1);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->RSSetState((ID3D11RasterizerState*) State::GetState(State::WIREFRAME_RS));
+	
+	m_pVSCBuffer->BindToRenderer();
+
+	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+
+	/*RenderPass* pass = new RenderPass;
+	pass->SetVertexShader("Shaders/VS_vertex1P.hlsl");
+	pass->SetPixelShader("Shaders/PS_red.hlsl");
+	pass->SetBlendState(State::NULL_STATE);
+	pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
+	pass->SetRasterizerState(State::CULL_NONE_RS);
+	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);*/
 	for (auto itr : DEBUG_DRAWING_TREE)
 	{
-		itr->Draw();
+		ptr->WVPTransform = *itr->m_pTransform;
+		m_pVSCBuffer->Update();
+
+		//itr->m_pMeshData->RenderUsingPass(pass);
+		itr->m_pMeshData->Render();
 	}
+	//delete pass;
+	
 #endif
 }
 

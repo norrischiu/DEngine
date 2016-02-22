@@ -13,7 +13,6 @@ public:
 
 	static const int ComponentID = ComponentID::SKELETON;
 
-	Skeleton(const int num);
 	Skeleton(const char* name);
 	~Skeleton();
 
@@ -26,8 +25,8 @@ public:
 	//std::unordered_map<std::string, SkeletonNode>* getSkeletonTree();
 	//void setSkeletonTree(const std::unordered_map<std::string, SkeletonNode>& skeletonTree);
 
-	int getNumSkeletonNodes() const;
-	void setNumSkeletonNodes(const int num);
+	//int getNumSkeletonNodes() const;
+	//void setNumSkeletonNodes(const int num);
 
 	inline int GetJointsCount()
 	{
@@ -42,10 +41,6 @@ public:
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
-	//std::unordered_map<std::string, SkeletonNode> m_skeletonTree;
-
-	std::vector<Joint*> m_vJoints;
-	std::vector<Matrix4> m_vGlobalPose;
-
-	int m_numSkeletonNodes;
+	std::vector<Joint*>							m_vJoints;
+	std::vector<Matrix4>						m_vGlobalPose;
 };

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Debug\Debug.cpp" />
+    <ClCompile Include="..\Debug\DEBUG_RENDERER.cpp" />
     <ClCompile Include="..\Event\EventQueue.cpp" />
     <ClCompile Include="..\Font\font.cpp" />
     <ClCompile Include="..\GameObject\GameObject.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="..\Graphics\Render\State.cpp" />
     <ClCompile Include="..\Graphics\Render\Texture.cpp" />
     <ClCompile Include="..\Graphics\Render\PSPerLightCBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Render\VSMatrixPaletteCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="..\Graphics\Scene\SceneGraph.cpp" />
@@ -189,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Debug\debug.h" />
-    <ClInclude Include="..\Debug\DebugDrawing.h" />
+    <ClInclude Include="..\Debug\DEBUG_RENDERER.h" />
     <ClInclude Include="..\Event\Event.h" />
     <ClInclude Include="..\Event\EventQueue.h" />
     <ClInclude Include="..\Event\InputEvent.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="..\Graphics\Render\RenderTechnique.h" />
     <ClInclude Include="..\Graphics\Render\State.h" />
     <ClInclude Include="..\Graphics\Render\Texture.h" />
+    <ClInclude Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.h" />
     <ClInclude Include="..\Graphics\Render\VSMatrixPaletteCBuffer.h" />
     <ClInclude Include="..\Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="..\Graphics\Scene\SceneGraph.h" />
@@ -273,13 +276,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_bump.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Shaders\PS_PPE_BlurV.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -294,13 +290,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV4J_deferred.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -308,16 +297,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1UV_deferred.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Shaders\PS_diffuse.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\PS_phong.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -369,12 +349,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\VS_vertex1P1N1UV.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

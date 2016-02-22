@@ -1,11 +1,18 @@
 #include "VSGSPSPerFrameCBuffer.h"
+#include "Graphics\D3D11Renderer.h"
 
-const size_t VSGSPSPerFrameCBuffer::sizeVS = sizeof(VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER);
-const size_t VSGSPSPerFrameCBuffer::sizeGS = sizeof(VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER);
-const size_t VSGSPSPerFrameCBuffer::sizePS = sizeof(VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER);
+const size_t VSGSPSPerFrameCBuffer::size = sizeof(VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER);
 
 VSGSPSPerFrameCBuffer::VSGSPSPerFrameCBuffer()
-	: CBuffer(type::VS_GS_PS, sizeVS, sizeGS, sizePS)
+	: CBuffer(type::VertexShader, size)
 {
 	m_iSlotID = 0;
+}
+
+void VSGSPSPerFrameCBuffer::BindToRenderer()
+{
+	// Set the same cbuffer for all shaders
+	D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
 }

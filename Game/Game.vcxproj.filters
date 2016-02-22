@@ -194,6 +194,12 @@
     <ClCompile Include="..\Graphics\Render\VSMatrixPaletteCBuffer.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
+    <ClCompile Include="..\Debug\DEBUG_RENDERER.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Graphics\D3D11Renderer.h">
@@ -342,9 +348,6 @@
     <ClInclude Include="..\Utilities\Geometry.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\Debug\DebugDrawing.h">
-      <Filter>Debug</Filter>
-    </ClInclude>
     <ClInclude Include="..\Math\Frustum.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -405,12 +408,15 @@
     <ClInclude Include="..\Graphics\Render\VSMatrixPaletteCBuffer.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
+    <ClInclude Include="..\Debug\DEBUG_RENDERER.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\VS_vertex1P1N1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P1D.hlsl">
@@ -425,19 +431,10 @@
     <FxCompile Include="Shaders\PS_red.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_phong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\PS_diffuse.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_bump.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1UV_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PS_phong_gbuffer.hlsl">
@@ -462,9 +459,6 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P1N1T1UV4J.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV4J_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

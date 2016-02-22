@@ -26,11 +26,10 @@ public:
 
 	void Update()
 	{
-		CBuffer::Update(NULL, NULL, sizePS);
+		CBuffer::Update(size);
 	}
 
-	static const size_t						sizeVS;
-	static const size_t						sizePS;
+	static const size_t						size;
 };
 
 #endif // !PS_PER_MATERIAL_CBUFFER_H_
