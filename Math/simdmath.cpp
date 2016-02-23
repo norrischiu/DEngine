@@ -65,7 +65,7 @@ void SIMDMatrix4::CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, 
 	_rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-SIMDMatrix4& SIMDMatrix4::LookAtMatrix(const SIMDVector3 & vEye, const SIMDVector3 & vAt, const SIMDVector3 & vUp)
+SIMDMatrix4 SIMDMatrix4::LookAtMatrix(const SIMDVector3 & vEye, const SIMDVector3 & vAt, const SIMDVector3 & vUp)
 {
 	Matrix4 mat;
 	mat.CreateLookAt(vEye, vAt, vUp);
@@ -84,14 +84,14 @@ void SIMDMatrix4::CreatePerspectiveFOV(float fFOVy, float fAspectRatio, float fN
 
 }
 
-SIMDMatrix4& SIMDMatrix4::PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar)
+SIMDMatrix4 SIMDMatrix4::PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar)
 {
 	SIMDMatrix4 mat;
 	mat.CreatePerspectiveFOV(fFOVy, fAspectRatio, fNear, fFar);
 	return mat;
 }
 
-SIMDMatrix4& SIMDMatrix4::OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar)
+SIMDMatrix4 SIMDMatrix4::OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar)
 {
 	SIMDMatrix4 mat;
 	mat.CreateOrthographicProj(width, height, zNear, zFar);

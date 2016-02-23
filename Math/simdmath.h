@@ -350,11 +350,11 @@ public:
 
 	// Set a look-at matrix (vUp MUST be normalized)
 	void CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp);
-	static SIMDMatrix4& LookAtMatrix(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp);
+	static SIMDMatrix4 LookAtMatrix(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp);
 
 	// Set a perspective FOV matrix
 	void CreatePerspectiveFOV(float fFOVy, float fAspectRatio, float fNear, float fFar);
-	static SIMDMatrix4& PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar);
+	static SIMDMatrix4 PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar);
 
 	//Set a orthographic projection matrix // temp
 	void CreateOrthographicProj(unsigned int width, unsigned int height, float zNear, float zFar)
@@ -366,7 +366,7 @@ public:
 		_rows[3] = result.r[3];
 		//_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
 	}
-	static SIMDMatrix4& OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
+	static SIMDMatrix4 OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
 
 	// Inverts the matrix, store the result back to this
 	void Invert();
