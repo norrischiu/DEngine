@@ -68,18 +68,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\Graphics;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;..\Graphics;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Game-Engine\Game-Engine;..\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;D:\Game-Engine\Game-Engine;..\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,6 +151,9 @@
     <ClCompile Include="..\Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="..\Graphics\GBuffer.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUD.cpp" />
+    <ClCompile Include="..\Graphics\HUD\TextBox.cpp" />
+    <ClCompile Include="..\Graphics\HUD\TextEngine.cpp" />
     <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="..\Graphics\Material.cpp" />
     <ClCompile Include="..\Graphics\MeshData.cpp" />
@@ -205,6 +208,9 @@
     <ClInclude Include="..\Graphics\Animation\Skeleton.h" />
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
     <ClInclude Include="..\Graphics\GBuffer.h" />
+    <ClInclude Include="..\Graphics\HUD\HUD.h" />
+    <ClInclude Include="..\Graphics\HUD\TextBox.h" />
+    <ClInclude Include="..\Graphics\HUD\TextEngine.h" />
     <ClInclude Include="..\Graphics\IndexBufferEngine.h" />
     <ClInclude Include="..\Graphics\Material.h" />
     <ClInclude Include="..\Graphics\MeshData.h" />
