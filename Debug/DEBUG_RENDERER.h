@@ -4,7 +4,8 @@
 #include "debug.h"
 #include "Math\Frustum.h"
 #include "Physics\cdAabb.h"
-#include "Font\font.h"
+#include "Graphics\HUD\HUDElement\TextBox\TextEngine.h"
+#include "D3D11Renderer.h"
 #include "Graphics\Scene\SceneGraph.h"
 
 class DEBUG_RENDERER
@@ -47,7 +48,7 @@ public:
 	
 	void DRAW_2D_TEXT(const char* text, unsigned int screenX, unsigned int screenY)
 	{
-		TextHelper txtHelper;
+		TextEngine txtHelper;
 		MeshData* meshData = txtHelper.CreateTextMeshData(text);
 		//m_vDbgMeshs.push_back(meshData);
 		RenderPass* pass = meshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0];

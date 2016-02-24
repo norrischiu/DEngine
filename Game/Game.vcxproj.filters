@@ -55,11 +55,11 @@
     <Filter Include="Graphics\HUD\HUDElement">
       <UniqueIdentifier>{324d5a20-1f6f-4582-8836-b832ed9009ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\HUD\HUDElement\TextBox">
-      <UniqueIdentifier>{7287be31-c54a-4dfa-b545-2b762c27874d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\HUD\HUDElement\ProgressBar">
       <UniqueIdentifier>{63f9c596-3ca7-4e70-916b-146d65676904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\TextBox">
+      <UniqueIdentifier>{754448fe-425b-4501-a59d-02415844d373}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -209,12 +209,6 @@
     <ClCompile Include="..\Debug\DEBUG_RENDERER.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClCompile>
     <ClCompile Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClCompile>
@@ -223,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\HUD\HUDElement\HUDElement.cpp">
       <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,12 +438,6 @@
     <ClInclude Include="..\Debug\DEBUG_RENDERER.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.h">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.h">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClInclude>
@@ -452,6 +446,12 @@
     </ClInclude>
     <ClInclude Include="..\Graphics\HUD\HUDElement\HUDElement.h">
       <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 /* Debug Include */
-#include "Debug\DEBUG_RENDERER.h"
+//#include "Debug\DEBUG_RENDERER.h"
 
 #include "GameLoop.h"
 #include "Graphics\MeshComponent.h"
@@ -21,7 +21,7 @@ GameLoop* GameLoop::m_pInstance = nullptr;
 GameLoop::GameLoop()
 { 
 	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), TextBox::FontSize::PT60, HUDElement::Color::RED);
-	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(200, 100));
+	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100));
 
 	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
 	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(100.0f);
