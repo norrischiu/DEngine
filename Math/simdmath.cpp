@@ -91,7 +91,7 @@ SIMDMatrix4& SIMDMatrix4::PerspectiveProjection(float fFOVy, float fAspectRatio,
 	return mat;
 }
 
-SIMDMatrix4& SIMDMatrix4::OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar)
+SIMDMatrix4 SIMDMatrix4::OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar)
 {
 	SIMDMatrix4 mat;
 	mat.CreateOrthographicProj(width, height, zNear, zFar);

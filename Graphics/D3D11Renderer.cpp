@@ -1,6 +1,7 @@
 // D3D11Renderer.cpp
 #include "D3D11Renderer.h"
 #include "Scene\SceneGraph.h"
+#include "Graphics\HUD\HUD.h"
 
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
 
@@ -94,6 +95,9 @@ void D3D11Renderer::Render()
 
 	// Debug drawing
 	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
+
+	//Render HUD
+	HUD::getInstance()->Render();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);

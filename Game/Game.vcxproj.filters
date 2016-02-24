@@ -22,9 +22,6 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{a703c263-ddc4-4086-b43a-11826f062845}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Font">
-      <UniqueIdentifier>{eda0d2c2-7f46-46f7-8264-25b5cb5de030}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameObject">
       <UniqueIdentifier>{76c5dd91-c942-453b-9f07-f55b8f32fc3b}</UniqueIdentifier>
     </Filter>
@@ -53,7 +50,16 @@
       <UniqueIdentifier>{df1eb073-1fef-4821-990f-6675dee38011}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\HUD">
-      <UniqueIdentifier>{1cf23c42-1bc2-4d50-81a9-1e7b75efca39}</UniqueIdentifier>
+      <UniqueIdentifier>{d210577d-6d59-402c-9948-6e02a5e665f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement">
+      <UniqueIdentifier>{324d5a20-1f6f-4582-8836-b832ed9009ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\TextBox">
+      <UniqueIdentifier>{7287be31-c54a-4dfa-b545-2b762c27874d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\ProgressBar">
+      <UniqueIdentifier>{63f9c596-3ca7-4e70-916b-146d65676904}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,9 +124,6 @@
     </ClCompile>
     <ClCompile Include="..\GameObject\GameWorld.cpp">
       <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Font\font.cpp">
-      <Filter>Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Debug\Debug.cpp">
       <Filter>Debug</Filter>
@@ -197,22 +200,29 @@
     <ClCompile Include="..\Graphics\Render\VSMatrixPaletteCBuffer.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
-<<<<<<< HEAD
+    <ClCompile Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
     <ClCompile Include="..\Graphics\HUD\HUD.cpp">
       <Filter>Graphics\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="..\Graphics\HUD\TextEngine.cpp">
-      <Filter>Graphics\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Graphics\HUD\TextBox.cpp">
-      <Filter>Graphics\HUD</Filter>
-=======
     <ClCompile Include="..\Debug\DEBUG_RENDERER.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.cpp">
-      <Filter>Graphics\Render</Filter>
->>>>>>> origin/master
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\HUD\HUDElement\HUDElement.cpp">
+      <Filter>Graphics\HUD\HUDElement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="..\GameObject\GameWorld.h">
       <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Font\font.h">
-      <Filter>Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Debug\debug.h">
       <Filter>Debug</Filter>
@@ -422,22 +429,29 @@
     <ClInclude Include="..\Graphics\Render\VSMatrixPaletteCBuffer.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
-<<<<<<< HEAD
+    <ClInclude Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
     <ClInclude Include="..\Graphics\HUD\HUD.h">
       <Filter>Graphics\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics\HUD\TextEngine.h">
-      <Filter>Graphics\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Graphics\HUD\TextBox.h">
-      <Filter>Graphics\HUD</Filter>
-=======
     <ClInclude Include="..\Debug\DEBUG_RENDERER.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics\Render\VSGSPSPerFrameCBuffer.h">
-      <Filter>Graphics\Render</Filter>
->>>>>>> origin/master
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\HUD\HUDElement\HUDElement.h">
+      <Filter>Graphics\HUD\HUDElement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

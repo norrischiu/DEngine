@@ -4,7 +4,7 @@
 #include "GameLoop.h"
 #include "Graphics\MeshComponent.h"
 #include "Debug\Debug.h"
-#include "Font\Font.h"
+#include "..\Graphics\HUD\HUDElement\TextBox\TextEngine.h"
 #include "Object\ObjectLoader.h"
 #include "GameObject\GameObject.h"
 #include "GameObject\GameWorld.h"
@@ -14,11 +14,18 @@
 #include "Graphics\Animation\AnimationController.h"
 #include "Graphics\Animation\Skeleton.h"
 #include "Object\Camera.h"
+#include "Graphics\HUD\HUD.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
 
 GameLoop::GameLoop()
 { 
+	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), TextBox::FontSize::PT60, HUDElement::Color::RED);
+	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(200, 100));
+
+	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
+	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(100.0f);
+
 	// GameObject dragon = GameObject::Builder().AddComponent(new MeshComponent("dragon")).AddTransform(Matrix4::Identity)
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
@@ -60,7 +67,7 @@ GameLoop::GameLoop()
 	//spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 10.0f, PI / 18.0f, Vector4(1.0, 1.0, 1.0), 2, 8, false));
 	//spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 
-	DEBUG_RENDERER::GetInstance()->DRAW_2D_TEXT("Test", 0, 0);
+	//DEBUG_RENDERER::GetInstance()->DRAW_2D_TEXT("Test", 0, 0);
 
 	// temp
 	/*

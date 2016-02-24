@@ -141,7 +141,6 @@
     <ClCompile Include="..\Debug\Debug.cpp" />
     <ClCompile Include="..\Debug\DEBUG_RENDERER.cpp" />
     <ClCompile Include="..\Event\EventQueue.cpp" />
-    <ClCompile Include="..\Font\font.cpp" />
     <ClCompile Include="..\GameObject\GameObject.cpp" />
     <ClCompile Include="..\GameObject\GameWorld.cpp" />
     <ClCompile Include="..\Graphics\Animation\Animation.cpp" />
@@ -152,8 +151,11 @@
     <ClCompile Include="..\Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="..\Graphics\GBuffer.cpp" />
     <ClCompile Include="..\Graphics\HUD\HUD.cpp" />
-    <ClCompile Include="..\Graphics\HUD\TextBox.cpp" />
-    <ClCompile Include="..\Graphics\HUD\TextEngine.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUDElement\HUDElement.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.cpp" />
+    <ClCompile Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.cpp" />
     <ClCompile Include="..\Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="..\Graphics\Material.cpp" />
     <ClCompile Include="..\Graphics\MeshData.cpp" />
@@ -198,7 +200,6 @@
     <ClInclude Include="..\Event\Event.h" />
     <ClInclude Include="..\Event\EventQueue.h" />
     <ClInclude Include="..\Event\InputEvent.h" />
-    <ClInclude Include="..\Font\font.h" />
     <ClInclude Include="..\GameObject\GameObject.h" />
     <ClInclude Include="..\GameObject\GameWorld.h" />
     <ClInclude Include="..\Graphics\Animation\Animation.h" />
@@ -209,8 +210,11 @@
     <ClInclude Include="..\Graphics\D3D11Renderer.h" />
     <ClInclude Include="..\Graphics\GBuffer.h" />
     <ClInclude Include="..\Graphics\HUD\HUD.h" />
-    <ClInclude Include="..\Graphics\HUD\TextBox.h" />
-    <ClInclude Include="..\Graphics\HUD\TextEngine.h" />
+    <ClInclude Include="..\Graphics\HUD\HUDElement\HUDElement.h" />
+    <ClInclude Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h" />
+    <ClInclude Include="..\Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h" />
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextBox.h" />
+    <ClInclude Include="..\Graphics\HUD\HUDElement\TextBox\TextEngine.h" />
     <ClInclude Include="..\Graphics\IndexBufferEngine.h" />
     <ClInclude Include="..\Graphics\Material.h" />
     <ClInclude Include="..\Graphics\MeshData.h" />
