@@ -20,11 +20,11 @@ GameLoop* GameLoop::m_pInstance = nullptr;
 
 GameLoop::GameLoop()
 { 
-	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), TextBox::FontSize::PT60, HUDElement::Color::RED);
+	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
 	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100));
 
 	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
-	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(100.0f);
+	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(47.0f);
 
 	// GameObject dragon = GameObject::Builder().AddComponent(new MeshComponent("dragon")).AddTransform(Matrix4::Identity)
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)

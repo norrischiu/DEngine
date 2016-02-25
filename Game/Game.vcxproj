@@ -72,14 +72,14 @@
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;D:\Game-Engine\Game-Engine;..\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine;D:\Game-Engine\Game-Engine;..\Graphics;C:\Program Files %28x86%29\Windows Kits\8.1\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\faifa\Desktop\Programming\Workspace\Visual Studio workspace\Game-Engine;..\Graphics;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Programming\Visual Studio workspace\Game-Engine;..\Graphics;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

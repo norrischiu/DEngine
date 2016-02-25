@@ -12,6 +12,10 @@ public:
 		RED, BLUE, GREEN
 	};
 
+	enum FontSize {
+		PT12 = 12, PT24 = 24, PT36 = 36, PT48 = 48, PT60 = 60, PT72 = 72, PT84 = 84, PT96 = 96, PT108 = 108, PT120 = 120, PT132 = 132, PT144 = 144, PT156 = 156, PT168 = 168, PT180 = 180, PT192 = 192, PT204 = 204
+	};
+
 	struct Position {
 		float x;
 		float y;

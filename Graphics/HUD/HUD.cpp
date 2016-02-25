@@ -10,7 +10,7 @@ HUD::HUD()
 	m_pVSCBuffer = new VSPerObjectCBuffer;
 }
 
-void HUD::addText(char* id, char* string, const HUDElement::Position pos, const TextBox::FontSize fontSizePt, const HUDElement::Color color)
+void HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color)
 {
 	m_elements[id] = new TextBox(id, string, pos, fontSizePt, color);
 }
