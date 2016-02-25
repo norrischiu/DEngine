@@ -1,0 +1,10 @@
+MATERIAL
+0.500000 0.500000 0.500000
+1.000000 1.000000 1.000000
+0.500000 0.500000 0.500000
+20.000000
+2
+DiffuseColor
+Ganfaul_diffuse.dds
+NormalMap
+Ganfaul_normal.dds
