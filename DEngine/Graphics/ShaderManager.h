@@ -1,4 +1,5 @@
 // ShaderManager.h:
+
 #ifndef SHADERMANAGER_H_
 #define SHADERMANAGER_H_
 
@@ -50,7 +51,7 @@ public:
 		std::unordered_map<std::string, void*>::iterator itr;
 		for (itr = m_mapShaders.begin(); itr != m_mapShaders.end(); ++itr)
 		{
-			ID3D11DeviceChild* pS = (ID3D11DeviceChild*) itr->second;
+			ID3D11DeviceChild* pS = (ID3D11DeviceChild*)itr->second;
 			pS->Release();
 		}
 		m_mapShaders.clear();
@@ -63,7 +64,7 @@ private:
 	static ShaderManager*									m_pInstance;
 
 	std::unordered_map<std::string, void*>					m_mapShaders;
-	
+
 	std::unordered_map<std::string, ID3D11InputLayout*>		m_mapInputLayouts;
 };
 
