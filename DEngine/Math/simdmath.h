@@ -603,7 +603,7 @@ public:
 		__m128 tempA = _mm_set_ps1(1.0f - t);
 		tempA = _mm_mul_ps(a._data, tempA); 
 		__m128 tempB = _mm_set_ps1(t);
-		tempB = _mm_mul_ps(b._data, tempA);
+		tempB = _mm_mul_ps(b._data, tempB);
 		__m128 result = _mm_add_ps(tempA, tempB);
 		return SIMDVector3(result);
 	}
@@ -789,7 +789,7 @@ public:
 	// Normalize the quaternion, store the result to this
 	inline void Normalize()
 	{
-		__m128 length = _mm_dp_ps(_data, _data, 0x77);
+		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
 		length = _mm_rsqrt_ps(length);
 		_data = _mm_mul_ps(_data, length);
 	}
@@ -802,6 +802,7 @@ public:
 		__m128 bFactor = _mm_set_ps1(t);
 		result._data = _mm_mul_ps(aFactor, a._data);
 		result._data = _mm_add_ps(result._data, _mm_mul_ps(bFactor, b._data));
+		return result;
 	}
 };
 

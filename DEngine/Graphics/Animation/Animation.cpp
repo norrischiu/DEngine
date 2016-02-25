@@ -32,21 +32,21 @@ int Animation::getCurrentKeyframe() const
 
 void Animation::setCurrentKeyframe(const int frame)
 {
-	if (frame >= 1 && frame <= 30) {
+	if (frame >= 1 && frame <= m_Poses.size()) {
 		m_currKeyframe = frame;
 	}
 }
 
-SQT& Animation::GetCurrentPose()
+SQT Animation::GetCurrentPose()
 {
 	return m_Poses[m_currKeyframe - 1];
 }
 
 void Animation::update(const float delta_time)
 {
-	int newFrame = (m_currKeyframe + ((int) (delta_time / (1.0f / 30.0f)))) % 30;
+	int newFrame = (m_currKeyframe + ((int) (delta_time / (1.0f / 30.0f)))) % m_Poses.size();
 	if (newFrame <= 0) {
-		newFrame = 30 - (-newFrame);
+		newFrame = m_Poses.size() - (-newFrame);
 	}
 
 	setCurrentKeyframe(newFrame);

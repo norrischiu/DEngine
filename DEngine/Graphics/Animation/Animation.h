@@ -21,7 +21,7 @@ public:
 	int getCurrentKeyframe() const;
 	void setCurrentKeyframe(const int frame);
 
-	SQT& GetCurrentPose();
+	SQT GetCurrentPose();
 
 	void update(const float delta_time);
 

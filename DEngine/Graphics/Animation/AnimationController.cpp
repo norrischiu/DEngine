@@ -31,7 +31,7 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 	fscanf(pFile, "%s", &clipName);
 	fscanf(pFile, "%i", &iNumJoints);
 	fscanf(pFile, "%i", &iNumFrames);
-	AnimationSet* animSet = new AnimationSet(0, iNumFrames * 1.0f / 120.0f);
+	AnimationSet* animSet = new AnimationSet(0, iNumFrames * 1.0f / 30.0f);
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
