@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MainPlayer">
+      <UniqueIdentifier>{56432a67-40e2-4233-aee0-30c6b29fa261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{a35c1f70-406e-4497-b3c5-73b9eb7adc3f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainPlayer\Player.cpp">
+      <Filter>MainPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPlayer\PlayerASM.cpp">
+      <Filter>MainPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPlayer\PlayerMC.cpp">
+      <Filter>MainPlayer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="MainPlayer\Player.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\PlayerASM.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\GameEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\PlayerMC.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

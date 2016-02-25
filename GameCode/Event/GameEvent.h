@@ -1,0 +1,30 @@
+#ifndef PLAYER_EVENT_H
+#define PLAYER_EVENT_H
+
+#include "DEngine\Event\Event.h"
+
+namespace EventID
+{
+	enum
+	{
+		Player_Attack_1_START_Event,
+		Player_Attack_1_END_Event,
+	};
+}
+
+
+struct Player_Attack_1_START_Event : public Event
+{
+	Player_Attack_1_START_Event()
+		:Event(EventID::Player_Attack_1_START_Event)
+	{};
+};
+
+struct Player_Attack_1_END_Event : public Event
+{
+	Player_Attack_1_END_Event()
+		:Event(EventID::Player_Attack_1_END_Event)
+	{};
+};
+
+#endif // !PLAYER_EVENT_H

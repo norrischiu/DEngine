@@ -1,0 +1,10 @@
+MATERIAL
+0.000000 0.000000 0.000000
+1.000000 1.000000 1.000000
+0 0 0
+1
+2
+DiffuseColor
+floor_texture.dds
+NormalMap
+floor_normal.dds
