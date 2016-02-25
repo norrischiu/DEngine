@@ -55,6 +55,15 @@
     <Filter Include="DebugRenderer">
       <UniqueIdentifier>{a703c263-ddc4-4086-b43a-11826f062845}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\HUD\HUDElement">
+      <UniqueIdentifier>{b2497fec-4275-4072-a072-ede9b1a6017d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\ProgressBar">
+      <UniqueIdentifier>{fc8134c6-63c2-4bc5-824b-ed3e6be44759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\TextBox">
+      <UniqueIdentifier>{bf7c072d-35ff-4d76-b9a4-c2f3704b8da6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -153,15 +162,6 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUD.cpp">
-      <Filter>Graphics\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\TextBox.cpp">
-      <Filter>Graphics\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\TextEngine.cpp">
-      <Filter>Graphics\HUD</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp">
       <Filter>Graphics\Scene</Filter>
     </ClCompile>
@@ -215,6 +215,24 @@
     </ClCompile>
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp">
       <Filter>DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUD.cpp">
+      <Filter>Graphics\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp">
+      <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -323,15 +341,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h">
       <Filter>Graphics\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUD.h">
-      <Filter>Graphics\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\TextBox.h">
-      <Filter>Graphics\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\TextEngine.h">
-      <Filter>Graphics\HUD</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Scene\SceneGraph.h">
       <Filter>Graphics\Scene</Filter>
@@ -443,6 +452,24 @@
     </ClInclude>
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h">
       <Filter>DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUD.h">
+      <Filter>Graphics\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h">
+      <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

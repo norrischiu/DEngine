@@ -10,6 +10,7 @@
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Object\Camera.h"
 #include "DEngine\Math\simdmath.h"
+#include "DEngine\Graphics\HUD\HUD.h"
 
 // Game include
 #include "MainPlayer\Player.h"
@@ -41,6 +42,12 @@ GameLoop::GameLoop()
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
 	//spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 10.0f, PI / 18.0f, Vector4(1.0, 1.0, 1.0), 2, 8, false));
 	//spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
+
+	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), TextBox::FontSize::PT60, HUDElement::Color::RED);
+	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100));
+
+	((TextBox*)HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
+	((ProgressBar*)HUD::getInstance()->getHUDElementById("progress1"))->setProgress(100.0f);
 
 	DEBUG_RENDERER::GetInstance()->DRAW_2D_TEXT("Test", 0, 0);
 }

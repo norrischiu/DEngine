@@ -2,6 +2,7 @@
 #include "D3D11Renderer.h"
 #include "Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
+#include "Graphics\HUD\HUD.h"
 
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
 
@@ -92,6 +93,9 @@ void D3D11Renderer::Render()
 
 	// Post process effect
 //	m_PPE->Render();
+
+	// HUD drawing
+	HUD::getInstance()->Render();
 
 	// Debug drawing
 	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
