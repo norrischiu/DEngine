@@ -5,15 +5,15 @@
 #include <assert.h>
 #include <vector>
 #include "Graphics\ShaderManager.h"
-#include "Graphics\Render\State.h"
-#include "Graphics\Render\Texture.h"
+#include "State.h"
+#include "Texture.h"
 
 class RenderPass
 {
 
 public:
 
-	RenderPass() 
+	RenderPass()
 	{
 		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		m_iRTVNum = 0;
@@ -58,19 +58,19 @@ public:
 
 	void SetRasterizerState(int stateID)
 	{
-		m_pRS = (ID3D11RasterizerState*) State::GetState(stateID);
+		m_pRS = (ID3D11RasterizerState*)State::GetState(stateID);
 	}
 
 	void SetDepthStencilState(int stateID)
 	{
-		m_pDSS = (ID3D11DepthStencilState*) State::GetState(stateID);
+		m_pDSS = (ID3D11DepthStencilState*)State::GetState(stateID);
 	}
 
 	void SetBlendState(int stateID)
 	{
-		m_pBS = (ID3D11BlendState*) State::GetState(stateID);
+		m_pBS = (ID3D11BlendState*)State::GetState(stateID);
 	}
-	
+
 	void SetTopology(int topology)
 	{
 		m_iTopology = topology;
