@@ -18,17 +18,20 @@ public:
 		, m_mapInputLayouts()
 	{};
 
-	//
+	// Return compiled shader stored in hash map
 	void* GetShader(const char* filename, D3D11_SHADER_VERSION_TYPE type);
 
 	// Compile and insert shader data into map
 	void LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE type);
 
-	//
+	// Create input layout of vertex shader
 	void CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout);
 
-	//
+	// Return input layout of vertex shader
 	void* GetInputLayout(const char* filename);
+
+	// Create stream out entry (shader output signature) of geometry shader
+	void* CreateStreamOutEntry(ID3DBlob* GS);
 
 	// Return singleton instance
 	static ShaderManager* GetInstance()

@@ -28,15 +28,6 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 	void* pShader = nullptr;
 	ID3D11InputLayout* inputLayout = nullptr;
 
-	D3D11_SO_DECLARATION_ENTRY pDecl[] =
-	{
-		// semantic name, semantic index, start component, component count, output slot
-		{ 0, "POSITION", 0, 0, 4, 0 },   // output all components of position
-		{ 0, "VELOCITY", 0, 0, 4, 0 },   // output all components of position
-		{ 0, "SIZE", 0, 0, 1, 0 },     // output the first 3 of the normal
-		{ 0, "AGE", 0, 0, 1, 0 },     // output the first 2 texture coordinates
-		{ 0, "TYPE", 0, 0, 1, 0 },     // output the first 2 texture coordinates
-	};
 	switch (type)
 	{
 	case D3D11_SHVER_VERTEX_SHADER:
@@ -65,16 +56,68 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 		pGShader = (ID3D11GeometryShader*)pShader;
 		hr = D3DCompileFromFile(pName, NULL, NULL, "GS", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 		if (error) compileErrors = (char*)(error->GetBufferPointer());
-		//hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pGShader);
-		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, 5, NULL, 0, 0, NULL, &pGShader);
+		D3D11_SO_DECLARATION_ENTRY* pDecl = (D3D11_SO_DECLARATION_ENTRY*) CreateStreamOutEntry(pRawData);
+		if (pDecl != nullptr)
+		{
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, 5, NULL, 0, 0, NULL, &pGShader);
+		}
+		else
+		{
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pGShader);
+		}
 		pShader = pGShader;
 		break;
-	default:
-		// TODO: not yet implemented
-		assert(false);
 	}
 
 	m_mapShaders[filename] = pShader;
+}
+
+void* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS)
+{
+	HRESULT hr;
+	std::vector<D3D11_SO_DECLARATION_ENTRY> SODeclarationArray;
+
+	ID3D11ShaderReflection* pReflection;
+	hr = D3DReflect(GS->GetBufferPointer(), GS->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflection);
+	assert(hr == S_OK);
+
+	D3D11_SHADER_DESC shaderDesc;
+	pReflection->GetDesc(&shaderDesc);
+	unsigned int i = 0;
+	for (; i < shaderDesc.OutputParameters; ++i)
+	{
+		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+		pReflection->GetOutputParameterDesc(i, &paramDesc);
+		D3D11_SO_DECLARATION_ENTRY SOEntryDesc;
+
+		SOEntryDesc.SemanticName = paramDesc.SemanticName;
+		SOEntryDesc.SemanticIndex = paramDesc.SemanticIndex;
+		SOEntryDesc.StartComponent = 0;
+		SOEntryDesc.Stream = 0;
+		SOEntryDesc.OutputSlot = 0;
+
+		if (paramDesc.Mask == 1)
+		{
+			SOEntryDesc.ComponentCount = 1;
+		}
+		else if (paramDesc.Mask <= 3)
+		{
+			SOEntryDesc.ComponentCount = 2;
+		}
+		else if (paramDesc.Mask <= 7)
+		{
+			SOEntryDesc.ComponentCount = 3;
+		}
+		else if (paramDesc.Mask <= 15)
+		{
+			SOEntryDesc.ComponentCount = 4;
+		}
+
+		SODeclarationArray.push_back(SOEntryDesc);
+	}
+
+	pReflection->Release();
+	return SODeclarationArray.data();
 }
 
 void ShaderManager::CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout)
