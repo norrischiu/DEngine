@@ -7,7 +7,7 @@ class ProgressBar : public HUDElement
 public:
 	static const int typeID = HUDElement::TypeID::PROGRESSBAR;
 
-	ProgressBar(char* m_id, const float progress, const HUDElement::Position, const HUDElement::Size, const bool showText = true);
+	ProgressBar(char* m_id, const float progress, const HUDElement::Position, const HUDElement::Size, const bool showText, const float duration = -1.0f);
 	~ProgressBar();
 
 	float getProgress();

@@ -1,7 +1,7 @@
 #include "TextBox.h"
 
-TextBox::TextBox(char* id, char* string, const HUDElement::Position pos, const int fontSizePt, const HUDElement::Color fontColor) :
-	m_text(string), m_fontSizePt(fontSizePt), m_color(fontColor), HUDElement(id, pos)
+TextBox::TextBox(char* id, char* string, const HUDElement::Position pos, const int fontSizePt, const HUDElement::Color fontColor, const float duration) :
+	m_text(string), m_fontSizePt(fontSizePt), m_color(fontColor), HUDElement(id, pos, duration)
 {
 
 }

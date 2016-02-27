@@ -65,8 +65,9 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	m_PPE = new PostProcessEffect;
 }
 
-void D3D11Renderer::Update()
+void D3D11Renderer::Update(const float delta_time)
 {
+	HUD::getInstance()->update(delta_time);
 }
 
 void D3D11Renderer::Render()

@@ -8,6 +8,7 @@
 
 // C++ include
 #include <stdio.h>
+#include <windows.h>
 
 #define C_STR(string, text)\
 		(string + text).c_str()
@@ -17,7 +18,7 @@ using namespace DE;
 AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skeleton)
 {
 	m_ID = ComponentID;
-	m_bPlaying = true;
+	m_bPlaying = false;
 }
 
 void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet, const BlendMode blendMode)
@@ -248,6 +249,7 @@ void AnimationController::setBlending(const std::vector<std::string> clipNames, 
 void AnimationController::Update(float deltaTime)
 {
 	m_bPlaying = false;
+
 	for (auto itr_blending: m_blending)
 	{
 		BlendMode blendMode = itr_blending.first;
@@ -286,9 +288,15 @@ void AnimationController::Update(float deltaTime)
 
 							const float interpolant = (1.0f * fromClip->m_vAnimations[0]->getCurrentKeyframe() / fromClip->m_vAnimations[0]->getNumKeyframes());
 
-							if(!fromClip->isLooping() && floor(interpolant)==1) {
-								fromClip->setActive(false); 
+							if (!fromClip->isLooping() && floor(interpolant) == 1) {
+								fromClip->setActive(false);
 							}
+
+							/*
+							static wchar_t s[64];
+							swprintf(s, 64, L"interpolant: %f\n", interpolant);
+							OutputDebugStringW(s);
+							*/
 
 							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
@@ -297,6 +305,7 @@ void AnimationController::Update(float deltaTime)
 								Joint* currJoint = m_skeleton->m_vJoints[i];
 								m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
 							}
+
 						} else {
 							for (auto clipName : itr_blending.second[0])
 							{

@@ -2,6 +2,7 @@
 #include "HUDElement\TextBox\TextEngine.h"
 #include "HUDElement\ProgressBar\ProgressBarEngine.h"
 #include "Graphics\D3D11Renderer.h"
+#include <windows.h>
 
 HUD* HUD::m_instance;
 
@@ -10,13 +11,15 @@ HUD::HUD()
 	m_pVSCBuffer = new VSPerObjectCBuffer;
 }
 
-void HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color)
+void HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color, const float duration)
 {
-	m_elements[id] = new TextBox(id, string, pos, fontSizePt, color);
+	m_elements[id] = new TextBox(id, string, pos, fontSizePt, color, duration);
+	m_timer[id] = 0.0f;
 }
 
-void HUD::addProgress(char* id, const float progress, const HUDElement::Position pos, const HUDElement::Size size, const bool showText) {
-	m_elements[id] = new ProgressBar(id, progress, pos, size, showText);
+void HUD::addProgress(char* id, const float progress, const HUDElement::Position pos, const HUDElement::Size size, const bool showText, const float duration) {
+	m_elements[id] = new ProgressBar(id, progress, pos, size, showText, duration);
+	m_timer[id] = 0.0f;
 }
 
 HUDElement* HUD::getHUDElementById(const char* id)
@@ -27,6 +30,37 @@ HUDElement* HUD::getHUDElementById(const char* id)
 void HUD::removeHUDElementById(const char* id)
 {
 	m_elements.erase(id);
+}
+
+void HUD::update(const float delta_time)
+{
+	/*
+	static wchar_t s[64];
+	swprintf(s, 64, L"delta_time: %f\n", delta_time);
+	OutputDebugStringW(s);
+	*/
+
+	static bool preventStartUpUpdate = true;
+	if (preventStartUpUpdate && delta_time > 2.0f) {		//Hack
+		preventStartUpUpdate = false;
+		return;
+	}
+
+	for (std::unordered_map<const char*, float>::iterator itr = m_timer.begin(); itr != m_timer.end();)
+	{
+		if ((int) m_elements[itr->first]->getDuration() != -1) {
+			itr->second += delta_time;
+
+			if (itr->second > m_elements[itr->first]->getDuration()) {
+				m_elements.erase(itr->first);
+				itr = m_timer.erase(itr);
+			} else {
+				itr++;
+			}
+		} else {
+			itr++;
+		}
+	}
 }
 
 void HUD::Render()

@@ -93,7 +93,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		}
 
 		// Inside one frame
-		if (elaspedTime >= 1.0 / FPS)
+		if (elaspedTime >= 1.0f / FPS)
 		{
 
 			// send input event by checking state change
@@ -102,7 +102,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);
-			D3D11Renderer::GetInstance()->Update();
+			D3D11Renderer::GetInstance()->Update(elaspedTime);
 
 			// Render this frame
 			D3D11Renderer::GetInstance()->Render();

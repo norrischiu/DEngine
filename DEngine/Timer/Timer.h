@@ -12,6 +12,8 @@ public:
 		__int64 sysFreq;
 		QueryPerformanceFrequency((LARGE_INTEGER*) &sysFreq);
 		m_fSysFreq = (float) sysFreq;
+		tick();
+		tick();
 	}
 
 	// run the timer
