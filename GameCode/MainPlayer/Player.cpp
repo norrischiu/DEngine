@@ -20,6 +20,8 @@ Player::Player()
 	//AddComponent(new Body(typeAABB));
 	SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	AddComponent(new PlayerMC());
+
+	// Create animation controller and skeleton
 	Skeleton* skel = new Skeleton("maria");
 	AnimationController* animController = new AnimationController(skel);
 	animController->CreateAnimationSets("maria_attack");
@@ -28,7 +30,10 @@ Player::Player()
 	animController->getAnimationSet("idle")->setActive(true);
 	AddComponent(skel);
 	AddComponent(animController);
-	AddComponent(new PlayerASM(animController));
+
+	// Create animation state machine
+	PlayerASM* playerAsm = new PlayerASM(animController);
+	AddComponent(playerAsm);
 }
 
 void Player::Update(float deltaTime)

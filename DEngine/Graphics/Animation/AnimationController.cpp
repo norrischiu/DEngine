@@ -1,7 +1,12 @@
 #include "AnimationController.h"
+
+// Engine include
 #include "Math\SQT.h"
 #include "Math\simdmath.h"
 #include "GameObject\GameObject.h"
+#include "Memory\Handle.h"
+
+// C++ include
 #include <stdio.h>
 
 #define C_STR(string, text)\
@@ -151,6 +156,7 @@ int AnimationController::getNumAnimations(const std::string name)
 
 void AnimationController::Update(float deltaTime)
 {
+	m_bPlaying = false;
 	for (
 		std::unordered_map<std::string, AnimationSet>::iterator it_s = m_animationSets.begin();
 		it_s != m_animationSets.end();
@@ -166,7 +172,17 @@ void AnimationController::Update(float deltaTime)
 				Joint* currJoint = m_skeleton->m_vJoints[i];
 				m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * it_s->second.m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
 			}
+			m_bPlaying = true;
 		}
+	}
+	// none is playing, i.e. animation ends
+	if (!m_bPlaying)
+	{
+		/*
+		Handle h(sizeof(Player_Attack_1_START_Event));
+		new (h) Player_Attack_1_START_Event;
+		EventQueue::GetInstance()->Add(h, GAME_EVENT);
+		*/
 	}
 }
 
