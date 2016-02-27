@@ -30,6 +30,11 @@ int Animation::getCurrentKeyframe() const
 	return m_currKeyframe;
 }
 
+int Animation::getNumKeyframes() const
+{
+	return m_Poses.size();
+}
+
 void Animation::setCurrentKeyframe(const int frame)
 {
 	if (frame >= 1 && frame <= m_Poses.size()) {
@@ -44,7 +49,8 @@ SQT Animation::GetCurrentPose(const float delta_time)
 	const float interpolant = frameOffset - floor(frameOffset);
 
 	if (interpolant > std::numeric_limits<float>::epsilon()) {
-		return SQT::LerpSQT(m_Poses[m_currKeyframe - 1], m_Poses[m_currKeyframe % m_Poses.size()], interpolant);
+		const int numFrame = m_Poses.size();
+		return SQT::LerpSQT(m_Poses[m_currKeyframe - 1], m_Poses[m_currKeyframe % numFrame], interpolant);
 	}
 
 	return m_Poses[m_currKeyframe - 1];

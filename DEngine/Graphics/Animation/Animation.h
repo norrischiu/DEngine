@@ -19,6 +19,7 @@ public:
 	void setNodeName(const std::string node_name);
 
 	int getCurrentKeyframe() const;
+	int getNumKeyframes() const;
 	void setCurrentKeyframe(const int frame);
 
 	SQT GetCurrentPose(const float delta_time);

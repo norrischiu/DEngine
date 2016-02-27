@@ -12,10 +12,36 @@ AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skelet
 	m_ID = ComponentID;
 }
 
-void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet)
+void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet, const BlendMode blendMode)
 {
-	std::pair<std::string, AnimationSet> t_animationSet = std::make_pair(name, animationSet);
-	m_animationSets.insert(t_animationSet);
+	m_animationSets[name] = animationSet;
+
+	if (m_blending.find(blendMode)==m_blending.end()) {
+		std::vector<std::vector<std::string>> vec2;
+		std::vector<std::string> vec1;
+		vec1.push_back(name);
+		vec2.push_back(vec1);
+		std::pair<BlendMode, std::vector<std::vector<std::string>>> blending = std::make_pair(blendMode, vec2);
+		m_blending.insert(blending);
+	}
+	else {
+		switch (blendMode)
+		{
+			case ADDICTIVE_BLENDING:
+				m_blending[blendMode][0].push_back(name);
+				break;
+			case CROSS_FADE_BLENDING:
+			case FROZEN_BLENDING:
+				for (auto itr : m_blending[blendMode])
+				{
+					if (itr.size() < 2)
+					{
+						itr.push_back(name);
+					}
+				}
+				break;
+		}
+	}
 }
 
 void AnimationController::CreateAnimationSets(const char* fileName)
@@ -149,23 +175,114 @@ int AnimationController::getNumAnimations(const std::string name)
 	return animationSet->getNumAnimations();
 }
 
+void AnimationController::setBlending(const std::vector<std::string> clipNames, const BlendMode blendMode)
+{
+	for (auto itr1 : m_blending)
+	{
+		switch (itr1.first)
+		{
+			case BlendMode::ADDICTIVE_BLENDING:
+				for (auto clipName : clipNames)
+				{
+					for (std::vector<std::string>::iterator itr2 = itr1.second[0].begin(); itr2 != itr1.second[0].end(); ++itr2)
+					{
+						if (*itr2 == clipName)
+						{
+							itr1.second[0].erase(itr2);
+						}
+					}
+					itr1.second[0].push_back(clipName);
+				}
+				break;
+			case BlendMode::FROZEN_BLENDING:
+			case BlendMode::CROSS_FADE_BLENDING:
+				for (std::vector<std::vector<std::string>>::iterator itr2 = itr1.second.begin(); itr2 != itr1.second.end(); ++itr2)
+				{
+					bool found = false;
+					std::vector<std::string> vec;
+					for (std::vector<std::string>::iterator itr3 = (*itr2).begin(); itr3 != (*itr2).end(); ++itr3)
+					{	
+						for (auto clipName : clipNames)
+						{
+							if (clipName == *itr3)
+							{
+								(*itr2).erase(itr3);
+								found = true;
+							}
+							else {
+								vec.push_back(*itr3);
+							}
+						}
+					}
+
+					if (found)
+					{
+						itr1.second.erase(itr2);
+						for (auto clipName : vec)
+						{
+							itr1.second[0].push_back(clipName);
+						}
+					}
+				}
+
+				itr1.second.push_back(clipNames);
+				break;
+		}
+	}
+}
+
 void AnimationController::Update(float deltaTime)
 {
-	for (
-		std::unordered_map<std::string, AnimationSet>::iterator it_s = m_animationSets.begin();
-		it_s != m_animationSets.end();
-		++it_s
-		) {
-		if (it_s->second.isActive())
+	for (auto itr1: m_blending)
+	{
+		BlendMode blendMode = itr1.first;
+		switch (blendMode)
 		{
-			it_s->second.update(deltaTime);		//update delta time first, then animate
+			case BlendMode::ADDICTIVE_BLENDING:
+				for (auto clipName : itr1.second[0])
+				{
+					AnimationSet* animationSet = &m_animationSets[clipName];
+					if (animationSet->isActive())
+					{
+						animationSet->update(deltaTime);		//update delta time first, then animate
 
-			m_skeleton->m_vGlobalPose[0] = it_s->second.m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
-			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-			{
-				Joint* currJoint = m_skeleton->m_vJoints[i];
-				m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * it_s->second.m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
-			}
+						m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+						for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+						{
+							Joint* currJoint = m_skeleton->m_vJoints[i];
+							m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+						}
+					}
+				}
+				break;
+			case BlendMode::CROSS_FADE_BLENDING:
+			case BlendMode::FROZEN_BLENDING:
+				for (auto itr2 : itr1.second)
+				{
+					if (itr2.size() == 2)
+					{
+						AnimationSet* fromClip = &m_animationSets[itr2[0]];
+						AnimationSet* toClip = &m_animationSets[itr2[1]];
+
+						if (fromClip->isActive() && toClip->isActive())
+						{
+							fromClip->update(deltaTime);
+							toClip->update(deltaTime);
+
+							const int numRemainKeyFrames = fromClip->m_vAnimations[0]->getNumKeyframes() - fromClip->m_vAnimations[0]->getCurrentKeyframe();
+							const float interpolant = std::fmax(1.0f / numRemainKeyFrames, 1.0f);
+
+							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+
+							for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+							{
+								Joint* currJoint = m_skeleton->m_vJoints[i];
+								m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+							}
+						}
+					}
+				}
+				break;
 		}
 	}
 }

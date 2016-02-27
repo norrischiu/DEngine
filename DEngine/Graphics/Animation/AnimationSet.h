@@ -7,7 +7,9 @@
 class AnimationSet
 {
 public:
-	AnimationSet(const float currTime, const float duration, const bool active = false, bool looping = false);
+
+	AnimationSet() {};
+	AnimationSet(const float currTime, const float duration, const bool active = false, const bool looping = false);
 	~AnimationSet();
 
 	void AddAnimation(Animation* animation);

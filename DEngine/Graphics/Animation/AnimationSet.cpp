@@ -1,6 +1,6 @@
 #include "AnimationSet.h"
 
-AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, bool looping) :
+AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
 	m_currTime(currTime), m_duration(duration), m_active(active), m_bLooping(looping)
 {
 
@@ -12,7 +12,7 @@ AnimationSet::~AnimationSet()
 
 void AnimationSet::AddAnimation(Animation* animation)
 {
-	m_animations.insert(std::make_pair(animation->getNodeName(), animation));
+	m_animations[animation->getNodeName()] = animation;
 }
 
 void AnimationSet::removeAnimation(const std::string name)

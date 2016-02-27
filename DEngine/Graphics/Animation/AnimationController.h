@@ -12,12 +12,18 @@ class AnimationController : public Component
 
 public:
 
+	enum BlendMode {
+		ADDICTIVE_BLENDING,
+		CROSS_FADE_BLENDING,
+		FROZEN_BLENDING
+	};
+
 	static const int ComponentID = ComponentID::ANIMATION_CONTROLLER;
 
 	AnimationController(Skeleton* skeleton);
 	~AnimationController();
 
-	void addAnimationSet(const std::string name, const AnimationSet& animationSet);
+	void addAnimationSet(const std::string name, const AnimationSet& animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
 
 	void CreateAnimationSets(const char* fileName);
 
@@ -39,11 +45,12 @@ public:
 	
 	bool triggerAnimation(const std::string set_name, const float currTime);
 
+	void setBlending(const std::vector<std::string> clips, const BlendMode blendMode);
+
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
 	std::unordered_map<std::string, AnimationSet> m_animationSets;
+	std::unordered_map<BlendMode, std::vector<std::vector<std::string>>> m_blending;
 	Skeleton* m_skeleton;
-
-	bool m_bPlaying;
 };
