@@ -28,8 +28,12 @@ HUDElement::Position HUDElement::getPosition()
 
 void HUDElement::setPosition(const HUDElement::Position pos)
 {
-	m_pos = pos;
-	m_hasUpdate = true;
+	if (pos.x >= 0 && pos.x <= 1024 && 
+		pos.y >= 0 && pos.y <= 768
+	){
+		m_pos = pos;
+		m_hasUpdate = true;
+	}
 }
 
 HUDElement::~HUDElement()

@@ -1,12 +1,7 @@
 #include "AnimationController.h"
-
-// Engine include
 #include "Math\SQT.h"
 #include "Math\simdmath.h"
 #include "GameObject\GameObject.h"
-#include "Memory\Handle.h"
-
-// C++ include
 #include <stdio.h>
 
 #define C_STR(string, text)\
@@ -27,7 +22,7 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 		vec1.push_back(name);
 		vec2.push_back(vec1);
 		m_blending[blendMode] = vec2;
-}
+	}
 	else {
 		switch (blendMode)
 		{
@@ -199,36 +194,39 @@ void AnimationController::setBlending(const std::vector<std::string> clipNames, 
 				break;
 			case BlendMode::FROZEN_BLENDING:
 			case BlendMode::CROSS_FADE_BLENDING:
-				for (std::vector<std::vector<std::string>>::iterator itr_clipName_vec2 = itr_blending.second.begin(); itr_clipName_vec2 != itr_blending.second.end(); ++itr_clipName_vec2)
+				if (clipNames.size() == 2)
 				{
-					bool found = false;
-					std::vector<std::string> vec;
-					for (std::vector<std::string>::iterator itr_clipName_vec1 = (*itr_clipName_vec2).begin(); itr_clipName_vec1 != (*itr_clipName_vec2).end(); ++itr_clipName_vec1)
-					{	
-						for (auto clipName : clipNames)
-						{
-							if (clipName == *itr_clipName_vec1)
-							{
-								(*itr_clipName_vec2).erase(itr_clipName_vec1);
-								found = true;
-							}
-							else {
-								vec.push_back(*itr_clipName_vec1);
-							}
-						}
-					}
-
-					if (found)
+					for (std::vector<std::vector<std::string>>::iterator itr_clipName_vec2 = itr_blending.second.begin(); itr_clipName_vec2 != itr_blending.second.end(); ++itr_clipName_vec2)
 					{
-						itr_blending.second.erase(itr_clipName_vec2);
-						for (auto clipName : vec)
+						bool found = false;
+						std::vector<std::string> vec;
+						for (std::vector<std::string>::iterator itr_clipName_vec1 = (*itr_clipName_vec2).begin(); itr_clipName_vec1 != (*itr_clipName_vec2).end(); ++itr_clipName_vec1)
 						{
-							itr_blending.second[0].push_back(clipName);
+							for (auto clipName : clipNames)
+							{
+								if (clipName == *itr_clipName_vec1)
+								{
+									(*itr_clipName_vec2).erase(itr_clipName_vec1);
+									found = true;
+								}
+								else {
+									vec.push_back(*itr_clipName_vec1);
+								}
+							}
+						}
+
+						if (found)
+						{
+							itr_blending.second.erase(itr_clipName_vec2);
+							for (auto clipName : vec)
+							{
+								itr_blending.second[0].push_back(clipName);
+							}
 						}
 					}
-				}
 
-				itr_blending.second.push_back(clipNames);
+					itr_blending.second.push_back(clipNames);
+				}
 				break;
 		}
 	}
@@ -267,35 +265,43 @@ void AnimationController::Update(float deltaTime)
 						AnimationSet* fromClip = &m_animationSets[clipNames[0]];
 						AnimationSet* toClip = &m_animationSets[clipNames[1]];
 
-						if (fromClip->isActive() && toClip->isActive())
-		{
+						if (fromClip->isActive() && toClip->isActive()) {
 							fromClip->update(deltaTime);
 							toClip->update(deltaTime);
 
 							const int numRemainKeyFrames = fromClip->m_vAnimations[0]->getNumKeyframes() - fromClip->m_vAnimations[0]->getCurrentKeyframe();
-							const float interpolant = std::fmax(1.0f / numRemainKeyFrames, 1.0f);
+							const float interpolant = numRemainKeyFrames==0 ? 1.0f : 1.0f / numRemainKeyFrames;
+
+							if (numRemainKeyFrames == 0) { fromClip->setActive(false); }
 
 							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
-			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-			{
-				Joint* currJoint = m_skeleton->m_vJoints[i];
+							for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+							{
+								Joint* currJoint = m_skeleton->m_vJoints[i];
 								m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+							}
+						} else {
+							for (auto clipName : itr_blending.second[0])
+							{
+								AnimationSet* animationSet = &m_animationSets[clipName];
+								if (animationSet->isActive())
+								{
+									animationSet->update(deltaTime);		//update delta time first, then animate
+
+									m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+									for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+									{
+										Joint* currJoint = m_skeleton->m_vJoints[i];
+										m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+									}
+								}
 							}
 						}
 					}
-			}
-			m_bPlaying = true;
+				}
+				break;
 		}
-	}
-	// none is playing, i.e. animation ends
-	if (!m_bPlaying)
-	{
-		/*
-		Handle h(sizeof(Player_Attack_1_START_Event));
-		new (h) Player_Attack_1_START_Event;
-		EventQueue::GetInstance()->Add(h, GAME_EVENT);
-		*/
 	}
 }
 
