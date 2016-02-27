@@ -47,7 +47,7 @@ GameLoop::GameLoop()
 	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100));
 
 	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
-	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(100.0f);
+	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(67.0f);
 }
 
 void GameLoop::Update(float deltaTime)

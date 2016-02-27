@@ -268,7 +268,7 @@ void AnimationController::Update(float deltaTime)
 							toClip->update(deltaTime);
 
 							const int numRemainKeyFrames = fromClip->m_vAnimations[0]->getNumKeyframes() - fromClip->m_vAnimations[0]->getCurrentKeyframe();
-							const float interpolant = std::fmax(1.0f / numRemainKeyFrames, 1.0f);
+							const float interpolant = numRemainKeyFrames==0 ? 1.0f : 1.0f / numRemainKeyFrames;
 
 							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
