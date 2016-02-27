@@ -286,7 +286,7 @@ void AnimationController::Update(float deltaTime)
 
 							const float interpolant = (1.0f * fromClip->m_vAnimations[0]->getCurrentKeyframe() / fromClip->m_vAnimations[0]->getNumKeyframes());
 
-							if (interpolant >= 1.0f) { 
+							if(!fromClip->isLooping() && floor(interpolant)==1) {
 								fromClip->setActive(false); 
 							}
 

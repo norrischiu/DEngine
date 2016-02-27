@@ -91,3 +91,13 @@ void AnimationSet::setActive(const bool active)
 {
 	m_active = active;
 }
+
+bool AnimationSet::isLooping()
+{
+	return m_bLooping;
+}
+
+void AnimationSet::SetLooping(const bool looping)
+{
+	m_bLooping = looping;
+}

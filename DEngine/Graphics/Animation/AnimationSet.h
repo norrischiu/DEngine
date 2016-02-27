@@ -25,11 +25,8 @@ public:
 	void setDuration(const float duration);
 	bool isActive() const;
 	void setActive(const bool active);
-
-	void SetLooping(const bool looping)
-	{
-		m_bLooping = looping;
-	}
+	bool isLooping();
+	void SetLooping(const bool looping);
 
 	void update(const float delta_time);
 
