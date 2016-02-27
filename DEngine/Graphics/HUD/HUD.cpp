@@ -11,15 +11,26 @@ HUD::HUD()
 	m_pVSCBuffer = new VSPerObjectCBuffer;
 }
 
-void HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color, const float duration)
+TextBox* HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color, const float duration)
 {
-	m_elements[id] = new TextBox(id, string, pos, fontSizePt, color, duration);
+	if (m_elements.find(id) != m_elements.end()) {
+		cleanUpCache(id);
+	}
+
+	TextBox* textBox = new TextBox(id, string, pos, fontSizePt, color, duration);
+
+	m_elements[id] = textBox;
 	m_timer[id] = 0.0f;
+
+	return textBox;
 }
 
-void HUD::addProgress(char* id, const float progress, const HUDElement::Position pos, const HUDElement::Size size, const bool showText, const float duration) {
-	m_elements[id] = new ProgressBar(id, progress, pos, size, showText, duration);
+ProgressBar* HUD::addProgress(char* id, const float progress, const HUDElement::Position pos, const HUDElement::Size size, const bool showText, const float duration) {
+	ProgressBar* progressBar = new ProgressBar(id, progress, pos, size, showText, duration);
+	m_elements[id] = progressBar;
 	m_timer[id] = 0.0f;
+
+	return progressBar;
 }
 
 HUDElement* HUD::getHUDElementById(const char* id)
@@ -29,7 +40,30 @@ HUDElement* HUD::getHUDElementById(const char* id)
 
 void HUD::removeHUDElementById(const char* id)
 {
-	m_elements.erase(id);
+	if (m_elements.find(id) != m_elements.end())
+	{
+		m_elements.erase(id);
+	}
+
+	if (m_timer.find(id) != m_timer.end())
+	{
+		m_timer.erase(id);
+	}
+
+	cleanUpCache(id);
+}
+
+void HUD::cleanUpCache(const char* id)
+{
+	switch (m_elements[id]->getTypeID())
+	{
+		case HUDElement::TypeID::TEXTBOX:
+			TextEngine::getInstance()->removeCacheByID(id);
+			break;
+		case HUDElement::TypeID::PROGRESSBAR:
+			ProgressBarEngine::getInstance()->removeCacheByID(id);
+			break;
+	}
 }
 
 void HUD::update(const float delta_time)
@@ -52,6 +86,7 @@ void HUD::update(const float delta_time)
 			itr->second += delta_time;
 
 			if (itr->second > m_elements[itr->first]->getDuration()) {
+				cleanUpCache(itr->first);
 				m_elements.erase(itr->first);
 				itr = m_timer.erase(itr);
 			} else {
@@ -72,8 +107,10 @@ void HUD::Render()
 
 	for (auto l : m_elements)
 	{
-		switch (l.second->getTypeID()) {
-			case HUDElement::TypeID::PROGRESSBAR:
+		if (l.second->isVisible())
+		{
+			switch (l.second->getTypeID()) {
+				case HUDElement::TypeID::PROGRESSBAR:
 				{
 					meshComponent = ProgressBarEngine::getInstance()->makeProgress((ProgressBar*)l.second);
 					int numMeshComponent = ((ProgressBar*)l.second)->isShowText() ? 2 : 1;
@@ -83,14 +120,15 @@ void HUD::Render()
 						meshComponent[i].m_pMeshData->Render();
 					}
 				}
-				break;
-			case HUDElement::TypeID::TEXTBOX:
-				meshComponent = TextEngine::getInstance()->makeText((TextBox*) l.second);
-				ptr->WVPTransform = *meshComponent->m_pTransform;
-				m_pVSCBuffer->Update();
+					break;
+				case HUDElement::TypeID::TEXTBOX:
+					meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
+					ptr->WVPTransform = *meshComponent->m_pTransform;
+					m_pVSCBuffer->Update();
 
-				meshComponent->m_pMeshData->Render();
-				break;
+					meshComponent->m_pMeshData->Render();
+					break;
+				}
 		}
 	}
 }

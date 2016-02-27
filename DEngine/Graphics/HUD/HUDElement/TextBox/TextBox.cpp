@@ -11,28 +11,28 @@ int TextBox::getTypeID()
 	return typeID;
 }
 
-const char* TextBox::getText()
+char* TextBox::getText()
 {
 	return m_text;
 }
 
-void TextBox::setText(char* string)
+TextBox* TextBox::setText(char* string)
 {
 	m_text = string;
 	HUDElement::setHasUpdate(true);
+	return this;
 }
 
+int TextBox::getFontSize()
+{
+	return m_fontSizePt;
+}
 
-void TextBox::setFontSize(const int fontSizePt)
+TextBox* TextBox::setFontSize(const int fontSizePt)
 {
 	m_fontSizePt = fontSizePt;
 	HUDElement::setHasUpdate(true);
-}
-
-void TextBox::setColor(const HUDElement::Color color)
-{
-	m_color = color;
-	HUDElement::setHasUpdate(true);
+	return this;
 }
 
 int TextBox::getColor()
@@ -40,9 +40,11 @@ int TextBox::getColor()
 	return m_color;
 }
 
-int TextBox::getFontSize()
+TextBox* TextBox::setColor(const HUDElement::Color color)
 {
-	return m_fontSizePt;
+	m_color = color;
+	HUDElement::setHasUpdate(true);
+	return this;
 }
 
 TextBox::~TextBox()

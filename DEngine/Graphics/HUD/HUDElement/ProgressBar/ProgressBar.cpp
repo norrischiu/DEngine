@@ -20,13 +20,15 @@ float ProgressBar::getProgress()
 	return m_progress;
 }
 
-void ProgressBar::setProgress(const float progress)
+ProgressBar* ProgressBar::setProgress(const float progress)
 {
 	if (progress >= 0.0f && progress <= 100.0f)
 	{
 		m_progress = progress;
 		HUDElement::setHasUpdate(true);
 	}
+
+	return this;
 }
 
 HUDElement::Size ProgressBar::getSize()
@@ -34,10 +36,11 @@ HUDElement::Size ProgressBar::getSize()
 	return m_size;
 }
 
-void ProgressBar::setSize(const HUDElement::Size size)
+ProgressBar* ProgressBar::setSize(const HUDElement::Size size)
 {
 	m_size = size;
 	HUDElement::setHasUpdate(true);
+	return this;
 }
 
 bool ProgressBar::isShowText()
@@ -45,10 +48,11 @@ bool ProgressBar::isShowText()
 	return m_showText;
 }
 
-void ProgressBar::setShowText(const bool showText)
+ProgressBar* ProgressBar::setShowText(const bool showText)
 {
 	m_showText = showText;
 	HUDElement::setHasUpdate(true);
+	return this;
 }
 
 int ProgressBar::getTypeID()

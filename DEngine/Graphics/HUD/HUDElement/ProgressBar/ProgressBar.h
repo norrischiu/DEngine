@@ -11,11 +11,11 @@ public:
 	~ProgressBar();
 
 	float getProgress();
-	void setProgress(const float progress);
+	ProgressBar* setProgress(const float progress);
 	HUDElement::Size getSize();
-	void setSize(const HUDElement::Size size);
+	ProgressBar* setSize(const HUDElement::Size size);
 	bool isShowText();
-	void setShowText(const bool showText);
+	ProgressBar* setShowText(const bool showText);
 	int getTypeID();
 
 private:

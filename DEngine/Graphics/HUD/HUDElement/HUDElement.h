@@ -40,7 +40,7 @@ public:
 		}
 	};
 
-	HUDElement(char* id, const HUDElement::Position pos, const float duration);
+	HUDElement(char* id, const HUDElement::Position pos, const float duration, const bool visibility = true);
 	~HUDElement();
 
 	virtual int getTypeID() = 0;
@@ -50,12 +50,15 @@ public:
 	void setPosition(const HUDElement::Position pos);
 	float getDuration();
 	void setDuration(const float duration);
+	bool isVisible();
+	void setVisibility(const bool visibility);
 	char* getID();
 
 private:
 	char* m_id;
-	bool m_hasUpdate;
 	float m_duration;
 	HUDElement::Position m_pos;
+	bool m_hasUpdate;
+	bool m_visibility;
 };
 

@@ -2,7 +2,8 @@
 
 
 
-HUDElement::HUDElement(char* id, const HUDElement::Position pos, const float duration) : m_id(id), m_pos(pos), m_hasUpdate(false), m_duration(duration)
+HUDElement::HUDElement(char* id, const HUDElement::Position pos, const float duration, const bool visibility) :
+	m_id(id), m_pos(pos), m_hasUpdate(false), m_duration(duration), m_visibility(visibility)
 {
 }
 
@@ -44,6 +45,16 @@ float HUDElement::getDuration()
 void HUDElement::setDuration(const float duration)
 {
 	m_duration = duration;
+}
+
+bool HUDElement::isVisible()
+{
+	return m_visibility;
+}
+
+void HUDElement::setVisibility(const bool visibility)
+{
+	m_visibility = visibility;
 }
 
 HUDElement::~HUDElement()

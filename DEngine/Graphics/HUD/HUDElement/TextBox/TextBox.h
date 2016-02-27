@@ -14,12 +14,12 @@ public:
 	~TextBox();
 
 	int getTypeID();
-	const char* getText();
+	char* getText();
 	int getFontSize();
 	int getColor();
-	void setText(char* string);
-	void setFontSize(const int fontSize);
-	void setColor(const HUDElement::Color color);
+	TextBox* setText(char* string);
+	TextBox* setFontSize(const int fontSize);
+	TextBox* setColor(const HUDElement::Color color);
 
 private:
 	char* m_prevText;

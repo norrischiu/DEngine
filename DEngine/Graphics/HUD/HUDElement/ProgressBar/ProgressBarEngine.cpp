@@ -114,7 +114,10 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 
 void ProgressBarEngine::removeCacheByID(const char* id)
 {
-	m_cache.erase(id);
+	if (m_cache.find(id) != m_cache.end())
+	{
+		m_cache.erase(id);
+	}
 }
 
 void ProgressBarEngine::destructAndCleanUp()

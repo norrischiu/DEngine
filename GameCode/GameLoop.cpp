@@ -44,7 +44,8 @@ GameLoop::GameLoop()
 	//spotlight->AddComponent(new CameraComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 
 	HUD::getInstance()->addText("text1", "Text", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
-	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100), true, 5.0f);
+	HUD::getInstance()->addText("text2", "This text will disappear in 5 seconds", HUDElement::Position(10, 80), HUDElement::FontSize::PT60, HUDElement::Color::RED, 5.0f);
+	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100), true);
 
 	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
 	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(67.0f);

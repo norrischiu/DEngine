@@ -52,6 +52,13 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 	// Draw each letter onto a quad.
 	for (int i = 0, letter = 0, index = 0; i < iNumLetters; i++)
 	{
+		if (sentence[i] == '\n')
+		{
+			drawY -= textHeight;
+			drawX = 0.0f;
+			continue;
+		}
+
 		letter = ((int)sentence[i]) - 32;
 		textWidth = m_Font[letter].size / (16.0f / textHeight);
 
@@ -70,13 +77,13 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 			// Bottom right
 			pVertices[index].m_pos = Vector3(drawX - textWidth, drawY - textHeight, 0.0f);
 			pVertices[index].m_UV[0] = m_Font[letter].right;
-			pVertices[index].m_UV[1] = textHeight;
+			pVertices[index].m_UV[1] = 1.0f;
 			index++;
 
 			// Bottom left
 			pVertices[index].m_pos = Vector3(drawX, drawY - textHeight, 0.0f);
 			pVertices[index].m_UV[0] = m_Font[letter].left;
-			pVertices[index].m_UV[1] = textHeight;
+			pVertices[index].m_UV[1] = 1.0f;
 			index++;
 
 			// Second triangle in quad
@@ -95,7 +102,7 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 			// Bottom right
 			pVertices[index].m_pos = Vector3(drawX - textWidth, drawY - textHeight, 0.0f);
 			pVertices[index].m_UV[0] = m_Font[letter].right;
-			pVertices[index].m_UV[1] = textHeight;
+			pVertices[index].m_UV[1] = 1.0f;
 			index++;
 
 			// Update the x location for drawing by the size of the letter and one pixel
@@ -208,7 +215,10 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 
 void TextEngine::removeCacheByID(const char* id)
 {
-	m_cache.erase(id);
+	if (m_cache.find(id) != m_cache.end())
+	{
+		m_cache.erase(id);
+	}
 }
 
 void TextEngine::destructAndCleanUp()
