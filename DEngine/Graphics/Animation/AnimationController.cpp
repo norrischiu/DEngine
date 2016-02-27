@@ -21,8 +21,7 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 		std::vector<std::string> vec1;
 		vec1.push_back(name);
 		vec2.push_back(vec1);
-		std::pair<BlendMode, std::vector<std::vector<std::string>>> blending = std::make_pair(blendMode, vec2);
-		m_blending.insert(blending);
+		m_blending[blendMode] = vec2;
 	}
 	else {
 		switch (blendMode)
@@ -34,8 +33,7 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 			case FROZEN_BLENDING:
 				for (auto itr : m_blending[blendMode])
 				{
-					if (itr.size() < 2)
-					{
+					if (itr.size() < 2) {
 						itr.push_back(name);
 					}
 				}
@@ -177,55 +175,55 @@ int AnimationController::getNumAnimations(const std::string name)
 
 void AnimationController::setBlending(const std::vector<std::string> clipNames, const BlendMode blendMode)
 {
-	for (auto itr1 : m_blending)
+	for (auto itr_blending : m_blending)
 	{
-		switch (itr1.first)
+		switch (itr_blending.first)
 		{
 			case BlendMode::ADDICTIVE_BLENDING:
 				for (auto clipName : clipNames)
 				{
-					for (std::vector<std::string>::iterator itr2 = itr1.second[0].begin(); itr2 != itr1.second[0].end(); ++itr2)
+					for (std::vector<std::string>::iterator itr_clipName_vec1 = itr_blending.second[0].begin(); itr_clipName_vec1 != itr_blending.second[0].end(); ++itr_clipName_vec1)
 					{
-						if (*itr2 == clipName)
+						if (*itr_clipName_vec1 == clipName)
 						{
-							itr1.second[0].erase(itr2);
+							itr_blending.second[0].erase(itr_clipName_vec1);
 						}
 					}
-					itr1.second[0].push_back(clipName);
+					itr_blending.second[0].push_back(clipName);
 				}
 				break;
 			case BlendMode::FROZEN_BLENDING:
 			case BlendMode::CROSS_FADE_BLENDING:
-				for (std::vector<std::vector<std::string>>::iterator itr2 = itr1.second.begin(); itr2 != itr1.second.end(); ++itr2)
+				for (std::vector<std::vector<std::string>>::iterator itr_clipName_vec2 = itr_blending.second.begin(); itr_clipName_vec2 != itr_blending.second.end(); ++itr_clipName_vec2)
 				{
 					bool found = false;
 					std::vector<std::string> vec;
-					for (std::vector<std::string>::iterator itr3 = (*itr2).begin(); itr3 != (*itr2).end(); ++itr3)
+					for (std::vector<std::string>::iterator itr_clipName_vec1 = (*itr_clipName_vec2).begin(); itr_clipName_vec1 != (*itr_clipName_vec2).end(); ++itr_clipName_vec1)
 					{	
 						for (auto clipName : clipNames)
 						{
-							if (clipName == *itr3)
+							if (clipName == *itr_clipName_vec1)
 							{
-								(*itr2).erase(itr3);
+								(*itr_clipName_vec2).erase(itr_clipName_vec1);
 								found = true;
 							}
 							else {
-								vec.push_back(*itr3);
+								vec.push_back(*itr_clipName_vec1);
 							}
 						}
 					}
 
 					if (found)
 					{
-						itr1.second.erase(itr2);
+						itr_blending.second.erase(itr_clipName_vec2);
 						for (auto clipName : vec)
 						{
-							itr1.second[0].push_back(clipName);
+							itr_blending.second[0].push_back(clipName);
 						}
 					}
 				}
 
-				itr1.second.push_back(clipNames);
+				itr_blending.second.push_back(clipNames);
 				break;
 		}
 	}
@@ -233,13 +231,13 @@ void AnimationController::setBlending(const std::vector<std::string> clipNames, 
 
 void AnimationController::Update(float deltaTime)
 {
-	for (auto itr1: m_blending)
+	for (auto itr_blending: m_blending)
 	{
-		BlendMode blendMode = itr1.first;
+		BlendMode blendMode = itr_blending.first;
 		switch (blendMode)
 		{
 			case BlendMode::ADDICTIVE_BLENDING:
-				for (auto clipName : itr1.second[0])
+				for (auto clipName : itr_blending.second[0])
 				{
 					AnimationSet* animationSet = &m_animationSets[clipName];
 					if (animationSet->isActive())
@@ -257,12 +255,12 @@ void AnimationController::Update(float deltaTime)
 				break;
 			case BlendMode::CROSS_FADE_BLENDING:
 			case BlendMode::FROZEN_BLENDING:
-				for (auto itr2 : itr1.second)
+				for (auto clipNames : itr_blending.second)
 				{
-					if (itr2.size() == 2)
+					if (clipNames.size() == 2)
 					{
-						AnimationSet* fromClip = &m_animationSets[itr2[0]];
-						AnimationSet* toClip = &m_animationSets[itr2[1]];
+						AnimationSet* fromClip = &m_animationSets[clipNames[0]];
+						AnimationSet* toClip = &m_animationSets[clipNames[1]];
 
 						if (fromClip->isActive() && toClip->isActive())
 						{
