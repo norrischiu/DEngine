@@ -9,6 +9,7 @@ AnimationStateMachine::AnimationStateMachine(AnimationController* animController
 	, m_fTransitionTime(0.0f)
 {
 	m_ID = ComponentID;
+	animController->m_bPlaying = true;
 }
 
 void AnimationStateMachine::Update(float deltaTime)
