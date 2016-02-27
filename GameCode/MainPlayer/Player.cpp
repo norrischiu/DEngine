@@ -34,6 +34,11 @@ Player::Player()
 	names.push_back("walk");
 	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
 
+	std::vector<std::string> names2;
+	names2.push_back("walk");
+	names2.push_back("idle");
+	animController->setBlending(names2, AnimationController::BlendMode::CROSS_FADE_BLENDING);
+
 	AddComponent(skel);
 	AddComponent(animController);
 	AddComponent(new PlayerASM(animController));

@@ -1,13 +1,13 @@
-#ifndef PLAYER_EVENT_H
-#define PLAYER_EVENT_H
+#ifndef GAME_EVENT_H
+#define GAME_EVENT_H
 
 #include "DEngine\Event\Event.h"
 
-namespace EventID
+namespace GameEventID
 {
 	enum
 	{
-		Player_Walk_START_Event,
+		Player_Walk_START_Event = 0xFFF,
 		Player_Walk_END_Event,
 		Player_Attack_1_START_Event,
 		Player_Attack_1_END_Event,
@@ -19,29 +19,29 @@ namespace EventID
 struct Player_Walk_START_Event : public Event
 {
 	Player_Walk_START_Event()
-		:Event(EventID::Player_Walk_START_Event)
+		:Event(GameEventID::Player_Walk_START_Event)
 	{};
 };
 
 struct Player_Walk_END_Event : public Event
 {
 	Player_Walk_END_Event()
-		:Event(EventID::Player_Walk_END_Event)
+		:Event(GameEventID::Player_Walk_END_Event)
 	{};
 };
 
 struct Player_Attack_1_START_Event : public Event
 {
 	Player_Attack_1_START_Event()
-		:Event(EventID::Player_Attack_1_START_Event)
+		:Event(GameEventID::Player_Attack_1_START_Event)
 	{};
 };
 
 struct Player_Attack_1_END_Event : public Event
 {
 	Player_Attack_1_END_Event()
-		:Event(EventID::Player_Attack_1_END_Event)
+		:Event(GameEventID::Player_Attack_1_END_Event)
 	{};
 };
 
-#endif // !PLAYER_EVENT_H
+#endif // !GAME_EVENT_H

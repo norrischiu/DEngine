@@ -21,20 +21,16 @@ void AnimationStateMachine::Update(float deltaTime)
 		// finished transition
 		if (m_fTransitionTime > m_pCurrTransition->m_fDuration)
 		{
-			m_pController->setActiveAnimationSet("idle", false);
+			m_pController->setActiveAnimationSet(m_pPrevState->m_sClipName, false);
 			m_fTransitionTime = 0.0f;
 			m_bInTrasition = false;
 		}
 	}
-	if (!m_pController->m_bPlaying)
-	{
-
-	}
-
 }
 
 void AnimationStateMachine::ChangeStateTo(const char* stateName)
 {
+	m_pPrevState = m_pCurrState;
 	State* target = (State*) m_mapStates[stateName].Raw();
 	Transition* trans = ((Transition*) m_mTransitions[m_pCurrState->m_iIndex][target->m_iIndex].Raw());
 	m_pCurrTransition = trans;

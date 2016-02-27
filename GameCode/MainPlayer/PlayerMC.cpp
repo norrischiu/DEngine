@@ -9,10 +9,16 @@
 void PlayerMC::HandleKeyboardEvent(Event * pEvt)
 {
 	DE::MovementController::HandleKeyboardEvent(pEvt);
-	if (pEvt->m_ID == DE::EventID::Key_W_Press_Event)
+	if (pEvt->m_ID == DE::InputEventID::Key_W_Press_Event)
 	{
 		Handle h(sizeof(Player_Walk_START_Event));
 		new (h) Player_Walk_START_Event;
+		EventQueue::GetInstance()->Add(h, GAME_EVENT);
+	}
+	if (pEvt->m_ID == DE::InputEventID::Key_W_Release_Event)
+	{
+		Handle h(sizeof(Player_Walk_END_Event));
+		new (h) Player_Walk_END_Event;
 		EventQueue::GetInstance()->Add(h, GAME_EVENT);
 	}
 }

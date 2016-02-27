@@ -471,6 +471,9 @@
     <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClInclude>
+    <ClInclude Include="Event\EngineEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

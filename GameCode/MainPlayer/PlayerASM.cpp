@@ -1,13 +1,14 @@
 // PlayerASM.cpp
-#include "PlayerASM.h"
 
 // Game include
+#include "PlayerASM.h"
 #include "Event\GameEvent.h"
-#include "DEngine\Graphics\Animation\AnimationController.h"
-#include "DEngine\Event\EventQueue.h"
-#include "DEngine\Memory\Handle.h"
 
 // Engine include
+#include "DEngine\Graphics\Animation\AnimationController.h"
+#include "DEngine\Event\EngineEvent.h"
+#include "DEngine\Event\EventQueue.h"
+#include "DEngine\Memory\Handle.h"
 
 #include <vector>
 
@@ -44,11 +45,14 @@ void PlayerASM::HandleEvent(Handle hEvt)
 	Event* pEvt = (Event*) hEvt.Raw();
 	switch (pEvt->m_ID)
 	{
-		case EventID::Player_Walk_START_Event:
+		case GameEventID::Player_Walk_START_Event:
 			ChangeStateTo("WALK");
 			break;
-		case EventID::Player_Walk_END_Event:
+		case GameEventID::Player_Walk_END_Event:
 			ChangeStateTo("IDLE");
-			break;
+			break;		
+//		case DE::EngineEventID::Animation_END_Event:
+//			ChangeStateTo("IDLE");
+//			break;
 	}
 }

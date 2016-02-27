@@ -1,16 +1,23 @@
+// Engine include
 #include "AnimationController.h"
 #include "Math\SQT.h"
 #include "Math\simdmath.h"
 #include "GameObject\GameObject.h"
+#include "Event\EventQueue.h"
+#include "Event\EngineEvent.h"
+
+// C++ include
 #include <stdio.h>
 
 #define C_STR(string, text)\
 		(string + text).c_str()
 
+using namespace DE;
+
 AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skeleton)
 {
 	m_ID = ComponentID;
-	m_bPlaying = false;
+	m_bPlaying = true;
 }
 
 void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet, const BlendMode blendMode)
@@ -307,10 +314,18 @@ void AnimationController::Update(float deltaTime)
 								}
 							}
 						}
+						m_bPlaying = true;
 					}
 				}
 				break;
 		}
+	}
+
+	if (!m_bPlaying)
+	{
+		Handle hEvt(sizeof(Animation_END_Event));
+		new (hEvt) Animation_END_Event;
+		EventQueue::GetInstance()->Add(hEvt, GAME_EVENT);
 	}
 }
 

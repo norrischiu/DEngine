@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -200,6 +200,7 @@
   <ItemGroup>
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
+    <ClInclude Include="Event\EngineEvent.h" />
     <ClInclude Include="Event\Event.h" />
     <ClInclude Include="Event\EventQueue.h" />
     <ClInclude Include="Event\InputEvent.h" />

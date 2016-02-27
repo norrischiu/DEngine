@@ -100,6 +100,8 @@ protected:
 
 	State*										m_pCurrState;
 
+	State*										m_pPrevState;
+
 	Transition*									m_pCurrTransition;
 
 	float										m_fTransitionTime;
