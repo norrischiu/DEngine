@@ -10,6 +10,7 @@
 AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skeleton)
 {
 	m_ID = ComponentID;
+	m_bPlaying = false;
 }
 
 void AnimationController::addAnimationSet(const std::string name, const AnimationSet& animationSet, const BlendMode blendMode)
@@ -274,10 +275,11 @@ void AnimationController::Update(float deltaTime)
 							fromClip->update(deltaTime);
 							toClip->update(deltaTime);
 
-							const int numRemainKeyFrames = fromClip->m_vAnimations[0]->getNumKeyframes() - fromClip->m_vAnimations[0]->getCurrentKeyframe();
-							const float interpolant = numRemainKeyFrames==0 ? 1.0f : 1.0f / numRemainKeyFrames;
+							const float interpolant = (1.0f * fromClip->m_vAnimations[0]->getCurrentKeyframe() / fromClip->m_vAnimations[0]->getNumKeyframes());
 
-							if (numRemainKeyFrames == 0) { fromClip->setActive(false); }
+							if (interpolant >= 1.0f) { 
+								fromClip->setActive(false); 
+							}
 
 							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
