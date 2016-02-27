@@ -43,7 +43,7 @@ void AnimationStateMachine::Update(float deltaTime)
 
 void AnimationStateMachine::ChangeStateTo(const char* stateName)
 {
-	//m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, false);
+	m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, false);
 
 	State* target = (State*) m_mapStates[stateName].Raw();
 	Transition* trans = ((Transition*) m_mTransitions[m_pCurrState->m_iIndex][target->m_iIndex].Raw());

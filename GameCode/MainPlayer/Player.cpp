@@ -29,10 +29,10 @@ Player::Player()
 	animController->getAnimationSet("idle")->SetLooping(true);
 	animController->getAnimationSet("idle")->setActive(true);
 
-	std::vector<std::string> names;
-	names.push_back(std::string("idle"));
-	names.push_back(std::string("attack1"));
-	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
+//	std::vector<std::string> names;
+//	names.push_back(std::string("idle"));
+//	names.push_back(std::string("attack1"));
+//	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
 
 	AddComponent(skel);
 	AddComponent(animController);

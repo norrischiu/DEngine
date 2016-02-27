@@ -234,6 +234,7 @@ void AnimationController::setBlending(const std::vector<std::string> clipNames, 
 
 void AnimationController::Update(float deltaTime)
 {
+	m_bPlaying = false;
 	for (auto itr_blending: m_blending)
 	{
 		BlendMode blendMode = itr_blending.first;
@@ -253,6 +254,7 @@ void AnimationController::Update(float deltaTime)
 							Joint* currJoint = m_skeleton->m_vJoints[i];
 							m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
 						}
+						m_bPlaying = true;
 					}
 				}
 				break;
