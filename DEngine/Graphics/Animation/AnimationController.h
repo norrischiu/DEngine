@@ -53,4 +53,5 @@ public:
 	std::unordered_map<std::string, AnimationSet> m_animationSets;
 	std::unordered_map<BlendMode, std::vector<std::vector<std::string>>> m_blending;
 	Skeleton* m_skeleton;
+	bool m_bPlaying;
 };
