@@ -16,9 +16,15 @@ PlayerASM::PlayerASM(AnimationController * animController)
 {
 	AddState("IDLE", "idle");
 	SetAsDefaultState("IDLE");
+	AddState("WALK", "walk");
 	AddState("ATTACK", "attack1");
-	AddTransistion("IDLE", "ATTACK", 0);
-	AddTransistion("ATTACK", "IDLE", 0);
+
+	AddTransistion("IDLE", "WALK", 1, 1.5f);
+	AddTransistion("WALK", "IDLE", 1, 1.5f);
+	AddTransistion("IDLE", "ATTACK", 1, 1.5f);
+	AddTransistion("ATTACK", "IDLE", 1, 1.5f);
+	AddTransistion("WALK", "ATTACK", 1, 1.5f);
+	AddTransistion("ATTACK", "WALK", 1, 1.5f);
 }
 
 void PlayerASM::Update(float deltaTime)
@@ -38,10 +44,10 @@ void PlayerASM::HandleEvent(Handle hEvt)
 	Event* pEvt = (Event*) hEvt.Raw();
 	switch (pEvt->m_ID)
 	{
-		case EventID::Player_Attack_1_START_Event:
-			ChangeStateTo("ATTACK");
+		case EventID::Player_Walk_START_Event:
+			ChangeStateTo("WALK");
 			break;
-		case EventID::Player_Attack_1_END_Event:
+		case EventID::Player_Walk_END_Event:
 			ChangeStateTo("IDLE");
 			break;
 	}

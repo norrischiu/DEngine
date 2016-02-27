@@ -45,7 +45,7 @@ SIMDVector3 SIMDMatrix4::GetPosition()
 
 SIMDVector3 SIMDMatrix4::GetForward()
 {
-	return SIMDVector3(_rows[2]);
+	return -SIMDVector3(_rows[2]).Normalize();
 }
 
 SIMDVector3 SIMDMatrix4::GetUp()

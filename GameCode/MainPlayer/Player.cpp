@@ -22,16 +22,16 @@ Player::Player()
 	AddComponent(new PlayerMC());
 	Skeleton* skel = new Skeleton("maria");
 	AnimationController* animController = new AnimationController(skel);
-	animController->CreateAnimationSets("maria_attack");
+	animController->CreateAnimationSets("maria_walk");
 	animController->CreateAnimationSets("maria_idle");
+	animController->CreateAnimationSets("maria_attack");
+	animController->getAnimationSet("walk")->SetLooping(true);
 	animController->getAnimationSet("idle")->SetLooping(true);
 	animController->getAnimationSet("idle")->setActive(true);
-	animController->getAnimationSet("attack1")->SetLooping(true);
-	animController->getAnimationSet("attack1")->setActive(true);
 
 	std::vector<std::string> names;
 	names.push_back("idle");
-	names.push_back("attack1");
+	names.push_back("walk");
 	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
 
 	AddComponent(skel);

@@ -11,8 +11,8 @@ void PlayerMC::HandleKeyboardEvent(Event * pEvt)
 	DE::MovementController::HandleKeyboardEvent(pEvt);
 	if (pEvt->m_ID == DE::EventID::Key_W_Press_Event)
 	{
-		Handle h(sizeof(Player_Attack_1_START_Event));
-		new (h) Player_Attack_1_START_Event;
+		Handle h(sizeof(Player_Walk_START_Event));
+		new (h) Player_Walk_START_Event;
 		EventQueue::GetInstance()->Add(h, GAME_EVENT);
 	}
 }

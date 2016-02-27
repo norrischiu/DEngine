@@ -24,7 +24,7 @@ void MovementController::HandleKeyboardEvent(Event* pEvt)
 {
 	if (pEvt->m_ID == EventID::Key_W_Hold_Event)
 	{
-		Vector3 vForward = Vector3::UnitZ; // temp
+		Vector3 vForward = m_pOwner->GetTransform()->GetForward();
 		Move(vForward * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == EventID::Key_S_Hold_Event)
@@ -44,8 +44,8 @@ void MovementController::HandleKeyboardEvent(Event* pEvt)
 	}
 	else if (pEvt->m_ID == EventID::Key_W_Press_Event)
 	{
-		Vector3 vForward = Vector3::UnitZ; // temp
-		Move(vForward * m_fDeltaTime * m_fSpeed * 20); // jump forward
+		//Vector3 vForward = m_pOwner->GetTransform()->GetForward();
+		//Move(vForward * m_fDeltaTime * m_fSpeed);
 	}
 }
 
