@@ -26,6 +26,14 @@ Player::Player()
 	animController->CreateAnimationSets("maria_idle");
 	animController->getAnimationSet("idle")->SetLooping(true);
 	animController->getAnimationSet("idle")->setActive(true);
+	animController->getAnimationSet("attack1")->SetLooping(true);
+	animController->getAnimationSet("attack1")->setActive(true);
+
+	std::vector<std::string> names;
+	names.push_back("idle");
+	names.push_back("attack1");
+	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
+
 	AddComponent(skel);
 	AddComponent(animController);
 	AddComponent(new PlayerASM(animController));

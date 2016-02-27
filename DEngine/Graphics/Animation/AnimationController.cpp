@@ -175,61 +175,66 @@ int AnimationController::getNumAnimations(const std::string name)
 
 void AnimationController::setBlending(const std::vector<std::string> clipNames, const BlendMode blendMode)
 {
-	for (auto itr_blending : m_blending)
+	for (std::unordered_map<BlendMode, std::vector<std::vector<std::string>>>::iterator itr_blending = m_blending.begin(); itr_blending != m_blending.end(); ++itr_blending)
 	{
-		switch (itr_blending.first)
+		switch (itr_blending->first)
 		{
 			case BlendMode::ADDICTIVE_BLENDING:
 				for (auto clipName : clipNames)
 				{
-					for (std::vector<std::string>::iterator itr_clipName_vec1 = itr_blending.second[0].begin(); itr_clipName_vec1 != itr_blending.second[0].end(); ++itr_clipName_vec1)
+					if (m_animationSets.find(clipName) != m_animationSets.end())
 					{
-						if (*itr_clipName_vec1 == clipName)
+						for (std::vector<std::string>::iterator itr_clipName_vec1 = itr_blending->second[0].begin(); itr_clipName_vec1 != itr_blending->second[0].end();)
 						{
-							itr_blending.second[0].erase(itr_clipName_vec1);
+							if (*itr_clipName_vec1 == clipName) {
+								itr_clipName_vec1 = itr_blending->second[0].erase(itr_clipName_vec1);
+							} else {
+								++itr_clipName_vec1;
+							}
 						}
 					}
-					itr_blending.second[0].push_back(clipName);
 				}
 				break;
 			case BlendMode::FROZEN_BLENDING:
 			case BlendMode::CROSS_FADE_BLENDING:
-				if (clipNames.size() == 2)
+				if (clipNames.size() == 2 && m_animationSets.find(clipNames[0]) != m_animationSets.end() && m_animationSets.find(clipNames[1]) != m_animationSets.end())
 				{
-					for (std::vector<std::vector<std::string>>::iterator itr_clipName_vec2 = itr_blending.second.begin(); itr_clipName_vec2 != itr_blending.second.end(); ++itr_clipName_vec2)
+					for (std::vector<std::vector<std::string>>::iterator itr_clipName_vec2 = itr_blending->second.begin(); itr_clipName_vec2 != itr_blending->second.end();)
 					{
 						bool found = false;
 						std::vector<std::string> vec;
-						for (std::vector<std::string>::iterator itr_clipName_vec1 = (*itr_clipName_vec2).begin(); itr_clipName_vec1 != (*itr_clipName_vec2).end(); ++itr_clipName_vec1)
+						for (std::vector<std::string>::iterator itr_clipName_vec1 = (*itr_clipName_vec2).begin(); itr_clipName_vec1 != (*itr_clipName_vec2).end();)
 						{
 							for (auto clipName : clipNames)
 							{
 								if (clipName == *itr_clipName_vec1)
 								{
-									(*itr_clipName_vec2).erase(itr_clipName_vec1);
+									itr_clipName_vec1 = (*itr_clipName_vec2).erase(itr_clipName_vec1);
 									found = true;
 								}
 								else {
 									vec.push_back(*itr_clipName_vec1);
+									++itr_clipName_vec1;
 								}
 							}
 						}
 
-						if (found)
-						{
-							itr_blending.second.erase(itr_clipName_vec2);
+						if (found) {
+							itr_clipName_vec2 = itr_blending->second.erase(itr_clipName_vec2);
 							for (auto clipName : vec)
 							{
-								itr_blending.second[0].push_back(clipName);
+								itr_blending->second[0].push_back(clipName);
 							}
+						} else {
+							++itr_clipName_vec2;
 						}
 					}
-
-					itr_blending.second.push_back(clipNames);
 				}
 				break;
 		}
 	}
+
+	m_blending[blendMode].push_back(clipNames);
 }
 
 void AnimationController::Update(float deltaTime)
