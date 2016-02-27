@@ -12,6 +12,9 @@
 namespace DE
 {
 
+#define TRANSITION_MAX 128
+#define STATE_MAX 64
+
 class AnimationStateMachine : public Component
 {
 
@@ -19,10 +22,53 @@ public:
 
 	static const int ComponentID = ComponentID::ANIMATION_STATE_MACHINE;
 
+	// Default constructor
+	AnimationStateMachine(AnimationController* animController);
+
+	void SetAsDefaultState(const char* stateName)
+	{
+		m_pCurrState = (State*) m_mapStates[stateName].Raw();
+	}
+
+	void AddState(const char* stateName, const char* clipname)
+	{
+		Handle hState(sizeof(State));
+		new (hState) State(stateName, clipname, m_iNumState++);
+		m_mapStates.insert(std::make_pair(stateName, hState));
+	}
+
+	void AddTransistion(const char* from, const char* to, int blendMode, float duration = 0.0f)
+	{
+		Handle hTransition(sizeof(Transition));
+		int fromIndex, toIndex;
+		fromIndex = ((State*)m_mapStates[from].Raw())->m_iIndex;
+		toIndex = ((State*)m_mapStates[to].Raw())->m_iIndex;
+		new (hTransition) Transition(fromIndex, toIndex, blendMode, duration);
+		m_mTransitions[fromIndex][toIndex] = hTransition;
+	}
+
+	// Handle state change events
+	virtual void HandleEvent(Handle hEvt) = 0;
+
+	// Inherited via Component, define transition rule here
+	virtual void Update(float deltaTime);
+
+	void ChangeStateTo(const char* stateName);
+
+	~AnimationStateMachine();
+
+protected:
+
 	struct State
 	{
 		CUSTOM_MEMORY_DEFINE();
 
+		State(const char* name, const char* clipname, unsigned int index)
+			: m_sName(name)
+			, m_sClipName(clipname)
+			, m_iIndex(index)
+		{};
+		unsigned int m_iIndex;
 		const char* m_sName;
 		const char* m_sClipName; // TODO: extend to multiple clips
 	};
@@ -31,46 +77,34 @@ public:
 	{
 		CUSTOM_MEMORY_DEFINE();
 
-		State* m_pFrom;
-		State* m_pTo;
+		Transition(unsigned int from, unsigned int to, int blendMode, float duration)
+			: m_iFrom(from)
+			, m_iTo(to)
+			, m_iBlendMode(blendMode)
+			, m_fDuration(duration)
+		{};
+		unsigned int m_iFrom;
+		unsigned int m_iTo;
 		int m_iBlendMode;
-		float time;
+		float m_fDuration;
 	};
-
-	// Default constructor
-	AnimationStateMachine(AnimationController* animController);
-
-	void SetAsDefaultState(Handle hState)
-	{
-		m_hCurrState = hState;
-	}
-
-	void AddState(Handle hState)
-	{
-		State* pState = (State*)hState.Raw();
-		m_mapStates.insert(std::make_pair(pState->m_sName, hState));
-	}
-
-	void AddTransistion(Handle hTransition)
-	{
-
-	}
-
-	// Handle state change events
-	virtual void HandleEvent(Handle hEvt) = 0;
-
-	// Inherited via Component, define transition rule here
-	virtual void Update(float deltaTime) = 0;
-
-	~AnimationStateMachine();
-
-protected:
 
 	float										m_fBlendValue;
 
 	std::unordered_map<const char*, Handle>		m_mapStates;
 
-	Handle										m_hCurrState;
+	unsigned int								m_iNumState;
+
+	// Transition matrix [from][to]
+	Handle										m_mTransitions[TRANSITION_MAX][TRANSITION_MAX];
+
+	State*										m_pCurrState;
+
+	Transition*									m_pCurrTransition;
+
+	float										m_fTransitionTime;
+
+	bool										m_bInTrasition;
 
 	AnimationController*						m_pController;
 };

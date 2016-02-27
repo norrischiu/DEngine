@@ -10,9 +10,7 @@ class PlayerASM : public DE::AnimationStateMachine
 
 public:
 
-	PlayerASM(AnimationController* animController)
-		: DE::AnimationStateMachine(animController)
-	{};
+	PlayerASM(AnimationController* animController);
 
 	// Inherited via AnimationStateMachine
 	void Update(float deltaTime) override;

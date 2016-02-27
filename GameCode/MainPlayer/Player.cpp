@@ -20,15 +20,26 @@ Player::Player()
 	//AddComponent(new Body(typeAABB));
 	SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	AddComponent(new PlayerMC());
+
+	// Create animation controller and skeleton
 	Skeleton* skel = new Skeleton("maria");
 	AnimationController* animController = new AnimationController(skel);
-	animController->CreateAnimationSets("maria_attack");
 	animController->CreateAnimationSets("maria_idle");
+	animController->CreateAnimationSets("maria_attack");
 	animController->getAnimationSet("idle")->SetLooping(true);
 	animController->getAnimationSet("idle")->setActive(true);
+
+	std::vector<std::string> names;
+	names.push_back(std::string("idle"));
+	names.push_back(std::string("attack1"));
+	animController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
+
 	AddComponent(skel);
 	AddComponent(animController);
-	AddComponent(new PlayerASM(animController));
+
+	// Create animation state machine
+	PlayerASM* playerAsm = new PlayerASM(animController);
+	AddComponent(playerAsm);
 }
 
 void Player::Update(float deltaTime)

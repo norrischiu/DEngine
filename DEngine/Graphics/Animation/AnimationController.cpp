@@ -1,7 +1,12 @@
 #include "AnimationController.h"
+
+// Engine include
 #include "Math\SQT.h"
 #include "Math\simdmath.h"
 #include "GameObject\GameObject.h"
+#include "Memory\Handle.h"
+
+// C++ include
 #include <stdio.h>
 
 #define C_STR(string, text)\
@@ -22,7 +27,7 @@ void AnimationController::addAnimationSet(const std::string name, const Animatio
 		vec1.push_back(name);
 		vec2.push_back(vec1);
 		m_blending[blendMode] = vec2;
-	}
+}
 	else {
 		switch (blendMode)
 		{
@@ -263,7 +268,7 @@ void AnimationController::Update(float deltaTime)
 						AnimationSet* toClip = &m_animationSets[clipNames[1]];
 
 						if (fromClip->isActive() && toClip->isActive())
-						{
+		{
 							fromClip->update(deltaTime);
 							toClip->update(deltaTime);
 
@@ -272,16 +277,25 @@ void AnimationController::Update(float deltaTime)
 
 							m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
-							for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-							{
-								Joint* currJoint = m_skeleton->m_vJoints[i];
+			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+			{
+				Joint* currJoint = m_skeleton->m_vJoints[i];
 								m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
 							}
 						}
 					}
-				}
-				break;
+			}
+			m_bPlaying = true;
 		}
+	}
+	// none is playing, i.e. animation ends
+	if (!m_bPlaying)
+	{
+		/*
+		Handle h(sizeof(Player_Attack_1_START_Event));
+		new (h) Player_Attack_1_START_Event;
+		EventQueue::GetInstance()->Add(h, GAME_EVENT);
+		*/
 	}
 }
 

@@ -9,6 +9,7 @@ namespace EventID
 	{
 		Player_Attack_1_START_Event,
 		Player_Attack_1_END_Event,
+		Animation_clip_END_Event
 	};
 }
 
