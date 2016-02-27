@@ -13,7 +13,13 @@
 
 struct Handle
 {
+	// Empty constructor
 	Handle() {};
+
+	Handle(size_t size) 
+	{
+		*this = MemoryManager::GetInstance()->Allocate(size);
+	};
 
 	// Constructor
 	Handle(uint32_t poolIndex, uint32_t blockIndex, uint32_t counter = 0)
