@@ -9,6 +9,8 @@ public:
 	// Default constructor
 	GameLoop();
 
+	void Construct();
+
 	static GameLoop* GetInstance()
 	{
 		if (!m_pInstance)

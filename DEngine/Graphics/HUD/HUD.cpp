@@ -68,18 +68,6 @@ void HUD::cleanUpCache(const char* id)
 
 void HUD::update(const float delta_time)
 {
-	/*
-	static wchar_t s[64];
-	swprintf(s, 64, L"delta_time: %f\n", delta_time);
-	OutputDebugStringW(s);
-	*/
-
-	static bool preventStartUpUpdate = true;
-	if (preventStartUpUpdate && delta_time > 2.0f) {		//Hack
-		preventStartUpUpdate = false;
-		return;
-	}
-
 	for (std::unordered_map<const char*, float>::iterator itr = m_timer.begin(); itr != m_timer.end();)
 	{
 		if ((int) m_elements[itr->first]->getDuration() != -1) {

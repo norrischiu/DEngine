@@ -70,6 +70,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 
+	GameLoop::GetInstance()->Construct();		//Load the game content first before entering to the main loop
+
 	/// Timer
 	Timer m_Timer;
 	const float FPS = 30.0f;
@@ -113,7 +115,6 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 			SetWindowText(hWnd, str.str().c_str());
 			elaspedTime = 0.0f;
 		}
-
 
 		m_Timer.tick();
 		elaspedTime += m_Timer.getDeltaTime();

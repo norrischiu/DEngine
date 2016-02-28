@@ -19,6 +19,11 @@ GameLoop* GameLoop::m_pInstance = nullptr;
 
 GameLoop::GameLoop()
 {
+
+}
+
+void GameLoop::Construct()
+{
 	// GameObject dragon = GameObject::Builder().AddComponent(new MeshComponent("dragon")).AddTransform(Matrix4::Identity)
 	// GameObject dragon = GameObject::Builder().Components(new MeshComponent("dragon"), new MovementController()).Transform(Matrix4::Identity)
 
@@ -47,8 +52,8 @@ GameLoop::GameLoop()
 	HUD::getInstance()->addText("text2", "This text will disappear in 5 seconds", HUDElement::Position(10, 80), HUDElement::FontSize::PT60, HUDElement::Color::RED, 5.0f);
 	HUD::getInstance()->addProgress("progress1", 20.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100), true);
 
-	((TextBox*) HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
-	((ProgressBar*) HUD::getInstance()->getHUDElementById("progress1"))->setProgress(67.0f);
+	((TextBox*)HUD::getInstance()->getHUDElementById("text1"))->setText("FYP Progress:");
+	((ProgressBar*)HUD::getInstance()->getHUDElementById("progress1"))->setProgress(67.0f);
 }
 
 void GameLoop::Update(float deltaTime)
