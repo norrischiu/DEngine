@@ -5,6 +5,8 @@
 class GameLoop
 {
 public: 
+	GameLoop();
+	~GameLoop();
 
 	void Construct();
 
@@ -21,10 +23,10 @@ public:
 private:
 
 	// Empty constructor
-	GameLoop() {};
-
+	
 	// Singleton instance
 	static GameLoop* m_pInstance;
+	float m_timer;
 };
 
 #endif GAMELOOP_H

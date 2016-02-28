@@ -1,8 +1,10 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 #include "../HUDElement.h"
 #include "Math/simdmath.h"
+
 
 class TextBox : public HUDElement
 {
@@ -14,16 +16,16 @@ public:
 	~TextBox();
 
 	int getTypeID();
-	char* getText();
+	const char* getText();
 	int getFontSize();
 	int getColor();
 	TextBox* setText(char* string);
+	TextBox* setText(const char* format, ...);
 	TextBox* setFontSize(const int fontSize);
 	TextBox* setColor(const HUDElement::Color color);
 
 private:
-	char* m_prevText;
-	char* m_text;
+	std::string m_text;
 	int m_fontSizePt;
 	int m_color;
 };

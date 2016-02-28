@@ -10,7 +10,7 @@ class Animation
 {
 
 public:
-	Animation(const std::string node_name, const int frame = 0);
+	Animation(const std::string node_name, const float animationFPS = 30.0f, const int frame = 0);
 	~Animation();
 
 	void AddPose(SQT sqt);
@@ -29,7 +29,7 @@ public:
 //private:
 	std::string m_node_name;
 	int m_currKeyframe;
-
-	std::vector<SQT>					m_Poses;
+	float m_animationFPS;
+	std::vector<SQT> m_Poses;
 };
 

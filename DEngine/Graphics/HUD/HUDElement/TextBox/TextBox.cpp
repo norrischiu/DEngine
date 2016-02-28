@@ -1,4 +1,5 @@
 #include "TextBox.h"
+#include <cstdarg>
 
 TextBox::TextBox(char* id, char* string, const HUDElement::Position pos, const int fontSizePt, const HUDElement::Color fontColor, const float duration) :
 	m_text(string), m_fontSizePt(fontSizePt), m_color(fontColor), HUDElement(id, pos, duration)
@@ -11,9 +12,9 @@ int TextBox::getTypeID()
 	return typeID;
 }
 
-char* TextBox::getText()
+const char* TextBox::getText()
 {
-	return m_text;
+	return m_text.c_str();
 }
 
 TextBox* TextBox::setText(char* string)
@@ -21,6 +22,16 @@ TextBox* TextBox::setText(char* string)
 	m_text = string;
 	HUDElement::setHasUpdate(true);
 	return this;
+}
+
+TextBox* TextBox::setText(const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	char string[128];
+	vsnprintf(string, sizeof(string), format, args);
+	va_end(args);
+	return setText(string);
 }
 
 int TextBox::getFontSize()

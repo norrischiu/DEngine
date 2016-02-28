@@ -87,9 +87,12 @@ void SceneGraph::Render()
 
 		itr->Draw();
 	}
+
+	/*
 	static wchar_t s[64];
 	swprintf(s, 64, L"Drawing: %i\n", count);
 	OutputDebugStringW(s);
+	*/
 }
 
 void SceneGraph::ShadowMapGeneration()

@@ -1,7 +1,7 @@
 #include "Animation.h"
 
-Animation::Animation(const std::string node_name, const int frame) :
-	m_node_name(node_name), m_currKeyframe(frame)
+Animation::Animation(const std::string node_name, const float animationFPS, const int frame) :
+	m_node_name(node_name), m_animationFPS(animationFPS), m_currKeyframe(frame)
 {
 
 }
@@ -44,8 +44,7 @@ void Animation::setCurrentKeyframe(const int frame)
 
 SQT Animation::GetCurrentPose(const float delta_time)
 {
-	const float FPS = 30.0f;
-	const float frameOffset = delta_time / (1.0f / FPS);
+	const float frameOffset = delta_time / (1.0f / m_animationFPS);
 	const float interpolant = frameOffset - floor(frameOffset);
 
 	if (interpolant > std::numeric_limits<float>::epsilon()) {
@@ -58,9 +57,8 @@ SQT Animation::GetCurrentPose(const float delta_time)
 
 void Animation::update(const float delta_time)
 {
-	const float FPS = 30.0f;
 	const int numFrame = m_Poses.size();
-	const int frameOffset = ((int) (delta_time / (1.0f / FPS)));
+	const int frameOffset = ((int) (delta_time / (1.0f / m_animationFPS)));
 
 	int newFrame = (m_currKeyframe + frameOffset) % numFrame;
 	if (newFrame <= 0) {
