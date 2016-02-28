@@ -6,9 +6,6 @@ class GameLoop
 {
 public: 
 
-	// Default constructor
-	GameLoop();
-
 	void Construct();
 
 	static GameLoop* GetInstance()
@@ -22,6 +19,9 @@ public:
 	void Update(float deltaTime);
 
 private:
+
+	// Empty constructor
+	GameLoop() {};
 
 	// Singleton instance
 	static GameLoop* m_pInstance;

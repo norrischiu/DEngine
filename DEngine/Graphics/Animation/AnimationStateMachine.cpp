@@ -1,3 +1,4 @@
+// Engine include
 #include "AnimationStateMachine.h"
 
 namespace DE
@@ -36,6 +37,11 @@ void AnimationStateMachine::ChangeStateTo(const char* stateName)
 	m_pCurrTransition = trans;
 	m_bInTrasition = true;
 	m_pCurrState = target;
+
+	std::vector<std::string> names;
+	names.push_back(m_pPrevState->m_sClipName);
+	names.push_back(m_pCurrState->m_sClipName);
+	m_pController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
 
 	m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, true);
 }

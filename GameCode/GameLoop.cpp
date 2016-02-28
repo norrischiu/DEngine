@@ -17,11 +17,6 @@
 
 GameLoop* GameLoop::m_pInstance = nullptr;
 
-GameLoop::GameLoop()
-{
-
-}
-
 void GameLoop::Construct()
 {
 	// GameObject dragon = GameObject::Builder().AddComponent(new MeshComponent("dragon")).AddTransform(Matrix4::Identity)
