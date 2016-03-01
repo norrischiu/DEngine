@@ -28,6 +28,8 @@ public:
 	bool isLooping();
 	void SetLooping(const bool looping);
 
+	void reset();
+
 	void update(const float delta_time);
 
 	std::vector<Animation*> m_vAnimations;

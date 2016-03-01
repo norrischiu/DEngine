@@ -39,6 +39,14 @@ int AnimationSet::getNumAnimations() const
 	return m_animations.size();
 }
 
+void AnimationSet::reset()
+{
+	for (auto itr : m_animations)
+	{
+		itr.second->setCurrentKeyframe(0);
+	}
+}
+
 void AnimationSet::update(const float delta_time)
 {
 	m_currTime = m_currTime + delta_time;

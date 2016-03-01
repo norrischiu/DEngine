@@ -42,6 +42,16 @@ void Animation::setCurrentKeyframe(const int frame)
 	}
 }
 
+float Animation::getAnimationFPS()
+{
+	return m_animationFPS;
+}
+
+void Animation::setAnimationFPS(const float animationFPS)
+{
+	m_animationFPS = animationFPS;
+}
+
 SQT Animation::GetCurrentPose(const float delta_time)
 {
 	const float frameOffset = delta_time / (1.0f / m_animationFPS);

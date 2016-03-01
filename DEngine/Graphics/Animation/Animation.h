@@ -21,6 +21,8 @@ public:
 	int getCurrentKeyframe() const;
 	int getNumKeyframes() const;
 	void setCurrentKeyframe(const int frame);
+	float getAnimationFPS();
+	void setAnimationFPS(const float animationFPS);
 
 	SQT GetCurrentPose(const float delta_time);
 

@@ -38,10 +38,7 @@ void AnimationStateMachine::ChangeStateTo(const char* stateName)
 	m_bInTrasition = true;
 	m_pCurrState = target;
 
-	std::vector<std::string> names;
-	names.push_back(m_pPrevState->m_sClipName);
-	names.push_back(m_pCurrState->m_sClipName);
-	m_pController->setBlending(names, AnimationController::BlendMode::CROSS_FADE_BLENDING);
+	m_pController->setBlending(m_pPrevState->m_sClipName, m_pCurrState->m_sClipName, AnimationController::BlendMode::CROSS_FADE_BLENDING, 1.0f);
 
 	m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, true);
 }
