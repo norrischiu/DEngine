@@ -51,7 +51,7 @@ void GameLoop::Construct()
 
 	HUD::getInstance()->addText("text1", "FYP Progress:", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
 	HUD::getInstance()->addText("timer1", "Timer: 0.0", HUDElement::Position(10, 80), HUDElement::FontSize::PT60, HUDElement::Color::RED);
-	HUD::getInstance()->addText("text2", "This text will disappear in 5 seconds", HUDElement::Position(10, 150), HUDElement::FontSize::PT60, HUDElement::Color::RED, 5.0f);
+	HUD::getInstance()->addText("debug1", "", HUDElement::Position(10, 150), HUDElement::FontSize::PT60, HUDElement::Color::RED);
 	HUD::getInstance()->addProgress("progress1", 67.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100), true);
 }
 

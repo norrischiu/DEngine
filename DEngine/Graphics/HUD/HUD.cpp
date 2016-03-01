@@ -110,11 +110,14 @@ void HUD::Render()
 				}
 					break;
 				case HUDElement::TypeID::TEXTBOX:
-					meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
-					ptr->WVPTransform = *meshComponent->m_pTransform;
-					m_pVSCBuffer->Update();
+					if (strcmp(((TextBox*)l.second)->getText(), "") != 0)
+					{
+						meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
+						ptr->WVPTransform = *meshComponent->m_pTransform;
+						m_pVSCBuffer->Update();
 
-					meshComponent->m_pMeshData->Render();
+						meshComponent->m_pMeshData->Render();
+					}
 					break;
 				}
 		}
