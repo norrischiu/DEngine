@@ -1,8 +1,11 @@
 // D3D11Renderer.cpp
+
+// Engine include
 #include "D3D11Renderer.h"
 #include "Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
 #include "Graphics\HUD\HUD.h"
+#include "Graphics\ParticleSystem\ParticleSystem.h"
 
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
 
@@ -63,6 +66,8 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 
 	m_GBuffer = new GBuffer;
 	m_PPE = new PostProcessEffect;
+
+	ParticleSystem::GetInstance()->Init();
 }
 
 void D3D11Renderer::Update(const float delta_time)
@@ -94,6 +99,9 @@ void D3D11Renderer::Render()
 
 	// Post process effect
 //	m_PPE->Render();
+	
+	// Particle system drawing
+	ParticleSystem::GetInstance()->Draw();
 
 	// HUD drawing
 	HUD::getInstance()->Render();

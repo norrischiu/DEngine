@@ -11,7 +11,14 @@ public:
 
 	struct VSGSPS_PER_FRAME_CBUFFER
 	{
-		float			sysTime;
+
+		Matrix4 gViewProj;
+		Vector3 gEyePosW;
+		Vector3 gEmitPosW;
+		Vector3 gEmitDirW;
+		float	gGameTime;
+		float	gTimeStep;
+		unsigned int gMaxParts;
 	};
 
 	VSGSPSPerFrameCBuffer();

@@ -170,6 +170,8 @@
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\MeshData.cpp" />
     <ClCompile Include="Graphics\MeshManager.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Particle.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />
     <ClCompile Include="Graphics\Render\PSPerLightCBuffer.cpp" />
@@ -236,6 +238,9 @@
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshData.h" />
     <ClInclude Include="Graphics\MeshManager.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Particle.h" />
+    <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Random.h" />
     <ClInclude Include="Graphics\PostProcessEffect.h" />
     <ClInclude Include="Graphics\Render\CBuffer.h" />
     <ClInclude Include="Graphics\Render\PSPerLightCBuffer.h" />
@@ -294,6 +299,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\GS_fire.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\GS_stream_out.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_fire.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\PS_PPE_BlurH.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -352,6 +366,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_fire.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_stream_out.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P.hlsl">

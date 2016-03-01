@@ -10,6 +10,7 @@
 #include "Material.h"
 #include "VertexFormat.h"
 #include <float.h>
+#include "ParticleSystem\ParticleSystem.h"
 #pragma comment (lib, "D3DCompiler")
 
 MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eMeshType renderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture)
@@ -60,22 +61,22 @@ MeshData::MeshData(const char* filename, int meshType)
 
 	switch (meshType)
 	{
-		case eMeshType::OUTLINE:
-			m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION, m_iStride);
-			break;
-		case eMeshType::STANDARD_MESH:
-			m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride);
-			break;
-		case eMeshType::SKELETAL_MESH:
-			m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS, m_iStride);
-			break;
+	case eMeshType::OUTLINE:
+		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION, m_iStride);
+		break;
+	case eMeshType::STANDARD_MESH:
+		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride);
+		break;
+	case eMeshType::SKELETAL_MESH:
+		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS, m_iStride);
+		break;
 	}
 
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
 	m_Material.ReadFromFile(C_STR(sFileName, "_material.mate"), meshType);
 }
 
-MeshData::~MeshData() 
+MeshData::~MeshData()
 {
 	if (m_pVertexBuffer)
 		m_pVertexBuffer->Release();
@@ -85,7 +86,7 @@ MeshData::~MeshData()
 
 void MeshData::SetUpEnvironment(const eMeshType renderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture) {
 	m_renderType = renderType;			// Set render type
-//	m_iTopology = typology; 			// Set primitive topology
+										//	m_iTopology = typology; 			// Set primitive topology
 
 	switch (renderType)
 	{
@@ -93,11 +94,11 @@ void MeshData::SetUpEnvironment(const eMeshType renderType, const D3D_PRIMITIVE_
 		// Set vertex shader
 		//m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		// Set input layout
-//		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
+		//		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
 		// Set pixel shader
 		//m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("../DEngine/Shaders/PS_texture.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		// Set texture resources view
-//		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(texture));
+		//		m_pTexResourceView.emplace_back((ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(texture));
 		// Set shader sampler state
 		//m_pSamplerState = (ID3D11SamplerState*)TextureManager::GetInstance()->GetSamplerState(eSamplerState::LINEAR_MIPMAP_MAX_LOD);
 		//m_pBlendState = (ID3D11BlendState*)TextureManager::GetInstance()->GetBlendState();
@@ -108,7 +109,7 @@ void MeshData::SetUpEnvironment(const eMeshType renderType, const D3D_PRIMITIVE_
 		//m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader("../DEngine/Shaders/VS_vertex1P.hlsl", D3D11_SHVER_VERTEX_SHADER);
 		m_iStride = sizeof(Vertex1P);
 		// Set input layout
-//		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("../DEngine/Shaders/VS_vertex1P.hlsl");
+		//		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout("../DEngine/Shaders/VS_vertex1P.hlsl");
 		// Set pixel shader
 		//m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader("../DEngine/Shaders/PS_red.hlsl", D3D11_SHVER_PIXEL_SHADER);
 		break;
@@ -210,9 +211,9 @@ void MeshData::Update()
 
 	D3D11_MAPPED_SUBRESOURCE mappedResources;
 	//D3D11Renderer::GetInstance()->m_pD3D11Context->Map(m_pVSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
-//	VS_CONSTANT_BUFFER* pCBuffer = (VS_CONSTANT_BUFFER*)mappedResources.pData;
+	//	VS_CONSTANT_BUFFER* pCBuffer = (VS_CONSTANT_BUFFER*)mappedResources.pData;
 	//pCBuffer->ProjectionMat = ProjectionMat;
-//	pCBuffer->TransformationMat = m_transformationMat;
+	//	pCBuffer->TransformationMat = m_transformationMat;
 	//D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_pVSConstantBuffer, 0);
 }
 
@@ -245,6 +246,7 @@ void MeshData::RenderUsingPass(RenderPass * pass)
 
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
 	if (m_bStreamOut)
 	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->DrawAuto();

@@ -71,6 +71,10 @@ public:
 
 	void UnBindStreamOutTargets()
 	{
+
+		static wchar_t s[64];
+		swprintf(s, 64, L"Unbind: %i\n", 4);
+		OutputDebugStringW(s);
 		ID3D11Buffer* null[1] = { nullptr };
 		const unsigned int offset = 0;
 		m_pD3D11Context->SOSetTargets(1, null, &offset);

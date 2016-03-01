@@ -31,7 +31,7 @@ public:
 	void* GetInputLayout(const char* filename);
 
 	// Create stream out entry (shader output signature) of geometry shader
-	void* CreateStreamOutEntry(ID3DBlob* GS);
+	D3D11_SO_DECLARATION_ENTRY* CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum);
 
 	// Return singleton instance
 	static ShaderManager* GetInstance()

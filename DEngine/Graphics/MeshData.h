@@ -24,7 +24,7 @@ public:
 
 	// Overload default constructor
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eMeshType eMeshType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
-	
+
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, unsigned int stride = 16, bool streamOut = false);
 
 	MeshData(const char* filename, int meshType);
@@ -39,7 +39,7 @@ public:
 		const float scalar = 1.0f,
 		const Vector3 rotation = Vector3(0.0f, 0.0f, 0.0f),
 		const Vector3 translation = Vector3(0.0f, 0.0f, 0.0f)
-	);
+		);
 
 	void Update();
 
@@ -58,7 +58,7 @@ public:
 			0.0f + m_dimension.GetX() / 2,
 			0.0f - m_dimension.GetY() / 2,
 			0.0f + m_dimension.GetZ() / 2
-		);
+			);
 		vMin.Transform(m_transformationMat);
 		return vMin;
 	}
@@ -69,7 +69,7 @@ public:
 			0.0f - m_dimension.GetX() / 2,
 			0.0f + m_dimension.GetY() / 2,
 			0.0f - m_dimension.GetZ() / 2
-		);
+			);
 		vMax.Transform(m_transformationMat);
 		static wchar_t s[64];
 		swprintf(s, 64, L"vMax: %f, %f, %f\n", vMax.GetX(), vMax.GetY(), vMax.GetZ());
@@ -94,6 +94,10 @@ public:
 		return m_BoundingBox;
 	}
 
+	inline ID3D11Buffer* GetVertexBuffer()
+	{
+		return m_pVertexBuffer;
+	}
 	// Mesh material
 	Material								m_Material;
 
@@ -119,7 +123,7 @@ private:
 
 	// Number of indics
 	unsigned int							m_iNumIndics;
- 
+
 	//Start Index Location
 	unsigned int							m_iStartIndexLocation;
 

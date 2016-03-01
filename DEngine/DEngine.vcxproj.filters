@@ -64,11 +64,8 @@
     <Filter Include="Graphics\HUD\HUDElement\TextBox">
       <UniqueIdentifier>{bf7c072d-35ff-4d76-b9a4-c2f3704b8da6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI">
-      <UniqueIdentifier>{d4537c60-aed7-42a6-bc35-0e2de7abb705}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\PathFinding">
-      <UniqueIdentifier>{c769cea0-28d5-4cd5-a16f-543bc453619c}</UniqueIdentifier>
+    <Filter Include="Graphics\ParticleSystem">
+      <UniqueIdentifier>{b0b27fdb-091f-4b87-bc06-b99d0e3da60b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -240,23 +237,15 @@
     <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClCompile>
-    <ClCompile Include="AI\PathFinding\PolygonMeshBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
+    <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClCompile>
-    <ClCompile Include="AI\PathFinding\SolidHeightfieldBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\ContourSetBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\DetailMeshBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\OpenHeightfieldBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
+    <ClCompile Include="Graphics\ParticleSystem\Particle.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Event\Event.h">
       <Filter>Event</Filter>
     </ClInclude>
@@ -491,23 +480,14 @@
     <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClInclude>
-    <ClInclude Include="Event\EngineEvent.h">
-      <Filter>Event</Filter>
+    <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="AI\PathFinding\OpenHeightfieldBuilder.h">
-      <Filter>AI\PathFinding</Filter>
+    <ClInclude Include="Graphics\ParticleSystem\Random.h">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\ContourSetBuilder.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\DetailMeshBuilder.h">
-      <Filter>AI\PathFinding</Filter>
+    <ClInclude Include="Graphics\ParticleSystem\Particle.h">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -554,6 +534,21 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P1N1T1UV4J.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_fire.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

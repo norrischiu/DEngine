@@ -56,10 +56,11 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 		pGShader = (ID3D11GeometryShader*)pShader;
 		hr = D3DCompileFromFile(pName, NULL, NULL, "GS", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 		if (error) compileErrors = (char*)(error->GetBufferPointer());
-		D3D11_SO_DECLARATION_ENTRY* pDecl = (D3D11_SO_DECLARATION_ENTRY*) CreateStreamOutEntry(pRawData);
+		unsigned int entryNum;
+		D3D11_SO_DECLARATION_ENTRY* pDecl = CreateStreamOutEntry(pRawData, entryNum);
 		if (pDecl != nullptr)
 		{
-			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, 5, NULL, 0, 0, NULL, &pGShader);
+			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, entryNum, NULL, 0, 0, NULL, &pGShader);
 		}
 		else
 		{
@@ -72,10 +73,9 @@ void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE t
 	m_mapShaders[filename] = pShader;
 }
 
-void* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS)
+D3D11_SO_DECLARATION_ENTRY* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum)
 {
 	HRESULT hr;
-	std::vector<D3D11_SO_DECLARATION_ENTRY> SODeclarationArray;
 
 	ID3D11ShaderReflection* pReflection;
 	hr = D3DReflect(GS->GetBufferPointer(), GS->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflection);
@@ -84,6 +84,9 @@ void* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS)
 	D3D11_SHADER_DESC shaderDesc;
 	pReflection->GetDesc(&shaderDesc);
 	unsigned int i = 0;
+	int prevRegister = -1;
+	unsigned int offset = 0;
+	D3D11_SO_DECLARATION_ENTRY* data = new D3D11_SO_DECLARATION_ENTRY[shaderDesc.OutputParameters];
 	for (; i < shaderDesc.OutputParameters; ++i)
 	{
 		D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
@@ -96,28 +99,38 @@ void* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS)
 		SOEntryDesc.Stream = 0;
 		SOEntryDesc.OutputSlot = 0;
 
+		if (prevRegister == paramDesc.Register)
+		{
+			offset += data[i-1].ComponentCount;
+		}
+		else
+		{
+			offset = 0;
+		}
 		if (paramDesc.Mask == 1)
 		{
-			SOEntryDesc.ComponentCount = 1;
+			SOEntryDesc.ComponentCount = 1 - offset;
 		}
 		else if (paramDesc.Mask <= 3)
 		{
-			SOEntryDesc.ComponentCount = 2;
+			SOEntryDesc.ComponentCount = 2 - offset;
 		}
 		else if (paramDesc.Mask <= 7)
 		{
-			SOEntryDesc.ComponentCount = 3;
+			SOEntryDesc.ComponentCount = 3 - offset;
 		}
 		else if (paramDesc.Mask <= 15)
 		{
-			SOEntryDesc.ComponentCount = 4;
+			SOEntryDesc.ComponentCount = 4 - offset;
 		}
 
-		SODeclarationArray.push_back(SOEntryDesc);
+		data[i] = SOEntryDesc;
+		prevRegister = paramDesc.Register;
 	}
 
 	pReflection->Release();
-	return SODeclarationArray.data();
+	entryNum = i;
+	return data;
 }
 
 void ShaderManager::CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout)
