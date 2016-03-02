@@ -51,10 +51,10 @@ void GS(point VS_INPUT gin[1],
 				{
 					VS_INPUT p;
 					//p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
-					p.InitialPosW = rand(float4(gEmitPosW.xyz, 0.0f));
+					p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
 					p.InitialVelW = float4(vRandom, 0.0f);
 					p.SizeW = 0.5f;
-					p.Age = 0.0f;
+					p.Age = gin[0].Age;
 					p.Type = PT_FLARE;
 					p.NoData = 0;
 

@@ -15,11 +15,6 @@ cbuffer CB_PER_FRAME : register(b0)
 	unsigned int gMaxParts;
 };
 
-cbuffer GS_CONSTANT_BUFFER
-{
-	// Net constant acceleration used to accerlate the particles.
-	float3 gAccelW = { 0.0f, 0.1f, 0.0f };
-}
 
 // input (Particle)
 struct VS_INPUT
@@ -48,6 +43,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 {
 	VS_OUTPUT vout;
 
+	float3 gAccelW = { 0.0f, -1.1f, 0.0f };
 //	float t = vin.Age;
 
 	float t = gFlareAge;

@@ -128,4 +128,8 @@ void ParticleSystem::Update(float dt)
 	m_fFlareAge += dt;
 	m_fTimeStep = dt;
 
+	static wchar_t s[64];
+	swprintf(s, 64, L"dt: %i\n", dt);
+	OutputDebugStringW(s);
+
 }
