@@ -49,7 +49,7 @@ private:
 	// Age of particles
 	float							m_fAge;
 
-	float							m_fFlare;
+	float							m_fFlareAge;
 
 	float							m_fGameTime;
 

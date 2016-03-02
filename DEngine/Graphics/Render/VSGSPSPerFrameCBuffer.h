@@ -18,7 +18,7 @@ public:
 		Vector3 gEmitDirW;
 		float	gGameTime;
 		float	gTimeStep;
-		float	gFlare;
+		float	gFlareAge;
 		unsigned int gMaxParts;
 	};
 

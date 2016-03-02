@@ -12,7 +12,7 @@ cbuffer CB_PER_FRAME : register(b0)
 
 	float		gGameTime;
 	float		gTimeStep;
-	float	gFlare;
+	float		gFlareAge;
 	unsigned int gMaxParts;
 };
 

@@ -12,7 +12,7 @@ cbuffer CONSTANT_BUFFER_PER_FRAME
 
 	float gGameTime;
 	float gTimeStep;
-	float	gFlare;
+	float	gFlareAge;
 	unsigned int gMaxParts;
 	
 };
@@ -29,24 +29,6 @@ struct VS_INPUT
 	float	Type : TYPE;
 	float	NoData : NODATA;
 };
-
-float4 rand(float4 t)
-{
-	float a = t.x + t.z*cMult + aSubtract - floor(t.x);
-	a *= a;
-	float b = t.y + a;
-	b -= floor(b);
-	float c = t.z + b;
-	c -= floor(c);
-	float d = c;
-	a += c*cMult + aSubtract - floor(a);
-	a *= a;
-	b += a;
-	b -= floor(b);
-	c += b;
-	c -= floor(c);
-	return float4(a, b, c, d);
-}
 
 
 [maxvertexcount(20)]

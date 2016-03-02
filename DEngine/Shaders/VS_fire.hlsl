@@ -11,7 +11,7 @@ cbuffer CB_PER_FRAME : register(b0)
 
 	float		gGameTime;
 	float		gTimeStep;
-	float	gFlare;
+	float		gFlareAge;
 	unsigned int gMaxParts;
 };
 
@@ -48,9 +48,9 @@ VS_OUTPUT VS(VS_INPUT vin)
 {
 	VS_OUTPUT vout;
 
-	float t = vin.Age;
+//	float t = vin.Age;
 
-//	float t = gFlare;
+	float t = gFlareAge;
 
 	// constant acceleration equation
 	//vout.PosW = vin.InitialPosW;//float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
