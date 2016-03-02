@@ -49,9 +49,11 @@ private:
 	// Age of particles
 	float							m_fAge;
 
+	float							m_fFlare;
+
 	float							m_fGameTime;
 
-	float							m_fGameStep;
+	float							m_fTimeStep;
 
 	// Position of eye in the world space
 	Vector3							m_vEyePosW;

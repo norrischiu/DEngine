@@ -12,6 +12,7 @@ cbuffer CB_PER_FRAME : register(b0)
 
 	float		gGameTime;
 	float		gTimeStep;
+	float	gFlare;
 	unsigned int gMaxParts;
 };
 
@@ -86,24 +87,12 @@ void GS(point VS_OUTPUT gin[1],
 		float halfHeight = halfWidth;
 
 		float4 v[4];
-//		if (gin[0].Age < 10.0f)
-//		{
+
 			v[0] = float4(gin[0].PosW.xyz + halfWidth*right - halfHeight*up, 1.0f);
 			v[1] = float4(gin[0].PosW.xyz + halfWidth*right + halfHeight*up, 1.0f);
 			v[2] = float4(gin[0].PosW.xyz - halfWidth*right - halfHeight*up, 1.0f);
 			v[3] = float4(gin[0].PosW.xyz - halfWidth*right + halfHeight*up, 1.0f);
-/*		}
-		else
-		{
-			v[0] = float4(gEmitPosW.xyz + halfWidth*right - halfHeight*up, 1.0f);
-			v[1] = float4(gEmitPosW.xyz + halfWidth*right + halfHeight*up, 1.0f);
-			v[2] = float4(gEmitPosW.xyz - halfWidth*right - halfHeight*up, 1.0f);
-			v[3] = float4(gEmitPosW.xyz - halfWidth*right + halfHeight*up, 1.0f);
-		}*/
-			//
-			// Transform quad vertices to world space and output 
-			// them as a triangle strip.
-			//
+
 
 		[unroll]
 		for (int i = 0; i < 4; ++i)

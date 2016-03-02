@@ -9,8 +9,9 @@ ParticleSystem* ParticleSystem::m_pInstance;
 ParticleSystem::ParticleSystem()
 {
 	m_fAge		= 0.0f;
+	m_fFlare = 0.0f;
 	m_fGameTime = 0.0f;
-	m_fGameStep = 0.1f;
+	m_fTimeStep = 0.1f;
 	m_iMaxParticles = 20;
 	m_vEyePosW	= Vector3(0.0f, 0.0f, 0.0f);
 	m_vEmitPosW = Vector3(0.0f, 0.0f, 0.0f);
@@ -74,7 +75,8 @@ void ParticleSystem::Draw()
 	ptr->gEmitPosW	= m_vEmitPosW;
 	ptr->gEmitDirW	= m_vEmitDirW;
 	ptr->gGameTime	= m_fGameTime;
-	ptr->gTimeStep	= m_fGameStep;
+	ptr->gTimeStep	= m_fTimeStep;
+	ptr->gFlare = m_fFlare;
 	ptr->gMaxParts = m_iMaxParticles;
 
 	m_pVSGSPSCBuffer->Update();
@@ -120,16 +122,6 @@ void ParticleSystem::SetMaxPartiples(const unsigned int maxParticles)
 
 void ParticleSystem::Update(float dt)
 {
-	if (dt > 0)
-	{
-		
-	}
-
-	m_fAge += 1;
-
-	static wchar_t s[64], w[64];
-	swprintf(s, 64, L"Age: %i\n", m_fAge);
-	swprintf(w, 64, L"dt: %i\n", dt);
-	OutputDebugStringW(s);
-	OutputDebugStringW(w);
+	m_fFlare += dt;
+	m_fGameTime = dt;
 }

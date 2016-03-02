@@ -12,6 +12,7 @@ cbuffer CONSTANT_BUFFER_PER_FRAME
 
 	float gGameTime;
 	float gTimeStep;
+	float	gFlare;
 	unsigned int gMaxParts;
 	
 };
@@ -64,13 +65,13 @@ void GS(point VS_INPUT gin[1],
 				vRandom.x *= 0.5f;
 				vRandom.z *= 0.5f;
 
-				for (int i = 0; i < 19; i++)
+				for (int i = 0; i < 1; i++)
 				{
 					VS_INPUT p;
 					//p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
 					p.InitialPosW = rand(float4(gEmitPosW.xyz, 0.0f));
-					p.InitialVelW = float4(1.0f*vRandom, 0.0f);
-					p.SizeW = 0.1f;
+					p.InitialVelW = float4(vRandom, 0.0f);
+					p.SizeW = 0.5f;
 					p.Age = 0.0f;
 					p.Type = PT_FLARE;
 					p.NoData = 0;
