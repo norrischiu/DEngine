@@ -729,6 +729,15 @@ public:
 		return _data.m128_f32[3];
 	}
 
+	// Return negative
+	inline SIMDQuaternion operator-() const
+	{
+		SIMDQuaternion result;
+		__m128 zero = _mm_set_ss(0.0f);
+		result._data = _mm_sub_ps(zero, _data);
+		return result;
+	}
+
 	// Multiply this quaternion with another quaternion, store result back to this
 	inline void Multiply(const SIMDQuaternion& other)
 	{
@@ -792,6 +801,13 @@ public:
 		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
 		length = _mm_rsqrt_ps(length);
 		_data = _mm_mul_ps(_data, length);
+	}
+
+	// Dot product, return a float
+	inline float Dot(const SIMDQuaternion& other) const
+	{
+		__m128 temp = _mm_dp_ps(_data, other._data, 0xFF);
+		return temp.m128_f32[3];
 	}
 
 	// TODO: switch to utility function in namespace

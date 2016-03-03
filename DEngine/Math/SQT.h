@@ -32,8 +32,12 @@ __declspec(align(16)) struct SQT
 	{
 		SQT result;
 		result.m_fScale = a.m_fScale * (1 - t) + b.m_fScale * t;
-		//result.m_qQuat = Quaternion::Lerp(a.m_qQuat, b.m_qQuat, t);
-		result.m_qQuat = Quaternion::SLerp(a.m_qQuat, b.m_qQuat, t);
+		Quaternion fixedA = a.m_qQuat;
+		if (a.m_qQuat.Dot(b.m_qQuat) < 0)
+		{
+			fixedA = -fixedA;
+		}
+		result.m_qQuat = Quaternion::Lerp(fixedA, b.m_qQuat, t);
 		result.m_qQuat.Normalize();
 		result.m_vTrans = Lerp(a.m_vTrans, b.m_vTrans, t);
 		return result;
