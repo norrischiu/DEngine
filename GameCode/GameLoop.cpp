@@ -11,6 +11,7 @@
 #include "DEngine\Object\Camera.h"
 #include "DEngine\Math\simdmath.h"
 #include "DEngine\Graphics\HUD\HUD.h"
+#include "DEngine\AI\PathFinding\FlowFieldBuilder.h"
 
 // Game include
 #include "MainPlayer\Player.h"
@@ -43,6 +44,11 @@ void GameLoop::Construct()
 	GameObject* pointlight = new GameObject;
 	pointlight->SetPosition(Vector3(0.0f, 3.0f, -3.0f));
 	pointlight->AddComponent(new PointLightComponent(pointlight->GetPosition(), Vector4(0.5, 0.5, 0.0), 8, 8));
+
+	std::vector<GameObject*> obstacles;
+	obstacles.push_back(player);
+
+	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(5.0f, 0.0f, 5.0f));
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));

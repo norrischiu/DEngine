@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "FlowField.h"
-#include "../../Graphics/MeshComponent.h"
+#include "../../GameObject/GameObject.h"
 #include "../../Graphics/VertexFormat.h"
 
 class FlowFieldBuilder
@@ -21,15 +21,15 @@ public:
 
 	static FlowFieldBuilder* getInstance();
 
-	FlowField generateFlowField(MeshComponent* map, std::vector<MeshComponent*> obstacles, const Vector3& destination);
+	FlowField generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination);
 
 private:
 	int getFlowFieldWidth();
 	int getFlowFieldHeight();
 	int getFlowFieldDepth();
 
-	void initializeFlowField(MeshComponent* map);
-	void setFlowFieldObstacles(std::vector<MeshComponent*> obstacles);
+	void initializeFlowField(GameObject* map);
+	void setFlowFieldObstacles(std::vector<GameObject*> obstacles);
 	std::vector<std::vector<std::vector<int>>> calculateDijkstraGrid(const Vector3& destination);
 	std::vector<FlowFieldBuilder::Position> getNeighbours(FlowFieldBuilder::Position pos);
 	void setFlowFieldDirection(std::vector<std::vector<std::vector<int>>> dijkstraGrid);

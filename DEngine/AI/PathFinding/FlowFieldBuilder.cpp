@@ -1,4 +1,6 @@
 #include "FlowFieldBuilder.h"
+#include "../../Graphics/MeshComponent.h"
+#include "../../Physics/cdAABB.h"
 
 FlowFieldBuilder* FlowFieldBuilder::m_instance = nullptr;
 
@@ -34,10 +36,10 @@ int FlowFieldBuilder::getFlowFieldDepth()
 	return m_flowField[0][0].size();
 }
 
-void FlowFieldBuilder::initializeFlowField(MeshComponent* map)
+void FlowFieldBuilder::initializeFlowField(GameObject* map)
 {
 	//Grid configuration
-	const AABB& mapBoundingBox = map->m_pMeshData->GetBoundingBox();
+	const AABB mapBoundingBox = map->GetComponent<MeshComponent>()->GetMeshData()->GetBoundingBox();
 	const Vector3 min = mapBoundingBox.getMin();
 	const Vector3 max = mapBoundingBox.getMax();
 	const int gridWidth = (int)ceil(abs(max.GetX() - min.GetX()));
@@ -47,27 +49,30 @@ void FlowFieldBuilder::initializeFlowField(MeshComponent* map)
 	//Initialize the grid
 	for (int i = 0; i < gridWidth; i++)
 	{
-		m_flowField[i] = std::vector<std::vector<FlowField::Cell>>();
+		m_flowField.push_back(std::vector<std::vector<FlowField::Cell>>());
 
-		for (int j = 0; j < /*max(gridHeight, 1)*/ 1; j++)
+		// for (int j = 0; j < gridHeight; j++)
+		for (int j = 0; j < 1; j++)
 		{
-			m_flowField[i][j] = std::vector<FlowField::Cell>();
+			m_flowField[i].push_back(std::vector<FlowField::Cell>());
 
 			for (int k = 0; k < gridDepth; k++)
 			{
-				m_flowField[i][j][k] = FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true);
+				m_flowField[i][j].push_back(FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true));
 			}
 		}
 	}
 }
 
-void FlowFieldBuilder::setFlowFieldObstacles(std::vector<MeshComponent*> obstacles)
+void FlowFieldBuilder::setFlowFieldObstacles(std::vector<GameObject*> obstacles)
 {
 	//Find obstacles
 	for (int i = 0; i < obstacles.size(); i++)
 	{
-		const Vector3& max = obstacles[i]->GetMeshData()->GetBoundingBox().getMax();
-		const Vector3& min = obstacles[i]->GetMeshData()->GetBoundingBox().getMin();
+		const AABB boundingBox = obstacles[i]->GetComponent<MeshComponent>()->GetMeshData()->GetBoundingBox();
+
+		const Vector3& max = boundingBox.getMax();
+		const Vector3& min = boundingBox.getMin();
 		const int minX = (int)min.GetX();
 		const int maxX = (int)ceil(max.GetX());
 		const int minY = (int)min.GetY();
@@ -104,16 +109,16 @@ std::vector<std::vector<std::vector<int>>> FlowFieldBuilder::calculateDijkstraGr
 
 	for (int i = 0; i < getFlowFieldWidth(); i++)
 	{
-		dijkstraGrid[i] = std::vector<std::vector<int>>();
+		dijkstraGrid.push_back(std::vector<std::vector<int>>());
 
 		//for (int j = 0; j < getFlowFieldHeight(); j++)
 		for (int j = 0; j < 1; j++)
 		{
-			dijkstraGrid[i][j] = std::vector<int>();
+			dijkstraGrid[i].push_back(std::vector<int>());
 
 			for (int k = 0; k < getFlowFieldDepth(); k++)
 			{
-				dijkstraGrid[i][j][k] = abs(i - destX) /*+ abs(j - destY)*/ + abs(k - destZ);
+				dijkstraGrid[i][j].push_back(abs(i - destX) /*+ abs(j - destY)*/ + abs(k - destZ));
 			}
 		}
 	}
@@ -185,8 +190,9 @@ void FlowFieldBuilder::setFlowFieldDirection(std::vector<std::vector<std::vector
 	}
 }
 
-FlowField FlowFieldBuilder::generateFlowField(MeshComponent* map, std::vector<MeshComponent*> obstacles, const Vector3& destination)
+FlowField FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination)
 {
+
 	initializeFlowField(map);
 	setFlowFieldObstacles(obstacles);
 	auto dijkstraGrid = calculateDijkstraGrid(destination);
