@@ -804,6 +804,13 @@ public:
 		result._data = _mm_add_ps(result._data, _mm_mul_ps(bFactor, b._data));
 		return result;
 	}
+
+	static SIMDQuaternion SLerp(SIMDQuaternion a, SIMDQuaternion b, float t)
+	{
+		SIMDQuaternion result;
+		result._data = DirectX::XMQuaternionSlerp(a._data, b._data, t);
+		return result;
+	}
 };
 
 typedef SIMDVector3 Vector3;
