@@ -67,6 +67,12 @@
     <Filter Include="Graphics\ParticleSystem">
       <UniqueIdentifier>{b0b27fdb-091f-4b87-bc06-b99d0e3da60b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{d0e9cf29-7fbf-4ed0-ac75-590998adea3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\PathFinding">
+      <UniqueIdentifier>{f4003de7-d586-4fb6-8ab3-ddd82d933a5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -240,11 +246,12 @@
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClCompile>
-    <ClCompile Include="AI\PathFinding\ContourSetBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\DetailMeshBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\OpenHeightfieldBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\PolygonMeshBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\SolidHeightfieldBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowField.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -490,12 +497,13 @@
     <ClInclude Include="Graphics\ParticleSystem\Particle.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="AI\PathFinding\ContourSetBuilder.h" />
-    <ClInclude Include="AI\PathFinding\DetailMeshBuilder.h" />
-    <ClInclude Include="AI\PathFinding\OpenHeightfieldBuilder.h" />
-    <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h" />
-    <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h" />
     <ClInclude Include="Event\EngineEvent.h" />
+    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowField.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
