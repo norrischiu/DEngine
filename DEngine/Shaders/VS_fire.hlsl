@@ -4,12 +4,12 @@
 cbuffer CB_PER_FRAME : register(b0)
 {
 	float4x4	gViewProj;
+	float4x4	gClipToView;
 	float4		gEyePosW;
 
 	float4		gEmitPosW;
 	float4		gEmitDirW;
 
-	float		gGameTime;
 	float		gTimeStep;
 	float		gFlareAge;
 	unsigned int gMaxParts;
@@ -43,13 +43,8 @@ VS_OUTPUT VS(VS_INPUT vin)
 {
 	VS_OUTPUT vout;
 
-	float3 gAccelW = { 0.0f, -1.1f, 0.0f };
-//	float t = vin.Age;
-
-	float t = gFlareAge;
-
-	// constant acceleration equation
-	//vout.PosW = vin.InitialPosW;//float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
+	float3 gAccelW = { 0.0f, -2.6f, 0.0f };
+	float t = vin.Age;
 
 	vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
 
@@ -59,7 +54,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 
 	vout.SizeW = vin.SizeW;
 	vout.Type = vin.Type;
-	vout.Age = 0.0f;
+	vout.Age = vin.Age;
 
 	// temp: useless data
 	vout.NoData = 0.0f;

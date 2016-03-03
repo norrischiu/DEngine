@@ -35,6 +35,11 @@ public:
 		return (m_llCurrTime - m_llPrevTime) * (1.0f / m_fSysFreq);
 	}
 
+	const float getCurrTime() const
+	{
+		return m_llCurrTime;
+	}
+
 private:
 	long long					m_llCurrTime;
 	long long					m_llPrevTime;

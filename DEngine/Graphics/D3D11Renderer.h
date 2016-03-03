@@ -41,7 +41,7 @@ public:
 			m_pD3D11Device->Release();
 	}
 
-	void Update(const float delta_time);
+	void Update(const float delta_time, const float curr_time);
 
 	void Render();
 

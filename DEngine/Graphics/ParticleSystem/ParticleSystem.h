@@ -8,6 +8,7 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Graphics\Render\VSGSPSPerFrameCBuffer.h"
 #include "Graphics\Render\Texture.h"
+#include "Random.h"
 
 class ParticleSystem
 {
@@ -37,7 +38,7 @@ public:
 		return m_pInstance;
 	}
 
-	void	Update(float dt);
+	void	Update(const float delta_time);
 
 private:
 	// singleton instance
@@ -65,24 +66,18 @@ private:
 	Vector3							m_vEmitDirW;
 
 	// Mesh for emitter
-	MeshData*						m_EmitterMesh;
+	MeshData*						m_InitMesh;
 
 	// Mesh for all particles
-	MeshData*						m_ParticlesMesh;
+	MeshData*						m_DrawMesh;
 
-	// Pointer to the initial vertex buffer
-//	ID3D11Buffer*					m_pInitVB;
-
-	// Pointer to the draw vertex buffer
-//	ID3D11Buffer*					m_pDrawVB;
-
-	// Pointer to the stream out vertex buffer
-//	ID3D11Buffer*					m_pStreamOutVB;
-
+	MeshData*						m_StreamOutMesh;
 	// 
 	VSGSPSPerFrameCBuffer*			m_pVSGSPSCBuffer;
 
-//	Texture*						m_pFlare;
+	bool							m_Flag;
+
+	bool							m_FirstRun;
 
 	RenderPass* emitterPass;
 

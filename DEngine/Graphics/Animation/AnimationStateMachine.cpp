@@ -38,7 +38,7 @@ void AnimationStateMachine::ChangeStateTo(const char* stateName)
 	m_bInTrasition = true;
 	m_pCurrState = target;
 
-	m_pController->setBlending(m_pPrevState->m_sClipName, m_pCurrState->m_sClipName, AnimationController::BlendMode::CROSS_FADE_BLENDING, 1.0f);
+	m_pController->setBlending(m_pPrevState->m_sClipName, m_pCurrState->m_sClipName, AnimationController::BlendMode::CROSS_FADE_BLENDING, m_pCurrTransition->m_fDuration);
 
 	m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, true);
 }

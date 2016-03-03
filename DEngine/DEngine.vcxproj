@@ -170,7 +170,6 @@
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\MeshData.cpp" />
     <ClCompile Include="Graphics\MeshManager.cpp" />
-    <ClCompile Include="Graphics\ParticleSystem\Particle.cpp" />
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />

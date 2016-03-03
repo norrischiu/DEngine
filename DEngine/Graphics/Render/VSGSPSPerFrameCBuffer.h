@@ -13,10 +13,10 @@ public:
 	{
 
 		Matrix4 gViewProj;
+		Matrix4 gClipToView;
 		Vector3 gEyePosW;
 		Vector3 gEmitPosW;
 		Vector3 gEmitDirW;
-		float	gGameTime;
 		float	gTimeStep;
 		float	gFlareAge;
 		unsigned int gMaxParts;

@@ -1,17 +1,12 @@
-#define cMult 0.0001002707309736288
-#define aSubtract 0.2727272727272727
-
 // globals
 cbuffer CONSTANT_BUFFER_PER_FRAME
 {
 	float4x4 gViewProj;
-
+	float4x4 gClipToView;
 	float4 gEyePosW;
 	float4 gEmitPosW;
 	float4 gEmitDirW;
-
-	float gGameTime;
-	float gTimeStep;
+	float	gTimeStep;
 	float	gFlareAge;
 	unsigned int gMaxParts;
 	
@@ -30,31 +25,36 @@ struct VS_INPUT
 	float	NoData : NODATA;
 };
 
+float rand_1_05(in float2 uv)
+{
+	float2 noise = (frac(sin(dot(uv, float2(12.9898, 78.233)*2.0)) * 43758.5453));
+	return abs(noise.x + noise.y) * 0.5;
+}
 
-[maxvertexcount(20)]
+[maxvertexcount(2)]
 void GS(point VS_INPUT gin[1],
 	inout PointStream<VS_INPUT> ptStream)
 {
 	gin[0].Age += gTimeStep;
 
+	float2 input = float2(gTimeStep, gFlareAge);
+
 		if (gin[0].Type == PT_EMITTER)
 		{
 			// time to emit a new particle?
-			if (gin[0].Age > 0.005f)
+			if (gin[0].Age > 0.5f)
 			{
 				// temp random vector3
-				float3 vRandom = float3(0.1f, 0.1f, 0.1f);
-				vRandom.x *= 0.5f;
-				vRandom.z *= 0.5f;
+				float3 random = rand_1_05(input);
 
 				for (int i = 0; i < 1; i++)
 				{
 					VS_INPUT p;
 					//p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
-					p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
-					p.InitialVelW = float4(vRandom, 0.0f);
-					p.SizeW = 0.5f;
-					p.Age = gin[0].Age;
+					p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
+					p.InitialVelW = float4(gEmitDirW.xyz*random, 0.0f);
+					p.SizeW = 0.4f;
+					p.Age = 0.0f;
 					p.Type = PT_FLARE;
 					p.NoData = 0;
 
@@ -70,7 +70,7 @@ void GS(point VS_INPUT gin[1],
 		else
 		{
 			// Specify conditions to keep particle; this may vary from system to system.
-			if (gin[0].Age <= 1.0f)
+			if (gin[0].Age <= 3.0f)
 				ptStream.Append(gin[0]);
 		}
 	

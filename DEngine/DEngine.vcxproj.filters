@@ -240,12 +240,13 @@
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\ParticleSystem\Particle.cpp">
-      <Filter>Graphics\ParticleSystem</Filter>
-    </ClCompile>
+    <ClCompile Include="AI\PathFinding\ContourSetBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\DetailMeshBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\OpenHeightfieldBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\PolygonMeshBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\SolidHeightfieldBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Event\Event.h">
       <Filter>Event</Filter>
     </ClInclude>
@@ -489,6 +490,12 @@
     <ClInclude Include="Graphics\ParticleSystem\Particle.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
+    <ClInclude Include="AI\PathFinding\ContourSetBuilder.h" />
+    <ClInclude Include="AI\PathFinding\DetailMeshBuilder.h" />
+    <ClInclude Include="AI\PathFinding\OpenHeightfieldBuilder.h" />
+    <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h" />
+    <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h" />
+    <ClInclude Include="Event\EngineEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

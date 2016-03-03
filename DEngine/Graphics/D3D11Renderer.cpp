@@ -70,7 +70,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	ParticleSystem::GetInstance()->Init();
 }
 
-void D3D11Renderer::Update(const float delta_time)
+void D3D11Renderer::Update(const float delta_time, const float curr_time)
 {
 	HUD::getInstance()->update(delta_time);
 	ParticleSystem::GetInstance()->Update(delta_time);

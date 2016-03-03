@@ -11,11 +11,13 @@ ParticleSystem::ParticleSystem()
 	m_fAge = 0.0f;
 	m_fFlareAge = 0.0f;
 	m_fTimeStep = 0.1f;
-	m_iMaxParticles = 50;
+	m_iMaxParticles = 20;
 	m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
 	m_vEmitPosW = Vector3(0.0f, 2.5f, 0.0f);
-	m_vEmitDirW = Vector3(0.0f, 0.3f, 0.0f);
+	m_vEmitDirW = Vector3(1.0f, 1.0f, 1.0f);
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
+	m_Flag = true;
+	m_FirstRun = true;
 }
 
 float ParticleSystem::GetAge()
@@ -40,17 +42,17 @@ void ParticleSystem::Init()
 	index1[1] = 1;
 
 
-	//	Particle particles[9];
-	std::vector<Particle> particles;
+		Particle particles[20];
+	//std::vector<Particle> particles;
 
-	m_EmitterMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
-	m_ParticlesMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
+	m_DrawMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_StreamOutMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
 
 	emitterPass = new RenderPass;
 	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
 	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
 	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	//emitterPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "flare.dds"));
 
 	drawPass = new RenderPass;
 	drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
@@ -81,24 +83,48 @@ void ParticleSystem::Draw()
 	m_pVSGSPSCBuffer->Update();
 
 
-	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
-	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
-	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-
 	// first pass
 	// updated particle list is streamed out to vertex buffer
-	emitterPass->SetStreamOutTargets(m_ParticlesMesh->GetVertexBuffer());
-	emitterPass->SetRasterizerState(State::CULL_NONE_RS);
-	emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-	m_EmitterMesh->RenderUsingPass(emitterPass);
-	//m_EmitterMesh->m_Material.AddPassToTechnique(emitterPass);
-	// unbind the vertex buffer from the SO stage
-	D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
-
-	// second pass
-
-	drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
-	m_ParticlesMesh->RenderUsingPass(drawPass);
+	if (m_FirstRun)
+	{
+		emitterPass->SetStreamOutTargets(m_DrawMesh->GetVertexBuffer());
+		emitterPass->SetRasterizerState(State::CULL_NONE_RS);
+		emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
+		m_InitMesh->RenderUsingPass(emitterPass);
+		D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+		
+		// second pass
+		drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+		m_DrawMesh->RenderUsingPass(drawPass);
+		m_FirstRun = false;
+	}
+	else
+	{
+		if (m_Flag)
+		{
+			emitterPass->SetStreamOutTargets(m_StreamOutMesh->GetVertexBuffer());
+			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
+			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
+			m_DrawMesh->RenderUsingPass(emitterPass);
+			D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+			// second pass
+			drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+			m_StreamOutMesh->RenderUsingPass(drawPass);
+			m_Flag = false;
+		}
+		else if (!m_Flag)
+		{
+			emitterPass->SetStreamOutTargets(m_DrawMesh->GetVertexBuffer());
+			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
+			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
+			m_StreamOutMesh->RenderUsingPass(emitterPass);
+			D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+			// second pass
+			drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+			m_DrawMesh->RenderUsingPass(drawPass);
+			m_Flag = true;
+		}
+	}
 
 }
 
@@ -124,12 +150,7 @@ void ParticleSystem::SetMaxPartiples(const unsigned int maxParticles)
 
 void ParticleSystem::Update(float dt)
 {
-
 	m_fFlareAge += dt;
 	m_fTimeStep = dt;
-
-	static wchar_t s[64];
-	swprintf(s, 64, L"dt: %i\n", dt);
-	OutputDebugStringW(s);
 
 }

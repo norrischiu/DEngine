@@ -20,12 +20,12 @@ PlayerASM::PlayerASM(AnimationController * animController)
 	AddState("WALK", "walk");
 	AddState("ATTACK", "attack1");
 
-	AddTransistion("IDLE", "WALK", 1, 1.5f);
-	AddTransistion("WALK", "IDLE", 1, 1.5f);
-	AddTransistion("IDLE", "ATTACK", 1, 1.5f);
-	AddTransistion("ATTACK", "IDLE", 1, 1.5f);
-	AddTransistion("WALK", "ATTACK", 1, 1.5f);
-	AddTransistion("ATTACK", "WALK", 1, 1.5f);
+	AddTransistion("IDLE", "WALK", 1, 0.5f);
+	AddTransistion("WALK", "IDLE", 1, 0.5f);
+	AddTransistion("IDLE", "ATTACK", 1, 0.5f);
+	AddTransistion("ATTACK", "IDLE", 1, 0.5f);
+	AddTransistion("WALK", "ATTACK", 1, 0.5f);
+	AddTransistion("ATTACK", "WALK", 1, 0.5f);
 }
 
 void PlayerASM::Update(float deltaTime)
