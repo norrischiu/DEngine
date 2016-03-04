@@ -4,6 +4,9 @@
 
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 struct Particle
 {
 	Vector3 InitialPos;
@@ -14,5 +17,5 @@ struct Particle
 	float NoData;
 };
 
-
+};
 #endif // !PARTICLE_H_

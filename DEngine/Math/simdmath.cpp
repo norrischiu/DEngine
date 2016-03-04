@@ -1,7 +1,10 @@
 #include "simdmath.h"
 
+namespace DE
+{
+
 // Matrix4 constant declaration
-float identityMatrix[4][4] = { 
+float identityMatrix[4][4] = {
 	{1.0f, 0.0f, 0.0f, 0.0f},
 	{0.0f, 1.0f, 0.0f, 0.0f},
 	{0.0f, 0.0f, 1.0f, 0.0f},
@@ -45,7 +48,7 @@ SIMDVector3 SIMDMatrix4::GetPosition()
 
 SIMDVector3 SIMDMatrix4::GetForward()
 {
-	return -SIMDVector3(_rows[2]).Normalize();
+	return SIMDVector3(_rows[2]);
 }
 
 SIMDVector3 SIMDMatrix4::GetUp()
@@ -114,3 +117,5 @@ SIMDMatrix4 SIMDMatrix4::Inverse()
 	result.Invert();
 	return result;
 }
+
+};

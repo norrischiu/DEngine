@@ -4,6 +4,9 @@
 #include "CBuffer.h"
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class VSGSPSPerFrameCBuffer : public CBuffer
 {
 
@@ -34,4 +37,5 @@ public:
 	static const size_t						size;
 };
 
+};
 #endif // !VSGSPS_PER_FRAME_CBUFFER_H_

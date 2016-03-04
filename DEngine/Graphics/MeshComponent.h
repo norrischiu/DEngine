@@ -5,14 +5,15 @@
 #include "Object\Component.h"
 #include "Graphics\MeshData.h"
 
+namespace DE
+{
+
 class MeshComponent : public Component
 {
 
 public:
 
 	static const int ComponentID = ComponentID::MESH;
-
-	MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eMeshType eMeshType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture = NULL);
 	
 	// Overload constructor: create with given mesh data
 	MeshComponent(MeshData* meshData);
@@ -43,6 +44,8 @@ private:
 
 	// Contains all buffer and shaders data
 	//MeshData*								m_pMeshData;
+
+};
 
 };
 

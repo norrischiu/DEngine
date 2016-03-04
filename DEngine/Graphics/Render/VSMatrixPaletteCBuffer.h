@@ -4,6 +4,9 @@
 #include "CBuffer.h"
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class VSMatrixPaletteCBuffer : public CBuffer
 {
 
@@ -24,5 +27,6 @@ public:
 	static const size_t						size;
 };
 
+};
 #endif // !VS_MATRIX_PALATTE_H_
 

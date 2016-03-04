@@ -14,7 +14,8 @@
 #define C_STR(string, text)\
 		(string + text).c_str()
 
-using namespace DE;
+namespace DE
+{
 
 AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skeleton)
 {
@@ -204,7 +205,7 @@ void AnimationController::Update(float deltaTime)
 
 					const float interpolant = itr_transition->second.accuTime / itr_transition->second.duration;
 
-					((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
+//					((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
 
 					m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
 
@@ -246,7 +247,7 @@ void AnimationController::Update(float deltaTime)
 
 				m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
 
-				((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
+//				((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
 
 				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 				{
@@ -270,3 +271,5 @@ void AnimationController::Update(float deltaTime)
 AnimationController::~AnimationController()
 {
 }
+
+};

@@ -4,6 +4,9 @@
 #include "Object\Component.h"
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class LightComponent : public Component
 {
 
@@ -73,5 +76,7 @@ private:
 	bool								m_bCastShadow;
 	int									m_iShadowMapIndex;
 };
+
+}; // namespace DE
 
 #endif // !LIGHT_COMPONENT_H_

@@ -10,6 +10,9 @@
 #include "Graphics\Render\Texture.h"
 #include "Random.h"
 
+namespace DE
+{
+
 class ParticleSystem
 {
 public:
@@ -84,4 +87,7 @@ private:
 	RenderPass*	drawPass;
 };
 
+};
+
 #endif // !PARTICLESYSTEM_H_
+

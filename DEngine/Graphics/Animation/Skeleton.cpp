@@ -6,6 +6,9 @@
 #define C_STR(string, text)\
 		(string + text).c_str()
 
+namespace DE
+{
+
 Skeleton::Skeleton(const char* name)
 {
 	m_ID = ComponentID;
@@ -105,3 +108,5 @@ void Skeleton::setNumSkeletonNodes(const int num)
 void Skeleton::Update(float deltaTime)
 {
 }
+
+};

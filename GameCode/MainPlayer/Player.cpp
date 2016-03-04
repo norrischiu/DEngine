@@ -11,20 +11,21 @@
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Graphics\Animation\Skeleton.h"
 #include "DEngine\Math\simdmath.h"
+#include "DEngine\Object\CameraComponent.h"
 
 Player::Player()
-	: GameObject()
+	: DE::GameObject()
 	, m_fHP(100.0f)
 {
-	AddComponent(new MeshComponent("maria", eMeshType::SKELETAL_MESH));
+	AddComponent(new DE::MeshComponent("maria", DE::eMeshType::SKELETAL_MESH));
 	//AddComponent(new Body(typeAABB));
-	SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	SetPosition(DE::Vector3(0.0f, 0.0f, 0.0f));
 	AddComponent(new PlayerMC());
-	Skeleton* skel = new Skeleton("maria");
-	AnimationController* animController = new AnimationController(skel);
+	DE::Skeleton* skel = new DE::Skeleton("maria");
+	DE::AnimationController* animController = new DE::AnimationController(skel);
 	animController->CreateAnimationSets("maria_walk");
 	animController->CreateAnimationSets("maria_idle");
-	animController->CreateAnimationSets("maria_attack");
+	animController->CreateAnimationSets("maria_attack1");
 	animController->getAnimationSet("walk")->SetLooping(true);
 	animController->getAnimationSet("idle")->SetLooping(true);
 	animController->getAnimationSet("idle")->setActive(true);
@@ -32,9 +33,11 @@ Player::Player()
 	AddComponent(skel);
 	AddComponent(animController);
 	AddComponent(new PlayerASM(animController));
+
+	AddComponent(new DE::CameraComponent(DE::Vector3(0.0f, 2.0f, -7.0f), DE::Vector3(0.0f, 2.0f, 3.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f));
 }
 
 void Player::Update(float deltaTime)
 {
-	GameObject::Update(deltaTime);
+	DE::GameObject::Update(deltaTime);
 }

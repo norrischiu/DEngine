@@ -6,6 +6,9 @@
 #include "cdCollide.h"
 #include "cdBody.h"
 
+namespace DE
+{
+
 class Ray : public Body
 {
 public:
@@ -27,5 +30,5 @@ private:
 	Vector3 m_Start;
 };
 
-
+};
 #endif

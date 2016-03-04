@@ -157,7 +157,6 @@
     <ClCompile Include="Graphics\Animation\Joint.cpp" />
     <ClCompile Include="Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="Graphics\D3D11Renderer.cpp" />
-    <ClCompile Include="Graphics\DeferredRenderer.cpp" />
     <ClCompile Include="Graphics\GBuffer.cpp" />
     <ClCompile Include="Graphics\HUD\HUD.cpp" />
     <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp" />
@@ -193,7 +192,6 @@
     <ClCompile Include="Memory\MemoryManager.cpp" />
     <ClCompile Include="Object\CameraComponent.cpp" />
     <ClCompile Include="Object\MovementController.cpp" />
-    <ClCompile Include="Object\ObjectLoader.cpp" />
     <ClCompile Include="Physics\cdAabb.cpp" />
     <ClCompile Include="Physics\cdBody.cpp" />
     <ClCompile Include="Physics\cdCollide.cpp" />
@@ -224,7 +222,6 @@
     <ClInclude Include="Graphics\Animation\Joint.h" />
     <ClInclude Include="Graphics\Animation\Skeleton.h" />
     <ClInclude Include="Graphics\D3D11Renderer.h" />
-    <ClInclude Include="Graphics\DeferredRenderer.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
     <ClInclude Include="Graphics\HUD\HUD.h" />
     <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h" />
@@ -275,7 +272,7 @@
     <ClInclude Include="Object\CameraComponent.h" />
     <ClInclude Include="Object\Component.h" />
     <ClInclude Include="Object\MovementController.h" />
-    <ClInclude Include="Object\objectloader.h" />
+    <ClInclude Include="Object\Transform.h" />
     <ClInclude Include="Physics\cdAabb.h" />
     <ClInclude Include="Physics\cdBody.h" />
     <ClInclude Include="Physics\cdCollide.h" />

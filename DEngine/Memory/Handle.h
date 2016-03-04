@@ -11,12 +11,15 @@
 	void operator delete(void* ptr, Handle hle)\
 	{ return MemoryManager::GetInstance()->Free(hle); }
 
+namespace DE
+{
+
 struct Handle
 {
 	// Empty constructor
 	Handle() {};
 
-	Handle(size_t size) 
+	Handle(size_t size)
 	{
 		*this = MemoryManager::GetInstance()->Allocate(size);
 	};
@@ -48,4 +51,5 @@ struct Handle
 	}
 };
 
+};
 #endif

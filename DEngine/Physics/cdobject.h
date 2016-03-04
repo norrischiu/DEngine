@@ -6,6 +6,8 @@
 #include "Math\simdmath.h"
 #include "Physics\cdCollisionWorld.h"
 
+namespace DE
+{
 
 class CollidableObject
 {
@@ -29,7 +31,7 @@ private:
 	// int EntityIO;
 };
 
-
+};
 
 
 #endif

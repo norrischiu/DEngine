@@ -5,6 +5,9 @@
 #include "Physics\cdSphere.h"
 #include "Physics\cdAabb.h"
 
+namespace DE
+{
+
 class Plane
 {
 public:
@@ -42,4 +45,5 @@ private:
 	float						m_fDist;
 };
 
+};
 #endif // !PLANE_H_

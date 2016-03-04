@@ -2,6 +2,9 @@
 #include <DDSTextureLoader.h>
 #include "D3D11Renderer.h"
 
+namespace DE
+{
+
 TextureManager* TextureManager::m_pInstance;
 
 void* TextureManager::GetTexture(const char* filename)
@@ -28,5 +31,7 @@ void TextureManager::LoadTexture(const char* filename)
 	hr = DirectX::CreateDDSTextureFromFile(D3D11Renderer::GetInstance()->m_pD3D11Device, pName, &pTexture, &pTexResourceView);
 	assert(hr == S_OK);
 
-	m_mapTexture[filename] = (void*) pTexResourceView;
+	m_mapTexture[filename] = (void*)pTexResourceView;
 }
+
+};

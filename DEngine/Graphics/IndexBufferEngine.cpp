@@ -1,5 +1,8 @@
 #include "IndexBufferEngine.h"
 
+namespace DE
+{
+
 IndexBufferEngine* IndexBufferEngine::m_pInstance;
 unsigned int IndexBufferEngine::g_iCurrIndex = 0;
 
@@ -100,3 +103,5 @@ void IndexBufferEngine::FillIndexData(unsigned int indicsNum, void *& pIndexData
 	}
 	fclose(pFile);
 }
+
+};

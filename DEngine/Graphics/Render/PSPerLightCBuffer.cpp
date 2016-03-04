@@ -1,5 +1,8 @@
 #include "PSPerLightCBuffer.h"
 
+namespace DE
+{
+
 const size_t PSPerLightCBuffer::size = sizeof(PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER);
 
 PSPerLightCBuffer::PSPerLightCBuffer()
@@ -7,3 +10,5 @@ PSPerLightCBuffer::PSPerLightCBuffer()
 {
 	m_iSlotID = 2;
 }
+
+};

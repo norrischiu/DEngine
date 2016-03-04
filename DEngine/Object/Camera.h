@@ -4,6 +4,9 @@
 
 #include "GameObject\GameObject.h"
 
+namespace DE
+{
+
 class Camera : public GameObject
 {
 public:
@@ -19,5 +22,6 @@ public:
 	}
 };
 
+};
 #endif // !CAMERA_H_
 

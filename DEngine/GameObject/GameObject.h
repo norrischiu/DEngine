@@ -3,9 +3,14 @@
 #define GAMEOBJECT_H_
 
 #include "Math\simdmath.h"
+#include "Object\Transform.h"
 #include "Physics\cdCollide.h"
-#include "GameWorld.h"
 #include <vector>
+
+namespace DE
+{
+
+class GameWorld;
 
 class GameObject
 {
@@ -28,7 +33,7 @@ public:
 
 	void				SetTransform(const Matrix4 transform);
 
-	void				Transform(const Matrix4& transform);
+	void				TransformBy(const Matrix4& transform);
 
 	void				AddComponent(Component* pComponent);
 
@@ -36,58 +41,52 @@ public:
 	template<class T>
 	T*			GetComponent()
 	{
-		for (auto itr : m_components)
+		for (auto itr : m_vComponents)
 		{
 			if (itr->GetID() == T::ComponentID)
 			{
-				return (T*) itr;
+				return (T*)itr;
 			}
 		}
 		return nullptr;
 	}
 
-	inline Matrix4* GetTransform() 
+	inline Matrix4* GetTransform()
 	{
-		return &m_mWorldTransform;
+		return m_pTransform->m_mWorldTransform;
 	};
 
 	inline Matrix4* GetLocalTransform()
 	{
-		return &m_mLocalTransform;
+		return m_pTransform->m_mLocalTransform;
 	}
 
 	Vector3 GetPosition()
 	{
-		return m_mWorldTransform.GetPosition();
+		return m_pTransform->m_mWorldTransform->GetPosition();
 	}
 
 	void SetPosition(Vector3 vPos)
 	{
 		Matrix4 trans;
 		trans.CreateTranslation(vPos);
-		m_mWorldTransform = trans;
+		*m_pTransform->m_mWorldTransform = trans;
 	}
-
-	// hierarchical functionality
-	void AttachTo(unsigned int objectID);
 
 protected:
 
-	Collide*					m_pContact;
-
-	// Local to world transform
-	Matrix4						m_mWorldTransform;
-
-	// World to local transform
-	Matrix4						m_mLocalTransform;
+	Collide*						m_pContact;
 
 	// temp
-	int							m_iGameObjectID;
+	int								m_iGameObjectID;
 
-	std::vector<Component*>		m_components;
+	// Vector of all added components
+	std::vector<Component*>			m_vComponents;
 
-	// hierarchical functionality
-	int							m_parentID;
+	// Default transform component
+	Transform*						m_pTransform;
+
 };
 
+}; // namespace DE
 #endif

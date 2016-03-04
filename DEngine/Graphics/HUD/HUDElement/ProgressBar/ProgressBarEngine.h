@@ -3,6 +3,9 @@
 #include "Graphics\MeshComponent.h"
 #include "ProgressBar.h"
 
+namespace DE
+{
+
 class ProgressBarEngine
 {
 public:
@@ -21,3 +24,4 @@ private:
 	std::unordered_map<const char*, MeshComponent*> m_cache;
 };
 
+}

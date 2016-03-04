@@ -8,6 +8,9 @@
 #include "Math\simdmath.h"
 #include "Graphics\Render\Texture.h"
 
+namespace DE
+{
+
 class LightManager
 {
 public:
@@ -35,8 +38,8 @@ public:
 	void* GetPointLightVertices()
 	{
 		return m_PointLightVertices;
-	}	
-	
+	}
+
 	void* GetSpotLightVertices()
 	{
 		return m_SpotLightVertices;
@@ -79,4 +82,5 @@ private:
 
 };
 
+};
 #endif

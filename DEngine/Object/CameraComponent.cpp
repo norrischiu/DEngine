@@ -10,6 +10,9 @@
 #include <sstream>
 #include <string>
 
+namespace DE
+{
+
 CameraComponent::CameraComponent(const Vector3& vPos, const Vector3& vLookAt, const Vector3& vUp, const float fFov, const float fRatio, const float fZNear, const float fZFar)
 	: Component(nullptr)
 	, m_vPos(vPos)
@@ -48,6 +51,7 @@ void CameraComponent::Update(float deltaTime)
 {
 }
 
+/*
 void CameraComponent::rotateVPos(const float thetaX, const float thetaY) {
 	Matrix4 transform;
 	m_vPos -= m_vLookAt;
@@ -102,3 +106,6 @@ void CameraComponent::move(const CameraMove moveType, const float offset)
 	m_vPos += transform;
 	m_vLookAt += transform;
 }
+*/
+
+};

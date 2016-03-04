@@ -7,6 +7,9 @@
 #include "Graphics\HUD\HUD.h"
 #include "Graphics\ParticleSystem\ParticleSystem.h"
 
+namespace DE
+{
+
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
 
 void D3D11Renderer::ConstructWithWindow(HWND hWnd)
@@ -35,7 +38,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 
 	// Create render target view
 	for (int i = 0; i < RT_NUM; i++)
-	{		
+	{
 		m_textures[i] = new Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
 		m_pRTVArray[i] = m_textures[i]->GetRTV();
 		m_pSRVArray[i] = m_textures[i]->GetSRV();
@@ -100,7 +103,7 @@ void D3D11Renderer::Render()
 
 	// Post process effect
 //	m_PPE->Render();
-	
+
 	// Particle system drawing
 	ParticleSystem::GetInstance()->Draw();
 
@@ -113,3 +116,5 @@ void D3D11Renderer::Render()
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);
 }
+
+};

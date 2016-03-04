@@ -4,6 +4,9 @@
 #include "Graphics/VertexFormat.h"
 #include "Graphics/D3D11Renderer.h"
 
+namespace DE
+{
+
 ProgressBarEngine* ProgressBarEngine::m_instance;
 
 ProgressBarEngine::ProgressBarEngine()
@@ -36,26 +39,26 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		char progressString[20];
 		sprintf(progressString, "%.1f%%", progress);
 
-		Vertex1P* pVerticesProgress = new Vertex1P[4] {
+		Vertex1P* pVerticesProgress = new Vertex1P[4]{
 			Vector3(0.0f,									0.0f,				0.0f),
 			Vector3(0.0f - progress / 100.0f - 0.003f,		0.0f,				0.0f),
 			Vector3(0.0f,									0.0f - 0.5f,		0.0f),
 			Vector3(0.0f - progress / 100.0f - 0.003f,		0.0f - 0.5f,		0.0f)
 		};
 
-		Vertex1P* pVerticesProgressBorder = new Vertex1P[4] {
+		Vertex1P* pVerticesProgressBorder = new Vertex1P[4]{
 			Vector3(0.0f,			0.0f,				0.0f),
 			Vector3(0.0f - 1.0f,	0.0f,				0.0f),
 			Vector3(0.0f,			0.0f - 0.5f,		0.0f),
 			Vector3(0.0f - 1.0f,	0.0f - 0.5f,		0.0f)
 		};
 
-		unsigned int* pIndicesProgress = new unsigned int[6] {
+		unsigned int* pIndicesProgress = new unsigned int[6]{
 			0, 1, 2,
 			2, 1, 3
 		};
 
-		unsigned int* pIndicesProgressBorder = new unsigned int[8] {
+		unsigned int* pIndicesProgressBorder = new unsigned int[8]{
 			0, 1,
 			2, 3,
 			1, 3,
@@ -69,20 +72,21 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		HUDElement::Position pos(
 			position.x + xOffset,
 			position.y + yOffset
-		);
+			);
 
 		MeshComponent* meshComponent = nullptr;
 
 		if (progressBar->isShowText()) {
-			meshComponent = new MeshComponent[3] {
+			meshComponent = new MeshComponent[3]{
 				MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P))),
 				MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P))),
 				*TextEngine::getInstance()->makeText(
 					new TextBox(progressBar->getID(), progressString, pos, fontSize, TextBox::Color::RED)
 				)
 			};
-		} else {
-			meshComponent = new MeshComponent[2] {
+		}
+		else {
+			meshComponent = new MeshComponent[2]{
 				MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P))),
 				MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P)))
 			};
@@ -131,3 +135,5 @@ void ProgressBarEngine::destructAndCleanUp()
 ProgressBarEngine::~ProgressBarEngine()
 {
 }
+
+};

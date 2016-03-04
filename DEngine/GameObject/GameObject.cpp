@@ -1,26 +1,24 @@
 #include "GameObject.h"
+#include "GameWorld.h"
+#include "Object\Transform.h"
+
+namespace DE
+{
 
 int GameObject::GameObjectID = 0;
 
 GameObject::GameObject()
 {
-	m_parentID = -1;
 	m_pContact = nullptr;
-	m_mWorldTransform = Matrix4::Identity;
-	m_mLocalTransform = Matrix4::Identity;
+	m_pTransform = new Transform;
+	AddComponent(m_pTransform);
 	m_iGameObjectID = GameObjectID++;
 	GameWorld::GetInstance()->AddGameObject(this);
 }
 
 void GameObject::Update(float deltaTime)
 {
-	// hierarchical functionality
-	if (m_parentID != -1)
-	{
-		m_mWorldTransform *= *GameWorld::GetInstance()->GetGameObjectAt(m_parentID)->GetLocalTransform(); // temp
-	}
-	
-	for (auto itr : m_components)
+	for (auto itr : m_vComponents)
 	{
 		itr->Update(deltaTime);
 	}
@@ -48,21 +46,18 @@ bool GameObject::isCollided(GameObject * gameObj)
 
 void GameObject::SetTransform(const Matrix4 transform)
 {
-	m_mWorldTransform = transform;
+	*m_pTransform->m_mWorldTransform = transform;
 }
 
-void GameObject::Transform(const Matrix4& transform)
+void GameObject::TransformBy(const Matrix4& transform)
 {
-	m_mWorldTransform *= transform;
+	*m_pTransform->m_mWorldTransform *= transform;
 }
 
 void GameObject::AddComponent(Component * pComponent)
 {
 	pComponent->SetOwner(this);
-	m_components.push_back(pComponent);
+	m_vComponents.push_back(pComponent);
 }
 
-void GameObject::AttachTo(unsigned int objectID)
-{
-	m_parentID = objectID;
-}
+}; // namespace DE

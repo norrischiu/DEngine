@@ -1,12 +1,15 @@
 #include "D3D11Renderer.h"
 #include "VertexFormat.h"
 
+namespace DE
+{
+
 class VertexBufferEngine
 {
 public:
-	VertexBufferEngine() 
+	VertexBufferEngine()
 		:m_vMaxXYZ(FLT_MIN, FLT_MIN, FLT_MIN)
-		,m_vMinXYZ(FLT_MAX, FLT_MAX, FLT_MAX)
+		, m_vMinXYZ(FLT_MAX, FLT_MAX, FLT_MAX)
 	{
 	};
 
@@ -47,4 +50,6 @@ private:
 
 	Vector3							m_vMaxXYZ;
 	Vector3							m_vMinXYZ;
+};
+
 };

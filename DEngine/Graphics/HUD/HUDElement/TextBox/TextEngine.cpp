@@ -5,6 +5,9 @@
 #include "Graphics/VertexFormat.h"
 #include "Graphics/D3D11Renderer.h"
 
+namespace DE
+{
+
 TextEngine* TextEngine::m_instance;
 
 TextEngine::TextEngine()
@@ -41,7 +44,7 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 	const float textSpacing = 0.05f;
 	const float textHeight = 1.0f;
 	float textWidth = 0.0f;
-	
+
 
 	float drawX = 0.0f;
 	float drawY = 0.0f;
@@ -150,7 +153,7 @@ bool TextEngine::LoadFontData(char* filename) {
 	}
 
 	// Read in the 95 used ascii characters for text.
-	for (i = 0; i<95; i++)
+	for (i = 0; i < 95; i++)
 	{
 		fin.get(temp);
 		while (temp != ' ')
@@ -233,3 +236,5 @@ TextEngine::~TextEngine()
 {
 
 }
+
+};

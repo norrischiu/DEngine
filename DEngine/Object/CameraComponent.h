@@ -9,27 +9,8 @@
 #include "Physics/cdSphere.h"
 #include "Physics/cdAABB.h"
 
-enum CameraMove {
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT,
-	ROTATE_UP,
-	ROTATE_DOWN,
-	ROTATE_LEFT,
-	ROTATE_RIGHT
-};
-
-enum CameraType {
-	MOVE_CAMERA,
-	DEGREE360_CAMERA,
-	TOP_VIEW_CAMERA,
-	BOTTOM_VIEW_CAMERA,
-	LEFT_VIEW_CAMERA,
-	RIGHT_VIEW_CAMERA,
-	FRONT_VIEW_CAMERA,
-	BACK_VIEW_CAMERA
-};
+namespace DE
+{
 
 class CameraComponent : public Component
 {
@@ -46,10 +27,10 @@ public:
 
 	void SetAsRendererCamera();
 
-	void rotateVLookAt(const CameraMove moveType, const float theta);
-	void rotateVPos(const float thetaX, const float thetaY);
-	void move(const CameraMove moveType, const float offset);
-	
+	//void rotateVLookAt(const CameraMove moveType, const float theta);
+	//void rotateVPos(const float thetaX, const float thetaY);
+	//void move(const CameraMove moveType, const float offset);
+
 	// Inherited via Component
 	void Update(float deltaTime) override;
 
@@ -65,7 +46,7 @@ public:
 		return m_vPos;
 	}
 
-	~CameraComponent(){};
+	~CameraComponent() {};
 
 private:
 	// Camera position in local space of game object owner
@@ -75,6 +56,8 @@ private:
 	Vector3						m_vUp;
 	Matrix4						m_mPerspectiveProj;
 	Frustum						m_Frustum;
+};
+
 };
 
 #endif

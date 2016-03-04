@@ -4,6 +4,9 @@
 #include "CBuffer.h"
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class PSPerLightCBuffer : public CBuffer
 {
 
@@ -42,5 +45,6 @@ public:
 	static const size_t						size;
 };
 
+};
 
 #endif // !PS_PER_LIGHT_CBUFFER_H_

@@ -7,6 +7,9 @@
 #include "LightManager.h"
 #include "LightComponent.h"
 
+namespace DE
+{
+
 class PointLightComponent : public LightComponent
 {
 
@@ -36,4 +39,5 @@ private:
 
 };
 
+};
 #endif //!POINTLIGHT_COMPONENT_H_

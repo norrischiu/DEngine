@@ -5,6 +5,10 @@
 #include "Render\PSPerLightCBuffer.h"
 #include "Render\VSPerObjectCBuffer.h"
 #include "Render\Texture.h"
+
+namespace DE
+{
+
 class MeshData;
 class RenderPass;
 
@@ -45,6 +49,8 @@ private:
 
 	RenderPass*									StencilingPass;
 	RenderPass*									LightingPass;
+};
+
 };
 
 #endif // !GBUFFER_H_

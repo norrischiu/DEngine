@@ -3,6 +3,9 @@
 #include "State.h"
 #include "Graphics\TextureManager.h"
 
+namespace DE
+{
+
 Texture::Texture(int type, int sampleCount, const char * filename)
 	: m_type(type)
 {
@@ -111,9 +114,11 @@ Texture::Texture(int type, ID3D11Texture2D* texSrc)
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
-		depthStencilViewDesc.Flags = 0; 
+		depthStencilViewDesc.Flags = 0;
 		depthStencilViewDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH | D3D11_DSV_READ_ONLY_STENCIL;
 		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateDepthStencilView(texSrc, &depthStencilViewDesc, &m_pDSV);
 		assert(hr == S_OK);
 	}
 }
+
+};

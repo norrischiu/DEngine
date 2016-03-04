@@ -5,6 +5,9 @@
 #include "Joint.h"
 #include "Object\Component.h"
 
+namespace DE
+{
+
 class Skeleton : public Component
 {
 
@@ -42,4 +45,6 @@ public:
 
 	std::vector<Joint*>							m_vJoints;
 	std::vector<Matrix4>						m_vGlobalPose;
+};
+
 };

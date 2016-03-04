@@ -1,4 +1,7 @@
 #pragma once
+namespace DE
+{
+
 class HUDElement
 {
 
@@ -62,3 +65,4 @@ private:
 	bool m_visibility;
 };
 
+};

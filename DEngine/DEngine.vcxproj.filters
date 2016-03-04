@@ -84,9 +84,6 @@
     <ClCompile Include="Graphics\D3D11Renderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\DeferredRenderer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GBuffer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -186,9 +183,6 @@
     <ClCompile Include="Object\MovementController.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObjectLoader.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\cdAabb.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -266,9 +260,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\D3D11Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DeferredRenderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GBuffer.h">
@@ -409,9 +400,6 @@
     <ClInclude Include="Object\MovementController.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object\objectloader.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\cdAabb.h">
       <Filter>Physics</Filter>
     </ClInclude>
@@ -496,6 +484,9 @@
     <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h" />
     <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h" />
     <ClInclude Include="Event\EngineEvent.h" />
+    <ClInclude Include="Object\Transform.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

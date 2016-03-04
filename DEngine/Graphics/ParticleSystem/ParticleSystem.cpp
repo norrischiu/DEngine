@@ -4,6 +4,9 @@
 #define PT_EMITTER 0
 #define PT_FLARE 1
 
+namespace DE
+{
+
 ParticleSystem* ParticleSystem::m_pInstance;
 
 ParticleSystem::ParticleSystem()
@@ -42,7 +45,7 @@ void ParticleSystem::Init()
 	index1[1] = 1;
 
 
-		Particle particles[20];
+	Particle particles[20];
 	//std::vector<Particle> particles;
 
 	m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
@@ -92,7 +95,7 @@ void ParticleSystem::Draw()
 		emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		m_InitMesh->RenderUsingPass(emitterPass);
 		D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
-		
+
 		// second pass
 		drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		m_DrawMesh->RenderUsingPass(drawPass);
@@ -154,3 +157,5 @@ void ParticleSystem::Update(float dt)
 	m_fTimeStep = dt;
 
 }
+
+};

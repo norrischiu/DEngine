@@ -9,6 +9,9 @@
 #include <string>
 #include <d3d11shader.h>
 
+namespace DE
+{
+
 class ShaderManager
 {
 public:
@@ -71,4 +74,5 @@ private:
 	std::unordered_map<std::string, ID3D11InputLayout*>		m_mapInputLayouts;
 };
 
+};
 #endif // !SHADERMANAGER_H_
