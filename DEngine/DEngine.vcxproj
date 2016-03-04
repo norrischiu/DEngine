@@ -140,11 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AI\PathFinding\ContourSetBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\DetailMeshBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\OpenHeightfieldBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\PolygonMeshBuilder.cpp" />
-    <ClCompile Include="AI\PathFinding\SolidHeightfieldBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowField.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -202,11 +199,8 @@
     <ClCompile Include="Physics\cdSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AI\PathFinding\ContourSetBuilder.h" />
-    <ClInclude Include="AI\PathFinding\DetailMeshBuilder.h" />
-    <ClInclude Include="AI\PathFinding\OpenHeightfieldBuilder.h" />
-    <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h" />
-    <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h" />
+    <ClInclude Include="AI\PathFinding\FlowField.h" />
+    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />

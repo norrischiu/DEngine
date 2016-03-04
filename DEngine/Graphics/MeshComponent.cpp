@@ -28,6 +28,11 @@ MeshComponent::MeshComponent(const char* meshName, int type)
 	SceneGraph::GetInstance()->AddComponent(this);
 }
 
+MeshData* MeshComponent::GetMeshData()
+{
+	return m_pMeshData;
+}
+
 void MeshComponent::SetOwner(GameObject * ptr)
 {
 	Component::SetOwner(ptr);

@@ -46,7 +46,7 @@ void AnimationSet::reset()
 {
 	for (auto itr : m_animations)
 	{
-		itr.second->setCurrentKeyframe(0);
+		itr.second->setCurrentKeyframe(1);
 	}
 }
 
