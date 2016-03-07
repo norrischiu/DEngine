@@ -184,6 +184,7 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 		(z >= 0 && z <= getFlowFieldDepth() - 1)
 	) {
 		if ( false && //bi-linear interpolation
+			(pos.GetX() - x + pos.GetY() - y + pos.GetZ() -z) > std::numeric_limits<float>::epsilon() &&
 			(x + 1 >= 0 && x + 1 <= getFlowFieldDepth() - 1) &&
 			(z + 1 >= 0 && z + 1 <= getFlowFieldDepth() - 1) &&
 			m_flowField[x][y][z].isMovable &&
@@ -197,10 +198,10 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 			Vector3 br_direction = m_flowField[x + 1][y][z].direction;
 			Vector3 tr_direction = m_flowField[x + 1][y][z + 1].direction;
 
-			const float bl_area = (position.GetX() - x) * (position.GetZ() - z);
-			const float br_area = (ceil(position.GetX()) - x) * (position.GetZ() - z);
-			const float tl_area = (position.GetX() - x) * (ceil(position.GetZ()) - z);
-			const float tr_area = (ceil(position.GetX()) - x) * (ceil(position.GetZ()) - z);
+			const float bl_area = (pos.GetX() - x) * (pos.GetZ() - z);
+			const float br_area = (ceil(pos.GetX()) - x) * (pos.GetZ() - z);
+			const float tl_area = (pos.GetX() - x) * (ceil(pos.GetZ()) - z);
+			const float tr_area = (ceil(pos.GetX()) - x) * (ceil(pos.GetZ()) - z);
 
 			direction = ((bl_direction * tr_area) + (br_direction * tl_area) + (tl_direction * br_area) + (tr_direction * bl_area)).Normalize();
 		} 
