@@ -20,7 +20,7 @@ Player::Player()
 	AddComponent(new DE::MeshComponent("maria", DE::eMeshType::SKELETAL_MESH));
 	//AddComponent(new Body(typeAABB));
 
-	SetPosition(Vector3(-4.0f, 0.0f, -4.0f));
+	SetPosition(DE::Vector3(-4.0f, 0.0f, -4.0f));
 	AddComponent(new PlayerMC());
 	DE::Skeleton* skel = new DE::Skeleton("maria");
 	DE::AnimationController* animController = new DE::AnimationController(skel);

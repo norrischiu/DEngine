@@ -1,7 +1,10 @@
 #include "AIController.h"
 #include "../../GameObject/GameObject.h"
 
-AIController::AIController(FlowField& flowField) 
+namespace DE
+{
+
+AIController::AIController(FlowField& flowField)
 	: Component(nullptr), m_flowField(flowField)
 {
 	m_ID = ComponentID;
@@ -25,5 +28,7 @@ void AIController::Move(Vector3 vTrans)
 {
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
-	m_pOwner->Transform(trans);
+	m_pOwner->TransformBy(trans);
 }
+
+};

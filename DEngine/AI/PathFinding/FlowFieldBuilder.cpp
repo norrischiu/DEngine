@@ -93,35 +93,6 @@ void FlowFieldBuilder::setFlowFieldObstacles(std::vector<Vector3> obstacles)
 		) {
 			m_flowField[x][y][z].isMovable = false;
 		}
-		
-		const AABB boundingBox = obstacles[i]->GetComponent<MeshComponent>()->GetMeshData()->GetBoundingBox();
-
-		const Vector3& max = boundingBox.getMax();
-		const Vector3& min = boundingBox.getMin();
-		const int minX = (int)min.GetX();
-		const int maxX = (int)ceil(max.GetX());
-		const int minY = (int)min.GetY();
-		const int maxY = (int)ceil(max.GetY());
-		const int minZ = (int)min.GetZ();
-		const int maxZ = (int)ceil(max.GetZ());
-
-		for (int i = minX; i < maxX; i++)
-		{
-			//for (int j = minY; j < maxY; j++)
-			for (int j = 0; j < 1; j++)
-			{
-				for (int k = minZ; k < maxZ; k++)
-				{
-					if (
-						(i >= 0 && (i <= getFlowFieldWidth() - 1)) ||
-						(j >= 0 && (j <= getFlowFieldHeight() - 1)) ||
-						(k >= 0 && (k <= getFlowFieldDepth() - 1))
-						) {
-						m_flowField[i][j][k].isMovable = false;
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -149,7 +120,11 @@ std::vector<std::vector<std::vector<int>>> FlowFieldBuilder::calculateDijkstraGr
 
 			for (int k = 0; k < getFlowFieldDepth(); k++)
 			{
-				dijkstraGrid[i][j].push_back(abs(i - destX) /*+ abs(j - destY)*/ + abs(k - destZ));
+				if (m_flowField[i][j][k].isMovable) {
+					dijkstraGrid[i][j].push_back(abs(i - destX) /*+ abs(j - destY)*/ + abs(k - destZ));
+				} else {
+					dijkstraGrid[i][j].push_back((std::numeric_limits<int>::max)());
+				}
 			}
 		}
 	}
@@ -170,9 +145,8 @@ std::vector<FlowFieldBuilder::Position> FlowFieldBuilder::getNeighbours(FlowFiel
 				if (
 					(i >= 0 && i <= getFlowFieldWidth() - 1) &&
 					(j >= 0 && j <= getFlowFieldHeight() - 1) &&
-					(k >= 0 && k <= getFlowFieldDepth() - 1) &&
-					m_flowField[i][j][k].isMovable
-					) {
+					(k >= 0 && k <= getFlowFieldDepth() - 1)
+				) {
 					neighbours.push_back(FlowFieldBuilder::Position(i, j, k));
 				}
 			}
@@ -191,30 +165,34 @@ void FlowFieldBuilder::setFlowFieldDirection(std::vector<std::vector<std::vector
 		{
 			for (int k = 0; k < getFlowFieldDepth(); k++)
 			{
-				FlowFieldBuilder::Position pos(i, j, k);
-				FlowFieldBuilder::Position minNeighbour;
-				auto neighbours = getNeighbours(pos);
-				bool isFoundValidNeighbour = false;
-				int minDist = 0;
-
-				for (int l = 0; l < neighbours.size(); l++)
+				if (m_flowField[i][j][k].isMovable)
 				{
-					FlowFieldBuilder::Position n = neighbours[l];
-					if (m_flowField[n.x][n.y][n.z].isMovable)
-					{
-						const int dist = dijkstraGrid[n.x][n.y][n.z] - dijkstraGrid[pos.x][pos.y][pos.z];
+					FlowFieldBuilder::Position pos(i, j, k);
+					FlowFieldBuilder::Position minNeighbour;
+					auto neighbours = getNeighbours(pos);
+					bool isFoundValidNeighbour = false;
+					int minDist = 0;
 
-						if (dist < minDist) {
-							minDist = dist;
-							minNeighbour = n;
-							isFoundValidNeighbour = true;
+					for (int l = 0; l < neighbours.size(); l++)
+					{
+						FlowFieldBuilder::Position n = neighbours[l];
+
+						if (m_flowField[n.x][n.y][n.z].isMovable)
+						{
+							const int dist = dijkstraGrid[n.x][n.y][n.z] - dijkstraGrid[pos.x][pos.y][pos.z];
+
+							if (dist < minDist) {
+								minDist = dist;
+								minNeighbour = n;
+								isFoundValidNeighbour = true;
+							}
 						}
 					}
-				}
 
-				if (isFoundValidNeighbour)
-				{
-					m_flowField[i][j][k].direction = (Vector3(minNeighbour.x, minNeighbour.y, minNeighbour.z) - Vector3(pos.x, pos.y, pos.z)).Normalize();
+					if (isFoundValidNeighbour)
+					{
+						m_flowField[i][j][k].direction = (Vector3(minNeighbour.x, minNeighbour.y, minNeighbour.z) - Vector3(pos.x, pos.y, pos.z)).Normalize();
+					}
 				}
 			}
 		}
@@ -234,7 +212,6 @@ FlowField FlowFieldBuilder::generateFlowField(const Vector3& map_dimension, std:
 	return flowField;
 }
 
-<<<<<<< HEAD
 FlowField FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination)
 {
 	const AABB mapBoundingBox = map->GetComponent<MeshComponent>()->GetMeshData()->GetBoundingBox();
@@ -281,6 +258,5 @@ FlowField FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<GameO
 
 	return generateFlowField(Vector3(gridWidth, gridHeight, gridDepth), vec3, destination);
 }
-=======
+
 };
->>>>>>> 76d96a33a44b8046f7812c39b0205fa5fe9e8149

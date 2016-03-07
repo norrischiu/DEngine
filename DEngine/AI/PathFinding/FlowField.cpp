@@ -3,20 +3,18 @@
 #include "../../Graphics/D3D11Renderer.h"
 #include "../../Graphics/Scene/SceneGraph.h"
 
+namespace DE
+{
 
 float getDirectionInRadian(const Vector3& direction)
 {
 	return atan2(direction.GetZ(), direction.GetX());
 }
 
-namespace DE
-{
-	
 FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination)
-	: m_flowField(flowField), m_destination(destination) {
-		
+	: m_flowField(flowField), m_destination(destination)
+{
 }
-
 
 FlowField::~FlowField()
 {
@@ -47,6 +45,11 @@ void FlowField::print()
 		indices[index_in] = index_in++;
 	}
 
+	Vector3 dest = m_destination;
+	Matrix4 transform;
+	transform.CreateTranslation(Vector3(getFlowFieldWidth() / 2.0f, 0.0f, getFlowFieldDepth() / 2.0f));
+	dest.Transform(transform);
+
 	for (int i = 0; i < getFlowFieldWidth(); i++)
 	{
 		//for (int j = 0; j < getFlowFieldHeight(); j++)
@@ -54,13 +57,19 @@ void FlowField::print()
 		{
 			for (int k = 0; k < getFlowFieldDepth(); k++)
 			{
+				if ((dest.GetX() - i - 1) + (dest.GetZ() - k - 1) < std::numeric_limits<float>::epsilon()) {
+					continue;
+				}
+
+				Matrix4 translate;
+				translate.CreateTranslation(Vector3(i + 0.5f, j, k + 0.5f));
+
 				if (m_flowField[i][j][k].isMovable)
 				{
-					Matrix4 rotate, translate;
+					Matrix4 rotate;
 					rotate.CreateRotationY(-getDirectionInRadian(m_flowField[i][j][k].direction));
-					translate.CreateTranslation(Vector3(i + 0.5f, j, k + 0.5f));
 
-					Vector3 arrows[4] = {
+					Vector3 arrow[4] = {
 						Vector3(-0.3f, 0.0f, 0.0f),
 						Vector3(0.3f, 0.0f, 0.0f),
 						Vector3(0.15f, 0.0f, 0.15f),
@@ -69,17 +78,33 @@ void FlowField::print()
 
 					for (int l = 0; l < 4; l++)
 					{
-						arrows[l].Transform(rotate);
-						arrows[l].Transform(translate);
-						vertices[index_ver++].m_pos = arrows[l];
+						arrow[l].Transform(rotate);
+						arrow[l].Transform(translate);
+						vertices[index_ver++].m_pos = arrow[l];
 					}
 
-					indices[index_in++] = index_ver + 0;
-					indices[index_in++] = index_ver + 1;
-					indices[index_in++] = index_ver + 2;
-					indices[index_in++] = index_ver + 1;
-					indices[index_in++] = index_ver + 3;
-					indices[index_in++] = index_ver + 1;
+					indices[index_in++] = index_ver -4 + 0;
+					indices[index_in++] = index_ver -4 + 1;
+					indices[index_in++] = index_ver -4 + 2;
+					indices[index_in++] = index_ver -4 + 1;
+					indices[index_in++] = index_ver -4 + 3;
+					indices[index_in++] = index_ver -4 + 1;
+				}
+				else
+				{
+					Vector3 cross[4] = {
+						Vector3(-0.3f, 0.0f, 0.3f),
+						Vector3(0.3f, 0.0f, -0.3f),
+						Vector3(-0.3f, 0.0f, -0.3f),
+						Vector3(0.3f, 0.0f, 0.3f)
+					};
+
+					for (int l = 0; l < 4; l++)
+					{
+						cross[l].Transform(translate);
+						vertices[index_ver].m_pos = cross[l];
+						indices[index_in++] = index_ver++;
+					}
 				}
 			}
 		}
@@ -133,7 +158,7 @@ bool FlowField::isPositionMovable(const Vector3& position)
 		(x >= 0 && x <= getFlowFieldWidth() - 1) &&
 		(y >= 0 && y <= getFlowFieldHeight() - 1) &&
 		(z >= 0 && z <= getFlowFieldDepth() - 1)
-		) {
+	) {
 		return m_flowField[x][y][z].isMovable;
 	}
 
@@ -151,18 +176,41 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 	const int y = pos.GetY();
 	const int z = pos.GetZ();
 
+	Vector3 direction(0.0f, 0.0f, 0.0f);
+
 	if (
 		(x >= 0 && x <= getFlowFieldWidth() - 1) &&
 		(y >= 0 && y <= getFlowFieldHeight() - 1) &&
-		(z >= 0 && z <= getFlowFieldDepth() - 1) &&
-		m_flowField[x][y][z].isMovable
-		) {
-		return m_flowField[x][y][z].direction;
+		(z >= 0 && z <= getFlowFieldDepth() - 1)
+	) {
+		if ( false && //bi-linear interpolation
+			(x + 1 >= 0 && x + 1 <= getFlowFieldDepth() - 1) &&
+			(z + 1 >= 0 && z + 1 <= getFlowFieldDepth() - 1) &&
+			m_flowField[x][y][z].isMovable &&
+			m_flowField[x][y][z + 1].isMovable &&
+			m_flowField[x + 1][y][z].isMovable &&
+			m_flowField[x + 1][y][z + 1].isMovable
+		) 
+		{
+			Vector3 bl_direction = m_flowField[x][y][z].direction;
+			Vector3 tl_direction = m_flowField[x][y][z + 1].direction;
+			Vector3 br_direction = m_flowField[x + 1][y][z].direction;
+			Vector3 tr_direction = m_flowField[x + 1][y][z + 1].direction;
+
+			const float bl_area = (position.GetX() - x) * (position.GetZ() - z);
+			const float br_area = (ceil(position.GetX()) - x) * (position.GetZ() - z);
+			const float tl_area = (position.GetX() - x) * (ceil(position.GetZ()) - z);
+			const float tr_area = (ceil(position.GetX()) - x) * (ceil(position.GetZ()) - z);
+
+			direction = ((bl_direction * tr_area) + (br_direction * tl_area) + (tl_direction * br_area) + (tr_direction * bl_area)).Normalize();
+		} 
+		else {
+			direction = m_flowField[x][y][z].direction;
+		}
 	}
 
-	return Vector3(0.0f, 0.0f, 0.0f);
+	return direction;
 }
-
 
 const Vector3 FlowField::getDestination()
 {

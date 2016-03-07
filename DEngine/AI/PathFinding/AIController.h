@@ -3,6 +3,9 @@
 #include "../../Graphics/VertexFormat.h"
 #include "FlowField.h"
 
+namespace DE
+{
+
 class AIController : public Component
 {
 
@@ -21,3 +24,4 @@ private:
 	FlowField m_flowField;
 };
 
+};
