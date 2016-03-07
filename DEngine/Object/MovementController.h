@@ -36,7 +36,7 @@ protected:
 	float							m_fDeltaTime;
 };
 
-}
+};
 #endif // !MOVEMENT_CONTROLLER_H_
 
 

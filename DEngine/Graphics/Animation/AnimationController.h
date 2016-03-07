@@ -7,6 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
+namespace DE
+{
+
 class AnimationController : public Component
 {
 
@@ -65,4 +68,6 @@ public:
 	std::unordered_map<std::string, Transition> m_transition;
 	Skeleton* m_skeleton;
 	bool m_bPlaying;
+};
+
 };

@@ -4,9 +4,10 @@
 #include "Utilities\Geometry.h"
 
 #define C_STR(string, text)\
-		(string + text).c_str()
+	(string + text).c_str()
 
-// #define _CRT_SECURE_NO_WARNINGS
+namespace DE
+{
 
 VertexBufferEngine* VertexBufferEngine::m_pInstance;
 
@@ -108,7 +109,7 @@ ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, con
 	// Create the vertex buffer
 	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
 	assert(hr == S_OK);
-	
+
 	return pVertexBuffer;
 }
 
@@ -120,7 +121,7 @@ void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned 
 	{
 		float x, y, z;
 		fscanf(pFile, "%f %f %f", &x, &y, &z);
-		((Vertex1P*) pVertexData)[i].m_pos = Vector3(x, y, z);
+		((Vertex1P*)pVertexData)[i].m_pos = Vector3(x, y, z);
 		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
 		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
 		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
@@ -140,7 +141,7 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	{
 		float x, y, z;
 		fscanf(pFile, "%f %f %f", &x, &y, &z);
-		((vertex1P1UV*) pVertexData)[i].m_pos = Vector3(x, y, z);
+		((vertex1P1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
 		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
 		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
 		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
@@ -153,14 +154,14 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	// Read texture coordinates
 	pFile = fopen(C_STR(sFileNmae, "_texture.bufa"), "r");
 	char c[256];
-	fscanf(pFile, "%s",&c );
+	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%i", &vertsNum);
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y;
 		fscanf(pFile, "%f %f", &x, &y);
-		((vertex1P1UV*) pVertexData)[i].m_UV[0] = x;
-		((vertex1P1UV*) pVertexData)[i].m_UV[1] = y;
+		((vertex1P1UV*)pVertexData)[i].m_UV[0] = x;
+		((vertex1P1UV*)pVertexData)[i].m_UV[1] = y;
 	}
 	fclose(pFile);
 }
@@ -344,3 +345,5 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOI
 	}
 	fclose(pFile);
 }
+
+};

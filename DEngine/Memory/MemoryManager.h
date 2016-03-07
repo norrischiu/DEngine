@@ -4,10 +4,14 @@
 
 #include "MemoryPool.h"
 #include <iostream>
+
+namespace DE
+{
+
 class Handle;
 
 const unsigned int MEMORY_POOL_NUM = 22;
-const unsigned int MEMORY_POOL_CONFIG[][2] = 
+const unsigned int MEMORY_POOL_CONFIG[][2] =
 {
 	// already 16-byte aligned
 	// block size, number of block
@@ -40,9 +44,9 @@ class MemoryManager
 {
 
 public:
-	
+
 	void ConstructDefaultPool();
-	
+
 	void Defragment();
 
 	void Destruct();
@@ -72,18 +76,20 @@ public:
 
 private:
 	// Default constructor
-	MemoryManager(){}
+	MemoryManager() {}
 
 	// Singleton instance
 	static MemoryManager*					m_pInstance;
 
 	// Raw heap start address
 	void*									m_pRawHeapStart;
-	
+
 	// All memory blocks' pools
 	MemoryPool*								m_pPool[MEMORY_POOL_NUM];
 
 	void* alignedAddress(void* ptr);
 };
 
+};
 #endif
+

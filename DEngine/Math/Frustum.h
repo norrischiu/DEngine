@@ -6,6 +6,9 @@
 #include "Physics\cdSphere.h"
 #include "Physics\cdAabb.h"
 
+namespace DE
+{
+
 class Frustum
 {
 public:
@@ -41,7 +44,7 @@ public:
 					(planeNormal.GetX() > 0 ? max.GetX() : min.GetX()),
 					(planeNormal.GetY() > 0 ? max.GetY() : min.GetY()),
 					(planeNormal.GetZ() > 0 ? max.GetZ() : min.GetZ())
-				);
+					);
 			if (!m_planes[i].IsInside(testPoint))
 			{
 				return false;
@@ -77,4 +80,5 @@ private:
 	Plane						m_planes[6];
 };
 
+};
 #endif // !FRUSTUM_H_

@@ -6,6 +6,9 @@
 #include "Math\SQT.h"
 #include "Skeleton.h"
 
+namespace DE
+{
+
 class Animation
 {
 
@@ -14,7 +17,7 @@ public:
 	~Animation();
 
 	void AddPose(SQT sqt);
-	
+
 	std::string getNodeName() const;
 	void setNodeName(const std::string node_name);
 
@@ -28,10 +31,11 @@ public:
 
 	void update(const float delta_time);
 
-//private:
+	//private:
 	std::string m_node_name;
 	int m_currKeyframe;
 	float m_animationFPS;
 	std::vector<SQT> m_Poses;
 };
 
+};

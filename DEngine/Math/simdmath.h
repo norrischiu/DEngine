@@ -7,6 +7,10 @@
 #include <math.h> // sin cos
 #include <DirectXMath.h> // DirectX helper methods (temp)
 #include "Memory\MemoryManager.h"
+
+namespace DE
+{
+
 class SQT;
 
 #define PI 3.1415926535f
@@ -16,7 +20,7 @@ __declspec(align(16)) class SIMDMatrix4
 {
 private:
 	__m128 _rows[4];
-	
+
 public:
 	friend class SIMDVector3;
 
@@ -138,7 +142,7 @@ public:
 		result._rows[1] = _mm_sub_ps(_rows[1], other._rows[1]);
 		result._rows[2] = _mm_sub_ps(_rows[2], other._rows[2]);
 		result._rows[3] = _mm_sub_ps(_rows[3], other._rows[3]);
-		
+
 		return result;
 	}
 
@@ -398,7 +402,7 @@ public:
 	static const SIMDVector3 NegativeUnitZ;
 
 	// Default Constructor
-	inline SIMDVector3(){};
+	inline SIMDVector3() {};
 
 	// Construct with given float values
 	inline SIMDVector3(float x, float y, float z, float w = 1.0f)
@@ -447,8 +451,8 @@ public:
 	{
 		__m128 temp = _mm_set_ss(z);
 		_data = _mm_insert_ps(_data, temp, 0x20);
-	}	
-	
+	}
+
 	inline void SetW(float w)
 	{
 		__m128 temp = _mm_set_ss(w);
@@ -590,7 +594,7 @@ public:
 	inline friend SIMDVector3 Cross(const SIMDVector3& a, const SIMDVector3& b)
 	{
 		__m128 te = _mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1));
-		__m128 result = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1)), _mm_shuffle_ps(b. _data, b._data, _MM_SHUFFLE(3, 1, 0, 2)));
+		__m128 result = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1)), _mm_shuffle_ps(b._data, b._data, _MM_SHUFFLE(3, 1, 0, 2)));
 		__m128 temp = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 1, 0, 2)), _mm_shuffle_ps(b._data, b._data, _MM_SHUFFLE(3, 0, 2, 1)));
 		result = _mm_sub_ps(result, temp);
 		return SIMDVector3(result);
@@ -678,7 +682,7 @@ public:
 	static const SIMDQuaternion Identity;
 
 	// Default constructor
-	SIMDQuaternion(){};
+	SIMDQuaternion() {};
 
 	// Construct with given axis and angle in radian
 	SIMDQuaternion(SIMDVector3& axis, float radian)
@@ -727,6 +731,15 @@ public:
 	inline float GetW() const
 	{
 		return _data.m128_f32[3];
+	}
+
+	// Return negative
+	inline SIMDQuaternion operator-() const
+	{
+		SIMDQuaternion result;
+		__m128 zero = _mm_set_ss(0.0f);
+		result._data = _mm_sub_ps(zero, _data);
+		return result;
 	}
 
 	// Multiply this quaternion with another quaternion, store result back to this
@@ -794,6 +807,13 @@ public:
 		_data = _mm_mul_ps(_data, length);
 	}
 
+	// Dot product, return a float
+	inline float Dot(const SIMDQuaternion& other) const
+	{
+		__m128 temp = _mm_dp_ps(_data, other._data, 0xFF);
+		return temp.m128_f32[3];
+	}
+
 	// TODO: switch to utility function in namespace
 	static SIMDQuaternion Lerp(SIMDQuaternion a, SIMDQuaternion b, float t)
 	{
@@ -804,6 +824,13 @@ public:
 		result._data = _mm_add_ps(result._data, _mm_mul_ps(bFactor, b._data));
 		return result;
 	}
+
+	static SIMDQuaternion SLerp(SIMDQuaternion a, SIMDQuaternion b, float t)
+	{
+		SIMDQuaternion result;
+		result._data = DirectX::XMQuaternionSlerp(a._data, b._data, t);
+		return result;
+	}
 };
 
 typedef SIMDVector3 Vector3;
@@ -811,4 +838,5 @@ typedef SIMDVector3 Vector4;
 typedef SIMDMatrix4 Matrix4;
 typedef SIMDQuaternion Quaternion;
 
+}
 #endif

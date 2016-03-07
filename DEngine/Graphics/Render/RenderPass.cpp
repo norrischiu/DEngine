@@ -1,6 +1,9 @@
 #include "RenderPass.h"
 #include "Graphics\D3D11Renderer.h"
 
+namespace DE
+{
+
 void RenderPass::BindToRenderer()
 {
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
@@ -32,3 +35,5 @@ void RenderPass::BindToRenderer()
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_vSamplerState[i]);
 	}
 }
+
+};

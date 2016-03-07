@@ -1,22 +1,24 @@
-
+// GameWorld.h:
 #ifndef GAMEWORLD_H
 #define GAMEWORLD_H
 
 #include <vector>
-#include "GameObject.h"
-class GameObject;
+#include "GameObject.h";
+
+namespace DE
+{
 
 class GameWorld
 {
 public:
-	GameWorld(){}
+	GameWorld() {}
 
 	static GameWorld*					GetInstance();
 
 	void Update(float deltaTime);
 
 	void AddGameObject(GameObject* gameObj);
-	
+
 	GameObject* GetGameObjectAt(unsigned int index);
 
 	// Destructor
@@ -34,5 +36,6 @@ private:
 	std::vector<GameObject*>			m_GameObjectList;
 };
 
+};
 
 #endif

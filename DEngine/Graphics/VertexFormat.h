@@ -4,6 +4,9 @@
 
 #include "Math/simdmath.h"
 
+namespace DE
+{
+
 enum eVertexFormat
 {
 	POSITION,
@@ -18,9 +21,9 @@ enum eVertexFormat
 struct Vertex1P
 {
 	Vector3								m_pos;
-	
+
 	Vertex1P() {};
-	Vertex1P(const Vector3& pos) : m_pos(pos){ }
+	Vertex1P(const Vector3& pos) : m_pos(pos) { }
 };
 
 // Vertex: Position, diffuse color
@@ -64,7 +67,7 @@ struct Vertex1P1N1UV
 	Vertex1P1N1UV(const Vector3& pos, const Vector3& norm, float uv[2]) : m_pos(pos), m_norm(norm) {
 		m_UV[0] = uv[0];
 		m_UV[1] = uv[1];
- 	}
+	}
 };
 
 struct Vertex1P1N1T1UV
@@ -85,4 +88,5 @@ struct Vertex1P1N1T1UV4J
 	float								m_UV[2]; // 48-byte offset
 };
 
+};
 #endif

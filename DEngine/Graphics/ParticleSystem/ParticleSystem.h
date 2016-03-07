@@ -5,6 +5,9 @@
 #include "Particles.h"
 #include <unordered_map>
 
+namespace DE
+{
+
 class ParticleSystem
 {
 public:
@@ -41,4 +44,7 @@ private:
 	std::unordered_map<const char*, Emitter*> m_Particles;
 };
 
+};
+
 #endif // !PARTICLESYSTEM_H_
+

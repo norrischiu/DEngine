@@ -6,6 +6,9 @@
 #include "HUDElement\ProgressBar\ProgressBar.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 
+namespace DE
+{
+
 class HUD
 {
 public:
@@ -32,3 +35,4 @@ private:
 	VSPerObjectCBuffer*	m_pVSCBuffer;
 };
 
+};

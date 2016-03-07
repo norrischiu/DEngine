@@ -2,7 +2,6 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Event\InputEvent.h"
 #include "GameObject\GameObject.h"
-#include "Graphics\Animation\AnimationController.h" //temp
 
 namespace DE
 {
@@ -44,7 +43,7 @@ void MovementController::HandleKeyboardEvent(Event* pEvt)
 	}
 	else if (pEvt->m_ID == InputEventID::Key_W_Press_Event)
 	{
-		//Vector3 vForward = m_pOwner->GetTransform()->GetForward();
+		//Vector3 vForward = m_pOwner->GetTransform().GetForward();
 		//Move(vForward * m_fDeltaTime * m_fSpeed);
 	}
 }
@@ -68,7 +67,7 @@ void MovementController::Move(Vector3 vTrans)
 {
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
-	m_pOwner->Transform(trans);
+	m_pOwner->TransformBy(trans);
 }
 
-}
+};

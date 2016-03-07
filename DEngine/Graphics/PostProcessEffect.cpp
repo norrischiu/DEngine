@@ -6,6 +6,9 @@
 #include "Render\PSPerLightCBuffer.h"
 #include "MeshData.h"
 
+namespace DE
+{
+
 PostProcessEffect::PostProcessEffect()
 {
 	m_pPSCBuffer = new PSPerLightCBuffer; // use static
@@ -13,7 +16,7 @@ PostProcessEffect::PostProcessEffect()
 
 	// Set vertex buffer
 	Vector3* pVertexData = new Vector3[6];
-	float left = - 1024 / 2;
+	float left = -1024 / 2;
 	float right = left + 1024;
 	float top = 768 / 2;
 	float bottom = top - 768;
@@ -79,8 +82,10 @@ void PostProcessEffect::Render()
 
 	// Render all passes inputted
 	fullscreenQuadMesh->Render();
-	
+
 	// Unbind the resources
 	D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);
 	D3D11Renderer::GetInstance()->UnbindRenderTargets();
 }
+
+};

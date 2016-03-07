@@ -1,6 +1,7 @@
 #include "cdSphere.h"
 
-
+namespace DE
+{
 
 void Sphere::update(const float deltaTime, const Vector3 & translate)
 {
@@ -8,3 +9,5 @@ void Sphere::update(const float deltaTime, const Vector3 & translate)
 	tran.Multiply(deltaTime);
 	m_Center += tran;
 }
+
+};

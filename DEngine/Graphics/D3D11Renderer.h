@@ -11,6 +11,9 @@
 
 #pragma comment (lib, "D3D11")
 
+namespace DE
+{
+
 // Number of render target in G-Buffer
 const static unsigned int					RT_NUM = 2;
 
@@ -45,7 +48,7 @@ public:
 
 	void Render();
 
-	static D3D11Renderer* GetInstance() 
+	static D3D11Renderer* GetInstance()
 	{
 		if (m_pInstance == nullptr)
 		{
@@ -99,7 +102,7 @@ public:
 	ID3D11RenderTargetView*						m_pRTVArray[RT_NUM];
 
 	// Array of pointer to shader resources view
-	ID3D11ShaderResourceView*					m_pSRVArray[RT_NUM+1];
+	ID3D11ShaderResourceView*					m_pSRVArray[RT_NUM + 1];
 
 	// Array of pointer to texture for deferred use
 	Texture*									m_textures[RT_NUM]; // Gbuffer RTV, SRV
@@ -124,4 +127,5 @@ private:
 	PostProcessEffect* m_PPE;
 };
 
+};
 #endif

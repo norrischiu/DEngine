@@ -1,13 +1,17 @@
 #ifndef POST_PROCESS_EFFECT_H_
 #define POST_PROCESS_EFFECT_H_
 
+class ID3D11Buffer;
+
+namespace DE
+{
+
 // Engine include
 class Texture;
 class PSPerLightCBuffer;
 class VSPerObjectCBuffer;
 class MeshData;
 class Material;
-class ID3D11Buffer;
 
 class PostProcessEffect
 {
@@ -40,4 +44,5 @@ private:
 	Texture*									m_texture2;
 };
 
+};
 #endif // !POST_PROCESS_EFFECT_H_

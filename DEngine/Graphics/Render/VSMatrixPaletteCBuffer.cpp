@@ -1,5 +1,8 @@
 #include "VSMatrixPaletteCBuffer.h"
 
+namespace DE
+{
+
 const size_t VSMatrixPaletteCBuffer::size = sizeof(VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER);
 
 VSMatrixPaletteCBuffer::VSMatrixPaletteCBuffer()
@@ -7,3 +10,5 @@ VSMatrixPaletteCBuffer::VSMatrixPaletteCBuffer()
 {
 	m_iSlotID = 2;
 }
+
+};

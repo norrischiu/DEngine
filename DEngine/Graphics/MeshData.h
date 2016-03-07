@@ -9,6 +9,9 @@
 #include "Material.h"
 #include "Physics\cdAABB.h"
 
+namespace DE
+{
+
 enum eMeshType
 {
 	OUTLINE,
@@ -23,8 +26,6 @@ class MeshData
 public:
 
 	// Overload default constructor
-	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eMeshType eMeshType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
-
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, unsigned int stride = 16, bool streamOut = false);
 
 	MeshData(const char* filename, int meshType);
@@ -32,14 +33,6 @@ public:
 	MeshData() {};
 
 	~MeshData();
-
-	void SetUpEnvironment(const eMeshType eMeshType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture);
-
-	void Transform(
-		const float scalar = 1.0f,
-		const Vector3 rotation = Vector3(0.0f, 0.0f, 0.0f),
-		const Vector3 translation = Vector3(0.0f, 0.0f, 0.0f)
-		);
 
 	void Update();
 
@@ -50,43 +43,6 @@ public:
 	inline int GetVertexNum()
 	{
 		return m_iNumVerts;
-	}
-
-	inline Vector3 GetVMin()
-	{
-		Vector3 vMin = Vector3(
-			0.0f + m_dimension.GetX() / 2,
-			0.0f - m_dimension.GetY() / 2,
-			0.0f + m_dimension.GetZ() / 2
-			);
-		vMin.Transform(m_transformationMat);
-		return vMin;
-	}
-
-	inline Vector3 GetVMax()
-	{
-		Vector3 vMax = Vector3(
-			0.0f - m_dimension.GetX() / 2,
-			0.0f + m_dimension.GetY() / 2,
-			0.0f - m_dimension.GetZ() / 2
-			);
-		vMax.Transform(m_transformationMat);
-		static wchar_t s[64];
-		swprintf(s, 64, L"vMax: %f, %f, %f\n", vMax.GetX(), vMax.GetY(), vMax.GetZ());
-		OutputDebugStringW(s);
-		return vMax;
-	}
-
-	inline Vector3 GetCenter()
-	{
-		Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
-		center.TransformAsVector(m_transformationMat);
-		return center;
-	}
-
-	inline Vector3 GetDimension()
-	{
-		return m_dimension;
 	}
 
 	inline AABB GetBoundingBox()
@@ -130,12 +86,9 @@ private:
 	// Flag whether it is stream out result
 	bool									m_bStreamOut;
 
-	Matrix4									m_transformationMat;
-
-	Vector3									m_dimension;
-
 	// Simple bounding box for camera frustum culling
 	AABB									m_BoundingBox;
 };
 
+};
 #endif

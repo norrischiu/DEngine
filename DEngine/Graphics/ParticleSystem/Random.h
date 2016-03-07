@@ -5,9 +5,12 @@
 #include <stdlib.h>
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 static float RandF()
 {
-	return (float)rand()/(float)RAND_MAX;
+	return (float)rand() / (float)RAND_MAX;
 }
 
 static float RandF(float a, float b)
@@ -19,7 +22,7 @@ static Vector3 RandUnitVec3()
 {
 	Vector3 one = Vector3(1.0f, 1.0f, 1.0f);
 	Vector3 v;
-	
+
 	while (true)
 	{
 		v = Vector3(RandF(-1.0f, 1.0f), RandF(-1.0f, 1.0f), RandF(-1.0f, 1.0f));
@@ -31,4 +34,5 @@ static Vector3 RandUnitVec3()
 	}
 }
 
+};
 #endif // !RANDOM_H_

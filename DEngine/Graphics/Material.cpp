@@ -5,6 +5,9 @@
 #include "Graphics\D3D11Renderer.h"
 #include "Graphics\MeshData.h"
 
+namespace DE
+{
+
 void Material::ReadFromFile(const char * filename, int meshType)
 {
 	FILE* pFile = fopen(filename, "r");
@@ -25,7 +28,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 	// read textures
 	int size;
 	fscanf(pFile, "%i", &size);
-	for (int i = 0; i < size; ++i) 
+	for (int i = 0; i < size; ++i)
 	{
 		fscanf(pFile, "%s", &c);
 		std::string str(c);
@@ -46,15 +49,15 @@ void Material::ReadFromFile(const char * filename, int meshType)
 	// decide which technique to use
 	switch (meshType)
 	{
-		case eMeshType::OUTLINE:
-			pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");			
-			break;
-		case eMeshType::STANDARD_MESH:
-			pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");			
-			break;
-		case eMeshType::SKELETAL_MESH:
-			pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");			
-			break;
+	case eMeshType::OUTLINE:
+		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
+		break;
+	case eMeshType::STANDARD_MESH:
+		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
+		break;
+	case eMeshType::SKELETAL_MESH:
+		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
+		break;
 	}
 	if (m_TexFlag & (DIFFUSE | NORMAL))
 	{
@@ -74,3 +77,5 @@ void Material::UseDefault()
 	m_vSpecular = Vector3::Zero;
 	m_fShininess = 1.0f;
 }
+
+};

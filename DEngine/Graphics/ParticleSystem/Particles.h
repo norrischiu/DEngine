@@ -10,6 +10,8 @@
 #include "Graphics\Render\Texture.h"
 #include "Random.h"
 
+namespace DE
+{
 class Emitter
 {
 public:
@@ -87,5 +89,5 @@ private:
 
 	RenderPass*	drawPass;
 };
-
+};
 #endif // !PARTICLES_H_

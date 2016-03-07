@@ -1,5 +1,8 @@
 #include "Animation.h"
 
+namespace DE
+{
+
 Animation::Animation(const std::string node_name, const float animationFPS, const int frame) :
 	m_node_name(node_name), m_animationFPS(animationFPS), m_currKeyframe(frame)
 {
@@ -68,7 +71,7 @@ SQT Animation::GetCurrentPose(const float delta_time)
 void Animation::update(const float delta_time)
 {
 	const int numFrame = m_Poses.size();
-	const int frameOffset = ((int) (delta_time / (1.0f / m_animationFPS)));
+	const int frameOffset = ((int)(delta_time / (1.0f / m_animationFPS)));
 
 	int newFrame = (m_currKeyframe + frameOffset) % numFrame;
 	if (newFrame <= 0) {
@@ -77,3 +80,5 @@ void Animation::update(const float delta_time)
 
 	setCurrentKeyframe(newFrame);
 }
+
+};

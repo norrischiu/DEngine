@@ -6,6 +6,9 @@
 #include "cdCollide.h"
 #include "cdBody.h"
 
+namespace DE
+{
+
 class Sphere : public Body
 {
 public:
@@ -36,4 +39,5 @@ private:
 	float		m_Radius;
 };
 
+};
 #endif

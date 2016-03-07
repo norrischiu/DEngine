@@ -1,5 +1,7 @@
 #include "ParticleSystem.h"
 
+namespace DE
+{
 ParticleSystem* ParticleSystem::m_pInstance;
 
 ParticleSystem::ParticleSystem()
@@ -52,4 +54,4 @@ void ParticleSystem::Render()
 	}
 }
 
-
+};

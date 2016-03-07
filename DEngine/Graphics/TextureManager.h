@@ -8,6 +8,9 @@
 #include <string>
 #include <d3d11.h>
 
+namespace DE
+{
+
 class TextureManager
 {
 public:
@@ -59,4 +62,5 @@ private:
 
 };
 
+};
 #endif // !TEXTUREMANAGER_H_

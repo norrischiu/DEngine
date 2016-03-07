@@ -1,6 +1,9 @@
 #include "LightComponent.h"
 #include "LightManager.h"
 
+namespace DE
+{
+
 LightComponent::LightComponent(Vector3 pos, Vector3 dir, Vector4 color, float radius, float intensity, int type, bool castShadow)
 	: m_vPos(pos)
 	, m_vDirection(dir)
@@ -15,3 +18,5 @@ LightComponent::LightComponent(Vector3 pos, Vector3 dir, Vector4 color, float ra
 		m_iShadowMapIndex = LightManager::GetInstance()->CreateShadowMap();
 	}
 }
+
+};

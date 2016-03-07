@@ -3,9 +3,12 @@
 
 #include "Memory\Handle.h"
 
+namespace DE
+{
+
 struct Event
 {
-	
+
 	CUSTOM_MEMORY_DEFINE();
 
 	Event(unsigned int ID)
@@ -15,5 +18,6 @@ struct Event
 	unsigned int m_ID;
 };
 
+};
 #endif // !EVENT_H
 

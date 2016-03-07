@@ -3,12 +3,15 @@
 #include <unordered_map>
 #include "MeshData.h"
 
+namespace DE
+{
+
 // Singleton class of a mesh manager
 class MeshManager
 {
 public:
 	// Default empty constructor
-	MeshManager(){}
+	MeshManager() {}
 	~MeshManager() {
 		m_MeshDataMap.clear();
 	}
@@ -34,4 +37,6 @@ private:
 
 	// Hash map of all mesh data
 	std::unordered_map<unsigned int, MeshData*>		m_MeshDataMap;
+};
+
 };

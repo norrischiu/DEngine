@@ -7,7 +7,8 @@
 #include "Helpers\TextHelper.h"
 #include "Graphics\Scene\SceneGraph.h"
 
-using namespace DE;
+namespace DE
+{
 
 class DEBUG_RENDERER
 {
@@ -46,7 +47,7 @@ public:
 		drawer.draw_line(corners[2], corners[6]);
 		drawer.draw_line(corners[3], corners[7]);
 	}
-	
+
 	void DRAW_2D_TEXT(const char* text, unsigned int screenX, unsigned int screenY)
 	{
 		TextHelper txtHelper;
@@ -94,7 +95,7 @@ public:
 	}
 
 private:
-	
+
 	DEBUG_RENDERER();
 
 	// Singleton instance
@@ -107,5 +108,6 @@ private:
 	Matrix4										m_m2DProjection;
 };
 
+};
 #endif // !DEBUG_RENDERER_H_
 

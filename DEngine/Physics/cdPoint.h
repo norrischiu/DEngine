@@ -5,10 +5,13 @@
 #include "cdCollide.h"
 #include "cdBody.h"
 
+namespace DE
+{
+
 class Point : public Body
 {
 public:
-	Point(){}
+	Point() {}
 
 	Point(const Vector3& point)
 	{
@@ -24,4 +27,5 @@ private:
 	Vector3 m_Point;
 };
 
+};
 #endif POINT_H

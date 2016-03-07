@@ -3,6 +3,9 @@
 #include <string>
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class Joint
 {
 public:
@@ -19,5 +22,7 @@ public:
 
 	// Array index to parent joint (max: 255)
 	int8_t							m_iParent;
+};
+
 };
 

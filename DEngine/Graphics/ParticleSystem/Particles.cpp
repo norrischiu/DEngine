@@ -4,61 +4,63 @@
 #define PT_EMITTER 0
 #define PT_FLARE 1
 
+namespace DE
+{
 Emitter::Emitter()
 {
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
 }
 
 Emitter::Emitter(int type, Vector3 & emitPos, Vector3 & emitDir)
-{	
-		m_fAge = 0.0f;
-		m_fFlareAge = 0.0f;
-		m_fTimeStep = 0.0f;
-		m_iMaxParticles = 20;
-		m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
-		m_EffectType = type;
-		m_vEmitPosW = emitPos;
-		m_vEmitDirW = emitDir;
-		m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
-		m_Flag = true;
-		m_FirstRun = true;
+{
+	m_fAge = 0.0f;
+	m_fFlareAge = 0.0f;
+	m_fTimeStep = 0.0f;
+	m_iMaxParticles = 20;
+	m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
+	m_EffectType = type;
+	m_vEmitPosW = emitPos;
+	m_vEmitDirW = emitDir;
+	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
+	m_Flag = true;
+	m_FirstRun = true;
 
-		// init data
-		Particle p;
-		ZeroMemory(&p, sizeof(Particle));
-		p.InitialPos = Vector3(0.0, 0.0, 0.0);
-		p.InitialVel = Vector3(0.0, 0.0, 0.0);
-		p.Size = 10.0f;
-		p.Age = 0.0f;
-		p.Type = PT_EMITTER;
-		p.NoData = 0.0f;
-		unsigned int index[1], index1[2];
-		index[0] = 0;
-		index1[0] = 0;
-		index1[1] = 1;
+	// init data
+	Particle p;
+	ZeroMemory(&p, sizeof(Particle));
+	p.InitialPos = Vector3(0.0, 0.0, 0.0);
+	p.InitialVel = Vector3(0.0, 0.0, 0.0);
+	p.Size = 10.0f;
+	p.Age = 0.0f;
+	p.Type = PT_EMITTER;
+	p.NoData = 0.0f;
+	unsigned int index[1], index1[2];
+	index[0] = 0;
+	index1[0] = 0;
+	index1[1] = 1;
 
 
-		Particle particles[20];
-		//std::vector<Particle> particles;
+	Particle particles[20];
+	//std::vector<Particle> particles;
 
-		m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
-		m_DrawMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
-		m_StreamOutMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
+	m_DrawMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_StreamOutMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
 
-		emitterPass = new RenderPass;
-		emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
-		emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
-		emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	emitterPass = new RenderPass;
+	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
+	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
+	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-		drawPass = new RenderPass;
-		drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
-		drawPass->SetGeometryShader("../DEngine/Shaders/GS_fire.hlsl");
-		drawPass->SetPixelShader("../DEngine/Shaders/PS_fire.hlsl");
-		drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		drawPass->SetRasterizerState(State::CULL_NONE_RS);
-		drawPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		drawPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
-		drawPass->SetBlendState(State::ALPHA_BS);
+	drawPass = new RenderPass;
+	drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
+	drawPass->SetGeometryShader("../DEngine/Shaders/GS_fire.hlsl");
+	drawPass->SetPixelShader("../DEngine/Shaders/PS_fire.hlsl");
+	drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	drawPass->SetRasterizerState(State::CULL_NONE_RS);
+	drawPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	drawPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
+	drawPass->SetBlendState(State::ALPHA_BS);
 
 	if (type == TORCH_FLAME)
 	{
@@ -165,7 +167,7 @@ void Emitter::Draw()
 		emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		m_InitMesh->RenderUsingPass(emitterPass);
 		D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
-		
+
 		// second pass
 		drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		m_DrawMesh->RenderUsingPass(drawPass);
@@ -230,3 +232,4 @@ void Emitter::Update(float dt)
 	m_fTimeStep = dt;
 
 }
+};

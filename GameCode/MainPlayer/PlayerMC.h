@@ -15,8 +15,8 @@ public:
 
 private:
 
-	void HandleKeyboardEvent(Event* pEvt) override;
-	void HandleMouseEvent(Event* pEvt) override;
+	void HandleKeyboardEvent(DE::Event* pEvt) override;
+	void HandleMouseEvent(DE::Event* pEvt) override;
 
 };
 

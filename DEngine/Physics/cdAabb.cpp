@@ -1,5 +1,8 @@
 #include "cdAabb.h"
 
+namespace DE
+{
+
 AABB::AABB(const Matrix4 & transform, const Vector3 & dimension, const Vector3 & origin)
 {
 	float aabb[6];
@@ -67,5 +70,6 @@ void AABB::update(const float deltaTime, const Vector3 & translate)
 	m_Min += tran;
 }
 
+};
 
 

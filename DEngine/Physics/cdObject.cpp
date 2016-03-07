@@ -1,5 +1,7 @@
 #include "cdObject.h"
 
+namespace DE
+{
 
 CollidableObject::CollidableObject(Body * body, const Vector3& translate, const int objectID)
 {
@@ -23,5 +25,7 @@ void CollidableObject::update()
 {
 
 }
+
+};
 
 //gameobjectarray[ID]->getTransform

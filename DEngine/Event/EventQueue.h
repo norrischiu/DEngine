@@ -5,6 +5,9 @@
 #include <queue>
 #include <assert.h>
 
+namespace DE
+{
+
 enum EventQueueType
 {
 	INPUT_EVENT,
@@ -82,5 +85,6 @@ private:
 	std::queue<Handle>					m_gameQueue;
 };
 
+};
 #endif // !EVENT_QUEUE
 

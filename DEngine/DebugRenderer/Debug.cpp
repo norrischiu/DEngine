@@ -4,8 +4,8 @@
 #include "Graphics\Scene\SceneGraph.h"
 #include "Graphics\MeshComponent.h"
 
-#pragma comment (lib, "D2D1")
-#pragma comment (lib, "Dwrite")
+namespace DE
+{
 
 Debug::Debug() {}
 
@@ -22,12 +22,13 @@ MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_
 		fabs(start_vertex.GetX() - end_vertex.GetX()),
 		fabs(start_vertex.GetY() - end_vertex.GetY()),
 		fabs(start_vertex.GetZ() - end_vertex.GetZ())
-	);
+		);
 
-	MeshComponent* Meshcomponent = new MeshComponent(vertices, 2, pIndices, 2, dimension, eMeshType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
+	MeshData* meshdata = new MeshData(vertices, 2, pIndices, 2);
+	MeshComponent* meshcomponent = new MeshComponent(meshdata);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshcomponent);
 
-	return Meshcomponent;
+	return meshcomponent;
 }
 
 MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, const int _stack_) {
@@ -45,9 +46,9 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 	const Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
 
 	for (int i = 0, index = 0;
-		i < stack;
+	i < stack;
 		i++
-	) {
+		) {
 		delta_h = height * i / (stack - 1);
 		cur_w_radius = w_radius * cosf(asinf(2 * (height / 2.0f - delta_h) / height));
 		cur_d_radius = d_radius * cosf(asinf(2 * (height / 2.0f - delta_h) / height));
@@ -57,7 +58,7 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 				cur_w_radius * sinf(theta) + center.GetX(),
 				(center.GetY() - height / 2.0f) + delta_h,
 				cur_d_radius * cosf(theta) + center.GetZ()
-			);
+				);
 		}
 	}
 
@@ -70,7 +71,8 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 				pIndices[index++] = (i + 1) * slice + k + 1;
 				pIndices[index++] = i * slice + k + 1;
 				pIndices[index++] = (i + 1) * slice + k;
-			} else {
+			}
+			else {
 				pIndices[index++] = i * slice;
 				pIndices[index++] = (i + 1) * slice - 1;
 				pIndices[index++] = (i + 1) * slice;
@@ -81,7 +83,8 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 		}
 	}
 
-	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eMeshType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
 	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
@@ -103,9 +106,9 @@ MeshComponent* Debug::draw_pyramid(const Vector3& dimension, const int slice, co
 	const Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
 
 	for (int i = 0, index = 0;
-		i < stack;
+	i < stack;
 		i++
-	) {
+		) {
 		cur_w_radius = (w_radius * (stack - 1 - i)) / (stack - 1);
 		cur_d_radius = (d_radius * (stack - 1 - i)) / (stack - 1);
 		delta_h = height * i / (stack - 1);
@@ -115,7 +118,7 @@ MeshComponent* Debug::draw_pyramid(const Vector3& dimension, const int slice, co
 				cur_w_radius * sinf(theta) + center.GetX(),
 				(center.GetY() - height / 2.0f) + delta_h,
 				cur_d_radius * cosf(theta) + center.GetZ()
-			);
+				);
 		}
 	}
 
@@ -139,17 +142,18 @@ MeshComponent* Debug::draw_pyramid(const Vector3& dimension, const int slice, co
 			}
 		}
 	}
-	
+
 	for (int i = 6 * slice * (stack - 1), j = 0;
-		i < iNumIndices;
+	i < iNumIndices;
 		j++
-	) {
+		) {
 		pIndices[i++] = 0;
 		pIndices[i++] = j + 1;
 		pIndices[i++] = j + 2;
 	}
-	
-	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eMeshType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
 	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
@@ -167,19 +171,19 @@ MeshComponent* Debug::draw_prism(const Vector3& dimension, const int slice) {
 
 	float theta = 0.0f;
 	for (int i = 0, indexUpper = 0, indexLower = iNumVerts / 2;
-		i < slice;
+	i < slice;
 		theta = 2 * PI * ++i / slice
-	) {
+		) {
 		pVertices[indexUpper++] = Vector3(
 			width / 2.0f * sinf(theta) + center.GetX(),
 			center.GetY() + height / 2.0f,
 			depth / 2.0f * cosf(theta) + center.GetZ()
-		);
+			);
 		pVertices[indexLower++] = Vector3(
 			width / 2.0f * sinf(theta) + center.GetX(),
 			center.GetY() - height / 2.0f,
 			depth / 2.0f * cosf(theta) + center.GetZ()
-		);
+			);
 	}
 
 	for (int i = 0, j = 0; i < 6 * slice; j++) {
@@ -202,9 +206,9 @@ MeshComponent* Debug::draw_prism(const Vector3& dimension, const int slice) {
 	}
 
 	for (int i = 6 * slice, j = 0;
-		i < iNumIndices;
+	i < iNumIndices;
 		j++
-	) {
+		) {
 		pIndices[i++] = 0;
 		pIndices[i++] = j + 1;
 		pIndices[i++] = j + 2;
@@ -213,8 +217,11 @@ MeshComponent* Debug::draw_prism(const Vector3& dimension, const int slice) {
 		pIndices[i++] = slice + j + 2;
 	}
 
-	MeshComponent* Meshcomponent = new MeshComponent(pVertices, iNumVerts, pIndices, iNumIndices, dimension, eMeshType::V1P, D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
 	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
+
+};

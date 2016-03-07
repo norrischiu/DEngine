@@ -3,6 +3,9 @@
 #include "MemoryManager.h"
 #include "Handle.h"
 
+namespace DE
+{
+
 MemoryManager* MemoryManager::m_pInstance;
 
 void MemoryManager::ConstructDefaultPool()
@@ -34,7 +37,7 @@ void MemoryManager::Destruct()
 
 Handle MemoryManager::Allocate(size_t size)
 {
-	for (unsigned int i = 0; i < MEMORY_POOL_NUM; ++i) 
+	for (unsigned int i = 0; i < MEMORY_POOL_NUM; ++i)
 	{
 		if (size <= MEMORY_POOL_CONFIG[i][0])
 		{
@@ -65,15 +68,17 @@ void* MemoryManager::GetMemoryAddressFromHandle(Handle hle)
 // Return a aligned address according to the alignment
 void* MemoryManager::alignedAddress(void* ptr)
 {
-	unsigned int adjustment = (unsigned int) ptr % MEMORY_ALIGNMENT;
+	unsigned int adjustment = (unsigned int)ptr % MEMORY_ALIGNMENT;
 	if (adjustment)
 	{
 		//unsigned int* intptr = (unsigned int*) ptr;
 		//intptr[0] = adjustment;
-		return (void *)((unsigned int) ptr + MEMORY_ALIGNMENT - adjustment);
+		return (void *)((unsigned int)ptr + MEMORY_ALIGNMENT - adjustment);
 	}
 	else
 	{
 		return ptr;
 	}
 }
+
+};

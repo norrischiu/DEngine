@@ -16,31 +16,31 @@ namespace GameEventID
 }
 
 
-struct Player_Walk_START_Event : public Event
+struct Player_Walk_START_Event : public DE::Event
 {
 	Player_Walk_START_Event()
-		:Event(GameEventID::Player_Walk_START_Event)
+		:DE::Event(GameEventID::Player_Walk_START_Event)
 	{};
 };
 
-struct Player_Walk_END_Event : public Event
+struct Player_Walk_END_Event : public DE::Event
 {
 	Player_Walk_END_Event()
-		:Event(GameEventID::Player_Walk_END_Event)
+		:DE::Event(GameEventID::Player_Walk_END_Event)
 	{};
 };
 
-struct Player_Attack_1_START_Event : public Event
+struct Player_Attack_1_START_Event : public DE::Event
 {
 	Player_Attack_1_START_Event()
-		:Event(GameEventID::Player_Attack_1_START_Event)
+		:DE::Event(GameEventID::Player_Attack_1_START_Event)
 	{};
 };
 
-struct Player_Attack_1_END_Event : public Event
+struct Player_Attack_1_END_Event : public DE::Event
 {
 	Player_Attack_1_END_Event()
-		:Event(GameEventID::Player_Attack_1_END_Event)
+		:DE::Event(GameEventID::Player_Attack_1_END_Event)
 	{};
 };
 

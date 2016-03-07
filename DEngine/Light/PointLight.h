@@ -7,6 +7,9 @@
 #include "PointLightComponent.h"
 #include <cmath>
 
+namespace DE
+{
+
 class PointLight : public GameObject
 {
 
@@ -37,4 +40,5 @@ public:
 
 };
 
+};
 #endif //!POINTLIGHT_H_

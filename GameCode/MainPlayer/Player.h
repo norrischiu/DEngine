@@ -5,7 +5,7 @@
 // Engine include
 #include "DEngine\GameObject\GameObject.h"
 
-class Player : public GameObject
+class Player : public DE::GameObject
 {
 
 public:

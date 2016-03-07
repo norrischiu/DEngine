@@ -5,12 +5,15 @@
 #include "Math\simdmath.h"
 #include "Render\RenderTechnique.h"
 
+namespace DE
+{
+
 class Material
 {
 public:
 
 	// Empty constructor
-	Material() 
+	Material()
 	{
 		m_pRenderTechnique = new RenderTechnique;
 	};
@@ -57,7 +60,7 @@ private:
 	Vector4						m_vDiffuse;
 	Vector4						m_vSpecular;
 	float						m_fShininess;
-	
+
 	// Texture bitfield
 	enum
 	{
@@ -73,4 +76,5 @@ private:
 	RenderTechnique*			m_pRenderTechnique;
 };
 
+};
 #endif
