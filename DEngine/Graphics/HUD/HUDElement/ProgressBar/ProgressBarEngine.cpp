@@ -27,9 +27,11 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 	char* id = progressBar->getID();
 
 	if (progressBar->hasUpdate()) {
-		delete m_cache[id];
-		m_cache.erase(id);
-		TextEngine::getInstance()->removeCacheByID(id);
+		if (m_cache[id]) {
+			delete m_cache[id];
+			m_cache.erase(id);
+			TextEngine::getInstance()->removeCacheByID(id);
+		}
 		progressBar->setHasUpdate(false);
 	}
 
@@ -124,8 +126,9 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 
 void ProgressBarEngine::removeCacheByID(const char* id)
 {
-	if (m_cache.find(id) != m_cache.end())
+	if (m_cache[id])
 	{
+		delete m_cache[id];
 		m_cache.erase(id);
 	}
 }

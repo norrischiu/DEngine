@@ -195,8 +195,10 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 	char* id = textBox->getID();
 
 	if (textBox->hasUpdate()) {
-		delete m_cache[id];
-		m_cache.erase(id);
+		if (m_cache[id]) {
+			delete m_cache[id];
+			m_cache.erase(id);
+		}
 		textBox->setHasUpdate(false);
 	}
 
@@ -222,8 +224,9 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 
 void TextEngine::removeCacheByID(const char* id)
 {
-	if (m_cache.find(id) != m_cache.end())
+	if (m_cache[id])
 	{
+		delete m_cache[id];
 		m_cache.erase(id);
 	}
 }

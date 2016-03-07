@@ -76,7 +76,7 @@ void SceneGraph::Render()
 				{
 					for (int index = 0; index < itr.second.m_vAnimations.size(); ++index)
 					{
-						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index]->m_mBindPoseInv;
+						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}
 				}
 			}

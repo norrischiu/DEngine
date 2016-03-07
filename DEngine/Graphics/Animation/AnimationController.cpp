@@ -23,9 +23,9 @@ AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skelet
 	m_bPlaying = false;
 }
 
-void AnimationController::addAnimationSet(std::string name, const AnimationSet& animationSet, const BlendMode blendMode)
+void AnimationController::addAnimationSet(const char* set_name, const AnimationSet& animationSet, const BlendMode blendMode)
 {
-	m_animationSets[name] = animationSet;
+	m_animationSets[set_name] = animationSet;
 }
 
 void AnimationController::CreateAnimationSets(const char* fileName)
@@ -45,7 +45,7 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
-		Animation* anim = new Animation(c);
+		Animation anim;
 		for (int j = 0; j < iNumFrames; ++j)
 		{
 			fscanf(pFile, "%f %f %f %f", &quat[0], &quat[1], &quat[2], &quat[3]);
@@ -54,18 +54,18 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 			Quaternion q(quat);
 			Vector3 t(trans[0], trans[1], trans[2]);
 			SQT sqt(q, t, scale);
-			anim->AddPose(sqt);
+			anim.AddPose(sqt);
 		}
+
 		animSet->AddAnimation(anim);
-		animSet->m_vAnimations.push_back(anim);
 	}
 	addAnimationSet(clipName, *animSet);
 	fclose(pFile);
 }
 
-void AnimationController::removeAnimationSet(const char* name)
+void AnimationController::removeAnimationSet(const char* set_name)
 {
-	m_animationSets.erase(name);
+	m_animationSets.erase(set_name);
 }
 
 std::unordered_map<std::string, AnimationSet>* AnimationController::getAnimationSets()
@@ -78,26 +78,15 @@ void AnimationController::setAnimationSet(const std::unordered_map<std::string, 
 	m_animationSets = animationSets;
 }
 
-AnimationSet* AnimationController::getAnimationSet(const char* name)
+AnimationSet* AnimationController::getAnimationSet(const char* set_name)
 {
-	auto t = m_animationSets.find(name);
+	auto t = m_animationSets.find(set_name);
 
 	if (t == m_animationSets.end()) {
 		return nullptr;
 	}
 	else {
 		return &t->second;
-	}
-
-	return nullptr;
-}
-
-Animation* AnimationController::getAnimation(const char* set_name, const char* animaton_name)
-{
-	AnimationSet* animationSet = getAnimationSet(set_name);
-
-	if (animationSet) {
-		return animationSet->getAnimation(animaton_name);
 	}
 
 	return nullptr;
@@ -113,14 +102,14 @@ void AnimationController::setSkeleton(Skeleton* skeleton)
 	m_skeleton = skeleton;
 }
 
-bool AnimationController::isAnimationSetActive(const char* name)
+bool AnimationController::isAnimationSetActive(const char* set_name)
 {
-	return getAnimationSet(name)->isActive();
+	return getAnimationSet(set_name)->isActive();
 }
 
-void AnimationController::setActiveAnimationSet(const char* name, const bool active)
+void AnimationController::setActiveAnimationSet(const char* set_name, const bool active)
 {
-	AnimationSet* animationSet = getAnimationSet(name);
+	AnimationSet* animationSet = getAnimationSet(set_name);
 
 	if (animationSet) {
 		animationSet->setActive(active);
@@ -146,9 +135,9 @@ int AnimationController::getNumAnimationSets() const
 	return m_animationSets.size();
 }
 
-int AnimationController::getNumAnimations(const char* name)
+int AnimationController::getNumAnimations(const char* set_name)
 {
-	AnimationSet* animationSet = getAnimationSet(name);
+	AnimationSet* animationSet = getAnimationSet(set_name);
 
 	/*
 	if (animationSet) {
@@ -205,14 +194,14 @@ void AnimationController::Update(float deltaTime)
 
 					const float interpolant = itr_transition->second.accuTime / itr_transition->second.duration;
 
-//					((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
+					((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
 
-					m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+					m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0].GetCurrentPose(deltaTime), toClip->m_vAnimations[0].GetCurrentPose(deltaTime), interpolant).Matrix();
 
 					for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 					{
-						Joint* currJoint = m_skeleton->m_vJoints[i];
-						m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+						const Joint& currJoint = m_skeleton->m_vJoints[i];
+						m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i].GetCurrentPose(deltaTime), toClip->m_vAnimations[i].GetCurrentPose(deltaTime), interpolant).Matrix();
 					}
 
 					itr_transition->second.accuTime += deltaTime;
@@ -245,14 +234,14 @@ void AnimationController::Update(float deltaTime)
 			{
 				animationSet->update(deltaTime);		//update delta time first, then animate
 
-				m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+				m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0].GetCurrentPose(deltaTime).Matrix();
 
-//				((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
+				((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
 
 				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 				{
-					Joint* currJoint = m_skeleton->m_vJoints[i];
-					m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+					const Joint& currJoint = m_skeleton->m_vJoints[i];
+					m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint.m_iParent] * animationSet->m_vAnimations[i].GetCurrentPose(deltaTime).Matrix();
 				}
 			}
 
@@ -270,6 +259,9 @@ void AnimationController::Update(float deltaTime)
 
 AnimationController::~AnimationController()
 {
+	if (m_skeleton) {
+		delete m_skeleton;
+	}
 }
 
 };
