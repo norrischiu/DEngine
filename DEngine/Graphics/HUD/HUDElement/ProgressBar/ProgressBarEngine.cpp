@@ -112,6 +112,11 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		}
 
 		m_cache[id] = meshComponent;
+
+		delete[] pVerticesProgress;
+		delete[] pVerticesProgressBorder;
+		delete[] pIndicesProgress;
+		delete[] pIndicesProgressBorder;
 	}
 
 	return m_cache[id];
@@ -127,6 +132,13 @@ void ProgressBarEngine::removeCacheByID(const char* id)
 
 void ProgressBarEngine::destructAndCleanUp()
 {
+	for (auto itr : m_cache)
+	{
+		delete itr.second;
+	}
+
+	m_cache.clear();
+
 	if (m_instance) {
 		delete m_instance;
 		m_instance = nullptr;

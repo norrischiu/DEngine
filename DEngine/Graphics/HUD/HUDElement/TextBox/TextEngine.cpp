@@ -130,6 +130,9 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 	textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "../Assets/font.dds"));
 	meshData->m_Material.AddPassToTechnique(textPass);
 
+	delete[] pVertices;
+	delete[] pIndices;
+
 	return meshData;
 }
 
@@ -227,6 +230,13 @@ void TextEngine::removeCacheByID(const char* id)
 
 void TextEngine::destructAndCleanUp()
 {
+	for (auto itr : m_cache)
+	{
+		delete itr.second;
+	}
+
+	m_cache.clear();
+
 	if (m_instance) {
 		delete m_instance;
 		m_instance = nullptr;

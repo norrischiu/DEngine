@@ -126,6 +126,9 @@ void FlowField::print()
 	translate.CreateTranslation(Vector3(-getFlowFieldWidth() / 2.0f, 0.0f, -getFlowFieldDepth() / 2.0f));
 	meshComponent->m_pTransform->Multiply(translate);
 	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComponent);
+
+	delete vertices;
+	delete indices;
 }
 
 int FlowField::getFlowFieldWidth()
