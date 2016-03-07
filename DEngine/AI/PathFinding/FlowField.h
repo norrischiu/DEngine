@@ -15,17 +15,21 @@ public:
 		{ }
 	};
 
+	FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination);
+	~FlowField();
+
 	int getFlowFieldWidth();
 	int getFlowFieldHeight();
 	int getFlowFieldDepth();
 
 	const Vector3 getDirection(const Vector3& position);
+	const Vector3 getDestination();
 	bool isPositionMovable(const Vector3& position);
 
-	FlowField(std::vector<std::vector<std::vector<Cell>>> flowField);
-	~FlowField();
+	void print();
 
 private:
 	std::vector<std::vector<std::vector<Cell>>> m_flowField;
+	Vector3 m_destination;
 };
 

@@ -18,7 +18,7 @@ Player::Player()
 {
 	AddComponent(new MeshComponent("maria", eMeshType::SKELETAL_MESH));
 	//AddComponent(new Body(typeAABB));
-	SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	SetPosition(Vector3(-4.0f, 0.0f, -4.0f));
 	AddComponent(new PlayerMC());
 	Skeleton* skel = new Skeleton("maria");
 	AnimationController* animController = new AnimationController(skel);

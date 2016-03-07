@@ -133,7 +133,7 @@ void SceneGraph::RENDER_DEBUG_DRAWING()
 	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);*/
 	for (auto itr : DEBUG_DRAWING_TREE)
 	{
-		ptr->WVPTransform = *itr->m_pTransform;
+		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
 		m_pVSCBuffer->Update();
 
 		//itr->m_pMeshData->RenderUsingPass(pass);

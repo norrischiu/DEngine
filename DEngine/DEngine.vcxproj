@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
@@ -201,6 +202,7 @@
     <ClCompile Include="Physics\cdSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
     <ClInclude Include="DebugRenderer\debug.h" />

@@ -252,6 +252,9 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
+    <ClCompile Include="AI\PathFinding\AIController.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -502,6 +505,9 @@
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="AI\PathFinding\FlowField.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\AIController.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
   </ItemGroup>

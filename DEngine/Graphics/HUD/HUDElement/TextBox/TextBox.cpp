@@ -28,7 +28,7 @@ TextBox* TextBox::setText(const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char string[128];
+	char string[256];
 	vsnprintf(string, sizeof(string), format, args);
 	va_end(args);
 	return setText(string);
