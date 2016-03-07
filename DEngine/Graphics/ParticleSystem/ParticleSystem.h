@@ -2,34 +2,27 @@
 #ifndef PARTICLESYSTEM_H_
 #define PARTICLESYSTEM_H_
 
-#include "Particle.h"
-#include <vector>
-#include <d3d11.h>
-#include "Graphics\D3D11Renderer.h"
-#include "Graphics\Render\VSGSPSPerFrameCBuffer.h"
-#include "Graphics\Render\Texture.h"
-#include "Random.h"
+#include "Particles.h"
+#include <unordered_map>
 
 class ParticleSystem
 {
 public:
+
+	enum
+	{
+		TORCH_FLAME = 1,
+		SMOKE = 2,
+		ROCKET_TRAIL = 3,
+	};
+
 	ParticleSystem();
 
 	~ParticleSystem();
 
-	float	GetAge();
+	Emitter* AddParticles(char* id, int type, Vector3& emitPos, Vector3& emitDir);
 
-	void	Init();
-
-	void	Draw();
-
-	void	SetEyePosW(const Vector3& eyePosW);
-
-	void	SetEmitPosW(const Vector3& emitPosW);
-
-	void	SetEmitDirW(const Vector3& emitDirW);
-
-	void	SetMaxPartiples(const unsigned int max);
+	void SetVelocity(char* id, Vector3& velocity);
 
 	static ParticleSystem*	GetInstance()
 	{
@@ -38,50 +31,14 @@ public:
 		return m_pInstance;
 	}
 
-	void	Update(const float delta_time);
+	void Update(float delta_time);
+
+	void Render();
 
 private:
-	// singleton instance
-	static ParticleSystem*			m_pInstance;
-
-	// Maximum number of particles
-	unsigned						m_iMaxParticles;
-
-	// Age of particles
-	float							m_fAge;
-
-	float							m_fFlareAge;
-
-	float							m_fGameTime;
-
-	float							m_fTimeStep;
-
-	// Position of eye in the world space
-	Vector3							m_vEyePosW;
-
-	// Position of emitting in the world space
-	Vector3							m_vEmitPosW;
-
-	// Emitting direction in the world space
-	Vector3							m_vEmitDirW;
-
-	// Mesh for emitter
-	MeshData*						m_InitMesh;
-
-	// Mesh for all particles
-	MeshData*						m_DrawMesh;
-
-	MeshData*						m_StreamOutMesh;
-	// 
-	VSGSPSPerFrameCBuffer*			m_pVSGSPSCBuffer;
-
-	bool							m_Flag;
-
-	bool							m_FirstRun;
-
-	RenderPass* emitterPass;
-
-	RenderPass*	drawPass;
+	Vector3						m_Velocity;
+	static ParticleSystem*		m_pInstance;
+	std::unordered_map<const char*, Emitter*> m_Particles;
 };
 
 #endif // !PARTICLESYSTEM_H_

@@ -237,14 +237,17 @@
     <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
-      <Filter>Graphics\ParticleSystem</Filter>
-    </ClCompile>
     <ClCompile Include="AI\PathFinding\ContourSetBuilder.cpp" />
     <ClCompile Include="AI\PathFinding\DetailMeshBuilder.cpp" />
     <ClCompile Include="AI\PathFinding\OpenHeightfieldBuilder.cpp" />
     <ClCompile Include="AI\PathFinding\PolygonMeshBuilder.cpp" />
     <ClCompile Include="AI\PathFinding\SolidHeightfieldBuilder.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Particles.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -481,9 +484,6 @@
     <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
       <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h">
-      <Filter>Graphics\ParticleSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\ParticleSystem\Random.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
@@ -496,6 +496,12 @@
     <ClInclude Include="AI\PathFinding\PolygonMeshBuilder.h" />
     <ClInclude Include="AI\PathFinding\SolidHeightfieldBuilder.h" />
     <ClInclude Include="Event\EngineEvent.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Particles.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

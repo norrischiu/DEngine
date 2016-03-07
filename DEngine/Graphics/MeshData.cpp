@@ -10,7 +10,7 @@
 #include "Material.h"
 #include "VertexFormat.h"
 #include <float.h>
-#include "ParticleSystem\ParticleSystem.h"
+#include "ParticleSystem\Particles.h"
 #pragma comment (lib, "D3DCompiler")
 
 MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, const Vector3& dimension, const eMeshType renderType, const D3D_PRIMITIVE_TOPOLOGY typology, const char* texture)

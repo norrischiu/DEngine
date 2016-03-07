@@ -20,6 +20,7 @@ public:
 		float	gTimeStep;
 		float	gFlareAge;
 		unsigned int gMaxParts;
+		unsigned int gEffectType;
 	};
 
 	VSGSPSPerFrameCBuffer();

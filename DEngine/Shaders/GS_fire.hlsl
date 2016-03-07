@@ -1,7 +1,7 @@
-
+#define PT_EMITTER	 0
+#define PT_FLARE	 1
 
 // Globals
-
 cbuffer CB_PER_FRAME : register(b0)
 {
 	float4x4	gViewProj;
@@ -14,6 +14,7 @@ cbuffer CB_PER_FRAME : register(b0)
 	float		gTimeStep;
 	float		gFlareAge;
 	unsigned int gMaxParts;
+	unsigned int gEffectType;
 };
 
 cbuffer GS_CONSTANT_BUFFER
@@ -21,29 +22,6 @@ cbuffer GS_CONSTANT_BUFFER
 	// Net constant acceleration used to accerlate the particles.
 	float3 gAccelW = { 0.0f, 7.8f, 0.0f };
 }
-
-// Random function
-/**
-float3 RandUnitVec3(float offset)
-{
-	// random texture, use to generate random number
-	Texture1D gRandomTex;
-
-	// Use game time plus offset to sample random texture.
-	float u = (gGameTime + offset);
-
-	// coordinates in [-1,1]
-	float3 v = gRandomTex.SampleLevel(samLinear, u, 0).xyz;
-
-	// project onto unit sphere
-	return normalize(v);
-}*/
-
-
-// Stream out
-#define PT_EMITTER	 0
-#define PT_FLARE	 1
-
 
 struct VS_OUTPUT
 {
@@ -60,6 +38,7 @@ struct GS_OUTPUT
 {
 	float4 PosH  : SV_Position;
 	float4 Color : COLOR;
+	float2 Tex   : TEXCOORD;
 };
 
 // The draw GS just expands points into camera facing quads.
@@ -70,6 +49,14 @@ void GS(point VS_OUTPUT gin[1],
 	GS_OUTPUT gout;
 	// do not draw emitter particles.
 
+	float2 gQuadTexC[4] =
+	{
+		float2(0.0f, 1.0f),
+		float2(1.0f, 1.0f),
+		float2(0.0f, 0.0f),
+		float2(1.0f, 0.0f)
+	};
+
 	if (gin[0].Type != PT_EMITTER)
 	{
 		//
@@ -79,12 +66,15 @@ void GS(point VS_OUTPUT gin[1],
 		float3 look = float3(normalize(gEyePosW.xyz - gin[0].PosW.xyz));
 		float3 right = normalize(cross(float3(0, 1, 0), look));
 		float3 up = cross(look, right);
+		
 
 		//
 		// Compute triangle strip vertices (quad) in world space.
 		//
 		float halfWidth = 0.1f*gin[0].SizeW.x;
-		float halfHeight = halfWidth;
+		float halfHeight = halfWidth*2;
+		//if (gEffectType == 2)
+			//halfHeight = halfWidth;
 
 		float4 v[4];
 
@@ -99,6 +89,7 @@ void GS(point VS_OUTPUT gin[1],
 		{
 			gout.PosH = mul(v[i], gViewProj);
 			gout.Color = gin[0].Color;
+			gout.Tex = gQuadTexC[i];
 			triStream.Append(gout);
 		}
 	}

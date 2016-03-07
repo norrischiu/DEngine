@@ -170,6 +170,7 @@
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\MeshData.cpp" />
     <ClCompile Include="Graphics\MeshManager.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Particles.cpp" />
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Graphics\MeshData.h" />
     <ClInclude Include="Graphics\MeshManager.h" />
     <ClInclude Include="Graphics\ParticleSystem\Particle.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Particles.h" />
     <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Graphics\ParticleSystem\Random.h" />
     <ClInclude Include="Graphics\PostProcessEffect.h" />
