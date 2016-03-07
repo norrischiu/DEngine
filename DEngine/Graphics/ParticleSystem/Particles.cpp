@@ -6,13 +6,18 @@
 
 namespace DE
 {
-Emitter::Emitter()
+Emitter::Emitter() : Component()
+, m_pTransform(new Matrix4())
 {
+	m_ID = ComponentID;
+	*m_pTransform = Matrix4::Identity;
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
 }
 
-Emitter::Emitter(int type, Vector3 & emitPos, Vector3 & emitDir)
+Emitter::Emitter(int type, Vector3 & emitPos, Vector3 & emitDir) : Component()
+, m_pTransform(new Matrix4())
 {
+	m_ID = ComponentID;
 	m_fAge = 0.0f;
 	m_fFlareAge = 0.0f;
 	m_fTimeStep = 0.0f;
@@ -38,7 +43,7 @@ Emitter::Emitter(int type, Vector3 & emitPos, Vector3 & emitDir)
 	index[0] = 0;
 	index1[0] = 0;
 	index1[1] = 1;
-
+	*m_pTransform = Matrix4::Identity;
 
 	Particle particles[20];
 	//std::vector<Particle> particles;
@@ -91,6 +96,7 @@ float Emitter::GetAge()
 
 void Emitter::AddParticle(int type, Vector3& emitPos, Vector3& emitDir)
 {
+	m_ID = ComponentID;
 	m_fAge = 0.0f;
 	m_fFlareAge = 0.0f;
 	m_fTimeStep = 0.0f;
@@ -230,6 +236,13 @@ void Emitter::Update(float dt)
 {
 	m_fFlareAge += dt;
 	m_fTimeStep = dt;
+	
+	m_vEmitPosW.Transform(*m_pTransform);
 
+}
+void Emitter::SetOwner(GameObject * ptr)
+{
+	Component::SetOwner(ptr);
+	m_pTransform = m_pOwner->GetTransform();
 }
 };

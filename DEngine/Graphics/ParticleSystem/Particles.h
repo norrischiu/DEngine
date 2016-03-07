@@ -9,10 +9,11 @@
 #include "Graphics\Render\VSGSPSPerFrameCBuffer.h"
 #include "Graphics\Render\Texture.h"
 #include "Random.h"
+#include "Object\Component.h"
 
 namespace DE
 {
-class Emitter
+class Emitter : public Component
 {
 public:
 
@@ -23,6 +24,8 @@ public:
 		ROCKET_TRAIL = 3,
 		FIRE = 4,
 	};
+
+	static const int ComponentID = ComponentID::PARTICLE_SYSTEM;
 
 	Emitter();
 
@@ -44,7 +47,9 @@ public:
 
 	void	SetMaxPartiples(const unsigned int max);
 
-	void	Update(const float delta_time);
+	void	Update(const float delta_time) override;
+
+	void	SetOwner(GameObject* ptr) override;
 
 private:
 
@@ -70,6 +75,9 @@ private:
 
 	// Emitting direction in the world space
 	Vector3							m_vEmitDirW;
+
+	// transform matrix
+	Matrix4*						m_pTransform;
 
 	// Mesh for emitter
 	MeshData*						m_InitMesh;
