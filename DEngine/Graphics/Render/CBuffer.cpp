@@ -2,6 +2,9 @@
 #include "Math\simdmath.h"
 #include "Graphics\D3D11Renderer.h"
 
+namespace DE
+{
+
 CBuffer::CBuffer(int type, size_t size)
 	:m_iType(type)
 {
@@ -50,3 +53,4 @@ void CBuffer::Update(size_t size)
 	D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_Memory._buffer, 0);
 }
 
+};

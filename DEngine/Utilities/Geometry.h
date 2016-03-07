@@ -5,6 +5,9 @@
 #include "Math\simdmath.h"
 #include "Physics\cdAabb.h"
 
+namespace DE
+{
+
 namespace Geometry
 {
 	static float* CreateSpotLightConeVertex() {};
@@ -30,18 +33,19 @@ namespace Geometry
 			yMin = (inVertices[i].GetY() < yMin) ? inVertices[i].GetY() : yMin;
 			zMin = (inVertices[i].GetZ() < zMin) ? inVertices[i].GetZ() : zMin;
 			*/
-			xMax = *(float*) &inVertices > xMax ? *(float*) &inVertices : xMax;
-			xMin = *(float*) &inVertices < xMin ? *(float*) &inVertices : xMin;
-			inVertices = (char*) inVertices + sizeof(float);
-			yMax = *(float*) &inVertices > yMax ? *(float*) &inVertices : yMax;
-			yMin = *(float*) &inVertices < yMin ? *(float*) &inVertices : yMin;
+			xMax = *(float*)&inVertices > xMax ? *(float*)&inVertices : xMax;
+			xMin = *(float*)&inVertices < xMin ? *(float*)&inVertices : xMin;
 			inVertices = (char*)inVertices + sizeof(float);
-			zMax = *(float*) &inVertices > zMax ? *(float*) &inVertices : zMax;
-			zMin = *(float*) &inVertices < zMin ? *(float*) &inVertices : zMin;
+			yMax = *(float*)&inVertices > yMax ? *(float*)&inVertices : yMax;
+			yMin = *(float*)&inVertices < yMin ? *(float*)&inVertices : yMin;
+			inVertices = (char*)inVertices + sizeof(float);
+			zMax = *(float*)&inVertices > zMax ? *(float*)&inVertices : zMax;
+			zMin = *(float*)&inVertices < zMin ? *(float*)&inVertices : zMin;
 			inVertices = (char*)inVertices + sizeof(float);
 		}
 		return AABB(Vector3(xMin, yMin, zMin), Vector3(xMax, yMax, zMax));
 	};
 }
 
+};
 #endif // GEOMETRY_H_

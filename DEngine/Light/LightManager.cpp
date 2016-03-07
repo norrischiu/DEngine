@@ -1,6 +1,9 @@
 #include "LightManager.h"
 #include "PointLight.h"
 
+namespace DE
+{
+
 LightManager* LightManager::m_pInstance;
 
 LightManager::LightManager()
@@ -10,7 +13,7 @@ LightManager::LightManager()
 	Vector3* pPointLightVertices = new Vector3[8];
 	Vector3* pSpotLightVertices = new Vector3[5];
 	unsigned int pPointLightIndices[36] =
-	{ 
+	{
 		0, 1, 2, // side 1
 		2, 1, 3,
 		4, 0, 6, // side 2
@@ -22,7 +25,7 @@ LightManager::LightManager()
 		4, 5, 0, // side 5
 		0, 5, 1,
 		3, 7, 2, // side 6
-		2, 7, 6 
+		2, 7, 6
 	};
 	pPointLightVertices[0] = Vector3(-1.0, 1.0, -1.0);
 	pPointLightVertices[1] = Vector3(1.0, 1.0, -1.0);
@@ -42,7 +45,7 @@ LightManager::LightManager()
 	{
 		0, 1, 2, // top
 		0, 2, 3,
-		0, 3, 4,  
+		0, 3, 4,
 		0, 4, 1,
 		1, 4, 3, // base
 		3, 2, 1,
@@ -75,3 +78,5 @@ LightComponent* LightManager::GetLightAt(int index)
 {
 	return m_vLights[index];
 }
+
+};

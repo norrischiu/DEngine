@@ -1,5 +1,9 @@
 #define cMult 0.0001002707309736288
 #define aSubtract 0.2727272727272727
+#define TORCH_FLAME 1
+#define SMOKE 2
+#define ROCKET_TRAIL 3
+#define FIRE 4
 
 cbuffer CB_PER_FRAME : register(b0)
 {
@@ -13,6 +17,7 @@ cbuffer CB_PER_FRAME : register(b0)
 	float		gTimeStep;
 	float		gFlareAge;
 	unsigned int gMaxParts;
+	unsigned int gEffectType;
 };
 
 
@@ -43,22 +48,31 @@ VS_OUTPUT VS(VS_INPUT vin)
 {
 	VS_OUTPUT vout;
 
-	float3 gAccelW = { 0.0f, -2.6f, 0.0f };
+	
+	float3 gAccelW = { 0.0f, 0.0f, 0.0f };
 	float t = vin.Age;
+	if (gEffectType == TORCH_FLAME)
+	{
+		vout.SizeW = vin.SizeW - t * vin.SizeW / 1.8;
 
+	}
+	else if (gEffectType == SMOKE)
+	{
+		vout.SizeW = t * vin.SizeW / 1.8 /2;
+	}
+	else if (gEffectType == FIRE)
+	{
+		vout.SizeW = t * vin.SizeW / 1.8;
+	}
 	vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
-
-	// fade color with time  --- smoothstep(min, max, x), x is in the range [min, max].
 	float opacity = 1.0f - smoothstep(0.0f, 1.0f, t / 1.0f);
 	vout.Color = float4(1.0f, 0.5f, 0.0f, opacity);
-
-	vout.SizeW = vin.SizeW;
 	vout.Type = vin.Type;
 	vout.Age = vin.Age;
 
 	// temp: useless data
 	vout.NoData = 0.0f;
-
+	
 	return vout;
 }
 

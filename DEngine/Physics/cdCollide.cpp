@@ -7,6 +7,8 @@
 #include "cdRay.h"
 #include <math.h>
 
+namespace DE
+{
 
 void Collide::setResponseObject1(const Vector3& response)
 {
@@ -281,3 +283,5 @@ void Collide::rayBoxCollide(const Body * p_Ray, const Body * p_Box)
 	setDistance(0.0f);
 
 }
+
+};

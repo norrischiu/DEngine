@@ -1,6 +1,5 @@
 Texture2D shaderTexture;
-#define cMult 0.0001002707309736288
-#define aSubtract 0.2727272727272727
+SamplerState SampleType;
 
 // globals
 cbuffer CB_PER_FRAME : register(b0)
@@ -15,32 +14,37 @@ cbuffer CB_PER_FRAME : register(b0)
 	float		gTimeStep;
 	float		gFlareAge;
 	unsigned int gMaxParts;
+	unsigned int gEffectType;
+};
+
+SamplerState gTriLinearSam
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
 };
 
 struct GS_OUTPUT
 {
 	float4 PosH  : SV_Position;
 	float4 Color : COLOR;
+	float2 Tex   : TEXCOORD;
 };
-
-
 
 // Draw
 float4 PS(GS_OUTPUT pin) : SV_TARGET
 {
+	float2 tex = pin.Tex;
+	if (gEffectType == 2)
+	{
+		float sinX = sin(gFlareAge);
+		float cosX = cos(gFlareAge);
+		float sinY = sin(gFlareAge);
+		float2x2 rotationMatrix = float2x2(cosX, -sinX, sinY, cosX);
+		tex.xy = mul(pin.Tex.xy, rotationMatrix);
+	}
 
-	float2 texCoord;
-	texCoord.x = pin.PosH.x / 1024.0f;
-	texCoord.y = pin.PosH.y / 768.0f;
+	//return gTexArray.Sample(samLinear, float3(pin.Tex, 0))*pin.Color;
 
-	float4 rgb = shaderTexture.Load(int3(pin.PosH.xy, 0));
-
-	float x = texCoord.x * 2.0f - 1.0f;
-	float y = (1.0f - texCoord.y) * 2.0f - 1.0f;
-	float4 projectedPos = float4(x, y, 1.0f, 1.0f);
-	float4 posVS = mul(projectedPos, gClipToView);
-	posVS.xyz /= posVS.w;
-
-
-	return pin.Color;
+	return shaderTexture.Sample(SampleType, pin.Tex);
 }

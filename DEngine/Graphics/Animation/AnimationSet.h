@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include "Animation.h"
 
+namespace DE
+{
+
 class AnimationSet
 {
 public:
@@ -16,7 +19,7 @@ public:
 
 	void removeAnimation(const std::string name);
 	Animation* getAnimation(const std::string name);
-	
+
 	int getNumAnimations() const;
 
 	float getCurrTime() const;
@@ -42,3 +45,4 @@ private:
 	bool m_bLooping;
 };
 
+};

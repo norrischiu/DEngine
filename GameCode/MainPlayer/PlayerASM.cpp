@@ -12,7 +12,7 @@
 
 #include <vector>
 
-PlayerASM::PlayerASM(AnimationController * animController)
+PlayerASM::PlayerASM(DE::AnimationController * animController)
 	: DE::AnimationStateMachine(animController)
 {
 	AddState("IDLE", "idle");
@@ -32,17 +32,17 @@ void PlayerASM::Update(float deltaTime)
 {
 	DE::AnimationStateMachine::Update(deltaTime);
 
-	while (!EventQueue::GetInstance()->Empty(GAME_EVENT))
+	while (!DE::EventQueue::GetInstance()->Empty(DE::GAME_EVENT))
 	{
-		Handle hEvt = EventQueue::GetInstance()->Front(GAME_EVENT);
+		DE::Handle hEvt = DE::EventQueue::GetInstance()->Front(DE::GAME_EVENT);
 		HandleEvent(hEvt);
-		EventQueue::GetInstance()->Pop(GAME_EVENT);
+		DE::EventQueue::GetInstance()->Pop(DE::GAME_EVENT);
 	}
 }
 
-void PlayerASM::HandleEvent(Handle hEvt)
+void PlayerASM::HandleEvent(DE::Handle hEvt)
 {
-	Event* pEvt = (Event*) hEvt.Raw();
+	DE::Event* pEvt = (DE::Event*) hEvt.Raw();
 	switch (pEvt->m_ID)
 	{
 		case GameEventID::Player_Walk_START_Event:

@@ -1,6 +1,9 @@
 #include "VSGSPSPerFrameCBuffer.h"
 #include "Graphics\D3D11Renderer.h"
 
+namespace DE
+{
+
 const size_t VSGSPSPerFrameCBuffer::size = sizeof(VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER);
 
 VSGSPSPerFrameCBuffer::VSGSPSPerFrameCBuffer()
@@ -16,3 +19,5 @@ void VSGSPSPerFrameCBuffer::BindToRenderer()
 	D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
 }
+
+};

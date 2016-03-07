@@ -7,6 +7,9 @@
 #include "cdSphere.h"
 #include "cdBody.h"
 
+namespace DE
+{
+
 class AABB : public Body
 {
 public:
@@ -76,5 +79,5 @@ private:
 	Vector3			m_Max;
 };
 
-
+};
 #endif

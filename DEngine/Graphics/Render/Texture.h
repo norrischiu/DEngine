@@ -4,6 +4,9 @@
 #include <d3d11.h>
 #include <assert.h>
 
+namespace DE
+{
+
 class Texture
 {
 
@@ -72,4 +75,5 @@ private:
 	ID3D11Texture2D*							m_pTexture;
 };
 
+};
 #endif // !TEXTURE_H_

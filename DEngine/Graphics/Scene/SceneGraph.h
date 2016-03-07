@@ -7,6 +7,10 @@
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 
+
+namespace DE
+{
+
 class MeshComponent;
 class RenderPass;
 
@@ -69,4 +73,5 @@ private:
 
 };
 
+};
 #endif

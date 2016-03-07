@@ -9,7 +9,7 @@ cbuffer CONSTANT_BUFFER_PER_FRAME
 	float	gTimeStep;
 	float	gFlareAge;
 	unsigned int gMaxParts;
-	
+	unsigned int gEffectType;
 };
 
 #define PT_EMITTER 0
@@ -42,18 +42,20 @@ void GS(point VS_INPUT gin[1],
 		if (gin[0].Type == PT_EMITTER)
 		{
 			// time to emit a new particle?
-			if (gin[0].Age > 0.5f)
+			if (gin[0].Age > 0.1f)
 			{
 				// temp random vector3
-				float3 random = rand_1_05(input);
+				float3 random = rand_1_05(input) * 0.5;
 
 				for (int i = 0; i < 1; i++)
 				{
 					VS_INPUT p;
-					//p.InitialPosW = float4(gEmitPosW.xyz, 0.0f);
-					p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
-					p.InitialVelW = float4(gEmitDirW.xyz*random, 0.0f);
-					p.SizeW = 0.4f;
+					//p.InitialPosW = float4(gEmitPosW.xyz + random, 1.0f);
+					p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
+					p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
+					p.SizeW = 6.0f;
+					if (gEffectType == 2)
+						p.SizeW = 8.0f;
 					p.Age = 0.0f;
 					p.Type = PT_FLARE;
 					p.NoData = 0;
@@ -70,7 +72,7 @@ void GS(point VS_INPUT gin[1],
 		else
 		{
 			// Specify conditions to keep particle; this may vary from system to system.
-			if (gin[0].Age <= 3.0f)
+			if (gin[0].Age <= 1.8f)
 				ptStream.Append(gin[0]);
 		}
 	

@@ -3,6 +3,10 @@
 
 // Engine include
 #include "Math\simdmath.h"
+
+namespace DE
+{
+
 class MeshComponent;
 
 enum Primitives {
@@ -25,14 +29,15 @@ enum Primitives {
 
 class Debug {
 
-	public:
-		Debug();
-		MeshComponent* draw_pyramid(const Vector3& dimension, const int _slice_, const int stack);
-		MeshComponent* draw_prism(const Vector3& dimension, const int stack);
-		MeshComponent* draw_ellipsoid(const Vector3& dimension, const int _slice_, const int stack);
-		MeshComponent* draw_line(const Vector3& start_vertex, const Vector3& end_vertex);
+public:
+	Debug();
+	MeshComponent* draw_pyramid(const Vector3& dimension, const int _slice_, const int stack);
+	MeshComponent* draw_prism(const Vector3& dimension, const int stack);
+	MeshComponent* draw_ellipsoid(const Vector3& dimension, const int _slice_, const int stack);
+	MeshComponent* draw_line(const Vector3& start_vertex, const Vector3& end_vertex);
 
-		~Debug() {};
+	~Debug() {};
 };
 
+};
 #endif

@@ -1,5 +1,8 @@
 #include "Joint.h"
 
+namespace DE
+{
+
 Joint::Joint(const Matrix4& matrix, const int parentIndex)
 	: m_mBindPoseInv(matrix)
 	, m_iParent(parentIndex)
@@ -18,3 +21,5 @@ const Matrix4& Joint::getCurrMatrix() const {
 void Joint::setCurrMatrix(const Matrix4& matrix) {
 	m_mBindPoseInv = matrix;
 }
+
+};

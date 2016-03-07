@@ -11,6 +11,9 @@
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 
+namespace DE
+{
+
 SceneGraph* SceneGraph::m_pInstance;
 
 SceneGraph::SceneGraph()
@@ -119,7 +122,7 @@ void SceneGraph::ShadowMapGeneration()
 void SceneGraph::RENDER_DEBUG_DRAWING()
 {
 #ifdef _DEBUG
-	
+
 	m_pVSCBuffer->BindToRenderer();
 
 	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
@@ -140,7 +143,7 @@ void SceneGraph::RENDER_DEBUG_DRAWING()
 		itr->m_pMeshData->Render();
 	}
 	//delete pass;
-	
+
 #endif
 }
 
@@ -154,3 +157,4 @@ void SceneGraph::ADD_DEBUG_DRAWING(MeshComponent * meshComponent)
 	DEBUG_DRAWING_TREE.push_back(meshComponent);
 }
 
+};

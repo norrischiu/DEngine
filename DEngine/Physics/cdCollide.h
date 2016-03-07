@@ -8,6 +8,9 @@
 
 class Body;
 
+namespace DE
+{
+
 struct Response
 {
 	Vector3 m_pObjectResponse;
@@ -53,5 +56,5 @@ private:
 	Response			m_ResponseObject2;
 };
 
-
+};
 #endif

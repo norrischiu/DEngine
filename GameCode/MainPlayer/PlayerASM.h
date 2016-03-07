@@ -10,13 +10,13 @@ class PlayerASM : public DE::AnimationStateMachine
 
 public:
 
-	PlayerASM(AnimationController* animController);
+	PlayerASM(DE::AnimationController* animController);
 
 	// Inherited via AnimationStateMachine
 	void Update(float deltaTime) override;
 
 	// Inherited via AnimationStateMachine
-	void HandleEvent(Handle hEvt) override;
+	void HandleEvent(DE::Handle hEvt) override;
 };
 
 #endif // !PLAYER_ASM_H_

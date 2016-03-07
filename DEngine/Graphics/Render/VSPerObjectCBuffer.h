@@ -4,6 +4,9 @@
 #include "CBuffer.h"
 #include "Math\simdmath.h"
 
+namespace DE
+{
+
 class VSPerObjectCBuffer : public CBuffer
 {
 
@@ -25,4 +28,5 @@ public:
 	static const size_t						size;
 };
 
+};
 #endif // !VS_PER_OBJECT_CBUFFER_H_

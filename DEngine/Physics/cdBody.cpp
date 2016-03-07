@@ -5,6 +5,9 @@
 #include "cdPoint.h"
 #include "cdRay.h"
 
+namespace DE
+{
+
 Vector3 Body::getCenter() const
 {
 	Vector3 center;
@@ -25,3 +28,5 @@ void Body::Update(float deltaTime)
 {
 
 }
+
+};

@@ -8,6 +8,9 @@
 #include "State.h"
 #include "Texture.h"
 
+namespace DE
+{
+
 class RenderPass
 {
 
@@ -106,6 +109,10 @@ public:
 
 	void BindToRenderer();
 
+	~RenderPass()
+	{
+	}
+
 private:
 
 	// Pointer to complied vertex shader
@@ -146,5 +153,6 @@ private:
 	std::vector<ID3D11SamplerState*>		m_vSamplerState;
 };
 
+};
 #endif // RENDER_PASS_H_
 

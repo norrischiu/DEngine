@@ -3,6 +3,9 @@
 #include <vector>
 #include "Graphics\D3D11Renderer.h"
 
+namespace DE
+{
+
 ShaderManager* ShaderManager::m_pInstance;
 
 void* ShaderManager::GetShader(const char* filename, D3D11_SHADER_VERSION_TYPE type)
@@ -101,7 +104,7 @@ D3D11_SO_DECLARATION_ENTRY* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS, un
 
 		if (prevRegister == paramDesc.Register)
 		{
-			offset += data[i-1].ComponentCount;
+			offset += data[i - 1].ComponentCount;
 		}
 		else
 		{
@@ -199,3 +202,4 @@ void* ShaderManager::GetInputLayout(const char * filename)
 	return m_mapInputLayouts[filename];
 }
 
+};

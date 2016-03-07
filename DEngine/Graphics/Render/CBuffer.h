@@ -3,6 +3,9 @@
 
 #include <d3d11.h>
 
+namespace DE
+{
+
 class CBuffer
 {
 
@@ -38,4 +41,5 @@ public:
 	int									m_iSlotID;
 };
 
+};
 #endif // !CBUFFER_H_

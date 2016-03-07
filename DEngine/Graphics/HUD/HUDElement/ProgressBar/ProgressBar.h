@@ -1,9 +1,12 @@
 #pragma once
 #include "../HUDElement.h"
 
+namespace DE
+{
+
 class ProgressBar : public HUDElement
 {
-	
+
 public:
 	static const int typeID = HUDElement::TypeID::PROGRESSBAR;
 
@@ -24,3 +27,4 @@ private:
 	bool m_showText;
 };
 
+};

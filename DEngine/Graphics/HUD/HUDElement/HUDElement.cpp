@@ -1,6 +1,7 @@
 #include "HUDElement.h"
 
-
+namespace DE
+{
 
 HUDElement::HUDElement(char* id, const HUDElement::Position pos, const float duration, const bool visibility) :
 	m_id(id), m_pos(pos), m_hasUpdate(false), m_duration(duration), m_visibility(visibility)
@@ -29,9 +30,9 @@ HUDElement::Position HUDElement::getPosition()
 
 void HUDElement::setPosition(const HUDElement::Position pos)
 {
-	if (pos.x >= 0 && pos.x <= 1024 && 
+	if (pos.x >= 0 && pos.x <= 1024 &&
 		pos.y >= 0 && pos.y <= 768
-	){
+		) {
 		m_pos = pos;
 		m_hasUpdate = true;
 	}
@@ -60,3 +61,5 @@ void HUDElement::setVisibility(const bool visibility)
 HUDElement::~HUDElement()
 {
 }
+
+};

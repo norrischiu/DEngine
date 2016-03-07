@@ -4,6 +4,9 @@
 #include "Graphics\D3D11Renderer.h"
 #include <windows.h>
 
+namespace DE
+{
+
 HUD* HUD::m_instance;
 
 HUD::HUD()
@@ -57,12 +60,12 @@ void HUD::cleanUpCache(const char* id)
 {
 	switch (m_elements[id]->getTypeID())
 	{
-		case HUDElement::TypeID::TEXTBOX:
-			TextEngine::getInstance()->removeCacheByID(id);
-			break;
-		case HUDElement::TypeID::PROGRESSBAR:
-			ProgressBarEngine::getInstance()->removeCacheByID(id);
-			break;
+	case HUDElement::TypeID::TEXTBOX:
+		TextEngine::getInstance()->removeCacheByID(id);
+		break;
+	case HUDElement::TypeID::PROGRESSBAR:
+		ProgressBarEngine::getInstance()->removeCacheByID(id);
+		break;
 	}
 }
 
@@ -70,17 +73,19 @@ void HUD::update(const float delta_time)
 {
 	for (std::unordered_map<const char*, float>::iterator itr = m_timer.begin(); itr != m_timer.end();)
 	{
-		if ((int) m_elements[itr->first]->getDuration() != -1) {
+		if ((int)m_elements[itr->first]->getDuration() != -1) {
 			itr->second += delta_time;
 
 			if (itr->second > m_elements[itr->first]->getDuration()) {
 				cleanUpCache(itr->first);
 				m_elements.erase(itr->first);
 				itr = m_timer.erase(itr);
-			} else {
+			}
+			else {
 				itr++;
 			}
-		} else {
+		}
+		else {
 			itr++;
 		}
 	}
@@ -98,28 +103,28 @@ void HUD::Render()
 		if (l.second->isVisible())
 		{
 			switch (l.second->getTypeID()) {
-				case HUDElement::TypeID::PROGRESSBAR:
+			case HUDElement::TypeID::PROGRESSBAR:
+			{
+				meshComponent = ProgressBarEngine::getInstance()->makeProgress((ProgressBar*)l.second);
+				int numMeshComponent = ((ProgressBar*)l.second)->isShowText() ? 2 : 1;
+				for (int i = 0; i <= numMeshComponent; i++) {
+					ptr->WVPTransform = *meshComponent[i].m_pTransform;
+					m_pVSCBuffer->Update();
+					meshComponent[i].m_pMeshData->Render();
+				}
+			}
+			break;
+			case HUDElement::TypeID::TEXTBOX:
+				if (strcmp(((TextBox*)l.second)->getText(), "") != 0)
 				{
-					meshComponent = ProgressBarEngine::getInstance()->makeProgress((ProgressBar*)l.second);
-					int numMeshComponent = ((ProgressBar*)l.second)->isShowText() ? 2 : 1;
-					for (int i = 0; i <= numMeshComponent; i++) {
-						ptr->WVPTransform = *meshComponent[i].m_pTransform;
-						m_pVSCBuffer->Update();
-						meshComponent[i].m_pMeshData->Render();
-					}
-				}
-					break;
-				case HUDElement::TypeID::TEXTBOX:
-					if (strcmp(((TextBox*)l.second)->getText(), "") != 0)
-					{
-						meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
-						ptr->WVPTransform = *meshComponent->m_pTransform;
-						m_pVSCBuffer->Update();
+					meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
+					ptr->WVPTransform = *meshComponent->m_pTransform;
+					m_pVSCBuffer->Update();
 
-						meshComponent->m_pMeshData->Render();
-					}
-					break;
+					meshComponent->m_pMeshData->Render();
 				}
+				break;
+			}
 		}
 	}
 }
@@ -142,3 +147,5 @@ HUD* HUD::getInstance()
 HUD::~HUD()
 {
 }
+
+};

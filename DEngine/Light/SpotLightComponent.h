@@ -7,6 +7,9 @@
 #include "LightComponent.h"
 #include "LightManager.h"
 
+namespace DE
+{
+
 class SpotLightComponent : public LightComponent
 {
 
@@ -43,6 +46,8 @@ private:
 
 	float								m_fInnerAngle;
 	float								m_fOuterAngle;
+
+};
 
 };
 

@@ -5,14 +5,8 @@
 #include "Scene\SceneGraph.h"
 #include "GameObject\GameObject.h"
 
-MeshComponent::MeshComponent(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndices, const Vector3& dimension, const eMeshType renderType, const D3D11_PRIMITIVE_TOPOLOGY typology, const char* texture)
-	: Component()
-	, m_pTransform(new Matrix4())
-	, m_bVisible(true)
+namespace DE
 {
-	*m_pTransform = Matrix4::Identity;
-	m_pMeshData = new MeshData(pVertexData, iNumVerts, pIndexData, iNumIndices, dimension, renderType, typology, texture);
-}
 
 MeshComponent::MeshComponent(MeshData* meshData)
 	: Component()
@@ -53,3 +47,5 @@ void MeshComponent::Draw()
 		m_pMeshData->Render();
 	}
 }
+
+};

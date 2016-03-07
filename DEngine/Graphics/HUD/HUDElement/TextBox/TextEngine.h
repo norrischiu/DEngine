@@ -3,6 +3,9 @@
 #include "TextBox.h"
 #include "Graphics/MeshComponent.h"
 
+namespace DE
+{
+
 class TextEngine
 {
 public:
@@ -35,4 +38,6 @@ private:
 	static TextEngine* m_instance;
 	FontType* m_Font;
 	std::unordered_map<const char*, MeshComponent*> m_cache;
+};
+
 };

@@ -6,6 +6,9 @@
 #include "cdCollide.h"
 #include "Math/simdmath.h"
 
+namespace DE
+{
+
 enum
 {
 	typeSPHERE,
@@ -50,6 +53,6 @@ private:
 
 };
 
-
+};
 
 #endif

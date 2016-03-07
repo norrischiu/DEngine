@@ -2,6 +2,9 @@
 #include <vector>
 #include "../../Graphics/VertexFormat.h"
 
+namespace DE
+{
+
 class FlowField
 {
 public:
@@ -33,3 +36,4 @@ private:
 	Vector3 m_destination;
 };
 
+};

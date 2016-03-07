@@ -1,5 +1,8 @@
 #include "AnimationSet.h"
 
+namespace DE
+{
+
 AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
 	m_currTime(currTime), m_duration(duration), m_active(active), m_bLooping(looping)
 {
@@ -75,7 +78,7 @@ void AnimationSet::setCurrTime(const float currTime)
 		std::unordered_map<std::string, Animation*>::iterator it = m_animations.begin();
 		it != m_animations.end();
 		++it
-	) {
+		) {
 		it->second->update(delta_time);
 	}
 }
@@ -109,3 +112,5 @@ void AnimationSet::SetLooping(const bool looping)
 {
 	m_bLooping = looping;
 }
+
+};

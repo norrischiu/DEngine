@@ -17,6 +17,8 @@
 // Game include
 #include "MainPlayer\Player.h"
 
+using namespace DE;
+
 GameLoop* GameLoop::m_pInstance = nullptr;
 
 GameLoop::GameLoop() 

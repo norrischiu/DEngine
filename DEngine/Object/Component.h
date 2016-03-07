@@ -2,6 +2,10 @@
 #ifndef COMPONENT_H_
 #define COMPONENT_H_
 
+
+namespace DE
+{
+
 class GameObject;
 
 namespace ComponentID
@@ -9,6 +13,7 @@ namespace ComponentID
 	enum
 	{
 		MESH,
+		TRANSFORM,
 		CAMERA,
 		CONTROLLER,
 		RIGIDBODY,
@@ -64,8 +69,10 @@ protected:
 	// Cache delta time in update()
 	float							m_fDeltaTime;
 
-	int m_ID;
+	// Component ID
+	int								m_ID;
 };
 
+};
 
 #endif // !COMPONENT_H

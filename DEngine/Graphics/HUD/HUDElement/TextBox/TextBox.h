@@ -5,6 +5,8 @@
 #include "../HUDElement.h"
 #include "Math/simdmath.h"
 
+namespace DE
+{
 
 class TextBox : public HUDElement
 {
@@ -30,3 +32,4 @@ private:
 	int m_color;
 };
 
+};

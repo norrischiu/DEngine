@@ -4,6 +4,9 @@
 
 #include "simdmath.h"
 
+namespace DE
+{
+
 __declspec(align(16)) struct SQT
 {
 	SQT() {};
@@ -42,6 +45,8 @@ __declspec(align(16)) struct SQT
 		result.m_vTrans = Lerp(a.m_vTrans, b.m_vTrans, t);
 		return result;
 	}
+
+};
 
 };
 

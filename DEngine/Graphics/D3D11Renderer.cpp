@@ -5,7 +5,11 @@
 #include "Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
 #include "Graphics\HUD\HUD.h"
+#include "Graphics\ParticleSystem\Particles.h"
 #include "Graphics\ParticleSystem\ParticleSystem.h"
+
+namespace DE
+{
 
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
 
@@ -35,7 +39,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 
 	// Create render target view
 	for (int i = 0; i < RT_NUM; i++)
-	{		
+	{
 		m_textures[i] = new Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
 		m_pRTVArray[i] = m_textures[i]->GetRTV();
 		m_pSRVArray[i] = m_textures[i]->GetSRV();
@@ -67,13 +71,19 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	m_GBuffer = new GBuffer;
 	m_PPE = new PostProcessEffect;
 
-	ParticleSystem::GetInstance()->Init();
+//	Emitter::GetInstance()->AddParticle(1, Vector3(2.5f, 0.5f, 0.0f), Vector3(0.0f, 0.7f, 0.0f));
+	// adding particles: input variables(particles id, particles type(torch flame), emitting position, emitting direction)
+	ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, Vector3(-2.5f, 0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+	ParticleSystem::GetInstance()->AddParticles("smoke", 2, Vector3(0.0f, 1.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+	ParticleSystem::GetInstance()->AddParticles("fire", 4, Vector3(2.0f, 1.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 }
 
 void D3D11Renderer::Update(const float delta_time, const float curr_time)
 {
 	HUD::getInstance()->update(delta_time);
+//	Emitter::GetInstance()->Update(delta_time);
 	ParticleSystem::GetInstance()->Update(delta_time);
+	ParticleSystem::GetInstance()->SetVelocity("torch_flame_1", Vector3(1.1f, 0.0f, 0.0f));
 }
 
 void D3D11Renderer::Render()
@@ -100,9 +110,10 @@ void D3D11Renderer::Render()
 
 	// Post process effect
 //	m_PPE->Render();
-	
+
 	// Particle system drawing
-	ParticleSystem::GetInstance()->Draw();
+//	Emitter::GetInstance()->Draw();
+	ParticleSystem::GetInstance()->Render();
 
 	// HUD drawing
 	HUD::getInstance()->Render();
@@ -113,3 +124,5 @@ void D3D11Renderer::Render()
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);
 }
+
+};

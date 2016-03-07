@@ -2,6 +2,9 @@
 
 #include "D3D11Renderer.h"
 
+namespace DE
+{
+
 class IndexBufferEngine
 {
 public:
@@ -20,4 +23,6 @@ private:
 	static IndexBufferEngine*		m_pInstance;
 	static unsigned int g_iCurrIndex;
 	FILE* pFile;
+};
+
 };

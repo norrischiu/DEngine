@@ -3,15 +3,20 @@
 #include "../../Graphics/D3D11Renderer.h"
 #include "../../Graphics/Scene/SceneGraph.h"
 
+
 float getDirectionInRadian(const Vector3& direction)
 {
 	return atan2(direction.GetZ(), direction.GetX());
 }
 
-FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination)
-	: m_flowField(flowField), m_destination(destination)
+namespace DE
 {
+	
+FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination)
+	: m_flowField(flowField), m_destination(destination) {
+		
 }
+
 
 FlowField::~FlowField()
 {
@@ -128,7 +133,7 @@ bool FlowField::isPositionMovable(const Vector3& position)
 		(x >= 0 && x <= getFlowFieldWidth() - 1) &&
 		(y >= 0 && y <= getFlowFieldHeight() - 1) &&
 		(z >= 0 && z <= getFlowFieldDepth() - 1)
-	) {
+		) {
 		return m_flowField[x][y][z].isMovable;
 	}
 
@@ -151,14 +156,17 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 		(y >= 0 && y <= getFlowFieldHeight() - 1) &&
 		(z >= 0 && z <= getFlowFieldDepth() - 1) &&
 		m_flowField[x][y][z].isMovable
-	) {
+		) {
 		return m_flowField[x][y][z].direction;
 	}
 
 	return Vector3(0.0f, 0.0f, 0.0f);
 }
 
+
 const Vector3 FlowField::getDestination()
 {
 	return m_destination;
 }
+
+};

@@ -4,13 +4,16 @@
 #include <vector>
 #include "RenderPass.h"
 
+namespace DE
+{
+
 class RenderTechnique
 {
 
 public:
 
 	// Empty constructor
-	RenderTechnique() 
+	RenderTechnique()
 	{
 	}
 
@@ -23,7 +26,12 @@ public:
 
 	std::vector<RenderPass*>				m_vRenderPasses;
 
+	~RenderTechnique()
+	{
+	}
+
 };
 
+};
 #endif // RENDER_TECHNIQUE_H_
 

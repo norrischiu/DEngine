@@ -5,6 +5,9 @@
 #include "../../Graphics/VertexFormat.h"
 #include "../../Physics/cdAABB.h"
 
+namespace DE
+{
+
 class FlowFieldBuilder
 {
 public:
@@ -40,3 +43,4 @@ private:
 	std::vector<std::vector<std::vector<FlowField::Cell>>> m_flowField;
 };
 
+};
