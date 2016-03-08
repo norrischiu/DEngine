@@ -14,7 +14,7 @@ void MemoryManager::ConstructDefaultPool()
 
 	for (unsigned int i = 0; i < MEMORY_POOL_NUM; ++i)
 	{
-		heapSize += MEMORY_POOL_CONFIG[i][0] * MEMORY_POOL_CONFIG[i][1] + sizeof(unsigned int) * 3;
+		heapSize += MEMORY_POOL_CONFIG[i][0] * MEMORY_POOL_CONFIG[i][1] + sizeof(unsigned int) * 4;
 	}
 	m_pRawHeapStart = malloc(heapSize);
 	void* heapStart = alignedAddress(m_pRawHeapStart); // align the start of memory pool
@@ -62,7 +62,8 @@ void MemoryManager::Free(Handle hle)
 // Get the raw address stored with reference to handle
 void* MemoryManager::GetMemoryAddressFromHandle(Handle hle)
 {
-	return (void*)((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 3 + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex);
+	assert((((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 4 + sizeof(unsigned int) * MEMORY_POOL_CONFIG[hle.m_poolIndex][1] + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex)) % 16 == 0); // temp check
+	return (void*)((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 4 + sizeof(unsigned int) * MEMORY_POOL_CONFIG[hle.m_poolIndex][1] + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex);
 }
 
 // Return a aligned address according to the alignment

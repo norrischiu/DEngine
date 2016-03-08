@@ -19,7 +19,7 @@ public:
 	{
 		m_vNormal = Cross(b - a, c - b);
 		m_vNormal.Normalize();
-		m_fDist = a.Dot(m_vNormal);
+		m_vNormal.SetW(a.Dot(m_vNormal));
 	}
 
 	bool IsInside(Sphere sphere)
@@ -31,7 +31,7 @@ public:
 	bool IsInside(Vector3 point)
 	{
 		float dist = m_vNormal.Dot(point);
-		return dist > m_fDist;
+		return dist > m_vNormal.GetW();
 	}
 
 	inline Vector3 GetNormal()
@@ -41,8 +41,8 @@ public:
 
 private:
 
+	// Stores distance to w component
 	Vector3						m_vNormal;
-	float						m_fDist;
 };
 
 };

@@ -2,6 +2,7 @@
 #define LIGHT_COMPONENT_H_
 
 #include "Object\Component.h"
+#include "GameObject\GameObject.h"
 #include "Math\simdmath.h"
 
 namespace DE
@@ -32,6 +33,12 @@ public:
 
 	inline Vector3 GetPosition()
 	{
+		if (m_pOwner)
+		{
+			Vector3 transformedPos = m_vPos;
+			transformedPos.Transform(*m_pOwner->GetTransform());
+			return transformedPos;
+		}
 		return m_vPos;
 	}
 

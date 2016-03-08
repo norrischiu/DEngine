@@ -49,13 +49,15 @@ public:
 	~CameraComponent() {};
 
 private:
+
+	Frustum						m_Frustum;
+	Matrix4						m_mPerspectiveProj;
+
 	// Camera position in local space of game object owner
 	Vector3						m_vPos;
 
 	Vector3						m_vLookAt;
 	Vector3						m_vUp;
-	Matrix4						m_mPerspectiveProj;
-	Frustum						m_Frustum;
 };
 
 };

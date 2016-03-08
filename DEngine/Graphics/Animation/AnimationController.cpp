@@ -207,12 +207,14 @@ void AnimationController::Update(float deltaTime)
 
 //					((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
 
-					m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+					*m_skeleton->m_vLocalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+					*m_skeleton->m_vGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vLocalPose[0];
 
 					for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 					{
 						Joint* currJoint = m_skeleton->m_vJoints[i];
-						m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+						*m_skeleton->m_vLocalPose[i] = *m_skeleton->m_vLocalPose[currJoint->m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+						*m_skeleton->m_vGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vLocalPose[i];
 					}
 
 					itr_transition->second.accuTime += deltaTime;
@@ -245,14 +247,16 @@ void AnimationController::Update(float deltaTime)
 			{
 				animationSet->update(deltaTime);		//update delta time first, then animate
 
-				m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+				*m_skeleton->m_vLocalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+				*m_skeleton->m_vGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vLocalPose[0];
 
 //				((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
 
 				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 				{
 					Joint* currJoint = m_skeleton->m_vJoints[i];
-					m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+					*m_skeleton->m_vLocalPose[i] = *m_skeleton->m_vLocalPose[currJoint->m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+					*m_skeleton->m_vGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vLocalPose[i];
 				}
 			}
 

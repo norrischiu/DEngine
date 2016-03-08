@@ -3,6 +3,7 @@
 
 #include <d3d11.h>
 #include <assert.h>
+#include "Memory/Handle.h"
 
 namespace DE
 {

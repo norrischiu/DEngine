@@ -20,8 +20,7 @@ public:
 
 	GameObject();
 
-	// Empty destructor: ownership at game world
-	~GameObject() {}
+	~GameObject();
 
 	virtual void		Update(float deltaTime);
 

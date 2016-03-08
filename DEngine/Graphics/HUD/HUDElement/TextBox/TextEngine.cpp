@@ -202,15 +202,15 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 		pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		pass->SetRasterizerState(State::CULL_NONE_RS);
-		MeshComponent* meshComp = new MeshComponent(meshData);
+//		MeshComponent* meshComp = new MeshComponent(meshData);
 
 		Matrix4 scaleX, scaleY, translate;
 		scaleX.CreateScaleX(-1.0f * textBox->getFontSize());
 		scaleY.CreateScaleY(1.0f * textBox->getFontSize());
 		translate.CreateTranslation(Vector3(-1024 / 2.0f + textBox->getPosition().x, 768 / 2.0f - textBox->getPosition().y, 0.0f));
-		*meshComp->m_pTransform = Matrix4::OrthographicProjection(1024, 768, 0.0f, 1.0f) * translate * scaleX * scaleY;
+//		*meshComp->m_pTransform = Matrix4::OrthographicProjection(1024, 768, 0.0f, 1.0f) * translate * scaleX * scaleY;
 
-		m_cache[id] = meshComp;
+//		m_cache[id] = meshComp;
 	}
 
 	return m_cache[id];

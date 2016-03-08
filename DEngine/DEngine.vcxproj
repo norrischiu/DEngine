@@ -209,6 +209,7 @@
     <ClInclude Include="Event\InputEvent.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
+    <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
     <ClInclude Include="Graphics\Animation\AnimationController.h" />
     <ClInclude Include="Graphics\Animation\AnimationSet.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />
+    <ClInclude Include="Helpers\GeometryHelper.h" />
     <ClInclude Include="Helpers\TextHelper.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\LightComponent.h" />

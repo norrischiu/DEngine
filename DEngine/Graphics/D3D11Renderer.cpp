@@ -105,10 +105,10 @@ void D3D11Renderer::Render()
 //	m_PPE->Render();
 
 	// Particle system drawing
-	ParticleSystem::GetInstance()->Draw();
+//	ParticleSystem::GetInstance()->Draw();
 
 	// HUD drawing
-	HUD::getInstance()->Render();
+//	HUD::getInstance()->Render();
 
 	// Debug drawing
 	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();

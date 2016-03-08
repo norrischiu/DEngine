@@ -16,7 +16,7 @@ namespace DE
 
 struct Handle
 {
-	// Empty constructor
+
 	Handle() {};
 
 	Handle(size_t size)

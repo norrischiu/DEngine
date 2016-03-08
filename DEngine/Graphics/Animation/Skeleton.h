@@ -35,16 +35,16 @@ public:
 		return m_vJoints.size();
 	}
 
-	inline Matrix4& GetGlobalPoseAt(int index)
-	{
-		return m_vGlobalPose[index];
-	}
-
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
 	std::vector<Joint*>							m_vJoints;
-	std::vector<Matrix4>						m_vGlobalPose;
+
+	// Pose in model space
+	std::vector<Matrix4*>						m_vLocalPose; 
+
+	// Pose in world space
+	std::vector<Matrix4*>						m_vGlobalPose;
 };
 
 };

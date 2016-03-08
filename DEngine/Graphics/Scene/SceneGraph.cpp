@@ -76,7 +76,7 @@ void SceneGraph::Render()
 				{
 					for (int index = 0; index < itr.second.m_vAnimations.size(); ++index)
 					{
-						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index]->m_mBindPoseInv;
+						palette->mSkinning[index] = *skel->m_vLocalPose[index] * skel->m_vJoints[index]->m_mBindPoseInv;
 					}
 				}
 			}
@@ -91,11 +91,11 @@ void SceneGraph::Render()
 		itr->Draw();
 	}
 
-	/*
+	
 	static wchar_t s[64];
 	swprintf(s, 64, L"Drawing: %i\n", count);
 	OutputDebugStringW(s);
-	*/
+	
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -127,22 +127,22 @@ void SceneGraph::RENDER_DEBUG_DRAWING()
 
 	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
 
-	/*RenderPass* pass = new RenderPass;
+	RenderPass* pass = new RenderPass;
 	pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
 	pass->SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 	pass->SetBlendState(State::NULL_STATE);
 	pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 	pass->SetRasterizerState(State::CULL_NONE_RS);
-	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);*/
+	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 	for (auto itr : DEBUG_DRAWING_TREE)
 	{
-		ptr->WVPTransform = *itr->m_pTransform;
+		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
 		m_pVSCBuffer->Update();
 
-		//itr->m_pMeshData->RenderUsingPass(pass);
-		itr->m_pMeshData->Render();
+		itr->m_pMeshData->RenderUsingPass(pass);
+		//itr->m_pMeshData->Render();
 	}
-	//delete pass;
+	delete pass;
 
 #endif
 }

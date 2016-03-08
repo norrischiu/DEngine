@@ -90,9 +90,6 @@
     <ClCompile Include="Graphics\D3D11Renderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\DeferredRenderer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GBuffer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -192,9 +189,6 @@
     <ClCompile Include="Object\MovementController.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObjectLoader.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\cdAabb.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -273,9 +267,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\D3D11Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DeferredRenderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GBuffer.h">
@@ -416,9 +407,6 @@
     <ClInclude Include="Object\MovementController.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object\objectloader.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\cdAabb.h">
       <Filter>Physics</Filter>
     </ClInclude>
@@ -497,13 +485,22 @@
     <ClInclude Include="Graphics\ParticleSystem\Particle.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Event\EngineEvent.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="AI\PathFinding\FlowField.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Transform.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers\GeometryHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EngineEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

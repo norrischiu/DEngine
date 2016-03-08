@@ -21,7 +21,7 @@ Skeleton::Skeleton(const char* name)
 	float transform[16];
 	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%i", &iNumJoints);
-	m_vGlobalPose.resize(iNumJoints, Matrix4::Identity);
+	//m_vLocalPose.resize(iNumJoints, new Matrix4);
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
@@ -31,6 +31,8 @@ Skeleton::Skeleton(const char* name)
 		}
 		fscanf(pFile, "%i", &parentIndex);
 		m_vJoints.push_back(new Joint(transform, parentIndex));
+		m_vLocalPose.push_back(new Matrix4);
+		m_vGlobalPose.push_back(new Matrix4);
 	}
 	fclose(pFile);
 }

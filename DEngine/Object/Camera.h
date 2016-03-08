@@ -13,7 +13,9 @@ public:
 
 	Camera(const Vector3& vPos, const Vector3& vLookAt, const Vector3& vUp, const float fFov, const float fRatio, const float fZNear, const float fZFar)
 	{
-		AddComponent(new CameraComponent(vPos, vLookAt, vUp, fFov, fRatio, fZNear, fZFar));
+		DE::Handle hCamera(sizeof(CameraComponent));
+		new (hCamera) CameraComponent(vPos, vLookAt, vUp, fFov, fRatio, fZNear, fZFar);
+		AddComponent((Component*) hCamera.Raw());
 	}
 
 	void SetAsRendererCamera()

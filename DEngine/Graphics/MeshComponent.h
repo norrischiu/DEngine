@@ -14,7 +14,7 @@ class MeshComponent : public Component
 public:
 
 	static const int ComponentID = ComponentID::MESH;
-	
+
 	// Overload constructor: create with given mesh data
 	MeshComponent(MeshData* meshData);
 	
