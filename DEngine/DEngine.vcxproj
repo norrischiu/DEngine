@@ -181,6 +181,7 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
+    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="Helpers\TextHelper.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
+    <ClInclude Include="Graphics\TerrainRendering\Terrain.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />

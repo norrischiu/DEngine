@@ -73,6 +73,9 @@
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{f4003de7-d586-4fb6-8ab3-ddd82d933a5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\TerrainRendering">
+      <UniqueIdentifier>{b7469f27-1663-4808-a7a2-c27810066f1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -88,9 +91,6 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\D3D11Renderer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\DeferredRenderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GBuffer.cpp">
@@ -192,9 +192,6 @@
     <ClCompile Include="Object\MovementController.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObjectLoader.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\cdAabb.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -252,6 +249,10 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\Particles.cpp" />
+    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp">
+      <Filter>Graphics\TerrainRendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -273,9 +274,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\D3D11Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DeferredRenderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GBuffer.h">
@@ -416,9 +414,6 @@
     <ClInclude Include="Object\MovementController.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object\objectloader.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\cdAabb.h">
       <Filter>Physics</Filter>
     </ClInclude>
@@ -503,6 +498,11 @@
     </ClInclude>
     <ClInclude Include="AI\PathFinding\FlowField.h">
       <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Particles.h" />
+    <ClInclude Include="Object\Transform.h" />
+    <ClInclude Include="Graphics\TerrainRendering\Terrain.h">
+      <Filter>Graphics\TerrainRendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
