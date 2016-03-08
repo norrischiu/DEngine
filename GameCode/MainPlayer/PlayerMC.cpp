@@ -6,24 +6,24 @@
 #include "DEngine\Event\InputEvent.h"
 #include "DEngine\Event\EventQueue.h"
 
-void PlayerMC::HandleKeyboardEvent(Event * pEvt)
+void PlayerMC::HandleKeyboardEvent(DE::Event * pEvt)
 {
 	//DE::MovementController::HandleKeyboardEvent(pEvt);
 	if (pEvt->m_ID == DE::InputEventID::Key_W_Press_Event)
 	{
-		Handle h(sizeof(Player_Walk_START_Event));
+		DE::Handle h(sizeof(Player_Walk_START_Event));
 		new (h) Player_Walk_START_Event;
-		EventQueue::GetInstance()->Add(h, GAME_EVENT);
+		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
 	if (pEvt->m_ID == DE::InputEventID::Key_W_Release_Event)
 	{
-		Handle h(sizeof(Player_Walk_END_Event));
+		DE::Handle h(sizeof(Player_Walk_END_Event));
 		new (h) Player_Walk_END_Event;
-		EventQueue::GetInstance()->Add(h, GAME_EVENT);
+		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
 }
 
-void PlayerMC::HandleMouseEvent(Event * pEvt)
+void PlayerMC::HandleMouseEvent(DE::Event * pEvt)
 {
 	DE::MovementController::HandleMouseEvent(pEvt);
 }
