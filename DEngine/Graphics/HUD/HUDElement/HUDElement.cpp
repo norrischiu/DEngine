@@ -60,6 +60,7 @@ void HUDElement::setVisibility(const bool visibility)
 
 HUDElement::~HUDElement()
 {
+
 }
 
 };

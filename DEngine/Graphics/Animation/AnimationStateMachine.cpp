@@ -52,6 +52,7 @@ AnimationStateMachine::~AnimationStateMachine()
 			m_mTransitions[i][j].Free();
 		}
 	}
+
 	for (auto itr : m_mapStates)
 	{
 		itr.second.Free();

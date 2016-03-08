@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
@@ -166,7 +167,7 @@
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\MeshData.cpp" />
     <ClCompile Include="Graphics\MeshManager.cpp" />
-    <ClCompile Include="Graphics\ParticleSystem\Particles.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp" />
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />
@@ -201,6 +202,7 @@
     <ClCompile Include="Physics\cdSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
@@ -231,7 +233,7 @@
     <ClInclude Include="Graphics\MeshData.h" />
     <ClInclude Include="Graphics\MeshManager.h" />
     <ClInclude Include="Graphics\ParticleSystem\Particle.h" />
-    <ClInclude Include="Graphics\ParticleSystem\Particles.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h" />
     <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Graphics\ParticleSystem\Random.h" />
     <ClInclude Include="Graphics\PostProcessEffect.h" />

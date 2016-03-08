@@ -249,9 +249,14 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\ParticleSystem\Particles.cpp" />
     <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp">
       <Filter>Graphics\TerrainRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\AIController.cpp">
+      <Filter>AI\PathFinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,10 +504,15 @@
     <ClInclude Include="AI\PathFinding\FlowField.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\ParticleSystem\Particles.h" />
     <ClInclude Include="Object\Transform.h" />
     <ClInclude Include="Graphics\TerrainRendering\Terrain.h">
       <Filter>Graphics\TerrainRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\AIController.h">
+      <Filter>AI\PathFinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

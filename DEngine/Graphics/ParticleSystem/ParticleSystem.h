@@ -2,7 +2,7 @@
 #ifndef PARTICLESYSTEM_H_
 #define PARTICLESYSTEM_H_
 
-#include "Particles.h"
+#include "Emitter.h"
 #include <unordered_map>
 
 namespace DE
