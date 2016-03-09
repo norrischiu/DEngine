@@ -88,8 +88,8 @@ void FlowFieldBuilder::setFlowFieldObstacles(std::vector<Vector3> obstacles, con
 		const int z = floor(obstacles[i].GetZ());
 
 		if (
-			(x >= 0 && (x <= getFlowFieldWidth() - 1)) ||
-			(y >= 0 && (y <= getFlowFieldHeight() - 1)) ||
+			(x >= 0 && (x <= getFlowFieldWidth() - 1)) &&
+			(y >= 0 && (y <= getFlowFieldHeight() - 1)) &&
 			(z >= 0 && (z <= getFlowFieldDepth() - 1))
 		) {
 			m_flowField[x][y][z].isMovable = false;
@@ -170,8 +170,8 @@ void FlowFieldBuilder::setFlowFieldDirection(std::vector<std::vector<std::vector
 	const int destZ = floor(dest.GetZ());
 
 	if (
-		(destX >= 0 && (destX <= getFlowFieldWidth() - 1)) ||
-		(destY >= 0 && (destY <= getFlowFieldHeight() - 1)) ||
+		(destX >= 0 && (destX <= getFlowFieldWidth() - 1)) &&
+		(destY >= 0 && (destY <= getFlowFieldHeight() - 1)) &&
 		(destZ >= 0 && (destZ <= getFlowFieldDepth() - 1))
 	) {
 		m_flowField[destX][destY][destZ].isMovable = true;
