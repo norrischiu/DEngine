@@ -11,8 +11,8 @@ float getDirectionInRadian(const Vector3& direction)
 	return atan2(direction.GetZ(), direction.GetX());
 }
 
-FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination)
-	: m_flowField(flowField), m_destination(destination)
+FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, std::vector<std::vector<std::vector<int>>> dijkstraGrid, const Vector3& offset, const Vector3& destination)
+	: m_flowField(flowField), m_dijkstraGrid(dijkstraGrid), m_offset(offset), m_destination(destination)
 {
 }
 
@@ -47,8 +47,12 @@ void FlowField::print()
 
 	Vector3 dest = m_destination;
 	Matrix4 transform;
-	transform.CreateTranslation(Vector3(getFlowFieldWidth() / 2.0f, 0.0f, getFlowFieldDepth() / 2.0f));
+	transform.CreateTranslation(-m_offset);
 	dest.Transform(transform);
+
+	const int destX = floor(dest.GetX());
+	const int destY = floor(dest.GetY());
+	const int destZ = floor(dest.GetZ());
 
 	for (int i = 0; i < getFlowFieldWidth(); i++)
 	{
@@ -57,12 +61,26 @@ void FlowField::print()
 		{
 			for (int k = 0; k < getFlowFieldDepth(); k++)
 			{
-				if ((dest.GetX() - i - 1) + (dest.GetZ() - k - 1) < std::numeric_limits<float>::epsilon()) {
-					continue;
-				}
-
 				Matrix4 translate;
 				translate.CreateTranslation(Vector3(i + 0.5f, j, k + 0.5f));
+
+				if ((destX - i) + (destZ - k) < std::numeric_limits<float>::epsilon()) { //destination
+					Vector3 t[4] = {
+						Vector3(-0.3f, 0.0f, 0.3f),
+						Vector3(0.3f, 0.0f, 0.3f),
+						Vector3(0.0f, 0.0f, 0.3f),
+						Vector3(0.0f, 0.0f, -0.3f)
+					};
+
+					for (int l = 0; l < 4; l++)
+					{
+						t[l].Transform(translate);
+						vertices[index_ver].m_pos = t[l];
+						indices[index_in++] = index_ver++;
+					}
+
+					continue;
+				}
 
 				if (m_flowField[i][j][k].isMovable)
 				{
@@ -123,7 +141,7 @@ void FlowField::print()
 	renderPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 	renderPass->SetRasterizerState(State::CULL_NONE_RS);
 	Matrix4 translate;
-	translate.CreateTranslation(Vector3(-getFlowFieldWidth() / 2.0f, 0.0f, -getFlowFieldDepth() / 2.0f));
+	translate.CreateTranslation(m_offset);
 	meshComponent->m_pTransform->Multiply(translate);
 	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComponent);
 
@@ -149,7 +167,7 @@ int FlowField::getFlowFieldDepth()
 bool FlowField::isPositionMovable(const Vector3& position)
 {
 	Matrix4 transform;
-	transform.CreateTranslation(Vector3(getFlowFieldWidth() / 2.0f, 0.0f, getFlowFieldDepth() / 2.0f));
+	transform.CreateTranslation(-m_offset);
 	Vector3 pos = position;
 	pos.Transform(transform);
 
@@ -171,13 +189,13 @@ bool FlowField::isPositionMovable(const Vector3& position)
 const Vector3 FlowField::getDirection(const Vector3& position)
 {
 	Matrix4 transform;
-	transform.CreateTranslation(Vector3(getFlowFieldWidth() / 2.0f, 0.0f, getFlowFieldDepth() / 2.0f));
+	transform.CreateTranslation(-m_offset);
 	Vector3 pos = position;
 	pos.Transform(transform);
 
-	const int x = pos.GetX();
-	const int y = pos.GetY();
-	const int z = pos.GetZ();
+	const int x = floor(pos.GetX());
+	const int y = floor(pos.GetY());
+	const int z = floor(pos.GetZ());
 
 	Vector3 direction(0.0f, 0.0f, 0.0f);
 

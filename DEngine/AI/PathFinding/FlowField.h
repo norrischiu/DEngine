@@ -18,7 +18,7 @@ public:
 		{ }
 	};
 
-	FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, const Vector3& destination);
+	FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, std::vector<std::vector<std::vector<int>>> dijkstraGrid, const Vector3& m_offset, const Vector3& destination);
 	~FlowField();
 
 	int getFlowFieldWidth();
@@ -33,6 +33,8 @@ public:
 
 private:
 	std::vector<std::vector<std::vector<Cell>>> m_flowField;
+	std::vector<std::vector<std::vector<int>>> m_dijkstraGrid;
+	Vector3 m_offset;
 	Vector3 m_destination;
 };
 
