@@ -238,7 +238,7 @@ FlowField FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Ve
 	auto dijkstraGrid = calculateDijkstraGrid(destination, offset);
 	setFlowFieldDirection(dijkstraGrid, offset, destination);
 
-	FlowField flowField(m_flowField, dijkstraGrid, offset, destination);
+	FlowField flowField(m_flowField, obstacles, offset, destination);
 	m_flowField.clear();
 
 	return flowField;

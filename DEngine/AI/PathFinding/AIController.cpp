@@ -1,5 +1,6 @@
 #include "AIController.h"
 #include "../../GameObject/GameObject.h"
+#include "FlowFieldBuilder.h"
 
 namespace DE
 {
@@ -13,6 +14,11 @@ AIController::AIController(FlowField& flowField)
 
 AIController::~AIController()
 {
+}
+
+void AIController::updateFlowField(const Vector3& start, const Vector3& destination)
+{
+	m_flowField = FlowFieldBuilder::getInstance()->generateFlowField(start, destination, m_flowField.getObstacles(), destination);
 }
 
 void AIController::Update(float deltaTime)

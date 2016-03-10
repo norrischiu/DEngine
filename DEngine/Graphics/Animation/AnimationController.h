@@ -37,14 +37,14 @@ public:
 	AnimationController(Skeleton* skeleton);
 	~AnimationController();
 
-	void addAnimationSet(const char* set_name, const AnimationSet& animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
+	void addAnimationSet(const char* set_name, AnimationSet* animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
 
 	void CreateAnimationSets(const char* fileName);
 
 	void removeAnimationSet(const char* set_name);
-	void setAnimationSet(const std::unordered_map<std::string, AnimationSet>& animationSets);
+	void setAnimationSet(const std::unordered_map<std::string, AnimationSet*>& animationSets);
 
-	std::unordered_map<std::string, AnimationSet>* getAnimationSets();
+	std::unordered_map<std::string, AnimationSet*>* getAnimationSets();
 	AnimationSet* getAnimationSet(const char* set_name);
 
 	Skeleton* getSkeleton();
@@ -63,7 +63,7 @@ public:
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
-	std::unordered_map<std::string, AnimationSet> m_animationSets;
+	std::unordered_map<std::string, AnimationSet*> m_animationSets;
 	std::unordered_map<std::string, Transition> m_transition;
 	Skeleton* m_skeleton;
 	bool m_bPlaying;

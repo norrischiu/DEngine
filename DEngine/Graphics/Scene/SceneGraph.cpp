@@ -72,9 +72,9 @@ void SceneGraph::Render()
 			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
 			for (auto itr : anim->m_animationSets)
 			{
-				if (itr.second.isActive())
+				if (itr.second->isActive())
 				{
-					for (int index = 0; index < itr.second.m_vAnimations.size(); ++index)
+					for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
 					{
 						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}

@@ -2,6 +2,7 @@
 #include "../../Graphics/MeshComponent.h"
 #include "../../Graphics/D3D11Renderer.h"
 #include "../../Graphics/Scene/SceneGraph.h"
+#include "FlowFieldBuilder.h"
 
 namespace DE
 {
@@ -11,8 +12,8 @@ float getDirectionInRadian(const Vector3& direction)
 	return atan2(direction.GetZ(), direction.GetX());
 }
 
-FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, std::vector<std::vector<std::vector<int>>> dijkstraGrid, const Vector3& offset, const Vector3& destination)
-	: m_flowField(flowField), m_dijkstraGrid(dijkstraGrid), m_offset(offset), m_destination(destination)
+FlowField::FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, std::vector<Vector3> obstacles, const Vector3& offset, const Vector3& destination)
+	: m_flowField(flowField), m_obstacles(obstacles), m_offset(offset), m_destination(destination)
 {
 }
 
@@ -232,6 +233,17 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 	}
 
 	return direction;
+}
+
+std::vector<Vector3>& FlowField::getObstacles()
+{
+	return m_obstacles;
+}
+
+
+const Vector3 FlowField::getOffset()
+{
+	return m_offset;
 }
 
 const Vector3 FlowField::getDestination()

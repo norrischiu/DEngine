@@ -11,10 +11,22 @@ AnimationSet::AnimationSet(const float currTime, const float duration, const boo
 
 AnimationSet::~AnimationSet()
 {
+	for (auto itr = m_vAnimations.begin(); itr != m_vAnimations.end();)
+	{
+		if (*itr) {
+			delete *itr;
+			itr = m_vAnimations.erase(itr);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+
 	m_vAnimations.clear();
 }
 
-void AnimationSet::AddAnimation(Animation animation)
+void AnimationSet::AddAnimation(Animation* animation)
 {
 	m_vAnimations.push_back(animation);
 }
@@ -28,7 +40,7 @@ void AnimationSet::reset()
 {
 	for (auto itr : m_vAnimations)
 	{
-		itr.setCurrentKeyframe(1);
+		itr->setCurrentKeyframe(1);
 	}
 }
 
@@ -38,7 +50,7 @@ void AnimationSet::update(const float delta_time)
 
 	for (auto itr : m_vAnimations)
 	{
-		itr.update(delta_time);
+		itr->update(delta_time);
 	}
 
 	if (m_currTime > m_duration && !m_bLooping) {
@@ -58,7 +70,7 @@ void AnimationSet::setCurrTime(const float currTime)
 
 	for (auto itr : m_vAnimations)
 	{
-		itr.update(delta_time);
+		itr->update(delta_time);
 	}
 }
 

@@ -15,7 +15,7 @@ public:
 	AnimationSet(const float currTime, const float duration, const bool active = false, const bool looping = false);
 	~AnimationSet();
 
-	void AddAnimation(Animation animation);
+	void AddAnimation(Animation* animation);
 
 	int getNumAnimations() const;
 
@@ -32,7 +32,7 @@ public:
 
 	void update(const float delta_time);
 
-	std::vector<Animation> m_vAnimations;
+	std::vector<Animation*> m_vAnimations;
 
 private:
 	float m_currTime;

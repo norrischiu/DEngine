@@ -55,7 +55,7 @@ void GameLoop::Construct()
 	Player* player = new Player();
 	std::vector<GameObject*> obstacles;
 
-	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(4.9f, 4.9f, 4.9f));
+	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(4.9f, 0.0f, 4.9f));
 	flowField.print();
 	//player->AddComponent(new AIController(flowField));
 	//player->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));

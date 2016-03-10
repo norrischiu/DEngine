@@ -19,6 +19,7 @@ public:
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 	void Move(Vector3 vTrans);
+	void updateFlowField(const Vector3& start, const Vector3& destination);
 
 private:
 	FlowField m_flowField;
