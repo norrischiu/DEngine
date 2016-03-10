@@ -39,25 +39,31 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 void AIController::Update(float deltaTime)
 {
 	Vector3 direction = m_flowField.getDirection(m_pOwner->GetPosition());
-	Move(direction * deltaTime * 2.0f);
+	Vector3 vTrans = direction * deltaTime * 2.0f;
+	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
+	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
+	newPos.SetY(newY);
+
+	if (!(newPos - m_pOwner->GetPosition()).iszero())
+	{
+		const Vector3 vec1 = (newPos - m_pOwner->GetPosition()).Normalize();
+		const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
+		const float angle = angleBetween(vec1, vec2);
+
+		if (angle < 30.0f)
+		{
+			vTrans.SetY(newY - m_pOwner->GetPosition().GetY());
+			Move(vTrans);
+		}
+	}
+
 }
 
 void AIController::Move(Vector3 vTrans)
 {
-	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
-	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
-	newPos.SetY(newY);
-	const Vector3 vec1 = (newPos - m_pOwner->GetPosition()).iszero() ? Vector3(0.0f, 0.0f, 0.0f) : (newPos - m_pOwner->GetPosition()).Normalize();
-	const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
-	const float angle = angleBetween(vec1, vec2);
-
-	if (angle < 30.0f)
-	{
-		vTrans.SetY(newY - m_pOwner->GetPosition().GetY());
-		Matrix4 trans;
-		trans.CreateTranslation(vTrans);
-		m_pOwner->TransformBy(trans);
-	}
+	Matrix4 trans;
+	trans.CreateTranslation(vTrans);
+	m_pOwner->TransformBy(trans);
 }
 
 };
