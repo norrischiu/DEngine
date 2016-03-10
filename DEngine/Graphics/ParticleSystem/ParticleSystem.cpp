@@ -32,6 +32,11 @@ Emitter * ParticleSystem::AddParticles(char* id, int type, Vector3& emitPos, Vec
 	return particles;
 }
 
+void ParticleSystem::AddComponent(char* id, Emitter * emitter)
+{
+	m_Particles[id] = emitter;
+}
+
 void ParticleSystem::SetVelocity(char* id, Vector3 & velocity)
 {
 

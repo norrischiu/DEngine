@@ -11,6 +11,7 @@
 #include "Random.h"
 #include "Object\Component.h"
 
+
 namespace DE
 {
 class Emitter : public Component
@@ -28,8 +29,11 @@ public:
 	static const int ComponentID = ComponentID::PARTICLE_SYSTEM;
 
 	Emitter();
-
+	
 	Emitter(int Type, Vector3& emitPos, Vector3& emitDir);
+
+	
+	Emitter(char* id, int Type, float size, Vector3& emitPos, Vector3& emitDir);
 
 	~Emitter();
 
@@ -64,6 +68,8 @@ private:
 	float							m_fGameTime;
 
 	float							m_fTimeStep;
+	// size of particles
+	float							m_fSize;
 
 	unsigned int					m_EffectType;
 

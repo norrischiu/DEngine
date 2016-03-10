@@ -22,6 +22,7 @@ public:
 		Vector3 gEmitDirW;
 		float	gTimeStep;
 		float	gFlareAge;
+		float	gParticleSize;
 		unsigned int gMaxParts;
 		unsigned int gEffectType;
 	};

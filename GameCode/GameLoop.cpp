@@ -57,8 +57,9 @@ void GameLoop::Construct()
 
 	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(5.0f, 0.0f, 5.0f));
 	flowField.print();
-	player->AddComponent(new AIController(flowField));
-	player->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
+	//player->AddComponent(new AIController(flowField));
+	//player->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
+	player->AddComponent(new Emitter("torch_flame", 4, 6.0f, DE::Vector3(0.0f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
