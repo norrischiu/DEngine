@@ -37,7 +37,7 @@ public:
 	AnimationController(Skeleton* skeleton);
 	~AnimationController();
 
-	void addAnimationSet(const char* set_name, AnimationSet* animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
+	void addAnimationSet(const char* set_name, AnimationSet* animationSet);
 
 	void CreateAnimationSets(const char* fileName);
 

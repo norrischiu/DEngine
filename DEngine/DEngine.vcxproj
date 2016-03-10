@@ -143,6 +143,8 @@
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="Blending.cpp" />
+    <ClCompile Include="CrossFadeBlending.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -205,6 +207,8 @@
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="Blending.h" />
+    <ClInclude Include="CrossFadeBlending.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />

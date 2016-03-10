@@ -32,6 +32,10 @@ public:
 	const Vector3 getOffset();
 	const Vector3 getDestination();
 
+	const Vector3 transfromAndFloor(const Vector3& position);
+	bool isValid(const Vector3& position);
+	int distance(const Vector3& position, const Vector3& destination);
+
 	void print();
 
 private:
@@ -39,6 +43,7 @@ private:
 	std::vector<Vector3> m_obstacles;
 	Vector3 m_offset;
 	Vector3 m_destination;
+	Vector3 m_currDir;
 };
 
 };

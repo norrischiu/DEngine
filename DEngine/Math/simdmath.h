@@ -25,6 +25,7 @@ public:
 	friend class SIMDVector3;
 
 	static const SIMDMatrix4 Identity;
+	static const SIMDMatrix4 Zero;
 
 	// Default constructor
 	inline SIMDMatrix4()

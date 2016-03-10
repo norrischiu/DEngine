@@ -23,7 +23,7 @@ AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skelet
 	m_bPlaying = false;
 }
 
-void AnimationController::addAnimationSet(const char* set_name, AnimationSet* animationSet, const BlendMode blendMode)
+void AnimationController::addAnimationSet(const char* set_name, AnimationSet* animationSet)
 {
 	m_animationSets[set_name] = animationSet;
 }
@@ -174,6 +174,7 @@ void AnimationController::Update(float deltaTime)
 {
 	std::vector<std::string> transitionClip;
 	m_bPlaying = false;
+	int num = 0;
 
 	for (std::unordered_map<std::string, Transition>::iterator itr_transition = m_transition.begin(); itr_transition != m_transition.end();)
 	{
@@ -217,6 +218,7 @@ void AnimationController::Update(float deltaTime)
 					break;
 			}
 
+			num++;
 			m_bPlaying = true;
 		}
 		else
@@ -243,9 +245,10 @@ void AnimationController::Update(float deltaTime)
 					const Joint& currJoint = m_skeleton->m_vJoints[i];
 					m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint.m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
 				}
-			}
 
-			m_bPlaying = true;
+				num++;
+				m_bPlaying = true;
+			}
 		}
 	}
 
