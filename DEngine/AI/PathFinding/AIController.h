@@ -18,6 +18,8 @@ public:
 
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
+	float LookUp(const float x, const float z);
+	float angleBetween(Vector3 vec1, Vector3 vec2);
 	void Move(Vector3 vTrans);
 	void updateFlowField(const Vector3& start, const Vector3& destination);
 

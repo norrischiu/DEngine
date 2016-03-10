@@ -11,15 +11,7 @@ float identityMatrix[4][4] = {
 	{0.0f, 0.0f, 0.0f, 1.0f}
 };
 
-float zeroMatrix[4][4] = {
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 0.0f, 0.0f, 0.0f }
-};
-
 const SIMDMatrix4 SIMDMatrix4::Identity(identityMatrix);
-const SIMDMatrix4 SIMDMatrix4::Zero(identityMatrix);
 
 // Vector3 constant declaration
 const SIMDVector3 SIMDVector3::Zero(0.0f, 0.0f, 0.0f);

@@ -584,6 +584,11 @@ public:
 		return sqrtf(length.m128_f32[3]);
 	}
 
+	inline bool iszero() const
+	{
+		return Length() < std::numeric_limits<float>::epsilon();
+	}
+
 	// Return the normal of a SIMDVector3
 	inline friend SIMDVector3 Normal(const SIMDVector3& vec)
 	{

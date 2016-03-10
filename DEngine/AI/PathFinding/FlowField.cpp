@@ -242,7 +242,7 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 
 	if (isPositionMovable(pos))
 	{
-		int intMax = (std::numeric_limits<int>::max)();
+		const int intMax = (std::numeric_limits<int>::max)();
 		const int f00 = isPositionMovable(pos) ? distance(pos, m_destination) : intMax;
 		const int f01 = isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(0.0f, 0.0f, 1.0f), m_destination) : intMax;
 		const int f10 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 0.0f), m_destination) : intMax;
@@ -267,7 +267,7 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 			m = transfromAndFloor(m);
 			p = transfromAndFloor(p);
 
-			const Vector3 directionTo = ((int)(m - p).Length()) != 0 ? (m - p).Normalize() : m_flowField[p.GetX()][p.GetY()][p.GetZ()].direction;
+			const Vector3 directionTo = (m - p).iszero() ?  m_flowField[p.GetX()][p.GetY()][p.GetZ()].direction : (m - p).Normalize();
 			const int length = (directionTo - currDirection).Length();
 
 			if (length < minVal)
