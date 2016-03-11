@@ -246,6 +246,9 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
+    <ClCompile Include="AI\PathFinding\AIController.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp" />
+    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -501,6 +504,9 @@
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="GlobalInclude.h" />
+    <ClInclude Include="AI\PathFinding\AIController.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h" />
+    <ClInclude Include="Graphics\TerrainRendering\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

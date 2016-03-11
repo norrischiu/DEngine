@@ -37,25 +37,24 @@ public:
 	AnimationController(Skeleton* skeleton);
 	~AnimationController();
 
-	void addAnimationSet(std::string name, const AnimationSet& animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
+	void addAnimationSet(const char* set_name, const AnimationSet& animationSet, const BlendMode blendMode = ADDICTIVE_BLENDING);
 
 	void CreateAnimationSets(const char* fileName);
 
-	void removeAnimationSet(const char* name);
+	void removeAnimationSet(const char* set_name);
 	void setAnimationSet(const std::unordered_map<std::string, AnimationSet>& animationSets);
 
 	std::unordered_map<std::string, AnimationSet>* getAnimationSets();
-	AnimationSet* getAnimationSet(const char* name);
-	Animation* getAnimation(const char* set_name, const char* animation_name);
+	AnimationSet* getAnimationSet(const char* set_name);
 
 	Skeleton* getSkeleton();
 	void setSkeleton(Skeleton* skeleton);
 
 	int getNumAnimationSets() const;
-	int getNumAnimations(const char* name);
+	int getNumAnimations(const char* set_name);
 
-	bool isAnimationSetActive(const char* name);
-	void setActiveAnimationSet(const char* name, const bool active);
+	bool isAnimationSetActive(const char* set_name);
+	void setActiveAnimationSet(const char* set_name, const bool active);
 
 	bool triggerAnimation(const char* set_name, const float currTime);
 

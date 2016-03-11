@@ -21,6 +21,8 @@ public:
 	// Overload constructor: create with given mesh file name
 	MeshComponent(const char* meshName, int type = eMeshType::STANDARD_MESH);
 
+	~MeshComponent();
+
 	// Inherited via Component
 	void SetOwner(GameObject* ptr) override;
 	void Update(float deltaTime) override

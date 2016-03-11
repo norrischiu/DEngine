@@ -140,8 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AI\PathFinding\FlowField.cpp" />
-    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\AIController.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowField.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -155,17 +160,28 @@
     <ClCompile Include="Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="Graphics\GBuffer.cpp" />
-    <ClCompile Include="Graphics\HUD\HUD.cpp" />
+    <ClCompile Include="Graphics\HUD\HUD.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp" />
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\MeshData.cpp" />
     <ClCompile Include="Graphics\MeshManager.cpp" />
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp" />
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />
@@ -180,6 +196,7 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
+    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="Helpers\TextHelper.cpp" />
@@ -199,8 +216,13 @@
     <ClCompile Include="Physics\cdSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AI\PathFinding\FlowField.h" />
-    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="AI\PathFinding\AIController.h" />
+    <ClInclude Include="AI\PathFinding\FlowField.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -218,18 +240,29 @@
     <ClInclude Include="Graphics\Animation\Skeleton.h" />
     <ClInclude Include="Graphics\D3D11Renderer.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
-    <ClInclude Include="Graphics\HUD\HUD.h" />
+    <ClInclude Include="Graphics\HUD\HUD.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h" />
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Graphics\IndexBufferEngine.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshData.h" />
     <ClInclude Include="Graphics\MeshManager.h" />
     <ClInclude Include="Graphics\ParticleSystem\Particle.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h" />
     <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Graphics\ParticleSystem\Random.h" />
     <ClInclude Include="Graphics\PostProcessEffect.h" />
@@ -245,6 +278,7 @@
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
+    <ClInclude Include="Graphics\TerrainRendering\Terrain.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />

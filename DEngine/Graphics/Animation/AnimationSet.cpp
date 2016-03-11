@@ -11,42 +11,24 @@ AnimationSet::AnimationSet(const float currTime, const float duration, const boo
 
 AnimationSet::~AnimationSet()
 {
+	m_vAnimations.clear();
 }
 
-void AnimationSet::AddAnimation(Animation* animation)
+void AnimationSet::AddAnimation(Animation animation)
 {
-	m_animations[animation->getNodeName()] = animation;
-}
-
-void AnimationSet::removeAnimation(const std::string name)
-{
-	m_animations.erase(name);
-}
-
-Animation* AnimationSet::getAnimation(const std::string name)
-{
-	auto t = m_animations.find(name);
-
-	if (t == m_animations.end()) {
-		return nullptr;
-	}
-	else {
-		return t->second;
-	}
-
-	return nullptr;
+	m_vAnimations.push_back(animation);
 }
 
 int AnimationSet::getNumAnimations() const
 {
-	return m_animations.size();
+	return m_vAnimations.size();
 }
 
 void AnimationSet::reset()
 {
-	for (auto itr : m_animations)
+	for (auto itr : m_vAnimations)
 	{
-		itr.second->setCurrentKeyframe(1);
+		itr.setCurrentKeyframe(1);
 	}
 }
 
@@ -56,7 +38,7 @@ void AnimationSet::update(const float delta_time)
 
 	for (auto itr : m_vAnimations)
 	{
-		itr->update(delta_time);
+		itr.update(delta_time);
 	}
 
 	if (m_currTime > m_duration && !m_bLooping) {
@@ -74,12 +56,9 @@ void AnimationSet::setCurrTime(const float currTime)
 	const int delta_time = currTime - m_currTime;
 	m_currTime = currTime;
 
-	for (
-		std::unordered_map<std::string, Animation*>::iterator it = m_animations.begin();
-		it != m_animations.end();
-		++it
-		) {
-		it->second->update(delta_time);
+	for (auto itr : m_vAnimations)
+	{
+		itr.update(delta_time);
 	}
 }
 

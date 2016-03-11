@@ -130,6 +130,9 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 	textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "../Assets/font.dds"));
 	meshData->m_Material.AddPassToTechnique(textPass);
 
+	delete[] pVertices;
+	delete[] pIndices;
+
 	return meshData;
 }
 
@@ -192,7 +195,10 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 	char* id = textBox->getID();
 
 	if (textBox->hasUpdate()) {
-		m_cache.erase(id);
+		if (m_cache[id]) {
+			delete m_cache[id];
+			m_cache.erase(id);
+		}
 		textBox->setHasUpdate(false);
 	}
 
@@ -218,14 +224,22 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 
 void TextEngine::removeCacheByID(const char* id)
 {
-	if (m_cache.find(id) != m_cache.end())
+	if (m_cache[id])
 	{
+		delete m_cache[id];
 		m_cache.erase(id);
 	}
 }
 
 void TextEngine::destructAndCleanUp()
 {
+	for (auto itr : m_cache)
+	{
+		delete itr.second;
+	}
+
+	m_cache.clear();
+
 	if (m_instance) {
 		delete m_instance;
 		m_instance = nullptr;

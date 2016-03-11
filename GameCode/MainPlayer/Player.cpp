@@ -11,6 +11,7 @@
 #include "DEngine\Graphics\MeshComponent.h"
 #include "DEngine\Graphics\MeshData.h"
 #include "DEngine\Graphics\Animation\Skeleton.h"
+#include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\GameObject\GameObject.h"
 #include "DEngine\Object\CameraComponent.h"
 #include "DEngine\Object\MovementController.h"
@@ -60,7 +61,7 @@ Player::Player()
 
 	// Follow camera
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent (DE::Vector3(0.0f, 3.0f, -6.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 3.0f, -6.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	AddComponent((DE::Component*) hCamera.Raw());
 
 	// Weapon
@@ -75,6 +76,11 @@ Player::Player()
 	m_Weapon->AddComponent((DE::Component*) hWeaponAABB.Raw());
 
 	m_Weapon->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
+
+	// Fire
+	//DE::Handle hEmitter(sizeof(DE::Emitter));
+	//new (hEmitter) DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
+	m_Weapon->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
 }
 
 void Player::Update(float deltaTime)

@@ -3,29 +3,20 @@
 namespace DE
 {
 
-Animation::Animation(const std::string node_name, const float animationFPS, const int frame) :
-	m_node_name(node_name), m_animationFPS(animationFPS), m_currKeyframe(frame)
+Animation::Animation(const float animationFPS, const int frame) :
+	m_animationFPS(animationFPS), m_currKeyframe(frame)
 {
 
 }
 
 Animation::~Animation()
 {
+
 }
 
 void Animation::AddPose(SQT sqt)
 {
 	m_Poses.push_back(sqt);
-}
-
-std::string Animation::getNodeName() const
-{
-	return m_node_name;
-}
-
-void Animation::setNodeName(std::string node_name)
-{
-	m_node_name = node_name;
 }
 
 int Animation::getCurrentKeyframe() const

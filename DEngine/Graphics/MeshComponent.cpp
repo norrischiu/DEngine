@@ -32,6 +32,12 @@ MeshComponent::MeshComponent(const char* meshName, int type)
 	SceneGraph::GetInstance()->AddComponent(this);
 }
 
+MeshComponent::~MeshComponent()
+{
+	delete m_pMeshData;
+	delete m_pTransform;
+}
+
 MeshData* MeshComponent::GetMeshData()
 {
 	return m_pMeshData;

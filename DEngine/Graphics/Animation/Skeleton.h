@@ -18,18 +18,6 @@ public:
 	Skeleton(const char* name);
 	~Skeleton();
 
-	//void addSkeletonNode(const std::string name, const SkeletonNode& skeletonNode);
-	//void removeSkeletonNode(const std::string name);
-	//SkeletonNode* findSkeletonNode(const std::string name);
-	//void updateSkeletonNode(SkeletonNode* skeletonNode, const Matrix4& matrix);
-	//void updateSkeletonNode(const std::string name, const Matrix4& matrix);
-
-	//std::unordered_map<std::string, SkeletonNode>* getSkeletonTree();
-	//void setSkeletonTree(const std::unordered_map<std::string, SkeletonNode>& skeletonTree);
-
-	//int getNumSkeletonNodes() const;
-	//void setNumSkeletonNodes(const int num);
-
 	inline int GetJointsCount()
 	{
 		return m_vJoints.size();
@@ -38,13 +26,13 @@ public:
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
-	std::vector<Joint*>							m_vJoints;
+	std::vector<Joint>							m_vJoints;
 
 	// Pose in model space
-	std::vector<Matrix4*>						m_vLocalPose; 
+	std::vector<Matrix4*>						m_vGlobalPose;
 
 	// Pose in world space
-	std::vector<Matrix4*>						m_vGlobalPose;
+	std::vector<Matrix4*>						m_vWorldGlobalPose;
 };
 
 };
