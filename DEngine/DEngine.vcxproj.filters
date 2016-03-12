@@ -248,7 +248,9 @@
     </ClCompile>
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp" />
-    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp" />
+    <ClCompile Include="Blending.cpp" />
+    <ClCompile Include="CrossFadeBlending.cpp" />
+    <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -506,7 +508,9 @@
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="Graphics\ParticleSystem\Emitter.h" />
-    <ClInclude Include="Graphics\TerrainRendering\Terrain.h" />
+    <ClInclude Include="Blending.h" />
+    <ClInclude Include="CrossFadeBlending.h" />
+    <ClInclude Include="Graphics\Terrain\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
@@ -567,6 +571,21 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\VS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HS_constant.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

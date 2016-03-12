@@ -8,6 +8,7 @@ cbuffer CONSTANT_BUFFER_PER_FRAME
 	float4 gEmitDirW;
 	float	gTimeStep;
 	float	gFlareAge;
+	float	gSize;
 	unsigned int gMaxParts;
 	unsigned int gEffectType;
 };
@@ -53,9 +54,9 @@ void GS(point VS_INPUT gin[1],
 					//p.InitialPosW = float4(gEmitPosW.xyz + random, 1.0f);
 					p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
 					p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
-					p.SizeW = 6.0f;
+					p.SizeW = gSize;
 					if (gEffectType == 2)
-						p.SizeW = 8.0f;
+						p.SizeW = gSize + 2.0f;
 					p.Age = 0.0f;
 					p.Type = PT_FLARE;
 					p.NoData = 0;

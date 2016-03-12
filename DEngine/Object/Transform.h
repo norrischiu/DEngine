@@ -19,6 +19,7 @@ namespace DE
 		Transform()
 			: Component()
 			, m_pParent(nullptr)
+			, m_pJointParent(nullptr)
 		{
 			m_ID = ComponentID;
 
@@ -33,24 +34,26 @@ namespace DE
 			if (m_pParent)
 			{
 				Matrix4 scale;
-				if (m_bAttachedToJoint)
+				if (m_pJointParent)
 				{
 					scale.CreateScale(100.0f);
+					*m_mWorldTransform = *m_mLocalTransform * *m_pParent * *m_pJointParent * scale;
 				}
-				*m_mWorldTransform = *m_mLocalTransform * *m_pParent * scale;
+				else
+				{
+					*m_mWorldTransform = *m_mLocalTransform * *m_pParent;
+				}
 			}
 		};
 
 		void AttachTo(Transform* transform)
 		{
-			m_bAttachedToJoint = false;
 			m_pParent = transform->m_mWorldTransform;
 		};
 
 		void AttachToJoint(Skeleton* skel, int jointIndex)
 		{
-			m_bAttachedToJoint = true;
-			m_pParent = skel->m_vGlobalPose[jointIndex];
+			m_pJointParent = skel->m_vGlobalPose[jointIndex];
 		}
 
 	// Pointer to the parent attached
@@ -59,13 +62,13 @@ namespace DE
 
 	Matrix4*								m_pParent;
 
+	Matrix4*								m_pJointParent;
+
 	// Local to world transform
 	Matrix4*								m_mWorldTransform;
 
 	// World to local transform
 	Matrix4*								m_mLocalTransform;
-
-	bool									m_bAttachedToJoint;
 };
 
 }

@@ -53,7 +53,7 @@ float3 TextureSpaceToViewSpace(float2 posTS, float depth)
 	return posVS.xyz;
 }
 
-#define tolerance 0.01f
+#define tolerance 0.001f
 
 bool intersectDepthBuffer(float z, float minZ, float maxZ)
 {
@@ -65,7 +65,7 @@ bool intersectDepthBuffer(float z, float minZ, float maxZ)
 
 #define VSMaxDist 8.0f
 #define MaxStep 30.0f
-#define PixelStride 16.0f
+#define PixelStride 8.0f
 
 bool RayMarch(float3 originVS, float3 rayVS, inout float2 hitPixel, float jitter)
 {

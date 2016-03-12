@@ -12,6 +12,24 @@ Terrain::~Terrain()
 {
 }
 
+void Terrain::Init(const char * heightMapFile, const char * layerMapFile, float heightScale, unsigned int heightMapWidth, unsigned int heightMapHeight, float cellSpacing)
+{
+	// pass data to m_Info
+	std::string heightMapName(heightMapFile);
+	std::string layerMapName(layerMapFile);
+	heightMapName = "../Assets/" + heightMapName;
+	layerMapName = "../Assets/" + layerMapName;
+
+	m_Info.HeightMapFilename = heightMapName;
+	m_Info.LayerMapFilename0 = layerMapName;
+	m_Info.HeightmapWidth = heightMapWidth;
+	m_Info.HeightmapHeight = heightMapHeight;
+	m_Info.CellSpacing = cellSpacing;
+
+
+
+}
+
 float Terrain::GetWidth() const
 {
 	return (m_Info.HeightmapWidth - 1)*m_Info.CellSpacing;
@@ -57,6 +75,7 @@ float Terrain::GetHeight(float x, float z) const
 		return D + (1.0f - s)*uy + (1.0f - t)*vy;
 	}
 }
+
 
 void Terrain::LoadHeightMap()
 {

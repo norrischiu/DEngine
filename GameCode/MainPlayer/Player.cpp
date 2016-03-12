@@ -61,7 +61,7 @@ Player::Player()
 
 	// Follow camera
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 3.0f, -6.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 3.0f, -8.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	AddComponent((DE::Component*) hCamera.Raw());
 
 	// Weapon
@@ -76,14 +76,16 @@ Player::Player()
 	m_Weapon->AddComponent((DE::Component*) hWeaponAABB.Raw());
 
 	m_Weapon->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
+	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// Fire
-	//DE::Handle hEmitter(sizeof(DE::Emitter));
-	//new (hEmitter) DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
-	m_Weapon->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
+	DE::Handle hEmitter(sizeof(DE::Emitter));
+	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
+	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
 }
 
 void Player::Update(float deltaTime)
 {
 	DE::GameObject::Update(deltaTime);
+	m_Weapon->TransformBy(*m_pTransform->m_mWorldTransform);
 }

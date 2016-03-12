@@ -25,6 +25,7 @@ public:
 	friend class SIMDVector3;
 
 	static const SIMDMatrix4 Identity;
+	static const SIMDMatrix4 Zero;
 
 	// Default constructor
 	inline SIMDMatrix4()
@@ -572,6 +573,11 @@ public:
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0x78);
 		return sqrtf(length.m128_f32[3]);
+	}
+
+	inline bool iszero() const
+	{
+		return Length() < std::numeric_limits<float>::epsilon();
 	}
 
 	// Return the normal of a SIMDVector3

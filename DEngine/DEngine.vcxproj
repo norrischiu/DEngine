@@ -141,12 +141,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
-    <ClCompile Include="AI\PathFinding\FlowField.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowField.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="Blending.cpp" />
+    <ClCompile Include="CrossFadeBlending.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -196,7 +194,7 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
-    <ClCompile Include="Graphics\TerrainRendering\Terrain.cpp" />
+    <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="Helpers\TextHelper.cpp" />
@@ -217,12 +215,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\PathFinding\AIController.h" />
-    <ClInclude Include="AI\PathFinding\FlowField.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowField.h" />
+    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="Blending.h" />
+    <ClInclude Include="CrossFadeBlending.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -278,7 +274,7 @@
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
-    <ClInclude Include="Graphics\TerrainRendering\Terrain.h" />
+    <ClInclude Include="Graphics\Terrain\Terrain.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />
@@ -325,10 +321,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\DS_terrain.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\GS_fire.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\GS_stream_out.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\HS_constant.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\HS_terrain.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\PS_fire.hlsl">
@@ -353,6 +358,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_terrain.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
@@ -398,6 +406,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\VS_stream_out.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_terrain.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P.hlsl">

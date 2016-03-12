@@ -13,6 +13,7 @@ cbuffer CB_PER_FRAME : register(b0)
 
 	float		gTimeStep;
 	float		gFlareAge;
+	float		gSize;
 	unsigned int gMaxParts;
 	unsigned int gEffectType;
 };

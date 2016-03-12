@@ -3,18 +3,30 @@
 namespace DE
 {
 
-AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
-	m_currTime(currTime), m_duration(duration), m_active(active), m_bLooping(looping)
+AnimationSet::AnimationSet(const float currTime, const float duration, const float weight, const bool active, const bool looping) :
+	m_currTime(currTime), m_duration(duration), m_weight(weight), m_active(active), m_bLooping(looping)
 {
 
 }
 
 AnimationSet::~AnimationSet()
 {
+	for (auto itr = m_vAnimations.begin(); itr != m_vAnimations.end();)
+	{
+		if (*itr) {
+			delete *itr;
+			itr = m_vAnimations.erase(itr);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+
 	m_vAnimations.clear();
 }
 
-void AnimationSet::AddAnimation(Animation animation)
+void AnimationSet::AddAnimation(Animation* animation)
 {
 	m_vAnimations.push_back(animation);
 }
@@ -28,7 +40,7 @@ void AnimationSet::reset()
 {
 	for (auto itr : m_vAnimations)
 	{
-		itr.setCurrentKeyframe(1);
+		itr->setCurrentKeyframe(1);
 	}
 }
 
@@ -38,7 +50,7 @@ void AnimationSet::update(const float delta_time)
 
 	for (auto itr : m_vAnimations)
 	{
-		itr.update(delta_time);
+		itr->update(delta_time);
 	}
 
 	if (m_currTime > m_duration && !m_bLooping) {
@@ -58,7 +70,7 @@ void AnimationSet::setCurrTime(const float currTime)
 
 	for (auto itr : m_vAnimations)
 	{
-		itr.update(delta_time);
+		itr->update(delta_time);
 	}
 }
 
@@ -70,6 +82,16 @@ float AnimationSet::getDuration() const
 void AnimationSet::setDuration(const float duration)
 {
 	m_duration = duration;
+}
+
+float AnimationSet::getWeighting() const
+{
+	return m_weight;
+}
+
+void AnimationSet::setWeighting(const float weight)
+{
+	m_weight = weight;
 }
 
 bool AnimationSet::isActive() const
