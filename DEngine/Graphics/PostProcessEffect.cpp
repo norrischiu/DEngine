@@ -29,8 +29,11 @@ PostProcessEffect::PostProcessEffect()
 	unsigned int pIndexData[6] = { 0, 1, 2, 3, 2, 1 };
 	fullscreenQuadMesh = new MeshData(pVertexData, 4, pIndexData, 6);
 
-	m_texture = new Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
-	m_texture2 = new Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
+	Handle hTexture(sizeof(Texture));
+	new (hTexture) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
+	m_texture = (Texture*) hTexture.Raw();
+	new (hTexture) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
+	m_texture2 = (Texture*) hTexture.Raw();
 
 	RenderPass* ReflectionPass = new RenderPass;
 	ReflectionPass->SetVertexShader("../DEngine/Shaders/VS_gbuffer.hlsl");
@@ -53,8 +56,8 @@ PostProcessEffect::PostProcessEffect()
 	BlurVPass->SetBlendState(State::ALPHA_BS);
 	BlurVPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[0]);
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[1]);
+	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[0]);
+	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[1]);
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
 	BlurHPass->AddTexture(m_texture);
 	BlurVPass->AddTexture(m_texture2);

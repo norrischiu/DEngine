@@ -23,6 +23,8 @@ public:
 		UNORDER_ACCESS = 0x10,
 	};
 
+	CUSTOM_MEMORY_DEFINE();
+
 	Texture(int type, int mipsLevel = 1, const char* filename = nullptr);
 
 	Texture(int type, ID3D11Texture2D* texSrc);

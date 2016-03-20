@@ -17,7 +17,9 @@ namespace DE
 struct Handle
 {
 
-	Handle() {};
+	Handle()
+		: m_counter(0)
+	{};
 
 	Handle(size_t size)
 	{
@@ -25,10 +27,10 @@ struct Handle
 	};
 
 	// Constructor
-	Handle(uint32_t poolIndex, uint32_t blockIndex, uint32_t counter = 0)
+	Handle(uint32_t poolIndex, uint32_t blockIndex, uint32_t counter = 1)
 		: m_poolIndex(poolIndex)
 		, m_blockIndex(blockIndex)
-		, m_counter(0)
+		, m_counter(1)
 	{}
 
 	uint32_t							m_poolIndex : 5;

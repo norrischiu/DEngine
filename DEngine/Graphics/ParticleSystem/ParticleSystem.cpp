@@ -12,7 +12,7 @@ ParticleSystem::ParticleSystem()
 ParticleSystem::~ParticleSystem()
 {
 }
-
+/*
 Emitter * ParticleSystem::AddParticles(char* id, int type, Vector3& emitPos, Vector3& emitDir)
 {
 	m_Velocity = emitDir;
@@ -34,6 +34,7 @@ Emitter * ParticleSystem::AddParticles(char* id, int type, Vector3& emitPos, Vec
 
 	return particles;
 }
+*/
 
 void ParticleSystem::AddComponent(char* id, Emitter * emitter)
 {

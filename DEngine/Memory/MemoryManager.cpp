@@ -62,6 +62,10 @@ void MemoryManager::Free(Handle hle)
 // Get the raw address stored with reference to handle
 void* MemoryManager::GetMemoryAddressFromHandle(Handle hle)
 {
+	if (hle.m_counter == 0)
+	{
+		return nullptr;
+	}
 	assert((((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 4 + sizeof(unsigned int) * MEMORY_POOL_CONFIG[hle.m_poolIndex][1] + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex)) % 16 == 0); // temp check
 	return (void*)((uint64_t)m_pPool[hle.m_poolIndex] + sizeof(unsigned int) * 4 + sizeof(unsigned int) * MEMORY_POOL_CONFIG[hle.m_poolIndex][1] + m_pPool[hle.m_poolIndex]->m_iBlockSize * hle.m_blockIndex);
 }

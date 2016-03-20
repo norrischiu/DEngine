@@ -90,6 +90,12 @@ public:
 		m_pDSV = DSV;
 	}
 
+	void AddTexture(Handle hTex)
+	{
+		m_vTextureSRVs.push_back(((Texture*) hTex.Raw())->GetSRV());
+		m_vSamplerState.push_back(((Texture*) hTex.Raw())->GetSamplerState());
+	}
+
 	void AddTexture(Texture* tex)
 	{
 		m_vTextureSRVs.push_back(tex->GetSRV());

@@ -273,7 +273,8 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, void *& pVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1N1T1UV4J[vertsNum]; // TODO: needs change memory allocation
+	Handle hVertexData(sizeof(Vertex1P1N1T1UV4J) * vertsNum);
+	pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{

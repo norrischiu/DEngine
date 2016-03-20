@@ -159,20 +159,20 @@
     <ClCompile Include="Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="Graphics\GBuffer.cpp" />
     <ClCompile Include="Graphics\HUD\HUD.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp" />
     <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
@@ -237,20 +237,20 @@
     <ClInclude Include="Graphics\D3D11Renderer.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
     <ClInclude Include="Graphics\HUD\HUD.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h" />
     <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\IndexBufferEngine.h" />
     <ClInclude Include="Graphics\Material.h" />
@@ -314,6 +314,7 @@
     <ClInclude Include="System\WinMsgHandler.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Utilities\Geometry.h" />
+    <ClInclude Include="Utilities\MyArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">

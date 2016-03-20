@@ -23,7 +23,6 @@ FlowField::~FlowField()
 
 void FlowField::print()
 {
-	/*
 	const int iNumVertices = (getFlowFieldWidth() + 1) * 2 + (getFlowFieldDepth() + 1) * 2 + 4 * getFlowFieldWidth() * getFlowFieldDepth();
 	const int iNumIndices = (getFlowFieldWidth() + 1) * 2 + (getFlowFieldDepth() + 1) * 2 + 6 * getFlowFieldWidth() * getFlowFieldDepth();
 	Vertex1P* vertices = new Vertex1P[iNumVertices];
@@ -130,9 +129,9 @@ void FlowField::print()
 		}
 	}
 
-	MeshComponent* meshComponent = new MeshComponent(
-		new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P))
-	);
+	Handle hMesh(sizeof(MeshComponent));
+	new (hMesh) MeshComponent(new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P)));
+	MeshComponent* meshComponent = (MeshComponent*) hMesh.Raw();
 
 	RenderPass* renderPass = new RenderPass;
 	renderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
@@ -149,7 +148,6 @@ void FlowField::print()
 
 	delete vertices;
 	delete indices;
-	*/
 }
 
 int FlowField::getFlowFieldWidth()

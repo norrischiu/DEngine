@@ -41,7 +41,9 @@ void Material::ReadFromFile(const char * filename, int meshType)
 			m_TexFlag |= NORMAL;
 		}
 		fscanf(pFile, "%s", &c);
-		pass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, c));
+		Handle hTexture(sizeof(Texture));
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c);
+		pass->AddTexture(hTexture);
 	}
 
 	fclose(pFile);

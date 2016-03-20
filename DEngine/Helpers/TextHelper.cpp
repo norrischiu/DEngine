@@ -114,7 +114,9 @@ namespace DE
 		textPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
 		textPass->SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
 		textPass->SetBlendState(State::ALPHA_BS);
-		textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "font.dds"));
+		Handle hTexture(sizeof(Texture));
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "font.dds");
+		textPass->AddTexture(hTexture);
 		meshData->m_Material.AddPassToTechnique(textPass);
 
 		return meshData;

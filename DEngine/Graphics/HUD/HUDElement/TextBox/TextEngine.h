@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "TextBox.h"
 #include "Graphics/MeshComponent.h"
+#include "Memory\Handle.h"
 
 namespace DE
 {
@@ -37,7 +38,7 @@ private:
 
 	static TextEngine* m_instance;
 	FontType* m_Font;
-	std::unordered_map<const char*, MeshComponent*> m_cache;
+	std::unordered_map<const char*, Handle> m_cache;
 };
 
 };

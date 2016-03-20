@@ -73,6 +73,9 @@
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{f4003de7-d586-4fb6-8ab3-ddd82d933a5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Terrain">
+      <UniqueIdentifier>{2399a8ff-5c8e-49b0-bc43-03c6de465379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -246,11 +249,21 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
-    <ClCompile Include="AI\PathFinding\AIController.cpp" />
-    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp" />
-    <ClCompile Include="Blending.cpp" />
-    <ClCompile Include="CrossFadeBlending.cpp" />
-    <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
+    <ClCompile Include="Graphics\Terrain\Terrain.cpp">
+      <Filter>Graphics\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\AIController.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossFadeBlending.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Blending.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -506,11 +519,24 @@
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="GlobalInclude.h" />
-    <ClInclude Include="AI\PathFinding\AIController.h" />
-    <ClInclude Include="Graphics\ParticleSystem\Emitter.h" />
-    <ClInclude Include="Blending.h" />
-    <ClInclude Include="CrossFadeBlending.h" />
-    <ClInclude Include="Graphics\Terrain\Terrain.h" />
+    <ClInclude Include="Utilities\MyArray.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Terrain\Terrain.h">
+      <Filter>Graphics\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\AIController.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Blending.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossFadeBlending.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

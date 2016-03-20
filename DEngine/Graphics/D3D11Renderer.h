@@ -105,9 +105,9 @@ public:
 	ID3D11ShaderResourceView*					m_pSRVArray[RT_NUM + 1];
 
 	// Array of pointer to texture for deferred use
-	Texture*									m_textures[RT_NUM]; // Gbuffer RTV, SRV
+	Handle										m_hTextures[RT_NUM]; // Gbuffer RTV, SRV
 
-	Texture*									m_LightingAccumBuffer;
+//	Texture*									m_LightingAccumBuffer;
 
 	Texture*									m_backbuffer; // RTV
 
