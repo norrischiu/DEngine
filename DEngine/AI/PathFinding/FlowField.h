@@ -18,12 +18,19 @@ public:
 		{ }
 	};
 
-	FlowField(std::vector<std::vector<std::vector<Cell>>> flowField, std::vector<Vector3> m_obstacles, const Vector3& m_offset, const Vector3& destination);
-	~FlowField();
+	struct InitInfo {
+		int FlowFieldWidth;
+		int FlowFieldDepth;
+		float CellSpacing;
 
-	int getFlowFieldWidth();
-	int getFlowFieldHeight();
-	int getFlowFieldDepth();
+		InitInfo(const int FlowFieldWidth, const int FlowFieldDepth, const float CellSpacing)
+			: FlowFieldWidth(FlowFieldWidth), FlowFieldDepth(FlowFieldDepth), CellSpacing(CellSpacing) { }
+
+		InitInfo() {}
+	};
+
+	FlowField(const InitInfo initInfo, std::vector<Cell> flowField, std::vector<Vector3> m_obstacles, const Vector3& m_offset, const Vector3& destination);
+	~FlowField();
 
 	bool isPositionMovable(const Vector3& position);
 	const Vector3 getDirection(const Vector3& position);
@@ -36,13 +43,14 @@ public:
 	bool isValid(const Vector3& position);
 	int distance(const Vector3& position, const Vector3& destination);
 
-	void print();
+	void Draw();
 
 private:
-	std::vector<std::vector<std::vector<Cell>>> m_flowField;
+	InitInfo m_initInfo;
+	std::vector<Cell> m_flowField;
 	std::vector<Vector3> m_obstacles;
-	Vector3 m_offset;
 	Vector3 m_destination;
+	Vector3 m_offset;
 	Vector3 m_currDir;
 };
 

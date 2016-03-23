@@ -10,6 +10,9 @@
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
+#include "Graphics\Render\HSDSPerFrameCBuffer.h"
+#include "Graphics\terrain\terrain.h"
+#include "Math\Plane.h"
 
 namespace DE
 {
@@ -23,7 +26,7 @@ SceneGraph::SceneGraph()
 	m_pMatrixPalette = new VSMatrixPaletteCBuffer;
 
 	shadowPass = new RenderPass;
-	shadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
+	shadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
 	shadowPass->SetPixelShader(nullptr);
 	shadowPass->SetBlendState(State::NULL_STATE);
 	shadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
@@ -76,12 +79,33 @@ void SceneGraph::Render()
 				{
 					for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
 					{
-						palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
+						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}
 				}
 			}
 			m_pMatrixPalette->Update();
 		}
+
+		// For terrain
+		HSDSPerFrameCBuffer m_pHSDSCBuffer;
+		m_pHSDSCBuffer.BindToRenderer();
+		HSDSPerFrameCBuffer::HSDS_CBUFFER* pHSDSCBuffer = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_pHSDSCBuffer.m_Memory._data;
+		pHSDSCBuffer->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
+		D3D11Renderer::GetInstance()->GetCamera()->GetFrustum();
+		Vector4* worldPlanes = new Vector4[6];
+		Terrain::GetInstance()->ExtractFrustumPlanes(worldPlanes, D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix());
+		for (int i = 0; i < 6; i++)
+		{
+			Vector3 planeNormal = D3D11Renderer::GetInstance()->GetCamera()->GetFrustum().GetPlanes()[i].GetNormal();
+			planeNormal.SetW(1.0f);
+			planeNormal.Transform(*itr->GetOwner()->GetTransform() * D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix().Inverse());
+			pHSDSCBuffer->gWorldFrustumPlanes[i] = planeNormal;
+		}
+		pHSDSCBuffer->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
+		pHSDSCBuffer->gView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix();
+		pHSDSCBuffer->gTexelCellSpaceU = 1.0f / 256.0f;
+		pHSDSCBuffer->gTexelCellSpacev = 1.0f / 256.0f;
+		m_pHSDSCBuffer.Update();
 
 		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->m_Memory._data;
 		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();
@@ -90,6 +114,12 @@ void SceneGraph::Render()
 
 		itr->Draw();
 	}
+
+	
+	static wchar_t s[64];
+	swprintf(s, 64, L"Drawing: %i\n", count);
+	OutputDebugStringW(s);
+	
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -103,29 +133,10 @@ void SceneGraph::ShadowMapGeneration()
 			for (auto itr : m_tree)
 			{
 				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
-				assert(currLight->GetOwner()->GetComponent<CameraComponent>() != nullptr);
 				ptr->WVPTransform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
 				m_pVSCBuffer->Update();
 
 				shadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
-				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
-				if (anim != nullptr)
-				{
-					Skeleton* skel = anim->m_skeleton;
-					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
-					for (auto itr : anim->m_animationSets)
-					{
-						if (itr.second->isActive())
-						{
-							for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
-							{
-								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
-							}
-						}
-					}
-					m_pMatrixPalette->Update();
-				}
-				// TODO: separete skeletal and static mesh
 				itr->m_pMeshData->RenderUsingPass(shadowPass);
 			}
 		}

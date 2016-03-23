@@ -88,7 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTK\Inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -100,7 +100,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTK\Inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Jackhui\Source\Repos\Game-Engine;$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTK\Inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -130,7 +130,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Jackhui\Source\Repos\Game-Engine;$(SolutionDir)\..\DirectXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTK\Inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -143,8 +143,6 @@
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
-    <ClCompile Include="Blending.cpp" />
-    <ClCompile Include="CrossFadeBlending.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -158,22 +156,12 @@
     <ClCompile Include="Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="Graphics\D3D11Renderer.cpp" />
     <ClCompile Include="Graphics\GBuffer.cpp" />
-    <ClCompile Include="Graphics\HUD\HUD.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUD.cpp" />
     <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp" />
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp" />
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp" />
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp" />
     <ClCompile Include="Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
@@ -183,6 +171,7 @@
     <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Graphics\PostProcessEffect.cpp" />
     <ClCompile Include="Graphics\Render\CBuffer.cpp" />
+    <ClCompile Include="Graphics\Render\HSDSPerFrameCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\PSPerLightCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\PSPerMaterialCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\RenderPass.cpp" />
@@ -195,6 +184,7 @@
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
     <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
+    <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="Helpers\TextHelper.cpp" />
@@ -217,8 +207,6 @@
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
-    <ClInclude Include="Blending.h" />
-    <ClInclude Include="CrossFadeBlending.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -227,7 +215,6 @@
     <ClInclude Include="Event\InputEvent.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
-    <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
     <ClInclude Include="Graphics\Animation\AnimationController.h" />
     <ClInclude Include="Graphics\Animation\AnimationSet.h" />
@@ -236,22 +223,12 @@
     <ClInclude Include="Graphics\Animation\Skeleton.h" />
     <ClInclude Include="Graphics\D3D11Renderer.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
-    <ClInclude Include="Graphics\HUD\HUD.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUD.h" />
     <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h" />
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h" />
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h" />
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h" />
     <ClInclude Include="Graphics\IndexBufferEngine.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
@@ -263,6 +240,7 @@
     <ClInclude Include="Graphics\ParticleSystem\Random.h" />
     <ClInclude Include="Graphics\PostProcessEffect.h" />
     <ClInclude Include="Graphics\Render\CBuffer.h" />
+    <ClInclude Include="Graphics\Render\HSDSPerFrameCBuffer.h" />
     <ClInclude Include="Graphics\Render\PSPerLightCBuffer.h" />
     <ClInclude Include="Graphics\Render\PSPerMaterialCBuffer.h" />
     <ClInclude Include="Graphics\Render\RenderPass.h" />
@@ -275,10 +253,10 @@
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
     <ClInclude Include="Graphics\Terrain\Terrain.h" />
+    <ClInclude Include="Graphics\Terrain\TerrainBuilder.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />
-    <ClInclude Include="Helpers\GeometryHelper.h" />
     <ClInclude Include="Helpers\TextHelper.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\LightComponent.h" />
@@ -314,7 +292,6 @@
     <ClInclude Include="System\WinMsgHandler.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Utilities\Geometry.h" />
-    <ClInclude Include="Utilities\MyArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
@@ -329,9 +306,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\GS_stream_out.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\HS_constant.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\HS_terrain.hlsl">
@@ -362,6 +336,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\PS_terrain.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1B1UV_deferred.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
@@ -409,9 +386,6 @@
     <FxCompile Include="Shaders\VS_stream_out.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Shaders\VS_terrain.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
@@ -422,6 +396,9 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1B1UV.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\VS_vertex1P1N1T1UV.hlsl">

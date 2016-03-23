@@ -16,13 +16,17 @@ namespace DE
 
 MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int * pIndexData, const int iNumIndics, unsigned int stride, bool streamOut)
 {
+	VertexBufferEngine vertexEngine;
+	IndexBufferEngine indexEngine;
+
 	m_iStride = stride;
 	m_iNumIndics = iNumIndics;
 	// Create vertex buffer
-	m_pVertexBuffer = VertexBufferEngine::GetInstance()->CreateBufferFromRawData(pVertexData, iNumVerts, m_iStride, streamOut);
+	m_pVertexBuffer = vertexEngine.CreateBufferFromRawData(pVertexData, iNumVerts, m_iStride, streamOut);
 	m_bStreamOut = streamOut;
 	// Create index buffer
-	m_pIndexBuffer = IndexBufferEngine::GetInstance()->CreateBufferFromRawData(pIndexData, m_iNumIndics);
+	m_pIndexBuffer = indexEngine.CreateBufferFromRawData(pIndexData, m_iNumIndics);
+	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
 	m_Material.UseDefault();
 }
 

@@ -3,7 +3,7 @@
 
 #include <d3d11.h>
 #include <assert.h>
-#include "Memory/Handle.h"
+#include <vector>
 
 namespace DE
 {
@@ -22,8 +22,6 @@ public:
 		RENDER_TARGET = 0x08,
 		UNORDER_ACCESS = 0x10,
 	};
-
-	CUSTOM_MEMORY_DEFINE();
 
 	Texture(int type, int mipsLevel = 1, const char* filename = nullptr);
 

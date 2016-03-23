@@ -15,11 +15,7 @@ public:
 	// Inherited via GameObject
 	void Update(float deltaTime) override;
 
-	//~Player();
-
 private:
-
-	GameObject*				m_Weapon;
 
 	float					m_fHP;
 

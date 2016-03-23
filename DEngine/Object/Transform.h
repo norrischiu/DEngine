@@ -3,72 +3,49 @@
 
 // Engine include
 #include "Object\Component.h"
-#include "Graphics\Animation\Skeleton.h"
 #include "Math\simdmath.h"
 
 namespace DE
 {
 
-	class Transform : public Component
+class Transform : public Component
+{
+
+public:
+
+	static const int ComponentID = ComponentID::TRANSFORM;
+
+	Transform()
+		:Component()
 	{
+		m_ID = ComponentID;
 
-	public:
+		m_mWorldTransform = new Matrix4;
+		m_mLocalTransform = new Matrix4;
+	}
 
-		static const int ComponentID = ComponentID::TRANSFORM;
-
-		Transform()
-			: Component()
-			, m_pParent(nullptr)
-			, m_pJointParent(nullptr)
+	// Inherited via Component
+	void Update(float deltaTime) override 
+	{
+		if (m_pParent)
 		{
-			m_ID = ComponentID;
-
-			//Handle hMatrix(sizeof(Matrix4));
-			m_mWorldTransform = new Matrix4;
-			m_mLocalTransform = new Matrix4;
+			*m_mWorldTransform = *(m_pParent->m_mWorldTransform) * *m_mLocalTransform;
 		}
+	};
 
-		// Inherited via Component
-		void Update(float deltaTime) override
-		{
-			if (m_pParent)
-			{
-				Matrix4 scale;
-				if (m_pJointParent)
-				{
-					scale.CreateScale(100.0f);
-					*m_mWorldTransform = *m_mLocalTransform * *m_pParent * *m_pJointParent * scale;
-				}
-				else
-				{
-					*m_mWorldTransform = *m_mLocalTransform * *m_pParent;
-				}
-			}
-		};
-
-		void AttachTo(Transform* transform)
-		{
-			m_pParent = transform->m_mWorldTransform;
-		};
-
-		void AttachToJoint(Skeleton* skel, int jointIndex)
-		{
-			m_pJointParent = skel->m_vGlobalPose[jointIndex];
-		}
+	void AttachTo(Transform* transform)
+	{
+		m_pParent = transform;
+	};
 
 	// Pointer to the parent attached
-
-	//Transform*							m_pParent;
-
-	Matrix4*								m_pParent;
-
-	Matrix4*								m_pJointParent;
+	Transform*							m_pParent;
 
 	// Local to world transform
-	Matrix4*								m_mWorldTransform;
+	Matrix4*							m_mWorldTransform;
 
 	// World to local transform
-	Matrix4*								m_mLocalTransform;
+	Matrix4*							m_mLocalTransform;
 };
 
 }

@@ -35,11 +35,11 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	{
 	case eVertexFormat::POSITION_TEXTURE:
 		FillVertexData_POSITION_TEXTURE(filename, iNumVerts, pVertexData);
-		stride = sizeof(vertex1P1UV);
+		stride = sizeof(Vertex1P1UV);
 		break;
 	case eVertexFormat::POSITION:
 		FillVertexData_POSITION(filename, iNumVerts, pVertexData);
-		stride = sizeof(vertex1P1UV);
+		stride = sizeof(Vertex1P1UV);
 		break;
 	case eVertexFormat::POSITION_NORMAL_TEXTURE:
 		FillVertexData_POSITION_NORMAL_TEXTURE(filename, iNumVerts, pVertexData);
@@ -85,6 +85,53 @@ void VertexBufferEngine::DestructandCleanUp() {
 
 ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut)
 {
+	for (unsigned int i = 0; i < iNumVerts; i++)
+	{
+		float x, y, z;
+		switch (iDataSize)
+		{
+			/*
+			case sizeof(Vertex1P1N1T1B1UV) :
+				x = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetX();
+				y = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetY();
+				z = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetZ();
+				break;
+
+			case sizeof(Vertex1P1N1T1UV):
+				x = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetX();
+				y = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetY();
+				z = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetZ();
+				break;
+
+			case sizeof(Vertex1P1N1UV):
+				x = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetX();
+				y = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetY();
+				z = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetZ();
+				break;
+
+			case sizeof(Vertex1P1UV):
+				x = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetX();
+				y = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetY();
+				z = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetZ();
+				break;
+			*/
+			case sizeof(Vertex1P):
+			default:
+				x = ((Vertex1P*)pVertexData)[i].m_pos.GetX();
+				y = ((Vertex1P*)pVertexData)[i].m_pos.GetY();
+				z = ((Vertex1P*)pVertexData)[i].m_pos.GetZ();
+				break;
+		}
+
+		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
+		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
+		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
+		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
+		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
+		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
+
+	}
+
 	HRESULT hr;
 	ID3D11Buffer* pVertexBuffer;
 
@@ -135,13 +182,13 @@ void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned 
 void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
+	pVertexData = new Vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
 		float x, y, z;
 		fscanf(pFile, "%f %f %f", &x, &y, &z);
-		((vertex1P1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
+		((Vertex1P1UV*)pVertexData)[i].m_pos = Vector3(x, y, z);
 		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
 		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
 		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
@@ -160,8 +207,8 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	{
 		float x, y;
 		fscanf(pFile, "%f %f", &x, &y);
-		((vertex1P1UV*)pVertexData)[i].m_UV[0] = x;
-		((vertex1P1UV*)pVertexData)[i].m_UV[1] = y;
+		((Vertex1P1UV*)pVertexData)[i].m_UV[0] = x;
+		((Vertex1P1UV*)pVertexData)[i].m_UV[1] = y;
 	}
 	fclose(pFile);
 }
@@ -273,8 +320,7 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, void *& pVertexData)
 {
 	std::string sFileNmae(filename);
-	Handle hVertexData(sizeof(Vertex1P1N1T1UV4J) * vertsNum);
-	pVertexData = hVertexData.Raw();
+	pVertexData = new Vertex1P1N1T1UV4J[vertsNum]; // TODO: needs change memory allocation
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{

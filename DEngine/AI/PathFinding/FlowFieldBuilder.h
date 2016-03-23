@@ -25,22 +25,19 @@ public:
 
 	static FlowFieldBuilder* getInstance();
 
-	FlowField generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination);
-	FlowField generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<Vector3> obstacles, const Vector3& destination);
+	FlowField generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
+	FlowField generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
+	FlowField generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
 
 private:
-	int getFlowFieldWidth();
-	int getFlowFieldHeight();
-	int getFlowFieldDepth();
-
-	void initializeFlowField(const Vector3& map_dimension);
-	void setFlowFieldObstacles(std::vector<Vector3> obstacles, const Vector3& offset);
-	std::vector<std::vector<std::vector<int>>> calculateDijkstraGrid(const Vector3& destination, const Vector3& offset);
-	std::vector<FlowFieldBuilder::Position> getNeighbours(FlowFieldBuilder::Position pos);
-	void setFlowFieldDirection(std::vector<std::vector<std::vector<int>>> dijkstraGrid, const Vector3& offset, const Vector3& destination);
+	void initializeFlowField(const FlowField::InitInfo initInfo);
+	void setFlowFieldObstacles(const FlowField::InitInfo initInfo, std::vector<Vector3> obstacles, const Vector3& offset);
+	std::vector<int> calculateDijkstraGrid(const FlowField::InitInfo initInfo, const Vector3& destination, const Vector3& offset);
+	std::vector<FlowFieldBuilder::Position> getNeighbours(const FlowField::InitInfo initInfo, const FlowFieldBuilder::Position pos);
+	void setFlowFieldDirection(const FlowField::InitInfo initInfo, std::vector<int> dijkstraGrid, const Vector3& offset, const Vector3& destination);
 
 	static FlowFieldBuilder* m_instance;
-	std::vector<std::vector<std::vector<FlowField::Cell>>> m_flowField;
+	std::vector<FlowField::Cell> m_flowField;
 };
 
 };

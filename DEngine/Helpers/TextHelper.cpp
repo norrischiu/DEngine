@@ -41,7 +41,7 @@ namespace DE
 		float drawY = 0.0f + placeholder_height / 2.0f;
 		Vector3 size = Vector3(placeholder_width, placeholder_height, 0.0f);
 
-		vertex1P1UV* pVertices = new vertex1P1UV[iNumVerts];
+		Vertex1P1UV* pVertices = new Vertex1P1UV[iNumVerts];
 		unsigned int* pIndices = new unsigned int[iNumIndices];
 
 		// Draw each letter onto a quad.
@@ -109,14 +109,12 @@ namespace DE
 			pIndices[i++] = j++;
 		}
 
-		MeshData* meshData = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices, sizeof(vertex1P1UV));
+		MeshData* meshData = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices, sizeof(Vertex1P1UV));
 		RenderPass* textPass = new RenderPass;
-		textPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
+		textPass->SetVertexShader("../DEngine/Shaders/VS_Vertex1P1UV.hlsl");
 		textPass->SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
 		textPass->SetBlendState(State::ALPHA_BS);
-		Handle hTexture(sizeof(Texture));
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "font.dds");
-		textPass->AddTexture(hTexture);
+		textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "font.dds"));
 		meshData->m_Material.AddPassToTechnique(textPass);
 
 		return meshData;

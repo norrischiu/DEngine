@@ -8,42 +8,42 @@
 namespace DE
 {
 
-class Plane
-{
-public:
-
-	Plane() {};
-
-	// Points list in clockwise direction
-	Plane(Vector3 a, Vector3 b, Vector3 c)
+	class Plane
 	{
-		m_vNormal = Cross(b - a, c - b);
-		m_vNormal.Normalize();
-		m_vNormal.SetW(a.Dot(m_vNormal));
-	}
+	public:
 
-	bool IsInside(Sphere sphere)
-	{
-		float dist = m_vNormal.Dot(sphere.getCenter());
-		return dist > -sphere.getRadius();
-	}
+		Plane() {};
 
-	bool IsInside(Vector3 point)
-	{
-		float dist = m_vNormal.Dot(point);
-		return dist > m_vNormal.GetW();
-	}
+		// Points list in clockwise direction
+		Plane(Vector3 a, Vector3 b, Vector3 c)
+		{
+			m_vNormal = Cross(b - a, c - b);
+			m_vNormal.Normalize();
+			m_vNormal.SetW(a.Dot(m_vNormal));
+		}
 
-	inline Vector3 GetNormal()
-	{
-		return m_vNormal;
-	}
+		bool IsInside(Sphere sphere)
+		{
+			float dist = m_vNormal.Dot(sphere.getCenter());
+			return dist > -sphere.getRadius();
+		}
 
-private:
+		bool IsInside(Vector3 point)
+		{
+			float dist = m_vNormal.Dot(point);
+			return dist > m_vNormal.GetW();
+		}
 
-	// Stores distance to w component
-	Vector3						m_vNormal;
-};
+		inline Vector3 GetNormal()
+		{
+			return m_vNormal;
+		}
+
+	private:
+
+		// Stores distance to w component
+		Vector3						m_vNormal;
+	};
 
 };
 #endif // !PLANE_H_

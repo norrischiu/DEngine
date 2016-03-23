@@ -19,7 +19,7 @@ public:
 	MovementController()
 		:Component()
 	{
-		m_fSpeed = 1.0f;
+		m_fSpeed = 10.0f;
 	}
 
 	// Inherited via Component

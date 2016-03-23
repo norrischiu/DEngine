@@ -43,6 +43,14 @@ void CBuffer::BindToRenderer()
 	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
 	}
+	if (m_iType == HullShader)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->HSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	}
+	if (m_iType == DomainShader)
+	{
+		D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	}
 }
 
 void CBuffer::Update(size_t size)

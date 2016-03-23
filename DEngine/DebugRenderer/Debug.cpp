@@ -8,7 +8,7 @@ namespace DE
 {
 
 Debug::Debug() {}
-/*
+
 MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_vertex) {
 	unsigned int pIndices[2] = {
 		0, 1
@@ -25,8 +25,8 @@ MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_
 		);
 
 	MeshData* meshdata = new MeshData(vertices, 2, pIndices, 2);
-	//MeshComponent* meshcomponent = new MeshComponent(meshdata);
-//	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshcomponent);
+	MeshComponent* meshcomponent = new MeshComponent(meshdata);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshcomponent);
 
 	return meshcomponent;
 }
@@ -84,8 +84,8 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 	}
 
 	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
-	//MeshComponent* Meshcomponent = new MeshComponent(meshdata);
-//	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
@@ -153,8 +153,8 @@ MeshComponent* Debug::draw_pyramid(const Vector3& dimension, const int slice, co
 	}
 
 	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
-	//MeshComponent* Meshcomponent = new MeshComponent(meshdata);
-//	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
@@ -218,10 +218,10 @@ MeshComponent* Debug::draw_prism(const Vector3& dimension, const int slice) {
 	}
 
 	MeshData* meshdata = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices);
-	//MeshComponent* Meshcomponent = new MeshComponent(meshdata);
-//	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
+	MeshComponent* Meshcomponent = new MeshComponent(meshdata);
+	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(Meshcomponent);
 
 	return Meshcomponent;
 }
-*/
+
 };

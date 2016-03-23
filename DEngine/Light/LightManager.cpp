@@ -70,9 +70,7 @@ void LightManager::AddLight(LightComponent* light)
 
 int LightManager::CreateShadowMap()
 {
-	Handle hTexture(sizeof(Texture));
-	new (hTexture) Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
-	m_ShadowMaps.push_back((Texture*) hTexture.Raw());
+	m_ShadowMaps.push_back(new Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES));
 	return m_ShadowMaps.size() - 1;
 }
 

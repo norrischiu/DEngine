@@ -74,7 +74,10 @@
       <UniqueIdentifier>{f4003de7-d586-4fb6-8ab3-ddd82d933a5d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Terrain">
-      <UniqueIdentifier>{2399a8ff-5c8e-49b0-bc43-03c6de465379}</UniqueIdentifier>
+      <UniqueIdentifier>{b7469f27-1663-4808-a7a2-c27810066f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Animation\BlendMode">
+      <UniqueIdentifier>{756a5e9a-ff4a-41e8-82d7-cf6d4688839b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -249,20 +252,20 @@
     <ClCompile Include="AI\PathFinding\FlowField.cpp">
       <Filter>AI\PathFinding</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\AIController.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Terrain\Terrain.cpp">
       <Filter>Graphics\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="AI\PathFinding\AIController.cpp">
-      <Filter>AI</Filter>
+    <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp">
+      <Filter>Graphics\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="CrossFadeBlending.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Blending.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp">
-      <Filter>Graphics\ParticleSystem</Filter>
+    <ClCompile Include="Graphics\Render\HSDSPerFrameCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,39 +506,28 @@
     <ClInclude Include="Graphics\ParticleSystem\Particle.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Event\EngineEvent.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="AI\PathFinding\FlowField.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="Object\Transform.h">
-      <Filter>Object</Filter>
+    <ClInclude Include="Object\Transform.h" />
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
+      <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers\GeometryHelper.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Event\EngineEvent.h">
-      <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalInclude.h" />
-    <ClInclude Include="Utilities\MyArray.h">
-      <Filter>Utilities</Filter>
+    <ClInclude Include="AI\PathFinding\AIController.h">
+      <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Terrain\Terrain.h">
       <Filter>Graphics\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="AI\PathFinding\AIController.h">
-      <Filter>AI</Filter>
+    <ClInclude Include="Graphics\Terrain\TerrainBuilder.h">
+      <Filter>Graphics\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="Blending.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="CrossFadeBlending.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
-      <Filter>Graphics\ParticleSystem</Filter>
+    <ClInclude Include="Graphics\Render\HSDSPerFrameCBuffer.h">
+      <Filter>Graphics\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,16 +591,16 @@
     <FxCompile Include="Shaders\VS_fire.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\VS_terrain.hlsl">
+    <FxCompile Include="Shaders\HS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\HS_terrain.hlsl">
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1B1UV_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\HS_constant.hlsl">
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1B1UV.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\DS_terrain.hlsl">

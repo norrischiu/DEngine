@@ -82,6 +82,7 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 	texCoord.x = IN.vPos.x / 1024.0f;
 	texCoord.y = IN.vPos.y / 768.0f;
 	rgb = shaderTexture[0].Load(int3(IN.vPos.xy, 0));
+	return rgb;//
 	normalVS = shaderTexture[1].Load(int3(IN.vPos.xy, 0));
 	float depth = shaderTexture[2].Load(int3(IN.vPos.xy, 0)).r;
 	Material mat;

@@ -89,6 +89,12 @@ public:
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, num, null);
 	}
 
+	void UnbindVSShaderResources(int num)
+	{
+		ID3D11ShaderResourceView* null[5] = { nullptr };
+		D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShaderResources(0, num, null);
+	}
+
 	// Pointer to interface, handles GPU and pipeline
 	ID3D11DeviceContext*						m_pD3D11Context;
 
@@ -105,9 +111,9 @@ public:
 	ID3D11ShaderResourceView*					m_pSRVArray[RT_NUM + 1];
 
 	// Array of pointer to texture for deferred use
-	Handle										m_hTextures[RT_NUM]; // Gbuffer RTV, SRV
+	Texture*									m_textures[RT_NUM]; // Gbuffer RTV, SRV
 
-//	Texture*									m_LightingAccumBuffer;
+	Texture*									m_LightingAccumBuffer;
 
 	Texture*									m_backbuffer; // RTV
 

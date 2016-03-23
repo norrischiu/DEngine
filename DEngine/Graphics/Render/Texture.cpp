@@ -2,6 +2,8 @@
 #include "Graphics\D3D11Renderer.h"
 #include "State.h"
 #include "Graphics\TextureManager.h"
+#include <DirectXMath.h>
+#include <algorithm>
 
 namespace DE
 {

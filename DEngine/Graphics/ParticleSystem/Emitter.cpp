@@ -15,6 +15,77 @@ Emitter::Emitter() : Component()
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
 }
 
+Emitter::Emitter(int type, Vector3 & emitPos, Vector3 & emitDir) : Component()
+, m_pTransform(new Matrix4())
+{
+	m_ID = ComponentID;
+	m_fAge = 0.0f;
+	m_fFlareAge = 0.0f;
+	m_fTimeStep = 0.0f;
+	m_iMaxParticles = 20;
+	m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
+	m_EffectType = type;
+	m_vEmitPosW = emitPos;
+	m_vEmitDirW = emitDir;
+	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
+	m_Flag = true;
+	m_FirstRun = true;
+
+	// init data
+	Particle p;
+	ZeroMemory(&p, sizeof(Particle));
+	p.InitialPos = Vector3(0.0, 0.0, 0.0);
+	p.InitialVel = Vector3(0.0, 0.0, 0.0);
+	p.Size = 10.0f;
+	p.Age = 0.0f;
+	p.Type = PT_EMITTER;
+	p.NoData = 0.0f;
+	unsigned int index[1], index1[2];
+	index[0] = 0;
+	index1[0] = 0;
+	index1[1] = 1;
+	*m_pTransform = Matrix4::Identity;
+
+	Particle particles[20];
+	//std::vector<Particle> particles;
+
+	m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
+	m_DrawMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_StreamOutMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+
+	emitterPass = new RenderPass;
+	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
+	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
+	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	drawPass = new RenderPass;
+	drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
+	drawPass->SetGeometryShader("../DEngine/Shaders/GS_fire.hlsl");
+	drawPass->SetPixelShader("../DEngine/Shaders/PS_fire.hlsl");
+	drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	drawPass->SetRasterizerState(State::CULL_NONE_RS);
+	drawPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	drawPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
+	drawPass->SetBlendState(State::ALPHA_BS);
+
+	if (type == TORCH_FLAME)
+	{
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "flare.dds"));
+	}
+	else if (type == SMOKE)
+	{
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds"));
+	}
+	else if (type == ROCKET_TRAIL)
+	{
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds"));
+	}
+	else if (type == FIRE)
+	{
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "fire.dds"));
+	}
+}
+
 Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emitDir) : Component()
 , m_pTransform(new Matrix4())
 {
@@ -70,28 +141,23 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	drawPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
 	drawPass->SetBlendState(State::ALPHA_BS);
 
-	Handle hTexture(sizeof(Texture));
 	if (type == TORCH_FLAME)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "flare.dds");
-		drawPass->AddTexture(hTexture);
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "flare.dds"));
 	}
 	else if (type == SMOKE)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds");
-		drawPass->AddTexture(hTexture);
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds"));
 	}
 	else if (type == ROCKET_TRAIL)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds");
-		drawPass->AddTexture(hTexture);
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds"));
 	}
 	else if (type == FIRE)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "fire.dds");
-		drawPass->AddTexture(hTexture);
+		drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "fire.dds"));
 	}
-
+	
 	ParticleSystem::GetInstance()->AddComponent(id, this);
 }
 
@@ -102,6 +168,58 @@ Emitter::~Emitter()
 float Emitter::GetAge()
 {
 	return m_fAge;
+}
+
+void Emitter::AddParticle(int type, Vector3& emitPos, Vector3& emitDir)
+{
+	m_ID = ComponentID;
+	m_fAge = 0.0f;
+	m_fFlareAge = 0.0f;
+	m_fTimeStep = 0.0f;
+	m_iMaxParticles = 20;
+	m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
+	m_vEmitPosW = emitPos;
+	m_vEmitDirW = emitDir;
+	m_Flag = true;
+	m_FirstRun = true;
+	m_EffectType = type;
+
+	// init data
+	Particle p;
+	ZeroMemory(&p, sizeof(Particle));
+	p.InitialPos = Vector3(0.0, 0.0, 0.0);
+	p.InitialVel = Vector3(0.0, 0.0, 0.0);
+	p.Size = 10.0f;
+	p.Age = 0.0f;
+	p.Type = PT_EMITTER;
+	p.NoData = 0.0f;
+	unsigned int index[1], index1[2];
+	index[0] = 0;
+	index1[0] = 0;
+	index1[1] = 1;
+
+
+	Particle particles[20];
+	//std::vector<Particle> particles;
+
+	m_InitMesh = new MeshData(&p, 1, index, 1, sizeof(Particle), false);
+	m_DrawMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+	m_StreamOutMesh = new MeshData(&particles, m_iMaxParticles, index1, m_iMaxParticles, sizeof(Particle), true);
+
+	emitterPass = new RenderPass;
+	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
+	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
+	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	drawPass = new RenderPass;
+	drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
+	drawPass->SetGeometryShader("../DEngine/Shaders/GS_fire.hlsl");
+	drawPass->SetPixelShader("../DEngine/Shaders/PS_fire.hlsl");
+	drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	drawPass->SetRasterizerState(State::CULL_NONE_RS);
+	drawPass->SetBlendState(State::ALPHA_BS);
+	drawPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "flare.dds"));
+
 }
 
 void Emitter::Draw()

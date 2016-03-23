@@ -14,10 +14,8 @@ MeshComponent::MeshComponent(MeshData* meshData)
 	, m_bVisible(true)
 	, m_pMeshData(meshData)
 {
-	m_ID = ComponentID;
-
 	*m_pTransform = Matrix4::Identity;
-	//SceneGraph::GetInstance()->AddComponent(this);
+	// SceneGraph::GetInstance()->AddComponent(this);
 }
 
 MeshComponent::MeshComponent(const char* meshName, int type)
@@ -25,8 +23,6 @@ MeshComponent::MeshComponent(const char* meshName, int type)
 	, m_pTransform(new Matrix4())
 	, m_bVisible(true)
 {
-	m_ID = ComponentID;
-
 	*m_pTransform = Matrix4::Identity;
 	m_pMeshData = new MeshData(meshName, type);
 	SceneGraph::GetInstance()->AddComponent(this);

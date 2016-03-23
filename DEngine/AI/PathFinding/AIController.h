@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Object/Component.h"
 #include "../../Graphics/VertexFormat.h"
+#include "../../Graphics/Terrain/Terrain.h"
 #include "FlowField.h"
 
 namespace DE
@@ -12,7 +13,7 @@ class AIController : public Component
 public:
 	static const int ComponentID = ComponentID::AI_CONTROLLER;
 
-	AIController(FlowField& flowField);
+	AIController(FlowField& flowField, Terrain* terrain = nullptr);
 	~AIController();
 
 
@@ -25,6 +26,7 @@ public:
 
 private:
 	FlowField m_flowField;
+	Terrain* m_terrain;
 };
 
 };

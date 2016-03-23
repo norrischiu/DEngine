@@ -16,6 +16,8 @@ public:
 		VertexShader,
 		GeometryShader,
 		PixelShader,
+		HullShader,
+		DomainShader,
 	};
 
 	CBuffer(int type, size_t size);

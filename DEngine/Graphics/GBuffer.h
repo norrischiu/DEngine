@@ -41,8 +41,8 @@ private:
 	ID3D11Buffer*								m_pSpotLightIB;
 
 	// Constant buffer update facilities
-	PSPerLightCBuffer							m_pPSCBuffer;
-	VSPerObjectCBuffer							m_pVSCBuffer;
+	PSPerLightCBuffer*							m_pPSCBuffer;
+	VSPerObjectCBuffer*							m_pVSCBuffer;
 
 	MeshData*									pointLightMesh;
 	MeshData*									spotLightMesh;

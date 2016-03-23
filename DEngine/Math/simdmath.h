@@ -96,6 +96,12 @@ public:
 		_rows[3] = _mm_setr_ps(other[3][0], other[3][1], other[3][2], other[3][3]);
 	}
 
+	// get data values
+	inline float Get(int col, int row)
+	{
+		return _rows[row].m128_f32[col];
+	}
+
 	// Add another matrix to the matrix, store the result back to this
 	inline void Add(SIMDMatrix4& other)
 	{
@@ -553,9 +559,18 @@ public:
 	}
 
 	// Normalize the vector, store result back to this
+	/*
+	inline void Normalize()
+	{
+		__m128 length = _mm_dp_ps(_data, _data, 0x77);
+		length = _mm_rsqrt_ps(length);
+		_data = _mm_mul_ps(_data, length);
+	}
+	*/
+
 	inline SIMDVector3& Normalize()
 	{
-		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
+		__m128 length = _mm_dp_ps(_data, _data, 0x77);
 		length = _mm_rsqrt_ps(length);
 		_data = _mm_mul_ps(_data, length);
 		return *this;
@@ -584,18 +599,17 @@ public:
 	inline friend SIMDVector3 Normal(const SIMDVector3& vec)
 	{
 		SIMDVector3 result = vec;
-		result.Normalize();
-		return result;
+		return result.Normalize();
 	}
 
 	// Return the cross product as SIMDVector3 of two vectors
 	inline friend SIMDVector3 Cross(const SIMDVector3& a, const SIMDVector3& b)
 	{
-		SIMDVector3 result;
-		result._data = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1)), _mm_shuffle_ps(b._data, b._data, _MM_SHUFFLE(3, 1, 0, 2)));
+		__m128 te = _mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1));
+		__m128 result = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 0, 2, 1)), _mm_shuffle_ps(b._data, b._data, _MM_SHUFFLE(3, 1, 0, 2)));
 		__m128 temp = _mm_mul_ps(_mm_shuffle_ps(a._data, a._data, _MM_SHUFFLE(3, 1, 0, 2)), _mm_shuffle_ps(b._data, b._data, _MM_SHUFFLE(3, 0, 2, 1)));
-		result._data = _mm_sub_ps(result._data, temp);
-		return result;
+		result = _mm_sub_ps(result, temp);
+		return SIMDVector3(result);
 	}
 
 	// Interpolate between two vectors with float t, return the resultant vector

@@ -1,6 +1,9 @@
 #pragma once
-class CrossFadeBlending
+#include "Blending.h"
+
+class CrossFadeBlending : public Blending
 {
+
 public:
 	CrossFadeBlending();
 	~CrossFadeBlending();

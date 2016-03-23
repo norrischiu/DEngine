@@ -1,5 +1,4 @@
 #include "ParticleSystem.h"
-#include "Memory\Handle.h"
 
 namespace DE
 {
@@ -12,7 +11,7 @@ ParticleSystem::ParticleSystem()
 ParticleSystem::~ParticleSystem()
 {
 }
-/*
+
 Emitter * ParticleSystem::AddParticles(char* id, int type, Vector3& emitPos, Vector3& emitDir)
 {
 	m_Velocity = emitDir;
@@ -26,15 +25,12 @@ Emitter * ParticleSystem::AddParticles(char* id, int type, Vector3& emitPos, Vec
 		partDir = Vector3(0.0f, 1.3f, 0.7f);
 	}
 
-	Handle hEmitter(sizeof(Emitter));
-	new (hEmitter) Emitter(type, emitPos + m_Velocity, partDir);
-	Emitter* particles = (Emitter*) hEmitter.Raw();
+	Emitter* particles = new Emitter(type, emitPos + m_Velocity, partDir);
 
 	m_Particles[id] = particles;
 
 	return particles;
 }
-*/
 
 void ParticleSystem::AddComponent(char* id, Emitter * emitter)
 {

@@ -27,15 +27,15 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 	char* id = progressBar->getID();
 
 	if (progressBar->hasUpdate()) {
-		if (m_cache[id].Raw()) {
-			m_cache[id].Free();
+		if (m_cache[id]) {
+			delete m_cache[id];
 			m_cache.erase(id);
 			TextEngine::getInstance()->removeCacheByID(id);
 		}
 		progressBar->setHasUpdate(false);
 	}
 
-	if (!m_cache[id].Raw()) {
+	if (!m_cache[id]) {
 		const HUDElement::Position position = progressBar->getPosition();
 		const HUDElement::Size size = progressBar->getSize();
 		const float progress = progressBar->getProgress();
@@ -77,22 +77,22 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 			position.y + yOffset
 			);
 
-		Handle hMesh1(sizeof(MeshComponent));
-		MeshComponent* meshComponent = (MeshComponent*) hMesh1.Raw();
+		MeshComponent* meshComponent = nullptr;
 
 		if (progressBar->isShowText()) {
-			Handle hMesh2(sizeof(MeshComponent));
-			Handle hMesh3(sizeof(MeshComponent));
-			new (hMesh1) MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P)));
-			new (hMesh2) MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P)));
-			*(MeshComponent*) hMesh3.Raw() =  *TextEngine::getInstance()->makeText(
-				new TextBox(progressBar->getID(), progressString, pos, fontSize, TextBox::Color::RED)
-				);
+			meshComponent = new MeshComponent[3]{
+				MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P))),
+				MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P))),
+				*TextEngine::getInstance()->makeText(
+					new TextBox(progressBar->getID(), progressString, pos, fontSize, TextBox::Color::RED)
+				)
+			};
 		}
 		else {
-			Handle hMesh2(sizeof(MeshComponent));
-			new (hMesh1) MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P)));
-			new (hMesh2) MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P)));
+			meshComponent = new MeshComponent[2]{
+				MeshComponent(new MeshData(pVerticesProgress, 4, pIndicesProgress, 6, sizeof(Vertex1P))),
+				MeshComponent(new MeshData(pVerticesProgressBorder, 4, pIndicesProgressBorder, 8, sizeof(Vertex1P)))
+			};
 		}
 
 
@@ -112,8 +112,8 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 			translate.CreateTranslation(Vector3(-1024 / 2.0f + position.x, 768 / 2.0f - position.y, 0.0f));
 			*meshComponent[i].m_pTransform = Matrix4::OrthographicProjection(1024, 768, 0.0f, 1.0f) * translate * scaleX * scaleY;
 		}
- 
-		m_cache[id] = hMesh1;
+
+		m_cache[id] = meshComponent;
 
 		delete[] pVerticesProgress;
 		delete[] pVerticesProgressBorder;
@@ -121,14 +121,14 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		delete[] pIndicesProgressBorder;
 	}
 
-	return (MeshComponent*) m_cache[id].Raw();
+	return m_cache[id];
 }
 
 void ProgressBarEngine::removeCacheByID(const char* id)
 {
 	if (m_cache[id])
 	{
-		m_cache[id].Free();
+		delete m_cache[id];
 		m_cache.erase(id);
 	}
 }
@@ -137,7 +137,7 @@ void ProgressBarEngine::destructAndCleanUp()
 {
 	for (auto itr : m_cache)
 	{
-		itr.second.Free();
+		delete itr.second;
 	}
 
 	m_cache.clear();

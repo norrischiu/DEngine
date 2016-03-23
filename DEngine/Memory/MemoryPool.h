@@ -13,28 +13,26 @@ public:
 	unsigned int							m_iBlockSize;
 	unsigned int							m_iFreeBlockNum;
 	unsigned int							m_iFreeBlockIndex;
-	unsigned int							pad; // to ensure the table is 16 byte aligned
 	unsigned int							m_pFreeList[63356]; // indices
 
 	// Construct a memory pool with alignment at the beginning
 	static MemoryPool* Construct(size_t size, unsigned int num, void* &heapStart)
 	{
 		assert(size % MEMORY_ALIGNMENT == 0); // Make sure the block size does not need alignment
-		assert((uint64_t) heapStart % MEMORY_ALIGNMENT == 0); // Make sure the block size does not need alignment
 
 		MemoryPool* ptr = (MemoryPool*) heapStart;
 		ptr->m_iBlockSize = size;
 		ptr->m_iFreeBlockNum = num;
 		ptr->m_iFreeBlockIndex = 0;
 
-		heapStart = (void*) ((uint64_t) heapStart + sizeof(unsigned int) * 4);
+		heapStart = (void*) ((uint64_t) heapStart + sizeof(unsigned int) * 3);
 
 		for (unsigned int i = 0; i < num; ++i)
 		{
 			ptr->m_pFreeList[i] = i;
 		}
 
-		heapStart = (void*)((uint64_t) heapStart + sizeof(unsigned int) * num + (size * num));
+		heapStart = (void*)((uint64_t) heapStart + (size * num));
 		return ptr;
 	}
 

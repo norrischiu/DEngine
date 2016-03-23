@@ -53,6 +53,11 @@ public:
 		return true;
 	}
 
+	Plane* GetPlanes()
+	{
+		return m_planes;
+	}
+
 private:
 
 	void Reconstruct(const float fFov, const float fRatio, const float fZNear, const float fZFar)

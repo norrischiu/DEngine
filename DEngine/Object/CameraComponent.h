@@ -41,23 +41,30 @@ public:
 	{
 		return m_Frustum;
 	}
+	
+	// World position
 	inline Vector3 GetPosition()
 	{
+		//return m_vPos;
+		if (m_pOwner)
+		{
+			Vector3 pos = m_vPos;
+			pos.Transform(*m_pOwner->GetTransform());
+			return pos;
+		}
 		return m_vPos;
 	}
 
 	~CameraComponent() {};
 
 private:
-
-	Frustum						m_Frustum;
-	Matrix4						m_mPerspectiveProj;
-
 	// Camera position in local space of game object owner
 	Vector3						m_vPos;
 
 	Vector3						m_vLookAt;
 	Vector3						m_vUp;
+	Matrix4						m_mPerspectiveProj;
+	Frustum						m_Frustum;
 };
 
 };

@@ -5,8 +5,8 @@
 namespace DE
 {
 
-AIController::AIController(FlowField& flowField)
-	: Component(nullptr), m_flowField(flowField)
+AIController::AIController(FlowField& flowField, Terrain* terrain)
+	: Component(nullptr), m_flowField(flowField), m_terrain(terrain)
 {
 	m_ID = ComponentID;
 }
@@ -23,6 +23,10 @@ void AIController::updateFlowField(const Vector3& start, const Vector3& destinat
 
 float AIController::LookUp(const float x, const float z)
 {
+	if (m_terrain) {
+		return m_terrain->GetHeight(x, z);
+	}
+
 	return 0.0f;
 }
 
@@ -39,7 +43,7 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 void AIController::Update(float deltaTime)
 {
 	Vector3 direction = m_flowField.getDirection(m_pOwner->GetPosition());
-	Vector3 vTrans = direction * deltaTime * 2.0f;
+	Vector3 vTrans = direction * deltaTime * 3.0f;
 	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
 	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
 	newPos.SetY(newY);
@@ -50,13 +54,12 @@ void AIController::Update(float deltaTime)
 		const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
 		const float angle = angleBetween(vec1, vec2);
 
-		if (angle < 30.0f)
+		if (true || angle < 30.0f)
 		{
 			vTrans.SetY(newY - m_pOwner->GetPosition().GetY());
 			Move(vTrans);
 		}
 	}
-
 }
 
 void AIController::Move(Vector3 vTrans)
