@@ -11,177 +11,187 @@
 namespace DE
 {
 
-	class RenderPass
+class RenderPass
+{
+
+public:
+
+	RenderPass()
 	{
+		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		m_iRTVNum = 0;
+	}
 
-	public:
+	void SetVertexShader(ID3D11VertexShader* pVS)
+	{
+		m_pVS = pVS;
+	}
 
-		RenderPass()
-		{
-			m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			m_iRTVNum = 0;
-		}
-
-		void SetVertexShader(const char* filename)
-		{
-			assert(filename != nullptr);
+	void SetVertexShader(const char* filename)
+	{
+		assert(filename != nullptr);
 
 			m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_VERTEX_SHADER);
 			m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout(filename);
-		}
+	}
 
-		void SetPixelShader(const char* filename)
+	ID3D11VertexShader* GetVertexShader()
+	{
+		return m_pVS;
+	}
+
+	void SetPixelShader(const char* filename)
+	{
+		if (filename == nullptr)
 		{
-			if (filename == nullptr)
-			{
-				m_pPS = nullptr;
-			}
-			else
-			{
-				m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_PIXEL_SHADER);
-			}
+			m_pPS = nullptr;
 		}
-
-		void SetHullShader(const char* filename)
+		else
 		{
-			if (filename == nullptr)
-			{
-				m_pHS = nullptr;
-			}
-			else
-			{
-				m_pHS = (ID3D11HullShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_HULL_SHADER);
-			}
+			m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_PIXEL_SHADER);
 		}
+	}
 
-		void SetDomainShader(const char* filename)
+	void SetHullShader(const char* filename)
+	{
+		if (filename == nullptr)
 		{
-			if (filename == nullptr)
-			{
-				m_pDS = nullptr;
-			}
-			else
-			{
-				m_pDS = (ID3D11DomainShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_DOMAIN_SHADER);
-			}
+			m_pHS = nullptr;
 		}
-
-		void SetGeometryShader(const char* filename)
+		else
 		{
-			if (filename == nullptr)
-			{
-				m_pGS = nullptr;
-			}
-			else
-			{
-				m_pGS = (ID3D11GeometryShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_GEOMETRY_SHADER);
-			}
+			m_pHS = (ID3D11HullShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_HULL_SHADER);
 		}
+	}
 
-		void SetStreamOutTargets(ID3D11Buffer* SOBuffer)
+	void SetDomainShader(const char* filename)
+	{
+		if (filename == nullptr)
 		{
-			m_pSOTarget = SOBuffer;
+			m_pDS = nullptr;
 		}
-
-		void SetRasterizerState(int stateID)
+		else
 		{
-			m_pRS = (ID3D11RasterizerState*)State::GetState(stateID);
+			m_pDS = (ID3D11DomainShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_DOMAIN_SHADER);
 		}
+	}
 
-		void SetDepthStencilState(int stateID)
+	void SetGeometryShader(const char* filename)
+	{
+		if (filename == nullptr)
 		{
-			m_pDSS = (ID3D11DepthStencilState*)State::GetState(stateID);
+			m_pGS = nullptr;
 		}
-
-		void SetBlendState(int stateID)
+		else
 		{
-			m_pBS = (ID3D11BlendState*)State::GetState(stateID);
+			m_pGS = (ID3D11GeometryShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_GEOMETRY_SHADER);
 		}
+	}
 
-		void SetTopology(int topology)
-		{
-			m_iTopology = topology;
-		}
+	void SetStreamOutTargets(ID3D11Buffer* SOBuffer)
+	{
+		m_pSOTarget = SOBuffer;
+	}
 
-		void SetRenderTargets(ID3D11RenderTargetView** RTVs, int num)
-		{
-			m_pRTVs = RTVs;
-			m_iRTVNum = num;
-		}
+	void SetRasterizerState(int stateID)
+	{
+		m_pRS = (ID3D11RasterizerState*)State::GetState(stateID);
+	}
 
-		void SetDepthStencilView(ID3D11DepthStencilView* DSV)
-		{
-			m_pDSV = DSV;
-		}
+	void SetDepthStencilState(int stateID)
+	{
+		m_pDSS = (ID3D11DepthStencilState*)State::GetState(stateID);
+	}
 
-		void AddTexture(Texture* tex)
-		{
-			m_vTextureSRVs.push_back(tex->GetSRV());
-			m_vSamplerState.push_back(tex->GetSamplerState());
-		}
+	void SetBlendState(int stateID)
+	{
+		m_pBS = (ID3D11BlendState*)State::GetState(stateID);
+	}
 
-		void PopTexture()
-		{
-			m_vTextureSRVs.pop_back();
-			m_vSamplerState.pop_back();
-		}
+	void SetTopology(int topology)
+	{
+		m_iTopology = topology;
+	}
 
-		int GetTextureCount()
-		{
-			return m_vTextureSRVs.size();
-		}
+	void SetRenderTargets(ID3D11RenderTargetView** RTVs, int num)
+	{
+		m_pRTVs = RTVs;
+		m_iRTVNum = num;
+	}
 
-		void BindToRenderer();
+	void SetDepthStencilView(ID3D11DepthStencilView* DSV)
+	{
+		m_pDSV = DSV;
+	}
 
-		~RenderPass()
-		{
-		}
+	void AddTexture(Texture* tex)
+	{
+		m_vTextureSRVs.push_back(tex->GetSRV());
+		m_vSamplerState.push_back(tex->GetSamplerState());
+	}
 
-	private:
+	void PopTexture()
+	{
+		m_vTextureSRVs.pop_back();
+		m_vSamplerState.pop_back();
+	}
 
-		// Pointer to complied vertex shader
-		ID3D11VertexShader*						m_pVS;
+	int GetTextureCount()
+	{
+		return m_vTextureSRVs.size();
+	}
 
-		// Pointer to complied hull shader
-		ID3D11HullShader*						m_pHS;
+	void BindToRenderer();
 
-		// Pointer to compiled domain shader
-		ID3D11DomainShader*						m_pDS;
+	~RenderPass()
+	{
+	}
 
-		// Pointer to complied geometry shader
-		ID3D11GeometryShader*					m_pGS;
+private:
 
-		// Pointer to complied pixel shader
-		ID3D11PixelShader*						m_pPS;
+	// Pointer to complied vertex shader
+	ID3D11VertexShader*						m_pVS;
 
-		// Primitive Topology
-		unsigned int							m_iTopology;
+	// Pointer to complied hull shader
+	ID3D11HullShader*						m_pHS;
 
-		// Pointer to input layout supply to IA
-		ID3D11InputLayout*						m_pInputLayout;
+	// Pointer to compiled domain shader
+	ID3D11DomainShader*						m_pDS;
 
-		// Pointer to depth stencil state
-		ID3D11DepthStencilState*				m_pDSS;
+	// Pointer to complied geometry shader
+	ID3D11GeometryShader*					m_pGS;
 
-		// Pointer to blend state
-		ID3D11BlendState*						m_pBS;
+	// Pointer to complied pixel shader
+	ID3D11PixelShader*						m_pPS;
 
-		// Pointer to rasterizer state
-		ID3D11RasterizerState*					m_pRS;
+	// Primitive Topology
+	unsigned int							m_iTopology;
 
-		ID3D11DepthStencilView*					m_pDSV;
+	// Pointer to input layout supply to IA
+	ID3D11InputLayout*						m_pInputLayout;
 
-		ID3D11RenderTargetView**				m_pRTVs;
+	// Pointer to depth stencil state
+	ID3D11DepthStencilState*				m_pDSS;
 
-		ID3D11Buffer*							m_pSOTarget;
+	// Pointer to blend state
+	ID3D11BlendState*						m_pBS;
 
-		int										m_iRTVNum;
+	// Pointer to rasterizer state
+	ID3D11RasterizerState*					m_pRS;
 
-		// Pointer to texture array
-		std::vector<ID3D11ShaderResourceView*>	m_vTextureSRVs;
+	ID3D11DepthStencilView*					m_pDSV;
 
-		std::vector<ID3D11SamplerState*>		m_vSamplerState;
-	};
+	ID3D11RenderTargetView**				m_pRTVs;
+
+	ID3D11Buffer*							m_pSOTarget;
+
+	int										m_iRTVNum;
+
+	// Pointer to texture array
+	std::vector<ID3D11ShaderResourceView*>	m_vTextureSRVs;
+
+	std::vector<ID3D11SamplerState*>		m_vSamplerState;
+};
 
 };
 #endif // RENDER_PASS_H_
