@@ -14,7 +14,7 @@ void MemoryManager::ConstructDefaultPool()
 
 	for (unsigned int i = 0; i < MEMORY_POOL_NUM; ++i)
 	{
-		heapSize += MEMORY_POOL_CONFIG[i][0] * MEMORY_POOL_CONFIG[i][1] + sizeof(unsigned int) * 4;
+		heapSize += MEMORY_POOL_CONFIG[i][0] * MEMORY_POOL_CONFIG[i][1] + sizeof(unsigned int) * 4 + sizeof(unsigned int) * MEMORY_POOL_CONFIG[i][1];
 	}
 	m_pRawHeapStart = malloc(heapSize);
 	void* heapStart = alignedAddress(m_pRawHeapStart); // align the start of memory pool
@@ -41,22 +41,32 @@ Handle MemoryManager::Allocate(size_t size)
 	{
 		if (size <= MEMORY_POOL_CONFIG[i][0])
 		{
-			if (!m_pPool[i]->m_pFreeList)
+			if (m_pPool[i]->m_iFreeBlockNum == 0)
 			{
-				assert(false || "no block left");
+				assert(false && "no block left");
 			}
-
+			int index = m_pPool[i]->m_pFreeList[m_pPool[i]->m_iFreeBlockIndex];
 			m_pPool[i]->m_iFreeBlockNum--;
-			return Handle(i, m_pPool[i]->m_iFreeBlockIndex++);
+			m_pPool[i]->m_iFreeBlockIndex++;
+			return Handle(i, index);
 		}
 	}
 
-	assert(false || "no block fits");
+	assert(false && "no block fits");
 }
 
 void MemoryManager::Free(Handle hle)
 {
-	unsigned int index = m_pPool[hle.m_poolIndex]->m_iFreeBlockNum++;
+	memset(hle.Raw(), 0, m_pPool[hle.m_poolIndex]->m_iBlockSize);
+	int index = m_pPool[hle.m_poolIndex]->m_iFreeBlockIndex - 1;
+	m_pPool[hle.m_poolIndex]->m_iFreeBlockIndex--;
+	if (index == -1)
+	{
+		m_pPool[hle.m_poolIndex]->m_iFreeBlockIndex = MEMORY_POOL_CONFIG[hle.m_poolIndex][1] - 1;
+		index = MEMORY_POOL_CONFIG[hle.m_poolIndex][1] - 1;
+	}
+	m_pPool[hle.m_poolIndex]->m_pFreeList[index] = hle.m_blockIndex;
+	m_pPool[hle.m_poolIndex]->m_iFreeBlockNum++;
 }
 
 // Get the raw address stored with reference to handle
