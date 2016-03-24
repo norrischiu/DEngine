@@ -33,7 +33,7 @@ public:
 
 	void Transform(Matrix4& transform)
 	{
-		Vector3 m_vMaxXYZ(FLT_MIN, FLT_MIN, FLT_MIN);
+		Vector3 m_vMaxXYZ(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 		Vector3 m_vMinXYZ(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 corners[8];
 		corners[0] = m_Min;
