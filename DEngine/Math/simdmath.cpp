@@ -119,4 +119,15 @@ SIMDMatrix4 SIMDMatrix4::Inverse()
 	return result;
 }
 
+SIMDMatrix4 SIMDMatrix4::Transpose()
+{
+	DirectX::XMMATRIX result = DirectX::XMMATRIX(_rows[0], _rows[1], _rows[2], _rows[3]);
+	result = DirectX::XMMatrixTranspose(result);
+	_rows[0] = result.r[0];
+	_rows[1] = result.r[1];
+	_rows[2] = result.r[2];
+	_rows[3] = result.r[3];
+	return *this;
+}
+
 };

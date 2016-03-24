@@ -377,6 +377,9 @@ public:
 	// Inverts the matrix, store the result back to this
 	void Invert();
 	SIMDMatrix4 Inverse();
+
+	// Transpose the matrix
+	SIMDMatrix4 Transpose();
 };
 
 // 3D Vector with SIMD
@@ -554,6 +557,14 @@ public:
 
 	// Normalize the vector, store result back to this
 	inline SIMDVector3& Normalize()
+	{
+		__m128 length = _mm_dp_ps(_data, _data, 0x77);
+		length = _mm_rsqrt_ps(length);
+		_data = _mm_mul_ps(_data, length);
+		return *this;
+	}
+
+	inline SIMDVector3& NormalizeAll()
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
 		length = _mm_rsqrt_ps(length);

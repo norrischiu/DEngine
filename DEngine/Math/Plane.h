@@ -17,9 +17,10 @@ public:
 	// Points list in clockwise direction
 	Plane(Vector3 a, Vector3 b, Vector3 c)
 	{
-		m_vNormal = Cross(b - a, c - b);
+		m_vNormal = Cross(c - a, c - b);
+		float dist = a.Dot(m_vNormal);
 		m_vNormal.Normalize();
-		m_vNormal.SetW(a.Dot(m_vNormal));
+		m_vNormal.SetW(dist);
 	}
 
 	bool IsInside(Sphere sphere)
