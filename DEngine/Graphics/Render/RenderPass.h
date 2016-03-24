@@ -22,11 +22,6 @@ public:
 		m_iRTVNum = 0;
 	}
 
-	void SetVertexShader(ID3D11VertexShader* pVS)
-	{
-		m_pVS = pVS;
-	}
-
 	void SetVertexShader(const char* filename)
 	{
 		assert(filename != nullptr);
