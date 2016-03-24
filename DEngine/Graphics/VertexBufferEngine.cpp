@@ -11,7 +11,8 @@ namespace DE
 
 VertexBufferEngine* VertexBufferEngine::m_pInstance;
 
-VertexBufferEngine* VertexBufferEngine::GetInstance() {
+VertexBufferEngine* VertexBufferEngine::GetInstance() 
+{
 	if (!m_pInstance)
 		m_pInstance = new VertexBufferEngine();
 	return m_pInstance;
@@ -23,7 +24,7 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	int iNumVerts;
 	HRESULT hr;
 	ID3D11Buffer* pVertexBuffer;
-	void* pVertexData = nullptr;
+	Handle hVertexData;
 
 	// Read vertices
 	pFile = fopen(C_STR(sFileNmae, "_vertex.bufa"), "r");
@@ -34,30 +35,35 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	switch (vertexFormat)
 	{
 	case eVertexFormat::POSITION_TEXTURE:
-		FillVertexData_POSITION_TEXTURE(filename, iNumVerts, pVertexData);
+		hVertexData.Set(sizeof(Vertex1P1UV) * iNumVerts);
+		FillVertexData_POSITION_TEXTURE(filename, iNumVerts, hVertexData);
 		stride = sizeof(Vertex1P1UV);
 		break;
 	case eVertexFormat::POSITION:
-		FillVertexData_POSITION(filename, iNumVerts, pVertexData);
-		stride = sizeof(Vertex1P1UV);
+		hVertexData.Set(sizeof(Vertex1P) * iNumVerts);
+		FillVertexData_POSITION(filename, iNumVerts, hVertexData);
+		stride = sizeof(Vertex1P);
 		break;
 	case eVertexFormat::POSITION_NORMAL_TEXTURE:
-		FillVertexData_POSITION_NORMAL_TEXTURE(filename, iNumVerts, pVertexData);
+		hVertexData.Set(sizeof(Vertex1P1N1UV) * iNumVerts);
+		FillVertexData_POSITION_NORMAL_TEXTURE(filename, iNumVerts, hVertexData);
 		stride = sizeof(Vertex1P1N1UV);
 		break;
 	case eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE:
-		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(filename, iNumVerts, pVertexData);
+		hVertexData.Set(sizeof(Vertex1P1N1T1UV) * iNumVerts);
+		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(filename, iNumVerts, hVertexData);
 		stride = sizeof(Vertex1P1N1T1UV);
 		break;
 	case eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS:
-		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(filename, iNumVerts, pVertexData);
+		hVertexData.Set(sizeof(Vertex1P1N1T1UV4J) * iNumVerts);
+		FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(filename, iNumVerts, hVertexData);
 		stride = sizeof(Vertex1P1N1T1UV4J);
 		break;
 	}
 
 	// Set vertex subresources data
 	D3D11_SUBRESOURCE_DATA vertexResourcesData;
-	vertexResourcesData.pSysMem = pVertexData;
+	vertexResourcesData.pSysMem = hVertexData.Raw();
 	vertexResourcesData.SysMemPitch = 0;
 	vertexResourcesData.SysMemSlicePitch = 0;
 
@@ -73,10 +79,12 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
 	assert(hr == S_OK);
 
+	hVertexData.Free();
 	return pVertexBuffer;
 }
 
-void VertexBufferEngine::DestructandCleanUp() {
+void VertexBufferEngine::DestructandCleanUp() 
+{
 	if (m_pInstance) {
 		delete m_pInstance;
 		m_pInstance = NULL;
@@ -85,53 +93,6 @@ void VertexBufferEngine::DestructandCleanUp() {
 
 ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut)
 {
-	for (unsigned int i = 0; i < iNumVerts; i++)
-	{
-		float x, y, z;
-		switch (iDataSize)
-		{
-			/*
-			case sizeof(Vertex1P1N1T1B1UV) :
-				x = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetX();
-				y = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetY();
-				z = ((Vertex1P1N1T1B1UV*)pVertexData)[i].m_pos.GetZ();
-				break;
-
-			case sizeof(Vertex1P1N1T1UV):
-				x = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetX();
-				y = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetY();
-				z = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetZ();
-				break;
-
-			case sizeof(Vertex1P1N1UV):
-				x = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetX();
-				y = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetY();
-				z = ((Vertex1P1N1UV*)pVertexData)[i].m_pos.GetZ();
-				break;
-
-			case sizeof(Vertex1P1UV):
-				x = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetX();
-				y = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetY();
-				z = ((Vertex1P1UV*)pVertexData)[i].m_pos.GetZ();
-				break;
-			*/
-			case sizeof(Vertex1P):
-			default:
-				x = ((Vertex1P*)pVertexData)[i].m_pos.GetX();
-				y = ((Vertex1P*)pVertexData)[i].m_pos.GetY();
-				z = ((Vertex1P*)pVertexData)[i].m_pos.GetZ();
-				break;
-		}
-
-		m_vMaxXYZ.SetX(x > m_vMaxXYZ.GetX() ? x : m_vMaxXYZ.GetX());
-		m_vMaxXYZ.SetY(y > m_vMaxXYZ.GetY() ? y : m_vMaxXYZ.GetY());
-		m_vMaxXYZ.SetZ(z > m_vMaxXYZ.GetZ() ? z : m_vMaxXYZ.GetZ());
-		m_vMinXYZ.SetX(x < m_vMinXYZ.GetX() ? x : m_vMinXYZ.GetX());
-		m_vMinXYZ.SetY(y < m_vMinXYZ.GetY() ? y : m_vMinXYZ.GetY());
-		m_vMinXYZ.SetZ(z < m_vMinXYZ.GetZ() ? z : m_vMinXYZ.GetZ());
-
-	}
-
 	HRESULT hr;
 	ID3D11Buffer* pVertexBuffer;
 
@@ -160,9 +121,9 @@ ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, con
 	return pVertexBuffer;
 }
 
-void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned int vertsNum, void* &pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned int vertsNum, Handle hVertexData)
 {
-	pVertexData = new Vertex1P[vertsNum]; // TODO: needs change memory allocation
+	void* pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
@@ -179,10 +140,10 @@ void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned 
 	fclose(pFile);
 }
 
-void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, void* &pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, unsigned int vertsNum, Handle hVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1UV[vertsNum]; // TODO: needs change memory allocation
+	void* pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
@@ -213,10 +174,10 @@ void VertexBufferEngine::FillVertexData_POSITION_TEXTURE(const char* filename, u
 	fclose(pFile);
 }
 
-void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* filename, unsigned int vertsNum, void *& pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* filename, unsigned int vertsNum, Handle hVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1N1UV[vertsNum]; // TODO: needs change memory allocation
+	void* pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
@@ -259,10 +220,10 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TEXTURE(const char* file
 	fclose(pFile);
 }
 
-void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const char* filename, unsigned int vertsNum, void *& pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const char* filename, unsigned int vertsNum, Handle hVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1N1T1UV[vertsNum]; // TODO: needs change memory allocation
+	void* pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{
@@ -317,10 +278,10 @@ void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE(const ch
 	fclose(pFile);
 }
 
-void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, void *& pVertexData)
+void VertexBufferEngine::FillVertexData_POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS(const char* filename, unsigned int vertsNum, Handle hVertexData)
 {
 	std::string sFileNmae(filename);
-	pVertexData = new Vertex1P1N1T1UV4J[vertsNum]; // TODO: needs change memory allocation
+	void* pVertexData = hVertexData.Raw();
 
 	for (unsigned int i = 0; i < vertsNum; i++)
 	{

@@ -6,25 +6,28 @@ namespace DE
 IndexBufferEngine* IndexBufferEngine::m_pInstance;
 unsigned int IndexBufferEngine::g_iCurrIndex = 0;
 
-IndexBufferEngine* IndexBufferEngine::GetInstance() {
+IndexBufferEngine* IndexBufferEngine::GetInstance() 
+{
 	if (!m_pInstance)
 		m_pInstance = new IndexBufferEngine();
 	return m_pInstance;
 }
 
-void IndexBufferEngine::DestructandCleanUp() {
+void IndexBufferEngine::DestructandCleanUp() 
+{
 	if (m_pInstance) {
 		delete m_pInstance;
 		m_pInstance = NULL;
 	}
 }
 
-unsigned int IndexBufferEngine::GetCurrentIndex() {
+unsigned int IndexBufferEngine::GetCurrentIndex() 
+{
 	return g_iCurrIndex;
 }
 
-ID3D11Buffer* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData, const int m_iNumIndics) {
-
+ID3D11Buffer* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData, const int m_iNumIndics) 
+{
 	ID3D11Buffer* pIndexBuffer;
 	HRESULT hr;
 
@@ -55,7 +58,6 @@ ID3D11Buffer* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIn
 void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indicsNum)
 {
 	unsigned int iNumTri;
-	void* pIndexData = nullptr;
 	ID3D11Buffer* pIndexBuffer;
 	HRESULT hr;
 
@@ -67,7 +69,8 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 	fscanf(pFile, "%i", &iNumTri);
 	indicsNum = iNumTri * 3;
 
-	FillIndexData(indicsNum, pIndexData);
+	Handle hIndexData(sizeof(UINT) * indicsNum);
+	FillIndexData(indicsNum, hIndexData);
 
 	// Set index buffer description
 	D3D11_BUFFER_DESC indexBufferDesc;
@@ -79,7 +82,7 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 
 	// Set index subresources data
 	D3D11_SUBRESOURCE_DATA indexResourcesData;
-	indexResourcesData.pSysMem = pIndexData;
+	indexResourcesData.pSysMem = hIndexData.Raw();
 	indexResourcesData.SysMemPitch = 0;
 	indexResourcesData.SysMemSlicePitch = 0;
 
@@ -88,12 +91,13 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 	assert(hr == S_OK);
 	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
+	hIndexData.Free();
 	return pIndexBuffer;
 }
 
-void IndexBufferEngine::FillIndexData(unsigned int indicsNum, void *& pIndexData)
+void IndexBufferEngine::FillIndexData(unsigned int indicsNum, Handle hIndexData)
 {
-	pIndexData = new UINT[indicsNum]; // needs change memory allocation
+	void* pIndexData = hIndexData.Raw();
 
 	for (unsigned int i = 0; i < indicsNum; i++)
 	{
