@@ -35,7 +35,6 @@ struct DS_OUTPUT
 	float4 vTangent : TANGENT;
 	float4 vBinormal : BINORMAL;
 	float2 vTex : TEXCOORD0;
-	float2 vBoundsY: BOUNDSY;
 };
 
 // output
