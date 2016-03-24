@@ -37,6 +37,7 @@ void SceneGraph::FrustumCulling(Frustum frustum)
 	for (auto itr : m_tree)
 	{
 		AABB meshBound = itr->m_pMeshData->GetBoundingBox();
+		AABB cache = meshBound;
 		Matrix4 cameraSpace = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->GetOwner()->GetTransform();
 		meshBound.Transform(cameraSpace);
 		if (frustum.Cull(meshBound))
@@ -107,17 +108,11 @@ void SceneGraph::Render()
 
 		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->m_Memory._data;
 		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();
-		ptr2->material.fShininess = itr->m_pMeshData->m_Material.GetShininess();
+		ptr2->material.fShininess = (!itr->m_bVisible) ? 1000.0f : itr->m_pMeshData->m_Material.GetShininess();
 		m_pPSCBuffer->Update();
 
 		itr->Draw();
 	}
-
-	
-	static wchar_t s[64];
-	swprintf(s, 64, L"Drawing: %i\n", count);
-	OutputDebugStringW(s);
-	
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -135,6 +130,25 @@ void SceneGraph::ShadowMapGeneration()
 				m_pVSCBuffer->Update();
 
 				shadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
+				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
+				if (anim != nullptr)
+				{
+					Skeleton* skel = anim->m_skeleton;
+					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
+					for (auto itr : anim->m_animationSets)
+					{
+						if (itr.second->isActive())
+						{
+							for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
+							{
+								palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
+							}
+						}
+					}
+					m_pMatrixPalette->Update();
+				}
+				// TODO: separete skeletal and static mesh
+				shadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
 				itr->m_pMeshData->RenderUsingPass(shadowPass);
 			}
 		}
