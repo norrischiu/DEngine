@@ -11,8 +11,10 @@ namespace DE
 
 class Frustum
 {
+
 public:
 	Frustum() {};
+
 	Frustum(const float fFov, const float fRatio, const float fZNear, const float fZFar)
 	{
 		Reconstruct(fFov, fRatio, fZNear, fZFar);
@@ -44,7 +46,7 @@ public:
 					(planeNormal.GetX() > 0 ? max.GetX() : min.GetX()),
 					(planeNormal.GetY() > 0 ? max.GetY() : min.GetY()),
 					(planeNormal.GetZ() > 0 ? max.GetZ() : min.GetZ())
-					);
+				);
 			if (!m_planes[i].IsInside(testPoint))
 			{
 				return false;
