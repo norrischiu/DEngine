@@ -22,12 +22,22 @@ public:
 		m_iRTVNum = 0;
 	}
 
+	void SetVertexShader(ID3D11VertexShader* pVS)
+	{
+		m_pVS = pVS;
+	}
+
 	void SetVertexShader(const char* filename)
 	{
 		assert(filename != nullptr);
 
 		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_VERTEX_SHADER);
 		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout(filename);
+	}
+
+	ID3D11VertexShader* GetVertexShader()
+	{
+		return m_pVS;
 	}
 
 	void SetPixelShader(const char* filename)
