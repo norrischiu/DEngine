@@ -10,34 +10,36 @@ namespace DE
 
 class Handle;
 
-const unsigned int MEMORY_POOL_NUM = 22;
+const unsigned int MEMORY_POOL_NUM = 23;
 const unsigned int MEMORY_POOL_CONFIG[][2] =
 {
 	// already 16-byte aligned
 	// block size, number of block
-	{ 16,       65536 },  //
-	{ 32,       4096 },  //
-	{ 48,       4096 },  //
-	{ 64,       2048 },  //
-	{ 80,       2048 },  //
-	{ 96,       2048 },  //
-	{ 112,      2048 },  //
-	{ 128,      2048 },  //
-	{ 256,      2048 },  //
-	{ 512,      2048 },  //
-	{ 1024,     2048 },  //
-	{ 2048,     2048 },  //
-	{ 4096,     512 },  //
-	{ 8192,     512 },  //
-	{ 16384,    1024 },  //
-	{ 32768,    512 },   //
-	{ 65536,    256 },   //
-	{ 131072,   32 },   //
-	{ 262144,   16 },    //
-	{ 524288,   8 },    // 
-	{ 1048576,  4 },    // 
-	{ 2097152,  2 },     //
-	{ 4194304,  1 },     //
+	{ 16,       65536 },
+	{ 32,       4096 },
+	{ 48,       4096 },
+	{ 64,       2048 },
+	{ 80,       2048 },
+	{ 96,       2048 },
+	{ 112,      2048 },
+	{ 128,      2048 },
+	{ 256,      2048 },
+	{ 512,      2048 },
+	{ 1024,     2048 },
+	{ 2048,     2048 },
+	{ 4096,     512 },
+	{ 8192,     512 },
+	{ 16384,    512 },
+	{ 32768,    512 },
+	{ 65536,    256 },
+	{ 131072,   32 },
+	{ 262144,   16 },  // low res texture (256 * 256 * 4)
+	{ 524288,   8 }, 
+	{ 1048576,  16 }, // mid res texture (512 * 512 * 4)
+	//{ 2097152,  2 },
+	{ 4194304,  16 }, // high res texture (1024 * 1024 * 4)
+	{ 8388608, 4 },
+	{ 16777216, 4 }  // ultra high res texture (2048 * 2048 * 4)
 };
 
 class MemoryManager
@@ -68,7 +70,7 @@ public:
 		return m_pInstance;
 	};
 
-	void Print()
+	void PrintInfo()
 	{
 		std::cout << "Num of free:" << m_pPool[0]->m_iFreeBlockNum << "\n";
 		std::cout << "Index of free:" << m_pPool[0]->m_iFreeBlockIndex << "\n";

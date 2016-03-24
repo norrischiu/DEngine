@@ -31,6 +31,14 @@ struct Handle
 		, m_counter(0)
 	{}
 
+	// RAII, only use for empty handle
+	void Set(size_t size)
+	{
+		assert(m_counter == 0);
+		m_counter++;
+		*this = MemoryManager::GetInstance()->Allocate(size);
+	}
+
 	uint32_t							m_poolIndex : 5;
 	uint32_t							m_blockIndex : 16;
 	uint32_t							m_counter : 11;
