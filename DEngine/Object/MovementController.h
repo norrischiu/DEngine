@@ -16,10 +16,10 @@ public:
 
 	static const int ComponentID = ComponentID::CONTROLLER;
 
-	MovementController()
-		:Component()
+	MovementController(float speed = 1.0f)
+		: Component()
+		, m_fSpeed(speed)
 	{
-		m_fSpeed = 10.0f;
 	}
 
 	// Inherited via Component
