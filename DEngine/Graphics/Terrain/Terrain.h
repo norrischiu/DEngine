@@ -62,9 +62,6 @@ namespace DE
 	public:
 		GameObject* CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename);
 
-	public:
-		void ExtractFrustumPlanes(Vector4 planes[6], Matrix4 viewProj);
-
 	private:
 		std::vector<float2> CalcAllPatchBoundsY();
 		float2 CalcPatchBoundsY(const int patch_id);

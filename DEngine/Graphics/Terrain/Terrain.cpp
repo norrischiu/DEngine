@@ -291,56 +291,6 @@ namespace DE
 		return tangent;
 	}
 
-	void Terrain::ExtractFrustumPlanes(Vector4 planes[6], Matrix4 m)
-	{
-		// left		= viewProj*,4 + viewProj*,1
-		planes[0].SetX(m.Get(0, 3) + m.Get(0, 0));
-		planes[0].SetY(m.Get(1, 3) + m.Get(1, 0));
-		planes[0].SetZ(m.Get(2, 3) + m.Get(2, 0));
-		planes[0].SetW(m.Get(3, 3) + m.Get(3, 0));
-
-		// right	= viewProj*,4 - viewProj*,1
-		planes[1].SetX(m.Get(0, 3) - m.Get(0, 0));
-		planes[1].SetY(m.Get(1, 3) - m.Get(1, 0));
-		planes[1].SetZ(m.Get(2, 3) - m.Get(2, 0));
-		planes[1].SetW(m.Get(3, 3) - m.Get(3, 0));
-
-		// bottom	= viewProj*,4 + viewProj*,2
-		planes[2].SetX(m.Get(0, 3) + m.Get(0, 1));
-		planes[2].SetY(m.Get(1, 3) + m.Get(1, 1));
-		planes[2].SetZ(m.Get(2, 3) + m.Get(2, 1));
-		planes[2].SetW(m.Get(3, 3) + m.Get(3, 1));
-
-		// top		= viewProj*,4 - viewProj*,2
-		planes[3].SetX(m.Get(0, 3) - m.Get(0, 1));
-		planes[3].SetY(m.Get(1, 3) - m.Get(1, 1));
-		planes[3].SetZ(m.Get(2, 3) - m.Get(2, 1));
-		planes[3].SetW(m.Get(3, 3) - m.Get(3, 1));
-
-		// near		= viewProj*,3
-		planes[4].SetX(m.Get(0, 2));
-		planes[4].SetY(m.Get(1, 2));
-		planes[4].SetZ(m.Get(2, 2));
-		planes[4].SetW(m.Get(3, 2));
-
-		// far		= viewProj*,4 - viewProj*,3
-		planes[5].SetX(m.Get(0, 3) - m.Get(0, 2));
-		planes[5].SetY(m.Get(1, 3) - m.Get(1, 2));
-		planes[5].SetZ(m.Get(2, 3) - m.Get(2, 2));
-		planes[5].SetW(m.Get(3, 3) - m.Get(3, 2));
-		
-		for (int i = 0; i < 6; i++)
-		{
-			float v = 1.0f / planes[i].Length();
-			planes[i].SetX(planes[i].GetX() * v);
-			planes[i].SetY(planes[i].GetY() * v);
-			planes[i].SetZ(planes[i].GetZ() * v);
-			planes[i].SetW(planes[i].GetW() * v);
-		}
-
-	}
-
-
 	GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename)
 	{
 		m_numPatchRows = m_initInfo.HeightmapHeight / 8 + 1;
@@ -461,22 +411,6 @@ namespace DE
 		MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P1N1T1B1UV));
 		MeshComponent* meshComponent = new MeshComponent(meshData);
 		SceneGraph::GetInstance()->AddComponent(meshComponent);
-
-		Vector4 worldPlanes[6];
-		ExtractFrustumPlanes(worldPlanes, D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix());
-/*		m_pHSDSCBuffer = new HSDSPerFrameCBuffer;
-		m_pHSDSCBuffer->BindToRenderer();
-		HSDSPerFrameCBuffer::HSDS_CBUFFER* ptr = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_pHSDSCBuffer->m_Memory._data;
-		ptr->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
-		for (int i = 0; i < 6; i++)
-		{
-			ptr->gWorldFrustumPlanes[i] = worldPlanes[i];
-		}
-
-		ptr->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
-		ptr->gTexelCellSpaceU = 1.0f / m_initInfo.HeightmapHeight;
-		ptr->gTexelCellSpacev = 1.0f / m_initInfo.HeightmapWidth;
-		m_pHSDSCBuffer->Update();*/
 
 		RenderPass* renderPass = new RenderPass;
 		renderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1B1UV.hlsl");

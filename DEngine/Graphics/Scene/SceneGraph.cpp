@@ -92,8 +92,6 @@ void SceneGraph::Render()
 		HSDSPerFrameCBuffer::HSDS_CBUFFER* pHSDSCBuffer = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_pHSDSCBuffer.m_Memory._data;
 		pHSDSCBuffer->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
 		D3D11Renderer::GetInstance()->GetCamera()->GetFrustum();
-		Vector4* worldPlanes = new Vector4[6];
-		Terrain::GetInstance()->ExtractFrustumPlanes(worldPlanes, D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix());
 		for (int i = 0; i < 6; i++)
 		{
 			Vector3 planeNormal = D3D11Renderer::GetInstance()->GetCamera()->GetFrustum().GetPlanes()[i].GetNormal();
