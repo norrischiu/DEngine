@@ -12,7 +12,7 @@
 #include <windows.h>
 
 #define C_STR(string, text)\
-		(string + text).c_str()
+	(string + text).c_str()
 
 namespace DE
 {
@@ -158,7 +158,7 @@ void AnimationController::setBlending(const char* fromClip, const char* toClip, 
 			strcmp(itr->second.fromClip, toClip) == 0 ||
 			strcmp(itr->second.toClip, fromClip) == 0 ||
 			strcmp(itr->second.toClip, toClip) == 0
-		) {
+			) {
 			itr = m_transition.erase(itr);
 		}
 		else
@@ -185,37 +185,37 @@ void AnimationController::Update(float deltaTime)
 		{
 			switch (itr_transition->second.blendMode)
 			{
-				case BlendMode::FROZEN_BLENDING:
-				case BlendMode::CROSS_FADE_BLENDING:
-					transitionClip.push_back(itr_transition->second.fromClip);
-					transitionClip.push_back(itr_transition->second.toClip);
+			case BlendMode::FROZEN_BLENDING:
+			case BlendMode::CROSS_FADE_BLENDING:
+				transitionClip.push_back(itr_transition->second.fromClip);
+				transitionClip.push_back(itr_transition->second.toClip);
 
-					fromClip->update(deltaTime);
-					toClip->update(deltaTime);
+				fromClip->update(deltaTime);
+				toClip->update(deltaTime);
 
-					const float interpolant = itr_transition->second.accuTime / itr_transition->second.duration;
+				const float interpolant = itr_transition->second.accuTime / itr_transition->second.duration;
 
-					// ((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("from %s to %s, interpolant: %f\n", itr_transition->second.fromClip, itr_transition->second.toClip, interpolant);
+				*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+				*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
 
-					m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(deltaTime), toClip->m_vAnimations[0]->GetCurrentPose(deltaTime), interpolant).Matrix();
+				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+				{
+					const Joint& currJoint = m_skeleton->m_vJoints[i];
+					*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
+					*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
+				}
 
-					for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-					{
-						const Joint& currJoint = m_skeleton->m_vJoints[i];
-						m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(deltaTime), toClip->m_vAnimations[i]->GetCurrentPose(deltaTime), interpolant).Matrix();
-					}
-
-					itr_transition->second.accuTime += deltaTime;
-					if (itr_transition->second.accuTime > itr_transition->second.duration)
-					{
-						setActiveAnimationSet(itr_transition->second.fromClip, false);
-						itr_transition = m_transition.erase(itr_transition);
-					}
-					else
-					{
-						itr_transition++;
-					}
-					break;
+				itr_transition->second.accuTime += deltaTime;
+				if (itr_transition->second.accuTime > itr_transition->second.duration)
+				{
+					setActiveAnimationSet(itr_transition->second.fromClip, false);
+					itr_transition = m_transition.erase(itr_transition);
+				}
+				else
+				{
+					itr_transition++;
+				}
+				break;
 			}
 
 			num++;
@@ -227,8 +227,6 @@ void AnimationController::Update(float deltaTime)
 		}
 	}
 
-	m_animationSets.size();
-
 	for (auto itr_clip : m_animationSets)
 	{
 		if (itr_clip.second->isActive() && std::find(transitionClip.begin(), transitionClip.end(), itr_clip.first) == transitionClip.end())
@@ -238,19 +236,19 @@ void AnimationController::Update(float deltaTime)
 			{
 				animationSet->update(deltaTime);		//update delta time first, then animate
 
-				m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
-
-				// ((TextBox*) HUD::getInstance()->getHUDElementById("debug1"))->setText("%s\n", itr_clip.first.c_str());
+				*m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose(deltaTime).Matrix();
+				*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
 
 				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 				{
 					const Joint& currJoint = m_skeleton->m_vJoints[i];
-					m_skeleton->m_vGlobalPose[i] = m_skeleton->m_vGlobalPose[currJoint.m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+					*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose(deltaTime).Matrix();
+					*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
 				}
-
-				num++;
-				m_bPlaying = true;
 			}
+
+			num++;
+			m_bPlaying = true;
 		}
 	}
 
@@ -264,10 +262,6 @@ void AnimationController::Update(float deltaTime)
 
 AnimationController::~AnimationController()
 {
-	if (m_skeleton) {
-		delete m_skeleton;
-	}
-
 	for (auto itr = m_animationSets.begin(); itr != m_animationSets.end();)
 	{
 		if (itr->second)

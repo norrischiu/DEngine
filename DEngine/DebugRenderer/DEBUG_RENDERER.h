@@ -57,12 +57,12 @@ public:
 		pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		pass->SetRasterizerState(State::CULL_NONE_RS);
-		MeshComponent* meshComp = new MeshComponent(meshData);
+		//		MeshComponent* meshComp = new MeshComponent(meshData);
 		Matrix4 scaleX, scaleY;
 		scaleX.CreateScaleX(-1024.0f / 2.0f);
 		scaleY.CreateScaleY(768.0f / 2.0f);
-		*meshComp->m_pTransform = m_m2DProjection * scaleX * scaleY;
-		SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComp);
+		//		*meshComp->m_pTransform = m_m2DProjection * scaleX * scaleY;
+		//		SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComp);
 	}
 
 	void DRAW_LINE_LIST(float* points)

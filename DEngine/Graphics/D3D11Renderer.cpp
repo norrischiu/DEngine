@@ -39,20 +39,30 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	// Create render target view
 	for (int i = 0; i < RT_NUM; i++)
 	{
-		m_textures[i] = new Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
-		m_pRTVArray[i] = m_textures[i]->GetRTV();
-		m_pSRVArray[i] = m_textures[i]->GetSRV();
+		Handle hTexture(sizeof(Texture));
+		new (hTexture) Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
+		m_hTextures[i] = hTexture;
+		m_pRTVArray[i] = ((Texture*)m_hTextures[i].Raw())->GetRTV();
+		m_pSRVArray[i] = ((Texture*)m_hTextures[i].Raw())->GetSRV();
 	}
 
 	ID3D11Texture2D* pBackBufferTex;
 	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBufferTex);
 	assert(hr == S_OK);
-	m_backbuffer = new Texture(Texture::RENDER_TARGET, pBackBufferTex);
-	m_depth = new Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
-	m_depthReadOnly = new Texture(Texture::DEPTH_STENCIL_READ_ONLY, m_depth->GetTexture2D());
+	Handle hBackBufferTex(sizeof(Texture));
+	new (hBackBufferTex) Texture(Texture::RENDER_TARGET, pBackBufferTex);
+	m_backbuffer = ((Texture*)hBackBufferTex.Raw());
+	Handle hdepthTex(sizeof(Texture));
+	new (hdepthTex) Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
+	m_depth = ((Texture*)hdepthTex.Raw());
+	Handle hdepthReadTex(sizeof(Texture));
+	new (hdepthReadTex) Texture(Texture::DEPTH_STENCIL_READ_ONLY, m_depth->GetTexture2D());
+	m_depthReadOnly = ((Texture*)hdepthReadTex.Raw());
 	m_pSRVArray[2] = m_depth->GetSRV();
 
-	m_LightingAccumBuffer = new Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
+	//	Handle hLightAccumTex(sizeof(Texture));
+	//	new (hLightAccumTex) Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES);
+	//	m_LightingAccumBuffer = ((Texture*) hLightAccumTex.Raw());
 
 	// Set viewport
 	D3D11_VIEWPORT vp;
@@ -69,19 +79,11 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 
 	m_GBuffer = new GBuffer;
 	m_PPE = new PostProcessEffect;
-
-//	Emitter::GetInstance()->AddParticle(1, Vector3(2.5f, 0.5f, 0.0f), Vector3(0.0f, 0.7f, 0.0f));
-	// adding particles: input variables(particles id, particles type(torch flame), emitting position, emitting direction)
-	//ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, Vector3(-2.5f, 0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
-	//ParticleSystem::GetInstance()->AddParticles("smoke", 2, Vector3(0.0f, 1.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
-	//ParticleSystem::GetInstance()->AddParticles("fire", 4, Vector3(2.0f, 1.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 }
 
 void D3D11Renderer::Update(const float delta_time, const float curr_time)
 {
 	HUD::getInstance()->update(delta_time);
-//	Emitter::GetInstance()->Update(delta_time);
-	//ParticleSystem::GetInstance()->Update(delta_time);
 }
 
 void D3D11Renderer::Render()
@@ -96,10 +98,10 @@ void D3D11Renderer::Render()
 	}
 	m_pD3D11Context->ClearRenderTargetView(m_backbuffer->GetRTV(), ClearColor);
 	m_pD3D11Context->ClearDepthStencilView(m_depth->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	m_pD3D11Context->ClearRenderTargetView(m_LightingAccumBuffer->GetRTV(), ClearColor);
+	//	m_pD3D11Context->ClearRenderTargetView(m_LightingAccumBuffer->GetRTV(), ClearColor);
 
 	// Render to texture
-	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
+//	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
 	SceneGraph::GetInstance()->Render();
 	SceneGraph::GetInstance()->ShadowMapGeneration();
 
@@ -107,10 +109,9 @@ void D3D11Renderer::Render()
 	m_GBuffer->Render();
 
 	// Post process effect
-//	m_PPE->Render();
+	m_PPE->Render();
 
 	// Particle system drawing
-//	Emitter::GetInstance()->Draw();
 	ParticleSystem::GetInstance()->Render();
 
 	// HUD drawing

@@ -54,15 +54,14 @@ float CalcTessFactor(float3 p)
 // Returns true if the box is completely behind (in negative half space) of plane.
 bool AabbBehindPlaneTest(float3 center, float3 extents, float4 plane)
 {
-
 	float3 n = abs(plane.xyz);
-	//float3 n = plane.xyz;
+
 	float r = dot(extents, n);
 
 	// signed distance from center point to plane.
-	float s = dot(center.xyz, plane.xyz);
+	float s = dot(center, plane.xyz);
 
-	return (s + r) < 0.0f;
+	return (s + r) < plane.w;
 }
 
 // Returns true if the box is completely outside the frustum.
@@ -89,8 +88,6 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 
 	float minY = patch[0].vBoundsY.x;
 	float maxY = patch[0].vBoundsY.y;
-	//float minY = 0.0f;
-	//float maxY = 5.0f;
 
 	float minX = 1000000;
 	float maxX = -1000000;
@@ -112,8 +109,6 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 //	float3 vMax = float3(patch[2].vPos.x, maxY, patch[2].vPos.z);
 	float3 vMin = float3(minX, minY, minZ);
 	float3 vMax = float3(maxX, maxY, maxZ);
-	vMin = mul(float4(vMin,0.0f), gView).xyz;
-	vMax = mul(float4(vMax, 0.0f), gView).xyz;
 
 	float3 boxCenter = 0.5f*(vMin + vMax);
 	float3 boxExtents = 0.5f*(vMax - vMin);	

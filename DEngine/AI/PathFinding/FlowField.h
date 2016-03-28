@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../../Graphics/VertexFormat.h"
+#include "Graphics/VertexFormat.h"
 
 namespace DE
 {

@@ -2,6 +2,7 @@
 #ifndef COMPONENT_H_
 #define COMPONENT_H_
 
+#include "Memory\Handle.h"
 
 namespace DE
 {
@@ -31,6 +32,8 @@ class Component
 {
 
 public:
+
+	CUSTOM_MEMORY_DEFINE();
 
 	// Default constructor
 	Component()

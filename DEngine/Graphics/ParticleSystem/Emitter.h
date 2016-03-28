@@ -29,10 +29,10 @@ public:
 	static const int ComponentID = ComponentID::PARTICLE_SYSTEM;
 
 	Emitter();
-	
+
 	Emitter(int Type, Vector3& emitPos, Vector3& emitDir);
 
-	
+
 	Emitter(char* id, int Type, float size, Vector3& emitPos, Vector3& emitDir);
 
 	~Emitter();

@@ -409,29 +409,34 @@ namespace DE
 		std::string normalTxt_filepath = std::string("../Assets/") + normalTxt_filename;
 
 		MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P1N1T1B1UV));
-		MeshComponent* meshComponent = new MeshComponent(meshData);
-		SceneGraph::GetInstance()->AddComponent(meshComponent);
+		Handle hMeshComp(sizeof(MeshComponent));
+		new (hMeshComp) MeshComponent(meshData);
+		SceneGraph::GetInstance()->AddComponent((MeshComponent*) hMeshComp.Raw());
 
 		RenderPass* renderPass = new RenderPass;
 		renderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1B1UV.hlsl");
 		renderPass->SetHullShader("../DEngine/Shaders/HS_terrain.hlsl");
 		renderPass->SetDomainShader("../DEngine/Shaders/DS_terrain.hlsl");
 		renderPass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1B1UV_deferred.hlsl");
-		renderPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str()));
-		renderPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, normalTxt_filepath.c_str()));
-		renderPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "../Assets/terrain_height.dds"));
-		//renderPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Handle hTexture1(sizeof(Texture));
+		new (hTexture1) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
+		Handle hTexture2(sizeof(Texture));
+		new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
+		Handle hTexture3(sizeof(Texture));
+		new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
+		renderPass->AddTexture(hTexture1);
+		renderPass->AddTexture(hTexture2);
+		renderPass->AddTexture(hTexture3);
 		renderPass->SetTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 		renderPass->SetBlendState(State::NULL_STATE);
-		//renderPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		renderPass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
 		renderPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
 		renderPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 		renderPass->SetRasterizerState(State::WIREFRAME_RS);
-		meshComponent->m_pMeshData->m_Material.AddPassToTechnique(renderPass);
+		((MeshComponent*) hMeshComp.Raw())->m_pMeshData->m_Material.AddPassToTechnique(renderPass);
 
 		GameObject* terrain = new GameObject;
-		terrain->AddComponent(meshComponent);
+		terrain->AddComponent((Component*) hMeshComp.Raw());
 
 		delete[] vertices;
 		delete[] indices;

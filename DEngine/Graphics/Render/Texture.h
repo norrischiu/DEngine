@@ -1,7 +1,13 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+// D3D11 include
 #include <d3d11.h>
+
+// Engine include
+#include "Memory\Handle.h"
+
+// C++ include
 #include <assert.h>
 #include <vector>
 
@@ -12,6 +18,8 @@ class Texture
 {
 
 public:
+
+	CUSTOM_MEMORY_DEFINE();
 
 	// Type bitfield
 	enum

@@ -23,8 +23,6 @@ public:
 
 	~ParticleSystem();
 
-	Emitter* AddParticles(char* id, int type, Vector3& emitPos, Vector3& emitDir);
-
 	void AddComponent(char* id, Emitter* emitter);
 
 	void SetVelocity(char* id, Vector3& velocity);

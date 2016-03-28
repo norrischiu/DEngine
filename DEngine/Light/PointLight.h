@@ -17,7 +17,9 @@ public:
 
 	PointLight(Vector3 position, Vector4 color, float radius, float intensity)
 	{
-		AddComponent(new PointLightComponent(position, color, radius, intensity));
+		DE::Handle hPointLight(sizeof(PointLightComponent));
+		new (hPointLight) PointLightComponent(position, color, radius, intensity);
+		AddComponent((Component*)hPointLight.Raw());
 	}
 
 	// Return radius, should be calculated with attenuation later
@@ -30,13 +32,6 @@ public:
 	{
 		return GetComponent<PointLightComponent>()->GetPosition();
 	}
-
-	/*
-	void SetPosition(Vector3 pos)
-	{
-		return GetComponent<PointLightComponent>()->SetPosition(pos);
-	}
-	*/
 
 };
 

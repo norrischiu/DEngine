@@ -25,14 +25,14 @@ public:
 		ptr->m_iFreeBlockNum = num;
 		ptr->m_iFreeBlockIndex = 0;
 
-		heapStart = (void*) ((uint64_t) heapStart + sizeof(unsigned int) * 3);
+		heapStart = (void*) ((uint64_t) heapStart + sizeof(unsigned int) * 4);
 
 		for (unsigned int i = 0; i < num; ++i)
 		{
 			ptr->m_pFreeList[i] = i;
 		}
 
-		heapStart = (void*)((uint64_t) heapStart + (size * num));
+		heapStart = (void*)((uint64_t) heapStart + (size * num) + (sizeof(unsigned int) * num));
 		return ptr;
 	}
 

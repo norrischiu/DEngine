@@ -1,7 +1,7 @@
 #include "FlowField.h"
-#include "../../Graphics/MeshComponent.h"
-#include "../../Graphics/D3D11Renderer.h"
-#include "../../Graphics/Scene/SceneGraph.h"
+#include "Graphics/MeshComponent.h"
+#include "Graphics/D3D11Renderer.h"
+#include "Graphics/Scene/SceneGraph.h"
 #include "FlowFieldBuilder.h"
 
 namespace DE
@@ -100,12 +100,12 @@ void FlowField::Draw()
 					vertices[index_ver++].m_pos = arrow[l];
 				}
 
-				indices[index_in++] = index_ver -4 + 0;
-				indices[index_in++] = index_ver -4 + 1;
-				indices[index_in++] = index_ver -4 + 2;
-				indices[index_in++] = index_ver -4 + 1;
-				indices[index_in++] = index_ver -4 + 3;
-				indices[index_in++] = index_ver -4 + 1;
+				indices[index_in++] = index_ver - 4 + 0;
+				indices[index_in++] = index_ver - 4 + 1;
+				indices[index_in++] = index_ver - 4 + 2;
+				indices[index_in++] = index_ver - 4 + 1;
+				indices[index_in++] = index_ver - 4 + 3;
+				indices[index_in++] = index_ver - 4 + 1;
 			}
 			else
 			{
@@ -126,9 +126,9 @@ void FlowField::Draw()
 		}
 	}
 
-	MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P));
-	MeshComponent* meshComponent = new MeshComponent(meshData);
-	SceneGraph::GetInstance()->AddComponent(meshComponent);
+	Handle hMesh(sizeof(MeshComponent));
+	new (hMesh) MeshComponent(new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P)));
+	MeshComponent* meshComponent = (MeshComponent*)hMesh.Raw();
 
 	RenderPass* renderPass = new RenderPass;
 	renderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
@@ -182,7 +182,7 @@ bool FlowField::isValid(const Vector3& position)
 	return (
 		(x >= 0 && x <= m_initInfo.FlowFieldWidth - 1) &&
 		(z >= 0 && z <= m_initInfo.FlowFieldDepth - 1)
-	);
+		);
 }
 
 bool FlowField::isPositionMovable(const Vector3& position)
@@ -195,7 +195,7 @@ bool FlowField::isPositionMovable(const Vector3& position)
 	const int x = floor(pos.GetX());
 	const int z = floor(pos.GetZ());
 
-	if(isValid(position)) {
+	if (isValid(position)) {
 		const int index = z * m_initInfo.FlowFieldWidth + x;
 		return m_flowField[index].isMovable;
 	}
@@ -252,7 +252,7 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 
 			const int index = p.GetZ() * m_initInfo.FlowFieldWidth + p.GetX();
 
-			const Vector3 directionTo = (m - p).iszero() ?  m_flowField[index].direction : (m - p).Normalize();
+			const Vector3 directionTo = (m - p).iszero() ? m_flowField[index].direction : (m - p).Normalize();
 			const int length = (directionTo - currDirection).Length();
 
 			if (length < minVal)

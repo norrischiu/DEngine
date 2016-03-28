@@ -25,11 +25,11 @@ SceneGraph::SceneGraph()
 	m_pPSCBuffer = new PSPerMaterialCBuffer;
 	m_pMatrixPalette = new VSMatrixPaletteCBuffer;
 
-	shadowPass = new RenderPass;
-	shadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
-	shadowPass->SetPixelShader(nullptr);
-	shadowPass->SetBlendState(State::NULL_STATE);
-	shadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	m_ShadowPass = new RenderPass;
+	m_ShadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
+	m_ShadowPass->SetPixelShader(nullptr);
+	m_ShadowPass->SetBlendState(State::NULL_STATE);
+	m_ShadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 }
 
 void SceneGraph::FrustumCulling(Frustum frustum)
@@ -80,7 +80,7 @@ void SceneGraph::Render()
 				{
 					for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
 					{
-						palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
+						palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}
 				}
 			}
@@ -92,13 +92,11 @@ void SceneGraph::Render()
 		m_pHSDSCBuffer.BindToRenderer();
 		HSDSPerFrameCBuffer::HSDS_CBUFFER* pHSDSCBuffer = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_pHSDSCBuffer.m_Memory._data;
 		pHSDSCBuffer->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
-		D3D11Renderer::GetInstance()->GetCamera()->GetFrustum();
 		for (int i = 0; i < 6; i++)
 		{
-			Vector3 planeNormal = D3D11Renderer::GetInstance()->GetCamera()->GetFrustum().GetPlanes()[i].GetNormal();
-			planeNormal.SetW(1.0f);
-			planeNormal.Transform(*itr->GetOwner()->GetTransform() * D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix().Inverse());
-			pHSDSCBuffer->gWorldFrustumPlanes[i] = planeNormal;
+			Plane plane = D3D11Renderer::GetInstance()->GetCamera()->GetFrustum().GetPlanes()[i];
+			plane.Transform(D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix().Inverse());
+			pHSDSCBuffer->gWorldFrustumPlanes[i] = plane.GetNormal();
 		}
 		pHSDSCBuffer->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
 		pHSDSCBuffer->gView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix();
@@ -129,7 +127,7 @@ void SceneGraph::ShadowMapGeneration()
 				ptr->WVPTransform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
 				m_pVSCBuffer->Update();
 
-				shadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
+				m_ShadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
 				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
 				if (anim != nullptr)
 				{
@@ -141,15 +139,15 @@ void SceneGraph::ShadowMapGeneration()
 						{
 							for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
 							{
-								palette->mSkinning[index] = skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
+								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 							}
 						}
 					}
 					m_pMatrixPalette->Update();
 				}
 				// TODO: separete skeletal and static mesh
-				shadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
-				itr->m_pMeshData->RenderUsingPass(shadowPass);
+				m_ShadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
+				itr->m_pMeshData->RenderUsingPass(m_ShadowPass);
 			}
 		}
 	}

@@ -506,14 +506,12 @@
     <ClInclude Include="Graphics\ParticleSystem\Particle.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Event\EngineEvent.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="AI\PathFinding\FlowField.h">
       <Filter>AI\PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="Object\Transform.h" />
     <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
       <Filter>Graphics\ParticleSystem</Filter>
     </ClInclude>
@@ -528,6 +526,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\Render\HSDSPerFrameCBuffer.h">
       <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Transform.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EngineEvent.h">
+      <Filter>Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

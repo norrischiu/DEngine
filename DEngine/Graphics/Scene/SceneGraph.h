@@ -44,11 +44,11 @@ public:
 	{
 		for (auto itr : m_tree)
 		{
-			delete itr;
+			//delete itr;
 		}
 		for (auto itr : DEBUG_DRAWING_TREE)
 		{
-			delete itr;
+			//delete itr;
 		}
 	}
 
@@ -69,7 +69,7 @@ private:
 
 	VSMatrixPaletteCBuffer*							m_pMatrixPalette;
 
-	RenderPass* shadowPass;
+	RenderPass*										m_ShadowPass;
 
 };
 

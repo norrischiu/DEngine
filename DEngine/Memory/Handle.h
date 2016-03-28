@@ -17,9 +17,12 @@ namespace DE
 struct Handle
 {
 	// Empty constructor
-	Handle() {};
+	Handle() 
+		: m_counter(0)
+	{};
 
 	Handle(size_t size)
+		: m_counter(1)
 	{
 		*this = MemoryManager::GetInstance()->Allocate(size);
 	};
@@ -28,7 +31,7 @@ struct Handle
 	Handle(uint32_t poolIndex, uint32_t blockIndex, uint32_t counter = 0)
 		: m_poolIndex(poolIndex)
 		, m_blockIndex(blockIndex)
-		, m_counter(0)
+		, m_counter(1)
 	{}
 
 	// RAII, only use for empty handle

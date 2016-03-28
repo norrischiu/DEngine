@@ -14,9 +14,6 @@ namespace DE
 
 GBuffer::GBuffer()
 {
-	m_pPSCBuffer = new PSPerLightCBuffer;
-	m_pVSCBuffer = new VSPerObjectCBuffer; // use static
-
 	pointLightMesh = new MeshData(LightManager::GetInstance()->GetPointLightVertices(), 8, (unsigned int*)LightManager::GetInstance()->GetPointLightIndices(), 36);
 	spotLightMesh = new MeshData(LightManager::GetInstance()->GetSpotLightVertices(), 5, (unsigned int*)LightManager::GetInstance()->GetSpotLightIndices(), 18);
 
@@ -36,22 +33,22 @@ GBuffer::GBuffer()
 	LightingPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 	LightingPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
 
-	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[0]);
-	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_textures[1]);
+	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[0]);
+	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[1]);
 	LightingPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
 }
 
 void GBuffer::Render()
 {
-	m_pPSCBuffer->BindToRenderer();
-	m_pVSCBuffer->BindToRenderer();
+	m_pPSCBuffer.BindToRenderer();
+	m_pVSCBuffer.BindToRenderer();
 
 	for (int i = 0; i < LightManager::GetInstance()->GetNumLights(); i++)
 	{
 		LightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
 
 		// Update VS cbuffer
-		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer.m_Memory._data;
 		Matrix4 scale, trans, rot;
 		scale.CreateScale(currLight->GetRadius());
 		trans.CreateTranslation(currLight->GetPosition());
@@ -72,10 +69,10 @@ void GBuffer::Render()
 			rot = quat.GetRotationMatrix();
 		}
 		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * trans * rot * scale;
-		m_pVSCBuffer->Update();
+		m_pVSCBuffer.Update();
 
 		// Update PS cbuffer
-		PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->m_Memory._data;
+		PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer.m_Memory._data;
 		ptr2->light.vColor = currLight->GetColor();
 		ptr2->light.fIntensity = currLight->GetIntensity();
 		ptr2->light.fRadius = currLight->GetRadius();
@@ -102,7 +99,7 @@ void GBuffer::Render()
 			ptr2->mViewToWorld = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix().Inverse();
 			LightingPass->AddTexture(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex()));
 		}
-		m_pPSCBuffer->Update();
+		m_pPSCBuffer.Update();
 
 		switch (currLight->GetType())
 		{

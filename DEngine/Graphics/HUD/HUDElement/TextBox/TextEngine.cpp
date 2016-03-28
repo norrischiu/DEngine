@@ -127,7 +127,9 @@ MeshData* TextEngine::CreateTextMeshData(const char* sentence) {
 	textPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
 	textPass->SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
 	textPass->SetBlendState(State::ALPHA_BS);
-	textPass->AddTexture(new Texture(Texture::SHADER_RESOURCES, 1, "../Assets/font.dds"));
+	Handle hTexture(sizeof(Texture));
+	new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "../Assets/font.dds");
+	textPass->AddTexture(hTexture);
 	meshData->m_Material.AddPassToTechnique(textPass);
 
 	delete[] pVertices;
@@ -195,20 +197,22 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 	char* id = textBox->getID();
 
 	if (textBox->hasUpdate()) {
-		if (m_cache[id]) {
-			delete m_cache[id];
+		if (m_cache[id].Raw()) {
+			m_cache[id].Free();
 			m_cache.erase(id);
 		}
 		textBox->setHasUpdate(false);
 	}
 
-	if (!m_cache[id]) {
+	Handle hMesh(sizeof(MeshComponent));
+	if (!m_cache[id].Raw()) {
 		MeshData* meshData = CreateTextMeshData(sentence);
 		RenderPass* pass = meshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0];
 		pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 		pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		pass->SetRasterizerState(State::CULL_NONE_RS);
-		MeshComponent* meshComp = new MeshComponent(meshData);
+		new (hMesh) MeshComponent(meshData);
+		MeshComponent* meshComp = (MeshComponent*)hMesh.Raw();
 
 		Matrix4 scaleX, scaleY, translate;
 		scaleX.CreateScaleX(-1.0f * textBox->getFontSize());
@@ -216,17 +220,17 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 		translate.CreateTranslation(Vector3(-1024 / 2.0f + textBox->getPosition().x, 768 / 2.0f - textBox->getPosition().y, 0.0f));
 		*meshComp->m_pTransform = Matrix4::OrthographicProjection(1024, 768, 0.0f, 1.0f) * translate * scaleX * scaleY;
 
-		m_cache[id] = meshComp;
+		m_cache[id] = hMesh;
 	}
 
-	return m_cache[id];
+	return (MeshComponent*)m_cache[id].Raw();
 }
 
 void TextEngine::removeCacheByID(const char* id)
 {
 	if (m_cache[id])
 	{
-		delete m_cache[id];
+		m_cache[id].Free();
 		m_cache.erase(id);
 	}
 }
@@ -235,7 +239,7 @@ void TextEngine::destructAndCleanUp()
 {
 	for (auto itr : m_cache)
 	{
-		delete itr.second;
+		itr.second.Free();
 	}
 
 	m_cache.clear();
