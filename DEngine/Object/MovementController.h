@@ -20,6 +20,7 @@ public:
 		: Component()
 		, m_fSpeed(speed)
 	{
+		m_ID = ComponentID;
 	}
 
 	// Inherited via Component

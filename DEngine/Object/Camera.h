@@ -3,6 +3,7 @@
 #define CAMERA_H_
 
 #include "GameObject\GameObject.h"
+#include "Object\CameraComponent.h"
 
 namespace DE
 {
