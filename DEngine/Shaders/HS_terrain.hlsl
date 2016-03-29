@@ -59,9 +59,9 @@ bool AabbBehindPlaneTest(float3 center, float3 extents, float4 plane)
 	float r = dot(extents, n);
 
 	// signed distance from center point to plane.
-	float s = dot(center, plane.xyz);
+	float s = dot(float4(center, -1.0f), plane);
 
-	return (s + r) < plane.w;
+	return (s + r) < 0.0f;
 }
 
 // Returns true if the box is completely outside the frustum.
@@ -111,7 +111,7 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 	float3 vMax = float3(maxX, maxY, maxZ);
 
 	float3 boxCenter = 0.5f*(vMin + vMax);
-	float3 boxExtents = 0.5f*(vMax - vMin);	
+	float3 boxExtents = vMax - boxCenter;
 
 	if (AabbOutsideFrustumTest(boxCenter, boxExtents, gWorldFrustumPlanes))
 	{
