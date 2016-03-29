@@ -40,11 +40,6 @@ public:
 		return m_pVS;
 	}
 
-	ID3D11VertexShader* GetVertexShader()
-	{
-		return m_pVS;
-	}
-
 	void SetPixelShader(const char* filename)
 	{
 		if (filename == nullptr)
