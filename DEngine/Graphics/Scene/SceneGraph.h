@@ -6,7 +6,7 @@
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
-
+#include "Graphics\Render\HSDSPerFrameCBuffer.h"
 
 namespace DE
 {
@@ -63,11 +63,13 @@ private:
 	// Temp storage for debug drawing
 	std::vector<MeshComponent*>						DEBUG_DRAWING_TREE; // temp
 
-	VSPerObjectCBuffer*								m_pVSCBuffer;
+	VSPerObjectCBuffer								m_VSCBuffer;
 
-	PSPerMaterialCBuffer*							m_pPSCBuffer;
+	PSPerMaterialCBuffer							m_PSCBuffer;
 
-	VSMatrixPaletteCBuffer*							m_pMatrixPalette;
+	HSDSPerFrameCBuffer								m_HSDSCBuffer;
+
+	VSMatrixPaletteCBuffer							m_MatrixPalette;
 
 	RenderPass*										m_ShadowPass;
 

@@ -21,10 +21,6 @@ SceneGraph* SceneGraph::m_pInstance;
 
 SceneGraph::SceneGraph()
 {
-	m_pVSCBuffer = new VSPerObjectCBuffer;
-	m_pPSCBuffer = new PSPerMaterialCBuffer;
-	m_pMatrixPalette = new VSMatrixPaletteCBuffer;
-
 	m_ShadowPass = new RenderPass;
 	m_ShadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
 	m_ShadowPass->SetPixelShader(nullptr);
@@ -55,25 +51,25 @@ void SceneGraph::Render()
 {
 	// TODO: update per frame cbuffer
 
-	m_pVSCBuffer->BindToRenderer();
-	m_pMatrixPalette->BindToRenderer();
-	m_pPSCBuffer->BindToRenderer();
+	m_VSCBuffer.BindToRenderer();
+	m_MatrixPalette.BindToRenderer();
+	m_PSCBuffer.BindToRenderer();
 
 	int count = 0; //
 	for (auto itr : m_tree)
 	{
 		if (itr->m_bVisible) count++; //
 
-		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 		ptr->WorldTransform = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
 		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
-		m_pVSCBuffer->Update();
+		m_VSCBuffer.Update();
 
 		AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
 		if (anim != nullptr)
 		{
 			Skeleton* skel = anim->m_skeleton;
-			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
+			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
 			for (auto itr : anim->m_animationSets)
 			{
 				if (itr.second->isActive())
@@ -84,13 +80,12 @@ void SceneGraph::Render()
 					}
 				}
 			}
-			m_pMatrixPalette->Update();
+			m_MatrixPalette.Update();
 		}
 
 		// For terrain
-		HSDSPerFrameCBuffer m_pHSDSCBuffer;
-		m_pHSDSCBuffer.BindToRenderer();
-		HSDSPerFrameCBuffer::HSDS_CBUFFER* pHSDSCBuffer = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_pHSDSCBuffer.m_Memory._data;
+		m_HSDSCBuffer.BindToRenderer();
+		HSDSPerFrameCBuffer::HSDS_CBUFFER* pHSDSCBuffer = (HSDSPerFrameCBuffer::HSDS_CBUFFER*) m_HSDSCBuffer.m_Memory._data;
 		pHSDSCBuffer->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
 		for (int i = 0; i < 6; i++)
 		{
@@ -102,15 +97,16 @@ void SceneGraph::Render()
 		pHSDSCBuffer->gView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix();
 		pHSDSCBuffer->gTexelCellSpaceU = 1.0f / 256.0f;
 		pHSDSCBuffer->gTexelCellSpacev = 1.0f / 256.0f;
-		m_pHSDSCBuffer.Update();
+		m_HSDSCBuffer.Update();
 
-		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_pPSCBuffer->m_Memory._data;
+		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_PSCBuffer.m_Memory._data;
 		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();
-		ptr2->material.fShininess = (!itr->m_bVisible) ? 1000.0f : itr->m_pMeshData->m_Material.GetShininess();
-		m_pPSCBuffer->Update();
+		ptr2->material.fShininess = itr->m_pMeshData->m_Material.GetShininess();
+		m_PSCBuffer.Update();
 
 		itr->Draw();
 	}
+
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -123,16 +119,16 @@ void SceneGraph::ShadowMapGeneration()
 			D3D11Renderer::GetInstance()->m_pD3D11Context->ClearDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 			for (auto itr : m_tree)
 			{
-				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+				VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 				ptr->WVPTransform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->m_pTransform;
-				m_pVSCBuffer->Update();
+				m_VSCBuffer.Update();
 
 				m_ShadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
 				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
 				if (anim != nullptr)
 				{
 					Skeleton* skel = anim->m_skeleton;
-					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_pMatrixPalette->m_Memory._data;
+					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
 					for (auto itr : anim->m_animationSets)
 					{
 						if (itr.second->isActive())
@@ -143,7 +139,7 @@ void SceneGraph::ShadowMapGeneration()
 							}
 						}
 					}
-					m_pMatrixPalette->Update();
+					m_MatrixPalette.Update();
 				}
 				// TODO: separete skeletal and static mesh
 				m_ShadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
@@ -157,9 +153,9 @@ void SceneGraph::RENDER_DEBUG_DRAWING()
 {
 #ifdef _DEBUG
 
-	m_pVSCBuffer->BindToRenderer();
+	m_VSCBuffer.BindToRenderer();
 
-	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
+	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 
 	/*RenderPass* pass = new RenderPass;
 	pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
@@ -171,7 +167,7 @@ void SceneGraph::RENDER_DEBUG_DRAWING()
 	for (auto itr : DEBUG_DRAWING_TREE)
 	{
 		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
-		m_pVSCBuffer->Update();
+		m_VSCBuffer.Update();
 
 		//itr->m_pMeshData->RenderUsingPass(pass);
 		itr->m_pMeshData->Render();
