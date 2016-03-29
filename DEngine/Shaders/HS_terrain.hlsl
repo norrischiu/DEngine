@@ -139,19 +139,6 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 		pt.InsideTess[0] = CalcTessFactor(float3(c.x, c.y, c.z));
 		pt.InsideTess[1] = pt.InsideTess[0];
 	}
-/*	float4 e0 = 0.5f*(patch[0].vPos + patch[2].vPos);
-	float4 e1 = 0.5f*(patch[0].vPos + patch[1].vPos);
-	float4 e2 = 0.5f*(patch[1].vPos + patch[3].vPos);
-	float4 e3 = 0.5f*(patch[2].vPos + patch[3].vPos);
-	float4  c = 0.25f*(patch[0].vPos + patch[1].vPos + patch[2].vPos + patch[3].vPos);
-
-	pt.EdgeTess[0] = CalcTessFactor(float3(e0.x, e0.y, e0.z));
-	pt.EdgeTess[1] = CalcTessFactor(float3(e0.x, e0.y, e0.z));
-	pt.EdgeTess[2] = CalcTessFactor(float3(e0.x, e0.y, e0.z));
-	pt.EdgeTess[3] = CalcTessFactor(float3(e0.x, e0.y, e0.z));
-
-	pt.InsideTess[0] = CalcTessFactor(float3(c.x, c.y, c.z));
-	pt.InsideTess[1] = pt.InsideTess[0];*/
 	return pt;
 }
 

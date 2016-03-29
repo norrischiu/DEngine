@@ -291,7 +291,7 @@ namespace DE
 		return tangent;
 	}
 
-	GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename)
+	GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename, const char* heightTxt_filemane)
 	{
 		m_numPatchRows = m_initInfo.HeightmapHeight / 8 + 1;
 		m_numPatchCols = m_initInfo.HeightmapWidth / 8 + 1;
@@ -407,6 +407,7 @@ namespace DE
 
 		std::string diffuseTxt_filepath = std::string("../Assets/") + diffuseTxt_filename;
 		std::string normalTxt_filepath = std::string("../Assets/") + normalTxt_filename;
+		std::string heightTxt_filepath = std::string("../Assets/") + heightTxt_filemane;
 
 		MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P1N1T1B1UV));
 		Handle hMeshComp(sizeof(MeshComponent));
@@ -421,9 +422,9 @@ namespace DE
 		Handle hTexture1(sizeof(Texture));
 		new (hTexture1) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
 		Handle hTexture2(sizeof(Texture));
-		new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
+		new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, normalTxt_filepath.c_str());
 		Handle hTexture3(sizeof(Texture));
-		new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, diffuseTxt_filepath.c_str());
+		new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, heightTxt_filepath.c_str());
 		renderPass->AddTexture(hTexture1);
 		renderPass->AddTexture(hTexture2);
 		renderPass->AddTexture(hTexture3);
@@ -432,7 +433,7 @@ namespace DE
 		renderPass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
 		renderPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
 		renderPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		renderPass->SetRasterizerState(State::WIREFRAME_RS);
+		renderPass->SetRasterizerState(State::CULL_NONE_RS);
 		((MeshComponent*) hMeshComp.Raw())->m_pMeshData->m_Material.AddPassToTechnique(renderPass);
 
 		GameObject* terrain = new GameObject;
