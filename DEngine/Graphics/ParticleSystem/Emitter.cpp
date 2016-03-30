@@ -193,15 +193,10 @@ void Emitter::SetMaxPartiples(const unsigned int maxParticles)
 		m_iMaxParticles = maxParticles;
 }
 
-// might be wrong
 void Emitter::Update(const float dt)
 {
 	m_fFlareAge += dt;
 	m_fTimeStep = dt;
-
-	static wchar_t s[64];
-	swprintf(s, 64, L"Unbind: %f, %f, %f\n", m_vEmitPosW.GetX(), m_vEmitPosW.GetY(), m_vEmitPosW.GetZ());
-	OutputDebugStringW(s);
 }
 
 void Emitter::SetOwner(GameObject * ptr)
