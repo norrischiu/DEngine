@@ -110,7 +110,7 @@ void D3D11Renderer::Render()
 	m_GBuffer->Render();
 
 	// Post process effect
-	m_PPE->Render();
+//	m_PPE->Render();
 
 	// Particle system drawing
 	ParticleSystem::GetInstance()->Render();
