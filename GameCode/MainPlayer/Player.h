@@ -4,6 +4,7 @@
 
 // Engine include
 #include "DEngine\GameObject\GameObject.h"
+#include "DEngine\Object\Camera.h"
 
 class Player : public DE::GameObject
 {
@@ -17,11 +18,23 @@ public:
 
 	//~Player();
 
+	inline DE::GameObject* GetWeapon()
+	{
+		return m_Weapon;
+	}
+
+	inline DE::Camera* GetFollowCamera()
+	{
+		return m_FollowCamera;
+	}
+
 private:
 
-	GameObject*				m_Weapon;
+	DE::GameObject*					m_Weapon;
 
-	float					m_fHP;
+	DE::Camera*						m_FollowCamera;
+
+	float							m_fHP;
 
 };
 

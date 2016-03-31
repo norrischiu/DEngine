@@ -56,13 +56,17 @@ Player::Player()
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4, 2);
+	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4, 3.5);
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
-	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 3.0f, -8.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
-	AddComponent((DE::Component*) hCamera.Raw());
+	m_FollowCamera = new DE::Camera(DE::Vector3(0.0f, 3.0f, -3.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	m_FollowCamera->SetAsRendererCamera();
+	m_FollowCamera->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
+	DE::Handle hCameraSphere(sizeof(DE::Sphere));
+	new (hCameraSphere) DE::Sphere(DE::Vector3(0.0f, 0.0f, 0.0f), 0.2);
+	m_FollowCamera->AddComponent((DE::Component*) hCameraSphere.Raw());
 
 	// Weapon
 	m_Weapon = new DE::GameObject();
