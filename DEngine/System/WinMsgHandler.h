@@ -15,7 +15,15 @@ struct WinMsgHandler
 		//if (msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST)
 		if (msg == WM_MOUSEMOVE)
 		{
-			Mouse::SetCursorPos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			Mouse::SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		}
+		else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN)
+		{
+			Mouse::SetButton(wParam, true);
+		}
+		else if (msg == WM_LBUTTONUP || msg == WM_LBUTTONUP)
+		{
+			Mouse::SetButton(wParam, false);
 		}
 		//else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)
 		else if (msg == WM_KEYDOWN)

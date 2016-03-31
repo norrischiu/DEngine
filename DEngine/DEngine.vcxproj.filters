@@ -267,6 +267,9 @@
     <ClCompile Include="Graphics\Render\HSDSPerFrameCBuffer.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
+    <ClCompile Include="System\Mouse.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -533,6 +536,7 @@
     <ClInclude Include="Event\EngineEvent.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

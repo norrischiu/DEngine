@@ -11,6 +11,8 @@ namespace InputEventID
 	enum
 	{
 		Mouse_Move_Event = 0x00,
+		Mouse_Left_Press_Event,
+		Mouse_Left_Release_Event,
 		Key_W_Press_Event,
 		Key_W_Release_Event,
 		Key_W_Hold_Event,
@@ -28,6 +30,21 @@ struct Mouse_Move_Event : public Event
 	{};
 public:
 	long cursorPosChange[2];
+	long cursorPos[2];
+};
+
+struct Mouse_Left_Press_Event : public Event
+{
+	Mouse_Left_Press_Event()
+		:Event(InputEventID::Mouse_Left_Press_Event)
+	{};
+};
+
+struct Mouse_Left_Release_Event : public Event
+{
+	Mouse_Left_Release_Event()
+		:Event(InputEventID::Mouse_Left_Release_Event)
+	{};
 };
 
 struct Key_W_Press_Event : public Event

@@ -202,6 +202,7 @@
     <ClCompile Include="Physics\cdPoint.cpp" />
     <ClCompile Include="Physics\cdRay.cpp" />
     <ClCompile Include="Physics\cdSphere.cpp" />
+    <ClCompile Include="System\Mouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\PathFinding\AIController.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Event\InputEvent.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
+    <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
     <ClInclude Include="Graphics\Animation\AnimationController.h" />
     <ClInclude Include="Graphics\Animation\AnimationSet.h" />
