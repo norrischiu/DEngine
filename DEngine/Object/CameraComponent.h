@@ -45,7 +45,6 @@ public:
 	// World position
 	inline Vector3 GetPosition()
 	{
-		//return m_vPos;
 		if (m_pOwner)
 		{
 			Vector3 pos = m_vPos;
@@ -53,6 +52,26 @@ public:
 			return pos;
 		}
 		return m_vPos;
+	}
+
+	inline Vector3 GetLocalPosition()
+	{
+		return m_vPos;
+	}
+
+	inline Vector3 GetLocalLookAt()
+	{
+		return m_vLookAt;
+	}
+
+	inline void SetLookAt(Vector3 lookAt)
+	{
+		m_vLookAt = lookAt;
+	}
+
+	inline Vector3 GetUp()
+	{
+		return m_vUp;
 	}
 
 	~CameraComponent() {};

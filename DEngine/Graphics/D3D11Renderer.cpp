@@ -12,6 +12,7 @@ namespace DE
 {
 
 D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
+
 void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 {
 	// Create device and swap chain
@@ -101,7 +102,7 @@ void D3D11Renderer::Render()
 	//	m_pD3D11Context->ClearRenderTargetView(m_LightingAccumBuffer->GetRTV(), ClearColor);
 
 	// Render to texture
-//	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
+	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
 	SceneGraph::GetInstance()->Render();
 	SceneGraph::GetInstance()->ShadowMapGeneration();
 
@@ -109,7 +110,7 @@ void D3D11Renderer::Render()
 	m_GBuffer->Render();
 
 	// Post process effect
-	m_PPE->Render();
+//	m_PPE->Render();
 
 	// Particle system drawing
 	ParticleSystem::GetInstance()->Render();

@@ -28,9 +28,6 @@ public:
 	// Inherited via Component
 	void Update(float deltaTime) override 
 	{
-		// temp
-		//m_vPos = Vector3::Zero;
-		//m_vPos.Transform(*m_pOwner->GetTransform());
 	};
 
 	~PointLightComponent() {};

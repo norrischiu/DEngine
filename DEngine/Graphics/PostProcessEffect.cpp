@@ -29,11 +29,12 @@ PostProcessEffect::PostProcessEffect()
 	unsigned int pIndexData[6] = { 0, 1, 2, 3, 2, 1 };
 	fullscreenQuadMesh = new MeshData(pVertexData, 4, pIndexData, 6);
 
-	Handle hTexture(sizeof(Texture));
-	new (hTexture) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
-	m_texture = (Texture*)hTexture.Raw();
-	new (hTexture) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
-	m_texture2 = (Texture*)hTexture.Raw();
+	Handle hTexture1(sizeof(Texture));
+	new (hTexture1) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
+	m_texture = (Texture*)hTexture1.Raw();
+	Handle hTexture2(sizeof(Texture));
+	new (hTexture2) Texture(Texture::SHADER_RESOURCES | Texture::RENDER_TARGET);
+	m_texture2 = (Texture*)hTexture2.Raw();
 
 	RenderPass* ReflectionPass = new RenderPass;
 	ReflectionPass->SetVertexShader("../DEngine/Shaders/VS_gbuffer.hlsl");
