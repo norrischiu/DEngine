@@ -9,7 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainPlayer\Player.cpp">
       <Filter>MainPlayer</Filter>
@@ -20,6 +19,7 @@
     <ClCompile Include="MainPlayer\PlayerMC.cpp">
       <Filter>MainPlayer</Filter>
     </ClCompile>
+    <ClCompile Include="GameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />

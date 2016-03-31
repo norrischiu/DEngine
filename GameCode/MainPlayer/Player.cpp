@@ -68,7 +68,7 @@ Player::Player()
 	m_Weapon = new DE::GameObject();
 
 	DE::Handle hWeaponMeshComponent(sizeof(DE::MeshComponent));
-	new (hWeaponMeshComponent) DE::MeshComponent("sword1", DE::eMeshType::STANDARD_MESH);
+	new (hWeaponMeshComponent) DE::MeshComponent("sword", DE::eMeshType::STANDARD_MESH);
 	m_Weapon->AddComponent((DE::Component*) hWeaponMeshComponent.Raw());
 
 	DE::Handle hWeaponAABB(sizeof(DE::AABB));

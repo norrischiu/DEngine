@@ -433,7 +433,7 @@ namespace DE
 		renderPass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
 		renderPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
 		renderPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		renderPass->SetRasterizerState(State::CULL_NONE_RS);
+		renderPass->SetRasterizerState(State::CULL_BACK_RS);
 		((MeshComponent*) hMeshComp.Raw())->m_pMeshData->m_Material.AddPassToTechnique(renderPass);
 
 		GameObject* terrain = new GameObject;

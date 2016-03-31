@@ -145,7 +145,7 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 // function
 [domain("quad")]
 [partitioning("fractional_even")]
-[outputtopology("triangle_cw")]
+[outputtopology("triangle_ccw")]
 [outputcontrolpoints(4)]
 [patchconstantfunc("ConstantHS")]
 [maxtessfactor(64.0f)]
