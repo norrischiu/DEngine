@@ -78,11 +78,9 @@ struct Vertex1P1N1T1UV
 	float								m_UV[2]; // 48-byte offset
 };
 
-struct Vertex1P1N1T1B1UV
+struct VertexTerrain
 {
 	Vector3								m_pos;
-	Vector3								m_norm; // 16-byte offset
-	Vector3								m_tangent; // 32-btye offset
 	float								m_UV[2]; // 48-byte offset
 	float								m_boundsY[2]; // 60-byte offset
 };

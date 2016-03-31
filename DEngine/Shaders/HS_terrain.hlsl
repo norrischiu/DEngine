@@ -1,7 +1,6 @@
 cbuffer CONSTANT_BUFFER : register(b0)
 {
 	float4x4 gViewProj;
-	float4x4 gView;
 	float4	gWorldFrustumPlanes[6];
 	float4	gEyePosW;
 	float	gTexelCellSpaceU;
@@ -11,9 +10,6 @@ cbuffer CONSTANT_BUFFER : register(b0)
 struct VS_OUTPUT
 {
 	float4 vPos : SV_POSITION;
-	float4 vNormal : NORMAL;
-	float4 vTangent : TANGENT;
-	float4 vBinormal : BINORMAL;
 	float2 vTex : TEXCOORD0;
 	float2 vBoundsY : BOUNDSY;
 };
@@ -21,9 +17,6 @@ struct VS_OUTPUT
 struct HS_OUTPUT
 {
 	float4 vPos : SV_POSITION;
-	float4 vNormal : NORMAL;
-	float4 vTangent : TANGENT;
-	float4 vBinormal : BINORMAL;
 	float2 vTex : TEXCOORD0;
 	float2 vBoundsY : BOUNDSY;
 };
@@ -40,13 +33,10 @@ float CalcTessFactor(float3 p)
 	float gMaxDist = 250.0f;
 	float gMinTess = 1.0f;
 	float gMaxTess = 6.0f;
-	//float d = distance(p, gEyePosW);
 	// max norm in xz plane (useful to see detail levels from a bird's eye).
 	float d = max( abs(p.x-gEyePosW.x), abs(p.z-gEyePosW.z) );
 
 	float dist = saturate((d - gMinDist) / (gMaxDist - gMinDist));
-
-	//float s = saturate((400.0f - gMinDist) / (gMaxDist - gMinDist));
 
 	return pow(2, (lerp(gMaxTess, gMinTess, dist)));
 }
@@ -105,8 +95,6 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 			minZ = patch[i].vPos.z;
 	}
 
-//	float3 vMin = float3(patch[0].vPos.x, minY, patch[0].vPos.z);
-//	float3 vMax = float3(patch[2].vPos.x, maxY, patch[2].vPos.z);
 	float3 vMin = float3(minX, minY, minZ);
 	float3 vMax = float3(maxX, maxY, maxZ);
 
@@ -158,9 +146,6 @@ HS_OUTPUT HS(InputPatch<VS_OUTPUT, 4> p,
 	// Pass through shader.
 	OUT.vPos = p[i].vPos;
 	OUT.vTex = p[i].vTex;
-	OUT.vNormal = p[i].vNormal;
-	OUT.vTangent = p[i].vTangent;
-	OUT.vBinormal = p[i].vBinormal;
 	OUT.vBoundsY = p[i].vBoundsY;
 
 	return OUT;

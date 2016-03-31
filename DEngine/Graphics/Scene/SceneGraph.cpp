@@ -94,7 +94,6 @@ void SceneGraph::Render()
 			pHSDSCBuffer->gWorldFrustumPlanes[i] = plane.GetNormal();
 		}
 		pHSDSCBuffer->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
-		pHSDSCBuffer->gView = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix();
 		pHSDSCBuffer->gTexelCellSpaceU = 1.0f / 256.0f;
 		pHSDSCBuffer->gTexelCellSpacev = 1.0f / 256.0f;
 		m_HSDSCBuffer.Update();

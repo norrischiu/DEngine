@@ -37,13 +37,6 @@ namespace DE
 			InitInfo() {}
 		};
 
-		static Terrain*	GetInstance()
-		{
-			if (!m_pInstance)
-				m_pInstance = new Terrain;
-			return m_pInstance;
-		}
-
 	public:
 		Terrain(){}
 		Terrain(const InitInfo initInfo, std::vector<float> heightMap);
@@ -66,8 +59,6 @@ namespace DE
 		std::vector<float2> CalcAllPatchBoundsY();
 		float2 CalcPatchBoundsY(const int patch_id);
 		std::vector<float2> calculateTextureCoordiate();
-		std::vector<Vector3> calculateNormal();
-		const Vector3 calculateTangent(const Vector3& vertex1, const Vector3& vertex2, const Vector3& vertex3, const float2 vertex1_uv, const float2 vertex2_uv, const float2 vertex3_uv);
 
 	private:
 		std::vector<float>	m_HeightMap;
@@ -75,9 +66,5 @@ namespace DE
 
 	private:
 		HSDSPerFrameCBuffer*			m_pHSDSCBuffer;
-		int cellPerPatch = 64;
-		int m_numPatchRows;
-		int m_numPatchCols;
-		static Terrain* m_pInstance;
 	};
 };

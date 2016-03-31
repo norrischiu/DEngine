@@ -598,16 +598,13 @@
     <FxCompile Include="Shaders\HS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\DS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="Shaders\PS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1T1B1UV_deferred.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\VS_vertex1P1N1T1B1UV.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DS_terrain.hlsl">
+    <FxCompile Include="Shaders\VS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

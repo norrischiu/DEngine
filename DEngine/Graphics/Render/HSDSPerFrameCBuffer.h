@@ -15,7 +15,6 @@ namespace DE
 		struct HSDS_CBUFFER
 		{
 			Matrix4 gViewProj;
-			Matrix4 gView;
 			Vector3 gWorldFrustumPlanes[6];
 			Vector3 gEyePosW;
 			float	gTexelCellSpaceU;
