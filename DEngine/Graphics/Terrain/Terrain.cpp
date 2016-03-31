@@ -250,6 +250,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	std::string heightTxt_filepath = std::string("../Assets/") + heightTxt_filemane;
 
 	MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(VertexTerrain));
+	meshData->SetBoundingBox(AABB(Vector3(0, 0, 0), Vector3(m_initInfo.HeightmapHeight, 0, m_initInfo.HeightmapWidth)));
 	Handle hMeshComp(sizeof(MeshComponent));
 	new (hMeshComp) MeshComponent(meshData);
 	SceneGraph::GetInstance()->AddComponent((MeshComponent*) hMeshComp.Raw());

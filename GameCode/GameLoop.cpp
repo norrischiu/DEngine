@@ -34,7 +34,7 @@ void GameLoop::Construct()
 	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain.dds", "terrain_normal.dds", "terrain_height.dds");
 
 	DE::GameObject* pointlight = new DE::GameObject;
-	pointlight->SetPosition(DE::Vector4(0.0, 370.0, 0.0));
+	pointlight->SetPosition(DE::Vector4(0.0, 0.0, 0.0));
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
 	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 400, 50);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());

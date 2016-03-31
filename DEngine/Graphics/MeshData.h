@@ -50,6 +50,11 @@ public:
 		return m_BoundingBox;
 	}
 
+	inline void SetBoundingBox(AABB aabb)
+	{
+		m_BoundingBox = aabb;
+	}
+
 	inline ID3D11Buffer* GetVertexBuffer()
 	{
 		return m_pVertexBuffer;
