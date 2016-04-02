@@ -270,6 +270,9 @@
     <ClCompile Include="System\Mouse.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="System\Keyboard.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">

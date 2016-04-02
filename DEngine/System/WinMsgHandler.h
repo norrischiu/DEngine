@@ -17,13 +17,13 @@ struct WinMsgHandler
 		{
 			Mouse::SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		}
-		else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN)
+		else if (msg == WM_LBUTTONDOWN)
 		{
-			Mouse::SetButton(wParam, true);
+			Mouse::SetButton(MK_LBUTTON, true);
 		}
-		else if (msg == WM_LBUTTONUP || msg == WM_LBUTTONUP)
+		else if (msg == WM_LBUTTONUP)
 		{
-			Mouse::SetButton(wParam, false);
+			Mouse::SetButton(MK_LBUTTON, false);
 		}
 		//else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)
 		else if (msg == WM_KEYDOWN)

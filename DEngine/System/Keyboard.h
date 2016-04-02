@@ -22,20 +22,23 @@
 #define VK_W 0x57
 #define VK_S 0x53
 
-using namespace DE;
+namespace DE
+{
 
-struct Keyboard
+class Keyboard
 {
 	struct State
 	{
 		std::unordered_map<int, bool> Keys = std::unordered_map<int, bool>
-		({
-			{ VK_W, false },
-			{ VK_S, false },
-			{ VK_A, false },
-			{ VK_D, false },
+			({
+				{ VK_W, false },
+				{ VK_S, false },
+				{ VK_A, false },
+				{ VK_D, false },
 		});
 	};
+
+public:
 
 	static void Update(float deltaTime)
 	{
@@ -86,8 +89,8 @@ struct Keyboard
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
 			}
-			m_lastState = m_currState;
 		}
+		m_lastState = m_currState;
 	}
 
 	static void SetInputKey(int virtualKey, bool flag)
@@ -95,11 +98,12 @@ struct Keyboard
 		m_currState.Keys[virtualKey] = flag;
 	}
 
+private:
+
 	static State m_currState;
 	static State m_lastState;
 };
 
-Keyboard::State Keyboard::m_currState;
-Keyboard::State Keyboard::m_lastState;
+};
 
 #endif // !KEYBOARD_H_

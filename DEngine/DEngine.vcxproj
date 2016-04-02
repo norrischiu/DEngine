@@ -202,6 +202,7 @@
     <ClCompile Include="Physics\cdPoint.cpp" />
     <ClCompile Include="Physics\cdRay.cpp" />
     <ClCompile Include="Physics\cdSphere.cpp" />
+    <ClCompile Include="System\Keyboard.cpp" />
     <ClCompile Include="System\Mouse.cpp" />
   </ItemGroup>
   <ItemGroup>
