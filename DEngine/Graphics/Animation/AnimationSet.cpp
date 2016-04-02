@@ -46,15 +46,19 @@ void AnimationSet::reset()
 
 void AnimationSet::update(const float delta_time)
 {
-	m_currTime = m_currTime + delta_time;
-
-	for (auto itr : m_vAnimations)
+	if (m_active)
 	{
-		itr->update(delta_time);
-	}
+		m_currTime = m_currTime + delta_time;
 
-	if (m_currTime > m_duration && !m_bLooping) {
-		m_active = false;
+		for (auto itr : m_vAnimations)
+		{
+			itr->update(delta_time);
+		}
+
+		if (m_currTime > m_duration && !m_bLooping) {
+			m_active = false;
+			m_currTime = 0.0f;
+		}
 	}
 }
 
