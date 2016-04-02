@@ -21,7 +21,7 @@ PlayerASM::PlayerASM(DE::AnimationController * animController)
 	AddTransistion("IDLE", "WALK", 1, 0.5f);
 	AddTransistion("WALK", "IDLE", 1, 0.5f);
 	AddTransistion("IDLE", "ATTACK", 1, 0.5f);
-	AddTransistion("ATTACK", "IDLE", 1, 0.5f);
+	AddTransistion("ATTACK", "IDLE", 1, 1.0f);
 	AddTransistion("WALK", "ATTACK", 1, 0.5f);
 	AddTransistion("ATTACK", "WALK", 1, 0.5f);
 }
@@ -52,8 +52,16 @@ void PlayerASM::HandleEvent(DE::Handle hEvt)
 		case GameEventID::Player_Attack_1_START_Event:
 			ChangeStateTo("ATTACK");
 			break;
-//		case DE::EngineEventID::Animation_END_Event:
-//			ChangeStateTo("IDLE");
-//			break;
+		case GameEventID::Player_Attack_1_END_Event:
+			ChangeStateTo("IDLE");
+			break;
+		case DE::EngineEventID::Animation_END_Event:
+			if (strcmp(m_pCurrState->m_sName, "ATTACK") == 0)
+			{
+				DE::Handle hEvt(sizeof(Player_Attack_1_END_Event));
+				new (hEvt) Player_Attack_1_END_Event;
+				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			}
+			break;
 	}
 }
