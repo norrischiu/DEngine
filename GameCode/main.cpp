@@ -99,7 +99,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		{
 
 			// send input event by checking state change
-			Keyboard::Update(elaspedTime);
+			DE::Keyboard::Update(elaspedTime);
 			DE::Mouse::Update(elaspedTime);
 
 			// Update the game world based on delta time
