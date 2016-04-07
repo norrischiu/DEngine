@@ -31,6 +31,20 @@ __declspec(align(16)) struct SQT
 		return result;
 	}
 
+	/*SQT& operator*(float factor)
+	{
+		m_qQuat.Multiply(factor);
+		m_qQuat.Normalize();
+		m_vTrans.Multiply(factor);
+		return *this;
+	}
+
+	void operator+=(const SQT& other)
+	{
+		m_qQuat += other.m_qQuat;
+		m_vTrans += other.m_vTrans;
+	}*/
+
 	static SQT LerpSQT(const SQT& a, const SQT& b, float t)
 	{
 		SQT result;

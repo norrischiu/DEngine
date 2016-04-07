@@ -52,6 +52,11 @@ SIMDVector3 SIMDMatrix4::GetForward()
 	return SIMDVector3(_rows[2]);
 }
 
+SIMDVector3 SIMDMatrix4::GetRight()
+{
+	return SIMDVector3(_rows[0]);
+}
+
 SIMDVector3 SIMDMatrix4::GetUp()
 {
 	return SIMDVector3(_rows[1]);
