@@ -4,13 +4,15 @@
 // Engine include
 #include "Memory\Handle.h"
 #include "Object\Component.h"
-#include "Graphics\Animation\AnimationController.h"
+#include "BlendTree.h"
 
 // C++ include
 #include <unordered_map>
 
 namespace DE
 {
+
+class AnimationController;
 
 #define TRANSITION_MAX 128
 #define STATE_MAX 64
@@ -21,6 +23,8 @@ class AnimationStateMachine : public Component
 public:
 
 	static const int ComponentID = ComponentID::ANIMATION_STATE_MACHINE;
+
+	friend AnimationController;
 
 	// Default constructor
 	AnimationStateMachine(AnimationController* animController);
@@ -34,6 +38,13 @@ public:
 	{
 		Handle hState(sizeof(State));
 		new (hState) State(stateName, clipname, m_iNumState++);
+		m_mapStates.insert(std::make_pair(stateName, hState));
+	}
+
+	void AddState(const char* stateName, BlendTree* blendTree)
+	{
+		Handle hState(sizeof(State));
+		new (hState) State(stateName, blendTree, m_iNumState++);
 		m_mapStates.insert(std::make_pair(stateName, hState));
 	}
 
@@ -55,6 +66,21 @@ public:
 
 	void ChangeStateTo(const char* stateName);
 
+	inline const char* GetCurrentClipName()
+	{
+		return m_pCurrState->m_sClipName;
+	}
+
+	inline BlendTree* GetCurrentBlendTree()
+	{
+		return m_pCurrState->m_BlendTree;
+	}
+
+	inline bool IsInTransition()
+	{
+		return m_bInTrasition;
+	}
+
 	~AnimationStateMachine();
 
 protected:
@@ -67,10 +93,24 @@ protected:
 			: m_sName(name)
 			, m_sClipName(clipname)
 			, m_iIndex(index)
+			, m_bUseBlendTree(false)
 		{};
+
+		State(const char* name, BlendTree* blendTree, unsigned int index)
+			: m_sName(name)
+			, m_BlendTree(blendTree)
+			, m_iIndex(index)
+			, m_bUseBlendTree(true)
+		{};
+
 		unsigned int m_iIndex;
 		const char* m_sName;
-		const char* m_sClipName; // TODO: extend to multiple clips
+		union
+		{
+			const char* m_sClipName;
+			BlendTree* m_BlendTree;
+		};
+		bool m_bUseBlendTree;
 	};
 
 	struct Transition
@@ -89,10 +129,15 @@ protected:
 		float m_fDuration;
 	};
 
+	void SetStateAnimationSetActive(State* pState, bool isActive);
+
+	// Blend factor used in transition
 	float										m_fBlendValue;
 
+	// Hash map of state name to state handle
 	std::unordered_map<const char*, Handle>		m_mapStates;
 
+	// Number of state
 	unsigned int								m_iNumState;
 
 	// Transition matrix [from][to]

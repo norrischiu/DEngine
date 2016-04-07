@@ -1,11 +1,11 @@
 // Engine include
 #include "AnimationController.h"
+#include "BlendTree.h"
 #include "Math\SQT.h"
 #include "Math\simdmath.h"
 #include "GameObject\GameObject.h"
 #include "Event\EventQueue.h"
 #include "Event\EngineEvent.h"
-#include "../HUD/HUD.h"
 
 // C++ include
 #include <stdio.h>
@@ -35,7 +35,7 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 	FILE* pFile = fopen(C_STR(sFileName, "_animation.bufa"), "r");
 	char c[256], clipName[256];
 	int iNumJoints, iNumFrames;
-	float quat[4], trans[3]; float transform[16];
+	float quat[4], trans[3];
 	float scale;
 	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%s", &clipName);
@@ -117,19 +117,6 @@ void AnimationController::setActiveAnimationSet(const char* set_name, const bool
 	}
 }
 
-bool AnimationController::triggerAnimation(const char* set_name, const float currTime)
-{
-	AnimationSet* animationSet = getAnimationSet(set_name);
-	Animation* animation = nullptr;
-
-	if (animationSet && !animationSet->isActive()) {
-		animationSet->setActive(true);
-		animationSet->setCurrTime(currTime);
-	}
-
-	return false;
-}
-
 int AnimationController::getNumAnimationSets() const
 {
 	return m_animationSets.size();
@@ -139,115 +126,42 @@ int AnimationController::getNumAnimations(const char* set_name)
 {
 	AnimationSet* animationSet = getAnimationSet(set_name);
 
-	/*
-	if (animationSet) {
 	return animationSet->getNumAnimations();
-	}
-
-	return -1;
-	*/
-
-	return animationSet->getNumAnimations();
-}
-
-void AnimationController::setBlending(const char* fromClip, const char* toClip, const BlendMode blendMode, const float duration)
-{
-	for (std::unordered_map<std::string, Transition>::iterator itr = m_transition.begin(); itr != m_transition.end();)
-	{
-		if (strcmp(itr->second.fromClip, fromClip) == 0 ||
-			strcmp(itr->second.fromClip, toClip) == 0 ||
-			strcmp(itr->second.toClip, fromClip) == 0 ||
-			strcmp(itr->second.toClip, toClip) == 0
-			) {
-			itr = m_transition.erase(itr);
-		}
-		else
-		{
-			itr++;
-		}
-	}
-
-	m_transition.insert({ (std::string(fromClip) + '#' + std::string(toClip)), Transition(fromClip, toClip, blendMode, duration) });
 }
 
 void AnimationController::Update(float deltaTime)
 {
-	std::vector<std::string> transitionClip;
 	m_bPlaying = false;
-	int num = 0;
-
-	for (std::unordered_map<std::string, Transition>::iterator itr_transition = m_transition.begin(); itr_transition != m_transition.end();)
+	for (auto itr : m_animationSets)
 	{
-		AnimationSet* fromClip = getAnimationSet(itr_transition->second.fromClip);
-		AnimationSet* toClip = getAnimationSet(itr_transition->second.toClip);
-
-		if (fromClip && toClip && fromClip->isActive() && toClip->isActive())
-		{
-			switch (itr_transition->second.blendMode)
-			{
-			case BlendMode::FROZEN_BLENDING:
-			case BlendMode::CROSS_FADE_BLENDING:
-				transitionClip.push_back(itr_transition->second.fromClip);
-				transitionClip.push_back(itr_transition->second.toClip);
-
-				fromClip->update(deltaTime);
-				toClip->update(deltaTime);
-
-				const float interpolant = itr_transition->second.accuTime / itr_transition->second.duration;
-
-				*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(fromClip->m_vAnimations[0]->GetCurrentPose(), toClip->m_vAnimations[0]->GetCurrentPose(), interpolant).Matrix();
-				*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
-
-				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-				{
-					const Joint& currJoint = m_skeleton->m_vJoints[i];
-					*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(fromClip->m_vAnimations[i]->GetCurrentPose(), toClip->m_vAnimations[i]->GetCurrentPose(), interpolant).Matrix();
-					*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
-				}
-
-				itr_transition->second.accuTime += deltaTime;
-				if (itr_transition->second.accuTime > itr_transition->second.duration)
-				{
-					setActiveAnimationSet(itr_transition->second.fromClip, false);
-					itr_transition = m_transition.erase(itr_transition);
-				}
-				else
-				{
-					itr_transition++;
-				}
-				break;
-			}
-
-			num++;
-			m_bPlaying = true;
-		}
-		else
-		{
-			itr_transition++;
-		}
+		itr.second->update(deltaTime);
 	}
 
-	for (auto itr_clip : m_animationSets)
+	if (m_pASM->IsInTransition())
 	{
-		if (itr_clip.second->isActive() && std::find(transitionClip.begin(), transitionClip.end(), itr_clip.first) == transitionClip.end())
+		*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, 0, deltaTime), GetPoseFromState(m_pASM->m_pCurrState, 0, deltaTime), m_pASM->m_fBlendValue).Matrix();
+		*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
+		for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 		{
-			AnimationSet* animationSet = m_animationSets[itr_clip.first];
-			if (animationSet->isActive())
+			const Joint& currJoint = m_skeleton->m_vJoints[i];
+			*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, i, deltaTime), GetPoseFromState(m_pASM->m_pCurrState, i, deltaTime), m_pASM->m_fBlendValue).Matrix();
+			*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
+		}
+		m_bPlaying = true;
+	}
+	// Play animation without transition
+	else
+	{
+		if (IsStateAnimationSetActive(m_pASM->m_pCurrState))
+		{
+			*m_skeleton->m_vGlobalPose[0] = GetPoseFromState(m_pASM->m_pCurrState, 0, deltaTime).Matrix();
+			*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
+			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 			{
-				animationSet->update(deltaTime);		//update delta time first, then animate
-
-				*m_skeleton->m_vGlobalPose[0] = animationSet->m_vAnimations[0]->GetCurrentPose().Matrix();
-				*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
-
-				for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
-				{
-					const Joint& currJoint = m_skeleton->m_vJoints[i];
-					*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * animationSet->m_vAnimations[i]->GetCurrentPose().Matrix();
-					*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
-				}
+				const Joint& currJoint = m_skeleton->m_vJoints[i];
+				*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * GetPoseFromState(m_pASM->m_pCurrState, i, deltaTime).Matrix();
+				*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
 			}
-
-			num++;
 			m_bPlaying = true;
 		}
 	}
@@ -257,6 +171,76 @@ void AnimationController::Update(float deltaTime)
 		Handle hEvt(sizeof(Animation_END_Event));
 		new (hEvt) Animation_END_Event;
 		EventQueue::GetInstance()->Add(hEvt, GAME_EVENT);
+	}
+}
+
+SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex, float deltaTime)
+{
+	if (pState->m_bUseBlendTree)
+	{
+		return GetPoseFromBlendTree(pState->m_BlendTree, jointIndex, deltaTime);
+	}
+	else
+	{
+		return GetPoseFromSingleSet(m_animationSets.at(pState->m_sClipName), jointIndex, deltaTime);
+	}
+}
+
+SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, int jointIndex, float deltaTime)
+{
+	return set->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime);
+}
+
+SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, int jointIndex, float deltaTime)
+{
+	int numClips = btree->m_vClipnames.size();
+	float factor = btree->m_fBlendFactor;
+	AnimationSet* fromSet = nullptr;
+	AnimationSet* toSet = nullptr;
+
+	// Special case: blend factor larger than predefined range
+	if (factor >= btree->m_vWeightings[numClips - 1])
+	{
+		fromSet = getAnimationSet(btree->m_vClipnames[numClips - 1]);
+		toSet = getAnimationSet(btree->m_vClipnames[0]);
+		factor = factor - btree->m_vWeightings[numClips - 1];
+	}
+	// Reduce many clips to binary lerp
+	else
+	{
+		for (int i = 0; i < numClips; ++i)
+		{
+			if (factor < btree->m_vWeightings[i])
+			{
+				fromSet = getAnimationSet(btree->m_vClipnames[i - 1]);
+				toSet = getAnimationSet(btree->m_vClipnames[i]);
+				factor = factor - btree->m_vWeightings[i - 1];
+				break;
+			}
+		}
+	}
+	fromSet->setActive(true);
+	toSet->setActive(true);
+	assert(fromSet != nullptr && toSet != nullptr);
+	return SQT::LerpSQT(fromSet->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime), toSet->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime), factor);
+}
+
+bool AnimationController::IsStateAnimationSetActive(AnimationStateMachine::State * pState)
+{
+	if (pState->m_bUseBlendTree)
+	{
+		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.size(); ++i)
+		{
+			if (!getAnimationSet(pState->m_BlendTree->m_vClipnames[i])->isActive())
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+	else
+	{
+		return getAnimationSet(pState->m_sClipName)->isActive();
 	}
 }
 

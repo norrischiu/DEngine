@@ -1,5 +1,6 @@
 // Engine include
 #include "AnimationStateMachine.h"
+#include "AnimationController.h"
 
 namespace DE
 {
@@ -8,6 +9,7 @@ AnimationStateMachine::AnimationStateMachine(AnimationController* animController
 	: m_pController(animController)
 	, m_iNumState(0)
 	, m_fTransitionTime(0.0f)
+	, m_fBlendValue(0.0f)
 	, m_bInTrasition(false)
 {
 	m_ID = ComponentID;
@@ -16,13 +18,16 @@ AnimationStateMachine::AnimationStateMachine(AnimationController* animController
 
 void AnimationStateMachine::Update(float deltaTime)
 {
+	m_fDeltaTime = deltaTime;
+
 	if (m_bInTrasition)
 	{
 		m_fTransitionTime += deltaTime;
+		m_fBlendValue = m_fTransitionTime / m_pCurrTransition->m_fDuration;
 		// finished transition
 		if (m_fTransitionTime > m_pCurrTransition->m_fDuration)
 		{
-			m_pController->setActiveAnimationSet(m_pPrevState->m_sClipName, false);
+			SetStateAnimationSetActive(m_pPrevState, false);
 			m_fTransitionTime = 0.0f;
 			m_bInTrasition = false;
 		}
@@ -31,16 +36,33 @@ void AnimationStateMachine::Update(float deltaTime)
 
 void AnimationStateMachine::ChangeStateTo(const char* stateName)
 {
-	m_pPrevState = m_pCurrState;
-	State* target = (State*) m_mapStates[stateName].Raw();
-	Transition* trans = ((Transition*) m_mTransitions[m_pCurrState->m_iIndex][target->m_iIndex].Raw());
-	m_pCurrTransition = trans;
-	m_bInTrasition = true;
-	m_pCurrState = target;
+	if (strcmp(m_pCurrState->m_sName, stateName) != 0)
+	{
+		m_pPrevState = m_pCurrState;
+		State* target = (State*)m_mapStates[stateName].Raw();
+		Transition* trans = ((Transition*)m_mTransitions[m_pCurrState->m_iIndex][target->m_iIndex].Raw());
+		m_pCurrTransition = trans;
+		m_bInTrasition = true;
+		m_fBlendValue = 0.0f;
+		m_pCurrState = target;
 
-	m_pController->setBlending(m_pPrevState->m_sClipName, m_pCurrState->m_sClipName, AnimationController::BlendMode::CROSS_FADE_BLENDING, m_pCurrTransition->m_fDuration);
+		SetStateAnimationSetActive(m_pCurrState, true);
+	}
+}
 
-	m_pController->setActiveAnimationSet(m_pCurrState->m_sClipName, true);
+void AnimationStateMachine::SetStateAnimationSetActive(State* pState, bool isActive)
+{
+	if (pState->m_bUseBlendTree)
+	{
+		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.size(); ++i)
+		{
+			m_pController->setActiveAnimationSet(pState->m_BlendTree->m_vClipnames[i], isActive);
+		}
+	}
+	else
+	{
+		m_pController->setActiveAnimationSet(pState->m_sClipName, isActive);
+	}
 }
 
 AnimationStateMachine::~AnimationStateMachine()

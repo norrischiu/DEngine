@@ -3,8 +3,10 @@
 #include <string>
 #include "Skeleton.h"
 #include "AnimationSet.h"
+#include "BlendTree.h"
+#include "AnimationStateMachine.h"
 #include "Object\Component.h"
-#include <unordered_map>
+#include "Math\SQT.h"
 #include <vector>
 
 namespace DE
@@ -21,21 +23,15 @@ public:
 		FROZEN_BLENDING
 	};
 
-	struct Transition {
-		const char* fromClip;
-		const char* toClip;
-		const BlendMode blendMode;
-		const float duration;
-		float accuTime;
-
-		Transition(const char* fromClip, const char* toClip, const BlendMode blendMode, const float duration) : fromClip(fromClip), toClip(toClip), blendMode(blendMode), duration(duration), accuTime(0.0f)
-		{ }
-	};
-
 	static const int ComponentID = ComponentID::ANIMATION_CONTROLLER;
 
 	AnimationController(Skeleton* skeleton);
 	~AnimationController();
+
+	inline void SetAnimationStateMachine(AnimationStateMachine* pASM)
+	{
+		m_pASM = pASM;
+	}
 
 	void addAnimationSet(const char* set_name, AnimationSet* animationSet);
 
@@ -56,17 +52,25 @@ public:
 	bool isAnimationSetActive(const char* set_name);
 	void setActiveAnimationSet(const char* set_name, const bool active);
 
-	bool triggerAnimation(const char* set_name, const float currTime);
+	// Extract the current pose of a joint from a state defined in state machine 
+	SQT GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex, float deltaTime);
 
-	void setBlending(const char* fromClip, const char* toClip, const BlendMode blendMode, const float duration);
+	// Extract the current pose of a joint from a clip
+	SQT GetPoseFromSingleSet(AnimationSet* set, int jointIndex, float deltaTime);
+
+	// Extract the current pose of a joint from a blend tree
+	SQT GetPoseFromBlendTree(BlendTree* btree, int jointIndex, float deltaTime);
+
+	// Check if any of the animation set in a state is active
+	bool IsStateAnimationSetActive(AnimationStateMachine::State* pState);
 
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
-	std::unordered_map<std::string, AnimationSet*> m_animationSets;
-	std::unordered_map<std::string, Transition> m_transition;
-	Skeleton* m_skeleton;
-	bool m_bPlaying;
+	std::unordered_map<std::string, AnimationSet*>		m_animationSets;
+	Skeleton*											m_skeleton;
+	bool												m_bPlaying;
+	AnimationStateMachine*								m_pASM;
 };
 
 };
