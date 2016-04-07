@@ -15,6 +15,12 @@ namespace InputEventID
 		Mouse_Left_Release_Event,
 		Key_W_Press_Event,
 		Key_W_Release_Event,
+		Key_S_Press_Event,
+		Key_S_Release_Event,
+		Key_D_Press_Event,
+		Key_D_Release_Event,
+		Key_A_Press_Event,
+		Key_A_Release_Event,
 		Key_W_Hold_Event,
 		Key_S_Hold_Event,
 		Key_A_Hold_Event,
@@ -68,6 +74,20 @@ struct Key_W_Hold_Event : public Event
 	{};
 };
 
+struct Key_S_Press_Event : public Event
+{
+	Key_S_Press_Event()
+		:Event(InputEventID::Key_S_Press_Event)
+	{};
+};
+
+struct Key_S_Release_Event : public Event
+{
+	Key_S_Release_Event()
+		:Event(InputEventID::Key_S_Release_Event)
+	{};
+};
+
 struct Key_S_Hold_Event : public Event
 {
 	Key_S_Hold_Event()
@@ -82,6 +102,20 @@ struct Key_A_Hold_Event : public Event
 	{};
 };
 
+struct Key_A_Press_Event : public Event
+{
+	Key_A_Press_Event()
+		:Event(InputEventID::Key_A_Press_Event)
+	{};
+};
+
+struct Key_A_Release_Event : public Event
+{
+	Key_A_Release_Event()
+		:Event(InputEventID::Key_A_Release_Event)
+	{};
+};
+
 struct Key_D_Hold_Event : public Event
 {
 	Key_D_Hold_Event()
@@ -89,6 +123,19 @@ struct Key_D_Hold_Event : public Event
 	{};
 };
 
+struct Key_D_Press_Event : public Event
+{
+	Key_D_Press_Event()
+		:Event(InputEventID::Key_D_Press_Event)
+	{};
+};
+
+struct Key_D_Release_Event : public Event
+{
+	Key_D_Release_Event()
+		:Event(InputEventID::Key_D_Release_Event)
+	{};
+};
 }
 
 #endif

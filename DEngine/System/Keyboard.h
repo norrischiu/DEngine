@@ -79,6 +79,24 @@ public:
 					new (hEvt) Key_W_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
+				if (itr.first == VK_S)
+				{
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Press_Event));
+					new (hEvt) Key_S_Press_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_A)
+				{
+					Handle hEvt(sizeof(Key_A_Press_Event));
+					new (hEvt) Key_A_Press_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_D)
+				{
+					Handle hEvt(sizeof(Key_D_Press_Event));
+					new (hEvt) Key_D_Press_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
 			}
 			if (!itr.second & m_lastState.Keys[itr.first])
 			{
@@ -86,6 +104,24 @@ public:
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Release_Event));
 					new (hEvt) Key_W_Release_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_S)
+				{
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Release_Event));
+					new (hEvt) Key_S_Release_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_A)
+				{
+					Handle hEvt(sizeof(Key_A_Release_Event));
+					new (hEvt) Key_A_Release_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_D)
+				{
+					Handle hEvt(sizeof(Key_D_Release_Event));
+					new (hEvt) Key_D_Release_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
 			}
