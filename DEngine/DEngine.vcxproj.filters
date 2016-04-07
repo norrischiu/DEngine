@@ -76,9 +76,6 @@
     <Filter Include="Graphics\Terrain">
       <UniqueIdentifier>{b7469f27-1663-4808-a7a2-c27810066f1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Animation\BlendMode">
-      <UniqueIdentifier>{756a5e9a-ff4a-41e8-82d7-cf6d4688839b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -540,6 +537,12 @@
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="GlobalInclude.h" />
+    <ClInclude Include="Graphics\Animation\BlendTree.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathHelper.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

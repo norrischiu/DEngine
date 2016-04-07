@@ -223,6 +223,7 @@
     <ClInclude Include="Graphics\Animation\AnimationController.h" />
     <ClInclude Include="Graphics\Animation\AnimationSet.h" />
     <ClInclude Include="Graphics\Animation\AnimationStateMachine.h" />
+    <ClInclude Include="Graphics\Animation\BlendTree.h" />
     <ClInclude Include="Graphics\Animation\Joint.h" />
     <ClInclude Include="Graphics\Animation\Skeleton.h" />
     <ClInclude Include="Graphics\D3D11Renderer.h" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Light\SpotLight.h" />
     <ClInclude Include="Light\SpotLightComponent.h" />
     <ClInclude Include="Math\Frustum.h" />
+    <ClInclude Include="Math\MathHelper.h" />
     <ClInclude Include="Math\Plane.h" />
     <ClInclude Include="Math\simdmath.h" />
     <ClInclude Include="Math\SQT.h" />

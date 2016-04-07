@@ -31,6 +31,7 @@
     <ClInclude Include="MainPlayer\Player.h" />
     <ClInclude Include="MainPlayer\PlayerASM.h" />
     <ClInclude Include="MainPlayer\PlayerMC.h" />
+    <ClInclude Include="MainPlayer\ThirdPersonCamera.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB917DAB-DC80-44FF-BF88-3466BFC3654A}</ProjectGuid>

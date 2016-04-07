@@ -35,5 +35,8 @@
     <ClInclude Include="MainPlayer\PlayerMC.h">
       <Filter>MainPlayer</Filter>
     </ClInclude>
+    <ClInclude Include="MainPlayer\ThirdPersonCamera.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
