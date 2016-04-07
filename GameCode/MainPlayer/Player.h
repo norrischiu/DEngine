@@ -4,12 +4,17 @@
 
 // Engine include
 #include "DEngine\GameObject\GameObject.h"
-#include "DEngine\Object\Camera.h"
+#include "ThirdPersonCamera.h"
 
 class Player : public DE::GameObject
 {
 
 public:
+
+	enum eState
+	{
+		ATTACKING, NOT_ATTACKING
+	};
 
 	Player();
 
@@ -23,18 +28,31 @@ public:
 		return m_Weapon;
 	}
 
-	inline DE::Camera* GetFollowCamera()
+	inline ThirdPersonCamera* GetFollowCamera()
 	{
 		return m_FollowCamera;
 	}
 
+	inline void SetState(eState state)
+	{
+		m_eState = state;
+	}
+
+	inline eState GetState()
+	{
+		return m_eState;
+	}
+
 private:
 
-	DE::GameObject*					m_Weapon;
+	DE::GameObject*						m_Weapon;
 
-	DE::Camera*						m_FollowCamera;
+	ThirdPersonCamera*					m_FollowCamera;
 
-	float							m_fHP;
+	// Health point
+	float								m_fHP;
+
+	eState								m_eState;
 
 };
 

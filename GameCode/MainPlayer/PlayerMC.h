@@ -18,6 +18,8 @@ private:
 	void HandleKeyboardEvent(DE::Event* pEvt) override;
 	void HandleMouseEvent(DE::Event* pEvt) override;
 
+	void Dispatch() override;
+
 };
 
 #endif // !PLAYER_ASM_H_

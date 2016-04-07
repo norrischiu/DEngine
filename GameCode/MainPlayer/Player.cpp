@@ -13,7 +13,6 @@
 #include "DEngine\Graphics\Animation\Skeleton.h"
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\GameObject\GameObject.h"
-#include "DEngine\Object\CameraComponent.h"
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Math\simdmath.h"
@@ -22,6 +21,7 @@
 Player::Player()
 	: DE::GameObject()
 	, m_fHP(100.0f)
+	, m_eState(NOT_ATTACKING)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
 	new (hMeshComponent) DE::MeshComponent("maria", DE::eMeshType::SKELETAL_MESH);
@@ -46,13 +46,20 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_walk");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_idle");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_attack1");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_walk_back");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_strafe_right");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_strafe_left");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk_back")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("strafe_right")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("strafe_left")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
 
 	DE::Handle hASM(sizeof(PlayerASM));
 	new (hASM) PlayerASM((DE::AnimationController*) hAnimController.Raw());
 	AddComponent((DE::Component*) hASM.Raw());
+	((DE::AnimationController*) hAnimController.Raw())->SetAnimationStateMachine((PlayerASM*) hASM.Raw());
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
@@ -60,7 +67,7 @@ Player::Player()
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
-	m_FollowCamera = new DE::Camera(DE::Vector3(0.0f, 3.0f, -3.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	m_FollowCamera = new ThirdPersonCamera(DE::Vector3(0.0f, 3.0f, -3.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	m_FollowCamera->SetAsRendererCamera();
 	m_FollowCamera->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
