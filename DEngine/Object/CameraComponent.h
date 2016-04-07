@@ -59,6 +59,11 @@ public:
 		return m_vPos;
 	}
 
+	inline void SetPosition(Vector3 pos)
+	{
+		m_vPos = pos;
+	}
+
 	inline Vector3 GetLocalLookAt()
 	{
 		return m_vLookAt;
