@@ -17,34 +17,36 @@ void MovementController::Update(float deltaTime)
 		HandleMouseEvent(pEvt);
 		EventQueue::GetInstance()->Pop(INPUT_EVENT);
 	}
+	Dispatch();
+}
+
+void MovementController::Dispatch()
+{
+	Move(m_vTrans);
+	m_vTrans = Vector3::Zero;
 }
 
 void MovementController::HandleKeyboardEvent(Event* pEvt)
 {
 	if (pEvt->m_ID == InputEventID::Key_W_Hold_Event)
 	{
-		Vector3 vForward = DE::Vector3::UnitZ;
-		Move(vForward * m_fDeltaTime * m_fSpeed);
+		Vector3 vForward = m_pOwner->GetTransform()->GetForward();
+		m_vTrans += (vForward * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == InputEventID::Key_S_Hold_Event)
 	{
-		Vector3 vBackward = DE::Vector3::NegativeUnitZ;
-		Move(vBackward * m_fDeltaTime * m_fSpeed);
+		Vector3 vBackward = -m_pOwner->GetTransform()->GetForward();
+		m_vTrans += (vBackward * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == InputEventID::Key_D_Hold_Event)
 	{
-		Vector3 vRight = Vector3::UnitX;
-		Move(vRight * m_fDeltaTime * m_fSpeed);
+		Vector3 vRight = m_pOwner->GetTransform()->GetRight();
+		m_vTrans += (vRight * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == InputEventID::Key_A_Hold_Event)
 	{
-		Vector3 vLeft = Vector3::NegativeUnitX;
-		Move(vLeft * m_fDeltaTime * m_fSpeed);
-	}
-	else if (pEvt->m_ID == InputEventID::Key_W_Press_Event)
-	{
-		//Vector3 vForward = m_pOwner->GetTransform().GetForward();
-		//Move(vForward * m_fDeltaTime * m_fSpeed);
+		Vector3 vLeft = -m_pOwner->GetTransform()->GetRight();
+		m_vTrans += (vLeft * m_fDeltaTime * m_fSpeed);
 	}
 }
 
@@ -59,7 +61,6 @@ void MovementController::HandleMouseEvent(Event* pEvt)
 			rot.CreateRotationX(pMouseEvt->cursorPosChange[0] / 150.0f);
 			//m_pOwner->Transform(rot);
 		}
-		//D3D11Renderer::GetInstance()->GetCamera()->rotateVPos(pMouseEvt->cursorPosChange[0] / 150.0f, pMouseEvt->cursorPosChange[1] / 150.0f);
 	}
 }
 

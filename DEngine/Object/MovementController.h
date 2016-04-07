@@ -28,6 +28,8 @@ public:
 
 protected:
 
+	virtual void Dispatch();
+
 	virtual void HandleKeyboardEvent(Event* pEvt);
 	virtual void HandleMouseEvent(Event* pEvt);
 
@@ -35,6 +37,7 @@ protected:
 
 	float							m_fSpeed;
 	float							m_fDeltaTime;
+	Vector3							m_vTrans;
 };
 
 };
