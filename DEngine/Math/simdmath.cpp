@@ -37,9 +37,9 @@ void SIMDMatrix4::SetPosition(const SIMDVector3 & translation)
 	__m128 transY = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetY());
 	__m128 transZ = _mm_setr_ps(0.0f, 0.0f, 0.0f, translation.GetZ());
 
-	_rows[0] = _mm_add_ps(_rows[0], transX);
-	_rows[1] = _mm_add_ps(_rows[1], transY);
-	_rows[2] = _mm_add_ps(_rows[2], transZ);
+	_rows[0] = _mm_insert_ps(_rows[0], transX, 0xF0);
+	_rows[1] = _mm_insert_ps(_rows[1], transY, 0xF0);
+	_rows[2] = _mm_insert_ps(_rows[2], transZ, 0xF0);
 }
 
 SIMDVector3 SIMDMatrix4::GetPosition()
