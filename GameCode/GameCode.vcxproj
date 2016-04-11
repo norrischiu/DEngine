@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boss\Boss.cpp" />
+    <ClCompile Include="Boss\AIBehavior.cpp" />
+    <ClCompile Include="Boss\BossASM.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainPlayer\Player.cpp" />
@@ -26,6 +29,9 @@
     <ClCompile Include="MainPlayer\PlayerMC.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boss\Boss.h" />
+    <ClInclude Include="Boss\AIBehavior.h" />
+    <ClInclude Include="Boss\BossASM.h" />
     <ClInclude Include="Event\GameEvent.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="MainPlayer\Player.h" />

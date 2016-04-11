@@ -22,7 +22,7 @@ VS_OUTPUT VS(VS_INPUT IN)
 {
 	VS_OUTPUT OUT;
 
-	OUT.vPos = mul(IN.vPos, WVPTransform);
+	OUT.vPos = mul(float4(IN.vPos.xyz, 1.0f), WVPTransform);
 	 
     return OUT;
 }

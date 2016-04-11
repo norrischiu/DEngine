@@ -13,8 +13,8 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 	m_3DRenderPass.SetBlendState(State::NULL_STATE);
 	m_3DRenderPass.SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	m_3DRenderPass.SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-	m_3DRenderPass.SetRasterizerState(State::CULL_NONE_RS);
+	m_3DRenderPass.SetDepthStencilState(State::NULL_STATE);
+	m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
 	m_3DRenderPass.SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 }
 

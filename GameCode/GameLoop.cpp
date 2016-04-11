@@ -18,6 +18,7 @@
 
 // Game include
 #include "MainPlayer\Player.h"
+#include "Boss\Boss.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
 
@@ -42,6 +43,7 @@ void GameLoop::Construct()
 //	HUD::getInstance()->addProgress("progress1", 67.0f, HUDElement::Position(300, 10), HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
+	Boss* boss = new Boss(player);
 	
 	for (int i = 0; i < 0/*381*/; ++i)
 	{
