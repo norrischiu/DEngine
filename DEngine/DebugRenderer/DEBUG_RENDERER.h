@@ -34,18 +34,18 @@ public:
 		corners[5] = Vector3(m_Min.GetX(), m_Max.GetY(), m_Max.GetZ());
 		corners[6] = m_Max;
 		corners[7] = Vector3(m_Max.GetX(), m_Min.GetY(), m_Max.GetZ());
-		drawer.draw_line(corners[0], corners[1]);
-		drawer.draw_line(corners[1], corners[2]);
-		drawer.draw_line(corners[2], corners[3]);
-		drawer.draw_line(corners[3], corners[0]);
-		drawer.draw_line(corners[4], corners[5]);
-		drawer.draw_line(corners[5], corners[6]);
-		drawer.draw_line(corners[6], corners[7]);
-		drawer.draw_line(corners[7], corners[4]);
-		drawer.draw_line(corners[0], corners[4]);
-		drawer.draw_line(corners[1], corners[5]);
-		drawer.draw_line(corners[2], corners[6]);
-		drawer.draw_line(corners[3], corners[7]);
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[1]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[2]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[3]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[0]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[4], corners[5]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[5], corners[6]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[6], corners[7]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[7], corners[4]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[4]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[5]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[6]));
+		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[7]));
 	}
 
 	void DRAW_2D_TEXT(const char* text, unsigned int screenX, unsigned int screenY)
@@ -65,8 +65,14 @@ public:
 		//		SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComp);
 	}
 
-	void DRAW_LINE_LIST(float* points)
+	void DRAW_LINE_LIST(Vector3* points)
 	{
+	}
+
+	void DRAW_RAY_SEGMENT(Vector3 start, Vector3 end)
+	{
+		Debug drawer;
+		m_vDbgMeshs.push_back(drawer.draw_line(start, end));
 	}
 
 	static DEBUG_RENDERER* GetInstance()
@@ -86,11 +92,28 @@ public:
 
 	void Render()
 	{
+		VSPerObjectCBuffer m_VSCBuffer;
+		m_VSCBuffer.BindToRenderer();
+		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 
+		for (MeshData* meshData : m_vDbgMeshs)
+		{
+			ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
+			m_VSCBuffer.Update();
+
+			meshData->RenderUsingPass(&m_3DRenderPass);
+		}
+
+		PostRender();
 	}
 
 	void PostRender()
 	{
+		for (MeshData* meshData : m_vDbgMeshs)
+		{
+			delete meshData;
+			meshData = nullptr;
+		}
 		m_vDbgMeshs.clear();
 	}
 
@@ -106,6 +129,9 @@ private:
 
 	// Default orthgraphic projection
 	Matrix4										m_m2DProjection;
+
+	// Rende pass for 3D debug mesh
+	RenderPass									m_3DRenderPass;
 };
 
 };

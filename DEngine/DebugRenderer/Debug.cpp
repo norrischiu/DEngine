@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "Debug.h"
 #include "Graphics\Scene\SceneGraph.h"
 #include "Graphics\MeshComponent.h"
@@ -5,13 +6,13 @@
 
 namespace DE
 {
-	/*
-	MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_vertex) {
-=======
-Debug::Debug() {}
 
-MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_vertex) {
->>>>>>> Stashed changes
+Debug::Debug()
+{
+}
+
+MeshData* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_vertex) {
+
 	unsigned int pIndices[2] = {
 	0, 1
 	};
@@ -27,20 +28,7 @@ MeshComponent* Debug::draw_line(const Vector3& start_vertex, const Vector3& end_
 	);
 
 	MeshData* meshdata = new MeshData(vertices, 2, pIndices, 2);
-<<<<<<< Updated upstream
-	//MeshComponent* meshcomponent = new MeshComponent(meshdata);
-	//	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshcomponent);
-
-	return meshcomponent;
-	}
-
-	MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, const int _stack_) {
-=======
-	Handle hMesh(sizeof(MeshComponent));
-	new (hMesh) MeshComponent(meshdata);
-	SceneGraph::GetInstance()->ADD_DEBUG_DRAWING((MeshComponent*) hMesh.Raw());
-
-	return (MeshComponent*) hMesh.Raw();
+	return meshdata;
 }
 /*
 MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, const int _stack_) {

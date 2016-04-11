@@ -12,7 +12,7 @@ class AnimationSet
 public:
 
 	AnimationSet() {};
-	AnimationSet(const float currTime, const float duration, const float weight = 1.0f, const bool active = false, const bool looping = false);
+	AnimationSet(const float currTime, const float duration, const bool active = false, const bool looping = false);
 	~AnimationSet();
 
 	void AddAnimation(Animation* animation);
@@ -23,8 +23,6 @@ public:
 	void setCurrTime(const float time);
 	float getDuration() const;
 	void setDuration(const float duration);
-	float getWeighting() const;
-	void setWeighting(const float weight);
 	bool isActive() const;
 	void setActive(const bool active);
 	bool isLooping();
@@ -37,11 +35,10 @@ public:
 	std::vector<Animation*> m_vAnimations;
 
 private:
-	float m_currTime;
-	float m_duration;
-	bool m_active;
+	float m_fCurrTime;
+	float m_fDuration;
+	bool m_bActive;
 	bool m_bLooping;
-	float m_weight;
 };
 
 };

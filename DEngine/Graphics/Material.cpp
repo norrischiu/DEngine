@@ -42,7 +42,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		}
 		fscanf(pFile, "%s", &c);
 		Handle hTexture(sizeof(Texture));
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c);
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c, 10);
 		pass->AddTexture(hTexture);
 	}
 
@@ -61,9 +61,27 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
 		break;
 	}
-	if (m_TexFlag & (DIFFUSE | NORMAL))
+	if (m_TexFlag == (DIFFUSE | NORMAL))
 	{
 		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_deferred.hlsl");
+		pass->SetBlendState(State::NULL_STATE);
+		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
+		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
+		pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+		m_pRenderTechnique->AddPass(pass);
+	}
+	else if (m_TexFlag == DIFFUSE)
+	{
+		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_noBump_deferred.hlsl");
+		pass->SetBlendState(State::NULL_STATE);
+		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
+		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
+		pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+		m_pRenderTechnique->AddPass(pass);
+	}
+	else
+	{
+		pass->SetPixelShader(nullptr);
 		pass->SetBlendState(State::NULL_STATE);
 		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
 		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());

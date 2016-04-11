@@ -26,6 +26,7 @@ public:
 		, m_fShininess(shin)
 		, m_TexFlag(NULL)
 	{
+		m_pRenderTechnique = new RenderTechnique;
 	}
 
 	void ReadFromFile(const char* filename, int meshType);

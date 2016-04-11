@@ -61,16 +61,16 @@ public:
 		return m_pTransform->m_mLocalTransform;
 	}
 
+	// Get world position directly
 	Vector3 GetPosition()
 	{
 		return m_pTransform->m_mWorldTransform->GetPosition();
 	}
 
+	// Set world position directly
 	void SetPosition(Vector3 vPos)
 	{
-		Matrix4 trans;
-		trans.CreateTranslation(vPos);
-		*m_pTransform->m_mWorldTransform = trans;
+		m_pTransform->m_mWorldTransform->SetPosition(vPos);
 	}
 
 protected:

@@ -19,11 +19,11 @@ class Mouse
 		{
 			cursorPos[0] = other.cursorPos[0];
 			cursorPos[1] = other.cursorPos[1];
-			Buttons[0] = other.Buttons[0];
 			Buttons[1] = other.Buttons[1];
+			Buttons[2] = other.Buttons[2];
 		}
 		long cursorPos[2] = { 0 };
-		bool Buttons[2] = { false, false };
+		bool Buttons[3] = { false, false, false};
 	};
 
 public:
@@ -40,7 +40,7 @@ public:
 		EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 
 		// Mouse buttons
-		for (int i = 0; i < 2; ++i)
+		for (int i = 1; i < 3; ++i)
 		{
 			if (m_currState.Buttons[i] & !m_lastState.Buttons[i])
 			{
@@ -50,6 +50,12 @@ public:
 					new (hButtonEvt) Mouse_Left_Press_Event;
 					EventQueue::GetInstance()->Add(hButtonEvt, INPUT_EVENT);
 				}
+				if (i == MK_RBUTTON)
+				{
+					Handle hButtonEvt(sizeof(Mouse_Right_Press_Event));
+					new (hButtonEvt) Mouse_Right_Press_Event;
+					EventQueue::GetInstance()->Add(hButtonEvt, INPUT_EVENT);
+				}
 			}
 			if (!m_currState.Buttons[i] & m_lastState.Buttons[i])
 			{
@@ -57,6 +63,21 @@ public:
 				{
 					Handle hButtonEvt(sizeof(Mouse_Left_Release_Event));
 					new (hButtonEvt) Mouse_Left_Release_Event;
+					EventQueue::GetInstance()->Add(hButtonEvt, INPUT_EVENT);
+				}
+				if (i == MK_RBUTTON)
+				{
+					Handle hButtonEvt(sizeof(Mouse_Right_Release_Event));
+					new (hButtonEvt) Mouse_Right_Release_Event;
+					EventQueue::GetInstance()->Add(hButtonEvt, INPUT_EVENT);
+				}
+			}
+			if (m_currState.Buttons[i] & m_lastState.Buttons[i])
+			{
+				if (i == MK_LBUTTON)
+				{
+					Handle hButtonEvt(sizeof(Mouse_Left_Hold_Event));
+					new (hButtonEvt) Mouse_Left_Hold_Event;
 					EventQueue::GetInstance()->Add(hButtonEvt, INPUT_EVENT);
 				}
 			}

@@ -16,11 +16,6 @@ Body * CollidableObject::getBody() const
 	return m_pBody;
 }
 
-void CollidableObject::translate(Vector3& translate)
-{
-	m_pBody->update(0.0f, translate);
-}
-
 void CollidableObject::update()
 {
 

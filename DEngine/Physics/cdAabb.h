@@ -31,7 +31,7 @@ public:
 	// check does two AABBs intersect? return an IntersectData
 //	IntersectData collision(const Body& other);
 
-	void Transform(Matrix4& transform)
+	virtual void Transform(Matrix4& transform) override
 	{
 		Vector3 m_vMaxXYZ(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 		Vector3 m_vMinXYZ(FLT_MAX, FLT_MAX, FLT_MAX);
@@ -77,6 +77,7 @@ private:
 	Vector3			m_Min;
 	// a vector which contains the maximum point
 	Vector3			m_Max;
+
 };
 
 };

@@ -30,8 +30,8 @@ protected:
 
 	virtual void Dispatch();
 
-	virtual void HandleKeyboardEvent(Event* pEvt);
-	virtual void HandleMouseEvent(Event* pEvt);
+	virtual bool HandleKeyboardEvent(Event* pEvt);
+	virtual bool HandleMouseEvent(Event* pEvt);
 
 	virtual void Move(Vector3 vTrans);
 

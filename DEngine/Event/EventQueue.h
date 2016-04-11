@@ -30,6 +30,22 @@ public:
 		}
 	}
 
+	void FrontToBack(int type)
+	{
+		if (type == INPUT_EVENT)
+		{
+			Handle hEvt = m_inputQueue.front();
+			m_inputQueue.pop();
+			m_inputQueue.push(hEvt);
+		}
+		else
+		{
+			Handle hEvt = m_gameQueue.front();
+			m_gameQueue.pop();
+			m_gameQueue.push(hEvt);
+		}
+	}
+
 	Handle Front(int type)
 	{
 		if (type == INPUT_EVENT)
@@ -53,6 +69,18 @@ public:
 		{
 			m_gameQueue.front().Free();
 			m_gameQueue.pop();
+		}
+	}
+
+	int Size(int type)
+	{
+		if (type == INPUT_EVENT)
+		{
+			return m_inputQueue.size();
+		}
+		else
+		{
+			return m_gameQueue.size();
 		}
 	}
 

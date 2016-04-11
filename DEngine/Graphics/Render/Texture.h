@@ -31,7 +31,7 @@ public:
 		UNORDER_ACCESS = 0x10,
 	};
 
-	Texture(int type, int mipsLevel = 1, const char* filename = nullptr);
+	Texture(int type, int mipsLevel = 1, const char* filename = nullptr, int mipLevel = 1);
 
 	Texture(int type, ID3D11Texture2D* texSrc);
 

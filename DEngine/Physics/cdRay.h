@@ -25,6 +25,9 @@ public:
 	Vector3 getStart() const { return m_Start; }
 	virtual void update(const float deltaTime, const Vector3& translate);
 
+	// Inherited via Body
+	virtual void Transform(Matrix4 & transform) override;
+
 private:
 	Vector3 m_Dir;
 	Vector3 m_Start;

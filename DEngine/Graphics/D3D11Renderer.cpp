@@ -7,6 +7,7 @@
 #include "Graphics\HUD\HUD.h"
 #include "Graphics\ParticleSystem\Emitter.h"
 #include "Graphics\ParticleSystem\ParticleSystem.h"
+#include "DebugRenderer\DEBUG_RENDERER.h"
 
 namespace DE
 {
@@ -24,9 +25,9 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	scData.BufferDesc.Height = 768;
 	scData.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scData.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scData.BufferDesc.RefreshRate.Numerator = 60;
+	scData.BufferDesc.RefreshRate.Numerator = 30;
 	scData.BufferDesc.RefreshRate.Denominator = 1;
-	scData.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	scData.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	scData.OutputWindow = hWnd;
 	scData.SampleDesc.Count = 1; // MSAA
 	scData.Windowed = TRUE;
@@ -51,7 +52,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBufferTex);
 	assert(hr == S_OK);
 	Handle hBackBufferTex(sizeof(Texture));
-	new (hBackBufferTex) Texture(Texture::RENDER_TARGET, pBackBufferTex);
+	new (hBackBufferTex) Texture(Texture::RENDER_TARGET | Texture::SHADER_RESOURCES, pBackBufferTex);
 	m_backbuffer = ((Texture*)hBackBufferTex.Raw());
 	Handle hdepthTex(sizeof(Texture));
 	new (hdepthTex) Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
@@ -110,7 +111,7 @@ void D3D11Renderer::Render()
 	m_GBuffer->Render();
 
 	// Post process effect
-//	m_PPE->Render();
+	m_PPE->Render();
 
 	// Particle system drawing
 	ParticleSystem::GetInstance()->Render();
@@ -119,7 +120,8 @@ void D3D11Renderer::Render()
 	HUD::getInstance()->Render();
 
 	// Debug drawing
-	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
+//	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
+	DEBUG_RENDERER::GetInstance()->Render();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
 	assert(hr == S_OK);

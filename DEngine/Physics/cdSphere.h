@@ -32,6 +32,9 @@ public:
 
 	virtual void update(const float deltaTime, const Vector3 & translate);
 
+	// Inherited via Body
+	virtual void Transform(Matrix4 & transform) override;
+
 private:
 	// the position of the center of the sphere
 	Vector3		m_Center;

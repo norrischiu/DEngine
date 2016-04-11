@@ -8,6 +8,7 @@ namespace DE
 {
 
 class MeshComponent;
+class MeshData;
 
 enum Primitives {
 	LINE = 2,
@@ -34,7 +35,7 @@ public:
 	MeshComponent* draw_pyramid(const Vector3& dimension, const int _slice_, const int stack);
 	MeshComponent* draw_prism(const Vector3& dimension, const int stack);
 	MeshComponent* draw_ellipsoid(const Vector3& dimension, const int _slice_, const int stack);
-	MeshComponent* draw_line(const Vector3& start_vertex, const Vector3& end_vertex);
+	MeshData* draw_line(const Vector3& start_vertex, const Vector3& end_vertex);
 
 	~Debug() {};
 };

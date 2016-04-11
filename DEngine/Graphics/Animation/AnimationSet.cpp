@@ -3,8 +3,8 @@
 namespace DE
 {
 
-AnimationSet::AnimationSet(const float currTime, const float duration, const float weight, const bool active, const bool looping) :
-	m_currTime(currTime), m_duration(duration), m_weight(weight), m_active(active), m_bLooping(looping)
+AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
+	m_fCurrTime(currTime), m_fDuration(duration), m_bActive(active), m_bLooping(looping)
 {
 
 }
@@ -41,36 +41,37 @@ void AnimationSet::reset()
 	for (auto itr : m_vAnimations)
 	{
 		itr->setCurrentKeyframe(1);
+		m_fCurrTime = 0.0f;
 	}
 }
 
 void AnimationSet::update(const float delta_time)
 {
-	if (m_active)
+	if (m_bActive)
 	{
-		m_currTime = m_currTime + delta_time;
+		m_fCurrTime = m_fCurrTime + delta_time;
 
 		for (auto itr : m_vAnimations)
 		{
 			itr->update(delta_time);
 		}
 
-		if (m_currTime > m_duration && !m_bLooping) {
-			m_active = false;
-			m_currTime = 0.0f;
+		if (m_fCurrTime > m_fDuration && !m_bLooping) {
+			m_bActive = false;
+			m_fCurrTime = 0.0f;
 		}
 	}
 }
 
 float AnimationSet::getCurrTime() const
 {
-	return m_currTime;
+	return m_fCurrTime;
 }
 
 void AnimationSet::setCurrTime(const float currTime)
 {
-	const int delta_time = currTime - m_currTime;
-	m_currTime = currTime;
+	const int delta_time = currTime - m_fCurrTime;
+	m_fCurrTime = currTime;
 
 	for (auto itr : m_vAnimations)
 	{
@@ -80,32 +81,22 @@ void AnimationSet::setCurrTime(const float currTime)
 
 float AnimationSet::getDuration() const
 {
-	return m_duration;
+	return m_fDuration;
 }
 
 void AnimationSet::setDuration(const float duration)
 {
-	m_duration = duration;
-}
-
-float AnimationSet::getWeighting() const
-{
-	return m_weight;
-}
-
-void AnimationSet::setWeighting(const float weight)
-{
-	m_weight = weight;
+	m_fDuration = duration;
 }
 
 bool AnimationSet::isActive() const
 {
-	return m_active;
+	return m_bActive;
 }
 
 void AnimationSet::setActive(const bool active)
 {
-	m_active = active;
+	m_bActive = active;
 }
 
 bool AnimationSet::isLooping()

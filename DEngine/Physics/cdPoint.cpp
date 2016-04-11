@@ -15,4 +15,9 @@ const Vector3 Point::getCenter()
 	return m_Point;
 }
 
+void Point::Transform(Matrix4 & transform)
+{
+	//TODO
+}
+
 };

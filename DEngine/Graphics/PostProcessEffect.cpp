@@ -57,7 +57,7 @@ PostProcessEffect::PostProcessEffect()
 	BlurVPass->SetBlendState(State::ALPHA_BS);
 	BlurVPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[0]);
+	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_backbuffer);
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[1]);
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
 	BlurHPass->AddTexture(m_texture);

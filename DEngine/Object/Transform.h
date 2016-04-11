@@ -37,15 +37,16 @@ public:
 			if (m_pJointParent)
 			{
 				scale.CreateScale(100.0f);
-				*m_mWorldTransform = *m_mLocalTransform * *m_pParent * *m_pJointParent * scale;
+				*m_mWorldTransform = *m_pParent * *m_pJointParent * scale * *m_mLocalTransform;
 			}
 			else
 			{
-				*m_mWorldTransform = *m_mLocalTransform * *m_pParent;
+				*m_mWorldTransform = *m_pParent * *m_mLocalTransform;
 			}
 		}
 	};
 
+	// After attachment, the game object's world transform is governed by local transform and parent only
 	void AttachTo(Transform* transform)
 	{
 		m_pParent = transform->m_mWorldTransform;
@@ -57,11 +58,9 @@ public:
 	}
 
 	// Pointer to the parent attached
-
-	//Transform*							m_pParent;
-
 	Matrix4*								m_pParent;
 
+	// Pointer to the skeleton joint attached
 	Matrix4*								m_pJointParent;
 
 	// Local to world transform

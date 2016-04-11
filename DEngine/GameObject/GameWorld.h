@@ -21,6 +21,15 @@ public:
 
 	GameObject* GetGameObjectAt(unsigned int index);
 
+	inline int GetGameObjectNum()
+	{
+		return m_GameObjectList.size();
+	}
+
+	bool RayCast(Vector3 start, Vector3 end);
+
+	bool ShapeCast();
+
 	// Destructor
 	~GameWorld()
 	{

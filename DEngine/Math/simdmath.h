@@ -568,6 +568,16 @@ public:
 		return *this;
 	}
 
+	// Return normalized vector
+	inline SIMDVector3 Normal()
+	{
+		SIMDVector3 result;
+		__m128 length = _mm_dp_ps(_data, _data, 0x77);
+		length = _mm_div_ps(_mm_set_ps1(1.0f), _mm_sqrt_ps(length)); // more accurate than _mm_rsqrt_ps
+		result._data = _mm_mul_ps(_data, length);
+		return result;
+	}
+
 	inline SIMDVector3& NormalizeAll()
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
@@ -615,7 +625,7 @@ public:
 
 	// Interpolate between two vectors with float t, return the resultant vector
 	// i.e. result = a * (1 - t) + b * t
-	inline friend SIMDVector3 Lerp(const SIMDVector3& a, const SIMDVector3& b, float t)
+	inline static SIMDVector3 Lerp(const SIMDVector3& a, const SIMDVector3& b, float t)
 	{
 		__m128 tempA = _mm_set_ps1(1.0f - t);
 		tempA = _mm_mul_ps(a._data, tempA);

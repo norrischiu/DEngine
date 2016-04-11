@@ -6,8 +6,6 @@
 #include "cdObject.h"
 #include "cdBody.h"
 
-class Body;
-
 namespace DE
 {
 

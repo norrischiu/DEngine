@@ -63,9 +63,9 @@ bool intersectDepthBuffer(float z, float minZ, float maxZ)
 		return true;
 }
 
-#define VSMaxDist 8.0f
-#define MaxStep 30.0f
-#define PixelStride 16.0f
+#define VSMaxDist 2.0f
+#define MaxStep 15.0f
+#define PixelStride 8.0f
 
 bool RayMarch(float3 originVS, float3 rayVS, inout float2 hitPixel, float jitter)
 {
@@ -165,7 +165,7 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 	float2 hitPixel = float2(0.0f, 0.0f);
 	float3 rayToPosVS = normalize(posVS.xyz);
 	float3 rayVS = normalize(reflect(rayToPosVS, normalVS));
-	float rDotV = saturate(dot(rayVS, rayToPosVS));
+	float rDotV = dot(rayVS, rayToPosVS);
 	float jitter = PixelStride > 1.0f ? float(int(IN.vPos.x + IN.vPos.y) & 1) * 0.5f : 0.0f;
 	bool hasIntersected = RayMarch(posVS.xyz, rayVS, hitPixel, jitter);
 	float3 rgb = shaderTexture[0].Load(int3(hitPixel, 0)).rgb;

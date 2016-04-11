@@ -12,7 +12,10 @@ namespace InputEventID
 	{
 		Mouse_Move_Event = 0x00,
 		Mouse_Left_Press_Event,
+		Mouse_Left_Hold_Event,
 		Mouse_Left_Release_Event,
+		Mouse_Right_Press_Event,
+		Mouse_Right_Release_Event,
 		Key_W_Press_Event,
 		Key_W_Release_Event,
 		Key_S_Press_Event,
@@ -50,6 +53,27 @@ struct Mouse_Left_Release_Event : public Event
 {
 	Mouse_Left_Release_Event()
 		:Event(InputEventID::Mouse_Left_Release_Event)
+	{};
+};
+
+struct Mouse_Left_Hold_Event : public Event
+{
+	Mouse_Left_Hold_Event()
+		:Event(InputEventID::Mouse_Left_Hold_Event)
+	{};
+};
+
+struct Mouse_Right_Press_Event : public Event
+{
+	Mouse_Right_Press_Event()
+		:Event(InputEventID::Mouse_Right_Press_Event)
+	{};
+};
+
+struct Mouse_Right_Release_Event : public Event
+{
+	Mouse_Right_Release_Event()
+		:Event(InputEventID::Mouse_Right_Release_Event)
 	{};
 };
 

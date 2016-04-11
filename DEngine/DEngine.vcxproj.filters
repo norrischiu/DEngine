@@ -617,6 +617,9 @@
     <FxCompile Include="Shaders\VS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_noBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\cbuffer.hlsli">

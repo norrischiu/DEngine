@@ -15,10 +15,10 @@ class PointLight : public GameObject
 
 public:
 
-	PointLight(Vector3 position, Vector4 color, float radius, float intensity)
+	PointLight(Vector3 position, Vector4 color, float radius, float intensity, bool bCastShadow = false)
 	{
 		DE::Handle hPointLight(sizeof(PointLightComponent));
-		new (hPointLight) PointLightComponent(position, color, radius, intensity);
+		new (hPointLight) PointLightComponent(position, color, radius, intensity, bCastShadow);
 		AddComponent((Component*)hPointLight.Raw());
 	}
 

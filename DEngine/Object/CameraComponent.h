@@ -27,10 +27,6 @@ public:
 
 	void SetAsRendererCamera();
 
-	//void rotateVLookAt(const CameraMove moveType, const float theta);
-	//void rotateVPos(const float thetaX, const float thetaY);
-	//void move(const CameraMove moveType, const float offset);
-
 	// Inherited via Component
 	void Update(float deltaTime) override;
 
@@ -54,12 +50,25 @@ public:
 		return m_vPos;
 	}
 
+	// World lookat
+	inline Vector3 GetWorldLookAt()
+	{
+		if (m_pOwner)
+		{
+			Vector3 lookat = m_vLookAt;
+			lookat.Transform(*m_pOwner->GetTransform());
+			return lookat;
+		}
+		return m_vLookAt;
+	}
+
 	inline Vector3 GetLocalPosition()
 	{
 		return m_vPos;
 	}
 
-	inline void SetPosition(Vector3 pos)
+
+	inline void SetLocalPosition(Vector3 pos)
 	{
 		m_vPos = pos;
 	}

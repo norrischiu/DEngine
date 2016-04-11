@@ -59,9 +59,9 @@ public:
 	}
 
 	// Handle state change events
-	virtual void HandleEvent(Handle hEvt) = 0;
+	virtual bool HandleEvent(Handle hEvt) = 0;
 
-	// Inherited via Component, define transition rule here
+	// Inherited via Component, handle transition rule only
 	virtual void Update(float deltaTime);
 
 	void ChangeStateTo(const char* stateName);

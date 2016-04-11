@@ -3,8 +3,7 @@
 #define CDBODY_H
 
 #include "Object\Component.h"
-#include "cdCollide.h"
-#include "Math/simdmath.h"
+#include "Math\simdmath.h"
 
 namespace DE
 {
@@ -41,9 +40,8 @@ public:
 	int getType() const { return m_Type; }
 	void setType(const int type) { m_Type = type; }
 	Vector3 getCenter() const;
-	virtual void computeAABB(const Matrix4& transform) {}
 
-	virtual void update(const float deltaTime, const Vector3& translate) {}
+	virtual void Transform(Matrix4& transform) = 0;
 
 	// Inherited via Component
 	void Update(float deltaTime) override;

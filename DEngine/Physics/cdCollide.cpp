@@ -5,6 +5,7 @@
 #include "cdAabb.h"
 #include "cdPoint.h"
 #include "cdRay.h"
+#include "GameObject\GameObject.h"
 #include <math.h>
 
 namespace DE
@@ -136,13 +137,16 @@ void Collide::sphereSphereCollide(const Body * sphere_1, const Body * sphere_2)
 
 void Collide::boxSphereCollide(const Body * box, const Body * sphere)
 {
-	AABB* m_box = (AABB*)box;
-	Sphere* m_sphere = (Sphere*)sphere;
+	AABB m_box(*(AABB*)box);
+	Sphere m_sphere(*(Sphere*)sphere);
 	float dMin = 0.0f;
 
-	Vector3 sCenter = m_sphere->getCenter();
-	Vector3 bMin = m_box->getMin();
-	Vector3 bMax = m_box->getMax();
+	m_box.Transform(*((AABB*)box)->GetOwner()->GetTransform());
+	m_sphere.Transform(*((AABB*)sphere)->GetOwner()->GetTransform());
+
+	Vector3 sCenter = m_sphere.getCenter();
+	Vector3 bMin = m_box.getMin();
+	Vector3 bMax = m_box.getMax();
 
 	if (sCenter.GetX() > bMin.GetX())
 		dMin += pow(sCenter.GetX() - bMin.GetX(), 2);
@@ -159,7 +163,7 @@ void Collide::boxSphereCollide(const Body * box, const Body * sphere)
 	else if (sCenter.GetY() > bMax.GetY())
 		dMin += pow(sCenter.GetZ() - bMax.GetZ(), 2);
 
-	if (dMin <= pow(m_sphere->getRadius(), 2))
+	if (dMin <= pow(m_sphere.getRadius(), 2))
 	{
 		setCollide(true);
 		setDistance(1);
@@ -236,25 +240,26 @@ void Collide::raySphereCollide(const Body * ray_, const Body * sphere_)
 
 void Collide::rayBoxCollide(const Body * p_Ray, const Body * p_Box)
 {
-
 	float tNear, tFar, t1, t2;
 	bool collideResult = true;
-	Ray* ray = (Ray*)p_Ray;
-	AABB* aabb = (AABB*)p_Box;
+	AABB aabb(*(AABB*)p_Box);
+	Ray ray(*(Ray*)p_Ray);
+
+	aabb.Transform(*((AABB*)p_Box)->GetOwner()->GetTransform());
 
 	float raydir[3], rayOrigin[3], min[3], max[3];
-	raydir[0] = ray->getDir().GetX();
-	raydir[1] = ray->getDir().GetY();
-	raydir[2] = ray->getDir().GetZ();
-	rayOrigin[0] = ray->getStart().GetX();
-	rayOrigin[1] = ray->getStart().GetY();
-	rayOrigin[2] = ray->getStart().GetZ();
-	min[0] = aabb->getMin().GetX();
-	min[1] = aabb->getMin().GetY();
-	min[2] = aabb->getMin().GetZ();
-	max[0] = aabb->getMax().GetX();
-	max[1] = aabb->getMax().GetY();
-	max[2] = aabb->getMax().GetZ();
+	raydir[0] = ray.getDir().GetX();
+	raydir[1] = ray.getDir().GetY();
+	raydir[2] = ray.getDir().GetZ();
+	rayOrigin[0] = ray.getStart().GetX();
+	rayOrigin[1] = ray.getStart().GetY();
+	rayOrigin[2] = ray.getStart().GetZ();
+	min[0] = aabb.getMin().GetX();
+	min[1] = aabb.getMin().GetY();
+	min[2] = aabb.getMin().GetZ();
+	max[0] = aabb.getMax().GetX();
+	max[1] = aabb.getMax().GetY();
+	max[2] = aabb.getMax().GetZ();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -280,7 +285,7 @@ void Collide::rayBoxCollide(const Body * p_Ray, const Body * p_Box)
 	}
 
 	setCollide(collideResult);
-	setDistance(0.0f);
+	setDistance(tNear);
 
 }
 

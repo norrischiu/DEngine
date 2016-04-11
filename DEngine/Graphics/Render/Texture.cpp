@@ -8,7 +8,7 @@
 namespace DE
 {
 
-Texture::Texture(int type, int sampleCount, const char * filename)
+Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	: m_type(type)
 {
 	if (type & SHADER_RESOURCES && filename != nullptr)
@@ -84,7 +84,7 @@ Texture::Texture(int type, int sampleCount, const char * filename)
 		shaderResourceViewDesc.Format = textureDesc.Format;
 		shaderResourceViewDesc.ViewDimension = (sampleCount > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D);
 		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+		shaderResourceViewDesc.Texture2D.MipLevels = mipLevel;
 
 		if (type & DEPTH_STENCIL)
 		{
@@ -110,6 +110,11 @@ Texture::Texture(int type, ID3D11Texture2D* texSrc)
 		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateRenderTargetView(texSrc, NULL, &m_pRTV);
 		assert(hr == S_OK);
 	}
+	if (type & SHADER_RESOURCES)
+	{
+		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateShaderResourceView(texSrc, NULL, &m_pSRV);
+		assert(hr == S_OK);
+	}
 	if (type & DEPTH_STENCIL_READ_ONLY)
 	{
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -121,6 +126,7 @@ Texture::Texture(int type, ID3D11Texture2D* texSrc)
 		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateDepthStencilView(texSrc, &depthStencilViewDesc, &m_pDSV);
 		assert(hr == S_OK);
 	}
+	m_pSampler = (ID3D11SamplerState*)State::GetState(State::NULL_STATE);
 }
 
 };

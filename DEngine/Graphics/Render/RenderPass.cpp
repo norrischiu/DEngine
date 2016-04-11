@@ -34,7 +34,7 @@ void RenderPass::BindToRenderer()
 	for (int i = 0; i < m_vTextureSRVs.size(); i++)
 	{
 		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_vSamplerState[i]);
+		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_vSamplerState[0]);
 		//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
 		//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetSamplers(0, 1, &m_vSamplerState[i]);
 		if (m_pDS)

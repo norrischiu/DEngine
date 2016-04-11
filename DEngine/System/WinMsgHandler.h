@@ -25,6 +25,14 @@ struct WinMsgHandler
 		{
 			Mouse::SetButton(MK_LBUTTON, false);
 		}
+		else if (msg == WM_RBUTTONDOWN)
+		{
+			Mouse::SetButton(MK_RBUTTON, true);
+		}
+		else if (msg == WM_RBUTTONUP)
+		{
+			Mouse::SetButton(MK_RBUTTON, false);
+		}
 		//else if (msg >= WM_KEYFIRST && msg <= WM_KEYLAST)
 		else if (msg == WM_KEYDOWN)
 		{
