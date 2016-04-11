@@ -16,7 +16,7 @@ public:
 	void Update(float deltaTime) override;
 
 	// Inherited via AnimationStateMachine
-	void HandleEvent(DE::Handle hEvt) override;
+	bool HandleEvent(DE::Handle hEvt) override;
 };
 
 #endif // !PLAYER_ASM_H_

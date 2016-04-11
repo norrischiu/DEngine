@@ -43,14 +43,30 @@ void GameLoop::Construct()
 
 	Player* player = new Player();
 	
-	for (int i = 0; i < 50/*381*/; ++i)
+	for (int i = 0; i < 0/*381*/; ++i)
 	{
 		std::string meshName = "church/church" + std::to_string(i);
 		DE::GameObject* levelMesh = new DE::GameObject;
-		DE::Handle hLevelMesh(sizeof(DE::MeshComponent));
-		new (hLevelMesh) DE::MeshComponent(meshName.c_str());
-		levelMesh->AddComponent((DE::Component*) hLevelMesh.Raw());
+
+		DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
+		new (hMeshComponent) DE::MeshComponent(meshName.c_str());
+		levelMesh->AddComponent((DE::Component*) hMeshComponent.Raw());
+
+		DE::Handle hAABB(sizeof(DE::AABB));
+		new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
+		((DE::AABB*) hAABB.Raw())->setType(DE::typeAABB);
+		levelMesh->AddComponent((DE::Component*) hAABB.Raw());
 	}
+
+/*	DE::GameObject* dragon = new DE::GameObject();
+	DE::Handle hMesh(sizeof(DE::MeshComponent));
+	new (hMesh) DE::MeshComponent("dragon0");
+	dragon->AddComponent((DE::Component*)hMesh.Raw());*/
+	
+	DE::PointLight* light = new DE::PointLight(DE::Vector3(0.0f, 10.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 10.0f, 5.0f);
+	DE::Handle hCamera(sizeof(DE::CameraComponent));
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	light->AddComponent((DE::Component*)hCamera.Raw());
 }
 
 void GameLoop::Update(float deltaTime)

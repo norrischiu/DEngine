@@ -2,6 +2,7 @@
 
 // Game include
 #include "PlayerASM.h"
+#include "PlayerMC.h"
 #include "Player.h"
 #include "Event\GameEvent.h"
 
@@ -20,28 +21,47 @@ PlayerASM::PlayerASM(DE::AnimationController * animController)
 	AddState("IDLE", "idle");
 	SetAsDefaultState("IDLE");
 	AddState("ATTACK", "attack1");
+	AddState("ATTACK2", "attack2");
+	AddState("ATTACK3", "attack3");
 
-	DE::Handle hBTree(sizeof(DE::BlendTree));
-	new (hBTree) DE::BlendTree();
-	((DE::BlendTree*)hBTree.Raw())->m_eBlendType = DE::BlendTree::eBlendType::ONE_D;
-	((DE::BlendTree*)hBTree.Raw())->m_vClipnames.push_back("walk");
-	((DE::BlendTree*)hBTree.Raw())->m_vWeightings.push_back(0);
-	((DE::BlendTree*)hBTree.Raw())->m_vClipnames.push_back("strafe_right");
-	((DE::BlendTree*)hBTree.Raw())->m_vWeightings.push_back(1);
-	((DE::BlendTree*)hBTree.Raw())->m_vClipnames.push_back("walk_back");
-	((DE::BlendTree*)hBTree.Raw())->m_vWeightings.push_back(2);
-	((DE::BlendTree*)hBTree.Raw())->m_vClipnames.push_back("strafe_left");
-	((DE::BlendTree*)hBTree.Raw())->m_vWeightings.push_back(3);
-	((DE::BlendTree*)hBTree.Raw())->m_eBlendType = DE::BlendTree::eBlendType::ONE_D;
-	((DE::BlendTree*)hBTree.Raw())->m_fBlendFactor = -1.0f;
-	AddState("WALK", (DE::BlendTree*) hBTree.Raw());
+	DE::Handle hWalkBTree(sizeof(DE::BlendTree));
+	new (hWalkBTree) DE::BlendTree();
+	((DE::BlendTree*)hWalkBTree.Raw())->m_eBlendType = DE::BlendTree::eBlendType::ONE_D;
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vClipnames.push_back("walk");
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vWeightings.push_back(0);
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vClipnames.push_back("strafe_right");
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vWeightings.push_back(1);
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vClipnames.push_back("walk_back");
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vWeightings.push_back(2);
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vClipnames.push_back("strafe_left");
+	((DE::BlendTree*)hWalkBTree.Raw())->m_vWeightings.push_back(3);
+	((DE::BlendTree*)hWalkBTree.Raw())->m_fBlendFactor = -1.0f;
+	AddState("WALK", (DE::BlendTree*) hWalkBTree.Raw());
 
-	AddTransistion("IDLE", "WALK", 1, 0.3f);
-	AddTransistion("WALK", "IDLE", 1, 0.3f);
+	DE::Handle hDodgeBTree(sizeof(DE::BlendTree));
+	new (hDodgeBTree) DE::BlendTree();
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_eBlendType = DE::BlendTree::eBlendType::ONE_D;
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_vClipnames.push_back("dodge_left");
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_vWeightings.push_back(0);
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_vClipnames.push_back("dodge_right");
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_vWeightings.push_back(1);
+	((DE::BlendTree*)hDodgeBTree.Raw())->m_fBlendFactor = -1.0f;
+	AddState("DODGE", (DE::BlendTree*) hDodgeBTree.Raw());
+
+	AddTransistion("IDLE", "WALK", 1, 0.2f);
+	AddTransistion("WALK", "IDLE", 1, 0.2f);
 	AddTransistion("IDLE", "ATTACK", 1, 0.1f);
 	AddTransistion("ATTACK", "IDLE", 1, 0.1f);
 	AddTransistion("WALK", "ATTACK", 1, 0.1f);
 	AddTransistion("ATTACK", "WALK", 1, 0.1f);
+	AddTransistion("WALK", "DODGE", 1, 0.1f);
+	AddTransistion("DODGE", "WALK", 1, 0.1f);
+	AddTransistion("DODGE", "IDLE", 1, 0.2f);
+	AddTransistion("IDLE", "DODGE", 1, 0.2f);
+	AddTransistion("ATTACK", "ATTACK2", 1, 0.1f);
+	AddTransistion("ATTACK2", "IDLE", 1, 0.2f);
+	AddTransistion("ATTACK2", "ATTACK3", 1, 0.1f);
+	AddTransistion("ATTACK3", "IDLE", 1, 0.3f);
 }
 
 void PlayerASM::Update(float deltaTime)
@@ -53,15 +73,22 @@ void PlayerASM::Update(float deltaTime)
 
 	DE::AnimationStateMachine::Update(deltaTime);
 
-	while (!DE::EventQueue::GetInstance()->Empty(DE::GAME_EVENT))
+	int size = DE::EventQueue::GetInstance()->Size(DE::GAME_EVENT);
+	for (int i = 0; i < size; ++i)
 	{
 		DE::Handle hEvt = DE::EventQueue::GetInstance()->Front(DE::GAME_EVENT);
-		HandleEvent(hEvt);
-		DE::EventQueue::GetInstance()->Pop(DE::GAME_EVENT);
+		if (HandleEvent(hEvt))
+		{
+			DE::EventQueue::GetInstance()->Pop(DE::GAME_EVENT);
+		}
+		else
+		{
+			DE::EventQueue::GetInstance()->FrontToBack(DE::GAME_EVENT);
+		}
 	}
 }
 
-void PlayerASM::HandleEvent(DE::Handle hEvt)
+bool PlayerASM::HandleEvent(DE::Handle hEvt)
 {
 	if (!m_bInTrasition)
 	{
@@ -69,10 +96,10 @@ void PlayerASM::HandleEvent(DE::Handle hEvt)
 		float forwardDot, rightDot;
 		switch (pEvt->m_ID)
 		{
-		case GameEventID::Player_Walk_START_Event:
+		case GameEventID::Player_Walk_PLAYING_Event:
 			ChangeStateTo("WALK");
-			forwardDot = m_pOwner->GetTransform()->GetForward().Dot(((Player_Walk_START_Event*)pEvt)->m_vDir);
-			rightDot = m_pOwner->GetTransform()->GetRight().Dot(((Player_Walk_START_Event*)pEvt)->m_vDir);
+			forwardDot = m_pOwner->GetTransform()->GetForward().Dot(((Player_Walk_PLAYING_Event*)pEvt)->m_vDir);
+			rightDot = m_pOwner->GetTransform()->GetRight().Dot(((Player_Walk_PLAYING_Event*)pEvt)->m_vDir);
 			if (forwardDot >= 0.0f)
 			{
 				if (rightDot >= 0.0f)
@@ -123,17 +150,52 @@ void PlayerASM::HandleEvent(DE::Handle hEvt)
 					}
 				}
 			}
-			break;
+			return true;
 		case GameEventID::Player_Walk_END_Event:
 			ChangeStateTo("IDLE");
-			break;
+			return true;
 		case GameEventID::Player_Attack_1_START_Event:
 			ChangeStateTo("ATTACK");
-			break;
+			return true;
+		case GameEventID::Player_Attack_2_START_Event:
+			ChangeStateTo("ATTACK2");
+			return true;
+		case GameEventID::Player_Attack_3_START_Event:
+			ChangeStateTo("ATTACK3");
+			return true;
 		case GameEventID::Player_Attack_1_END_Event:
-			((Player*)m_pOwner)->SetState(Player::NOT_ATTACKING);
+			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[0] = false;
+			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
 			ChangeStateTo(m_pPrevState->m_sName);
-			break;
+			return true;
+		case GameEventID::Player_Attack_2_END_Event:
+			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[1] = false;
+			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
+			ChangeStateTo("IDLE");
+			return true;
+		case GameEventID::Player_Attack_3_END_Event:
+			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[2] = false;
+			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
+			ChangeStateTo("IDLE");
+			return true;
+		case GameEventID::Player_Dodge_START_Event:
+			ChangeStateTo("DODGE");
+			if (((Player_Dodge_START_Event*)pEvt)->m_vDir.GetX() > 0)
+			{
+				m_pCurrState->m_BlendTree->m_fBlendFactor = 1.0f;
+			}
+			else
+			{
+				m_pCurrState->m_BlendTree->m_fBlendFactor = 0.0f;
+			}
+			return true;
+		case GameEventID::Player_Dodge_END_Event:
+			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+			ChangeStateTo(m_pPrevState->m_sName);
+			return true;
 		case DE::EngineEventID::Animation_END_Event:
 			if (strcmp(m_pCurrState->m_sName, "ATTACK") == 0)
 			{
@@ -141,7 +203,26 @@ void PlayerASM::HandleEvent(DE::Handle hEvt)
 				new (hEvt) Player_Attack_1_END_Event;
 				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
 			}
-			break;
+			else if (strcmp(m_pCurrState->m_sName, "ATTACK2") == 0)
+			{
+				DE::Handle hEvt(sizeof(Player_Attack_2_END_Event));
+				new (hEvt) Player_Attack_2_END_Event;
+				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			}
+			else if (strcmp(m_pCurrState->m_sName, "ATTACK3") == 0)
+			{
+				DE::Handle hEvt(sizeof(Player_Attack_3_END_Event));
+				new (hEvt) Player_Attack_3_END_Event;
+				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			}
+			else if (strcmp(m_pCurrState->m_sName, "DODGE") == 0)
+			{
+				DE::Handle hEvt(sizeof(Player_Dodge_END_Event));
+				new (hEvt) Player_Dodge_END_Event;
+				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			}
+			return true;
 		}
 	}
+	return false;
 }
