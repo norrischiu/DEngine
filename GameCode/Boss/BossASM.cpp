@@ -23,6 +23,8 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddTransistion("PUNCH", "WALK", 1, 0.5f);
 	AddTransistion("WALK", "JUMP_ATTACK", 1, 0.5f);
 	AddTransistion("JUMP_ATTACK", "WALK", 1, 0.5f);
+	AddTransistion("JUMP_ATTACK", "PUNCH", 1, 0.5f);
+	AddTransistion("PUNCH", "JUMP_ATTACK", 1, 0.5f);
 }
 
 void BossASM::Update(float deltaTime)
