@@ -7,6 +7,7 @@
 
 // Engine include
 #include "DEngine\Event\EventQueue.h"
+#include "DEngine\Math\MathHelper.h"
 
 
 void AIBehavior::HandleMovement()
@@ -16,34 +17,37 @@ void AIBehavior::HandleMovement()
 	// temporary using
 	float long_attack_dist = 5.0f;
 	float short_attack_dist = 1.0f;
-	float speed = 0.8f;
+	float speed = 0.5f;
 	float offset = 0.00001f;
 	DE::Vector3 bossPos = ((Boss*)m_pOwner)->GetPosition();
 	DE::Vector3 direction = playerPos-bossPos;
 	if (!direction.iszero())
 	{
 		direction.Normalize();
-		float dot = Cross(m_pOwner->GetTransform()->GetForward().Normal(), direction).Length();
-		if (dot > 0.1)
-		{
-			float theta = asinf(dot);
-			static wchar_t s[64];
-			swprintf(s, 64, L"Unbind: %f\n", dot);
-			OutputDebugStringW(s);
+		DE::Vector3 cross = Cross(m_pOwner->GetTransform()->GetForward().Normal(), direction);
+		float dot = cross.Dot(DE::Vector3::UnitY);
+			float theta = asinf(cross.Length());
+			if (dot < 0.0f)
+			{
+				theta = 2 * PI - theta;
+			}
+			//static wchar_t s[64];
+			//swprintf(s, 64, L"Unbind: %f\n", cross);
+			//OutputDebugStringW(s);
 
-			DE::Quaternion quat(DE::Vector3(0, 1, 0), 0.1);
+			DE::Quaternion quat(DE::Vector3(0, 1, 0), theta);
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
-		}
+		
 
 		
 		
 
 	}
 //	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos + DE::Vector3(0, 2, 0), bossPos + direction * 2.0f + DE::Vector3(0, 2, 0));
-//	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
 
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, bossPos + m_pOwner->GetTransform()->GetForward());
-	//Move(direction*speed*m_fDeltaTime);
+	Move(direction*speed*m_fDeltaTime);
 	/*
 	if (distance > long_attack_dist)
 	{	

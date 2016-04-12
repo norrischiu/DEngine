@@ -7,6 +7,9 @@
     <Filter Include="Event">
       <UniqueIdentifier>{a35c1f70-406e-4497-b3c5-73b9eb7adc3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Boss">
+      <UniqueIdentifier>{a7e829ff-f99a-46e7-9397-706ee0687d8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -20,6 +23,15 @@
       <Filter>MainPlayer</Filter>
     </ClCompile>
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="Boss\Boss.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss\AIBehavior.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss\BossASM.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -37,6 +49,15 @@
     </ClInclude>
     <ClInclude Include="MainPlayer\ThirdPersonCamera.h">
       <Filter>MainPlayer</Filter>
+	</ClInclude>
+    <ClInclude Include="Boss\Boss.h">
+      <Filter>Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss\AIBehavior.h">
+      <Filter>Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss\BossASM.h">
+      <Filter>Boss</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
