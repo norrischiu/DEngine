@@ -3,6 +3,7 @@
 #include "DEngine\Event\EngineEvent.h"
 #include "DEngine\Event\EventQueue.h"
 
+
 BossASM::BossASM(DE::AnimationController * animController)
 	: DE::AnimationStateMachine(animController)
 {
@@ -58,6 +59,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		ChangeStateTo("JUMP_ATTACK");
 		return true;
 	case GameEventID::Boss_Jump_Attack_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::WAITING);
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Punch_START_Event:

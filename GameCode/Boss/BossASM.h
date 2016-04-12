@@ -7,6 +7,9 @@
 #include "DEngine\Graphics\Animation\AnimationStateMachine.h"
 #include "DEngine\Memory\Handle.h"
 
+// Game include
+#include "Boss.h"
+
 class BossASM : public DE::AnimationStateMachine
 {
 
@@ -19,6 +22,8 @@ public:
 
 	// Inherited via AnimationStateMachine
 	bool HandleEvent(DE::Handle hEvt) override;
+
+	float time;
 };
 
 #endif // !BOSS_ASM_H_

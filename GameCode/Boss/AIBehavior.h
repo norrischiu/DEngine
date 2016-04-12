@@ -14,16 +14,19 @@ public:
 		: DE::Component()
 	{
 		m_ID = DE::ComponentID::CUSTOM_COMPONENT_1;
+		time = 0.0f;
 	};
 
 private:
 
-	void HandleMovement();
+	void BossBehavior();
 
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 
 	void Move(DE::Vector3 move);
+
+	float time;
 };
 
 #endif // !AIBEHAVIOR_H_

@@ -17,6 +17,11 @@ class Boss : public DE::GameObject
 
 public:
 
+	enum eState
+	{
+		WAITING, PUNCHING, JUMPATTACKING
+	};
+
 	Boss(Player* player);
 
 	// Inherited via GameObject
@@ -35,11 +40,23 @@ public:
 		m_Player = player;
 	}
 
+	void SetState(eState state) 
+	{
+		m_eState = state;
+	}
+
+	eState GetState()
+	{
+		return m_eState;
+	}
+
 private:
 
 	float							m_fHP;
 
 	Player*							m_Player;
+
+	eState							m_eState;
 };
 
 
