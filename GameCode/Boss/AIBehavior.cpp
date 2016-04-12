@@ -14,9 +14,8 @@ void AIBehavior::BossBehavior()
 {
 	DE::Vector3 playerPos = ((Boss*)m_pOwner)->GetPlayerPostion();
 	float distance = (playerPos - ((Boss*)m_pOwner)->GetTransform()->GetPosition()).Length();
-	// temporary using
 	float short_attack_dist = 1.0f;
-	float speed = 0.7f;
+	float speed = 0.8f;
 	float idleTime = 1.7f;
 	DE::Vector3 bossPos = ((Boss*)m_pOwner)->GetPosition();
 	DE::Vector3 direction = playerPos-bossPos;
