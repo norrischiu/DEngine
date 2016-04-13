@@ -183,6 +183,7 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
+    <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp" />
     <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
     <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
+    <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h" />
     <ClInclude Include="Graphics\Terrain\Terrain.h" />
     <ClInclude Include="Graphics\Terrain\TerrainBuilder.h" />
     <ClInclude Include="Graphics\TextureManager.h" />

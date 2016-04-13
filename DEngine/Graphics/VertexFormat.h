@@ -56,6 +56,13 @@ struct Vertex1P1N
 	Vertex1P1N(const Vector3& pos, const Vector3& norm) : m_pos(pos), m_norm(norm) { }
 };
 
+struct Vertex1P1N1D
+{
+	Vector3								m_pos;
+	Vector3								m_norm;		// 16-byte offset
+	Vector3								m_diffuse;	// 32-byte offset
+};
+
 // Vertex: Position, normal, texture coordinate
 struct Vertex1P1N1UV
 {

@@ -182,7 +182,7 @@ bool FlowField::isValid(const Vector3& position)
 	return (
 		(x >= 0 && x <= m_initInfo.FlowFieldWidth - 1) &&
 		(z >= 0 && z <= m_initInfo.FlowFieldDepth - 1)
-		);
+	);
 }
 
 bool FlowField::isPositionMovable(const Vector3& position)
