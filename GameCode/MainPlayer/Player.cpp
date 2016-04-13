@@ -84,11 +84,6 @@ Player::Player()
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
-
-
-	DE::Matrix4 scale;
-	scale.CreateScale(300.0f);
-	TransformBy(scale);
 }
 
 void Player::Update(float deltaTime)
