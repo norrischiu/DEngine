@@ -198,6 +198,11 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 			Vector3 ul(i* m_initInfo.CellSpacing, m_HeightMap[index_ul] * m_initInfo.CellSpacing, (j + 8)* m_initInfo.CellSpacing);
 			Vector3 ur((i + 8)* m_initInfo.CellSpacing, m_HeightMap[index_ur] * m_initInfo.CellSpacing, (j + 8)* m_initInfo.CellSpacing);
 
+			bl.Transform(translate);
+			br.Transform(translate);
+			ul.Transform(translate);
+			ur.Transform(translate);
+
 			const int patch_id = j + (i / m_initInfo.CellsPerPatch);
 			// bottom left
 			{

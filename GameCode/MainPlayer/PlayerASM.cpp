@@ -13,34 +13,25 @@
 PlayerASM::PlayerASM(DE::AnimationController * animController)
 	: DE::AnimationStateMachine(animController)
 {
-	AddState("IDLE", "idle");
-	SetAsDefaultState("IDLE");
 	AddState("WALK", "walk");
-	AddState("ATTACK", "attack1");
-
-	AddTransistion("IDLE", "WALK", 1, 0.5f);
-	AddTransistion("WALK", "IDLE", 1, 0.5f);
-	AddTransistion("IDLE", "ATTACK", 1, 0.5f);
-	AddTransistion("ATTACK", "IDLE", 1, 1.0f);
-	AddTransistion("WALK", "ATTACK", 1, 0.5f);
-	AddTransistion("ATTACK", "WALK", 1, 0.5f);
+	SetAsDefaultState("WALK");
 }
 
 void PlayerASM::Update(float deltaTime)
 {
 	DE::AnimationStateMachine::Update(deltaTime);
 
-	while (!DE::EventQueue::GetInstance()->Empty(DE::GAME_EVENT))
+	/*while (!DE::EventQueue::GetInstance()->Empty(DE::GAME_EVENT))
 	{
 		DE::Handle hEvt = DE::EventQueue::GetInstance()->Front(DE::GAME_EVENT);
 		HandleEvent(hEvt);
 		DE::EventQueue::GetInstance()->Pop(DE::GAME_EVENT);
-	}
+	}*/
 }
 
 void PlayerASM::HandleEvent(DE::Handle hEvt)
 {
-	DE::Event* pEvt = (DE::Event*) hEvt.Raw();
+	/*DE::Event* pEvt = (DE::Event*) hEvt.Raw();
 	switch (pEvt->m_ID)
 	{
 		case GameEventID::Player_Walk_START_Event:
@@ -63,5 +54,5 @@ void PlayerASM::HandleEvent(DE::Handle hEvt)
 				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
 			}
 			break;
-	}
+	}*/
 }

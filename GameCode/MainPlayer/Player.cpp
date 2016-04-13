@@ -48,7 +48,7 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_attack1");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
-	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->setActive(true);
 
 	DE::Handle hASM(sizeof(PlayerASM));
 	new (hASM) PlayerASM((DE::AnimationController*) hAnimController.Raw());
@@ -60,9 +60,11 @@ Player::Player()
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
+	/*
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 3.0f, -8.0f), DE::Vector3(0.0f, 2.5f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	AddComponent((DE::Component*) hCamera.Raw());
+	*/
 
 	// Weapon
 	m_Weapon = new DE::GameObject();
@@ -82,6 +84,11 @@ Player::Player()
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
+
+
+	DE::Matrix4 scale;
+	scale.CreateScale(300.0f);
+	TransformBy(scale);
 }
 
 void Player::Update(float deltaTime)

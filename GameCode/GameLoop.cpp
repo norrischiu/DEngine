@@ -36,21 +36,18 @@ void GameLoop::Construct()
 	DE::GameObject* pointlight = new DE::GameObject;
 	pointlight->SetPosition(DE::Vector4(0.0, 0.0, 0.0));
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 400, 50);
+	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 420, 60);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
-
-	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0, 0.0, 10.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
-	cam->SetAsRendererCamera();
-	cam->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f) * 30.0f + 30.0f, 0.0f));
-	DE::Handle hMC(sizeof(DE::MovementController));
-	new (hMC) DE::MovementController(100.0f);
-	cam->AddComponent((DE::Component*) hMC.Raw());
 
 	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
-	//Player* player = new Player();
-	//player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
+	Player* player = new Player();
+	player->SetPosition(DE::Vector3(8.0f, terrain->GetHeight(8.0f, 5.0f) * 30.0f, 5.0f));
+	DE::Handle hCamera(sizeof(DE::CameraComponent));
+	new (hCamera) DE::CameraComponent(DE::Vector3(8.0f, terrain->GetHeight(8.0f, 10.0f) * 30.0f + 10.0f, 10.0f), player->GetPosition(), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	player->AddComponent((DE::Component*) hCamera.Raw());
+	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 
 	//	std::vector<GameObject*> obstacles;
 	//	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(5.0f, 0.0f, 5.0f));
