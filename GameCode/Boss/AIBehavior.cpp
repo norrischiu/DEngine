@@ -12,13 +12,13 @@
 
 void AIBehavior::BossBehavior()
 {
-	DE::Vector3 playerPos = ((Boss*)m_pOwner)->GetPlayerPostion();
-	float distance = (playerPos - ((Boss*)m_pOwner)->GetTransform()->GetPosition()).Length();
-	float short_attack_dist = 2.8f;
-	float long_attack_dist = 3.0f;
+	DE::Vector3 playerPos = DE::Vector3(((Boss*)m_pOwner)->GetPlayerPostion().GetX(), 0.0f, ((Boss*)m_pOwner)->GetPlayerPostion().GetZ());
+	DE::Vector3	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
+	float distance = (playerPos - bossPos).Length();
+	float short_attack_dist = 3.1f;
+	float long_attack_dist = 5.0f;
 	float speed = 0.8f;
-	float idleTime = 1.7f;
-	DE::Vector3 bossPos = ((Boss*)m_pOwner)->GetPosition();
+	float idleTime = 2.0f;
 	DE::Vector3 direction = playerPos-bossPos;
 	float playerMoveDir = distance - preDist;
 	if (!direction.iszero())
@@ -36,22 +36,19 @@ void AIBehavior::BossBehavior()
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
 
 	}
-//	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos + DE::Vector3(0, 2, 0), bossPos + direction * 2.0f + DE::Vector3(0, 2, 0));
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
-
-//	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, bossPos + m_pOwner->GetTransform()->GetForward());
 	
-	if (!direction.iszero() && distance > 1.0f)// && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
+	if (!direction.iszero() && distance > 1.0f)
 	{
-		if(((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING)
-			Move(direction*speed*m_fDeltaTime*1.5f);
-		else
+
+		if (((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING)
+		{	
+			Move(direction*speed*m_fDeltaTime*1.8f);
+		}
+			
+		else if(((Boss*)m_pOwner)->GetState() != Boss::IDLE && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING)
 			Move(direction*speed*m_fDeltaTime);
 	}
-	
-	static wchar_t s[64];
-	swprintf(s, 64, L"Distance: %f\n", distance);
-	OutputDebugStringW(s);
 
 	
 	if (distance > short_attack_dist && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
@@ -75,7 +72,7 @@ void AIBehavior::BossBehavior()
 		new (h) Boss_Walk_START_Event;
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
-	else if (distance < 1.2)
+	else if (distance < 1.2 && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING && time > idleTime)
 	{
 		((Boss*)m_pOwner)->SetState(Boss::PUNCHING);
 		DE::Handle h(sizeof(Boss_Punch_START_Event));
@@ -92,11 +89,8 @@ void AIBehavior::Update(float deltaTime)
 	BossBehavior();
 
 	// update the time
-	if (time < 1.8f)
-	{
-		time += deltaTime;
-	}
-	else
+	time += deltaTime;
+	if (time > 2.1f)
 	{
 		time = 0.0f;
 	}

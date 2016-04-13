@@ -55,33 +55,36 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		ChangeStateTo("WALK");
 		return true;
 	case GameEventID::Boss_Walk_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Jump_Attack_START_Event:
 		ChangeStateTo("JUMP_ATTACK");
 		return true;
 	case GameEventID::Boss_Jump_Attack_END_Event:
-		((Boss*)m_pOwner)->SetState(Boss::WAITING);
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Punch_START_Event:
+		((Boss*)m_pOwner)->SetState(Boss::PUNCHING);
 		ChangeStateTo("PUNCH");
 		return true;
 	case GameEventID::Boss_Punch_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;
 	case DE::EngineEventID::Animation_END_Event:
 		if (strcmp(m_pCurrState->m_sName, "PUNCH") == 0)
 		{
-			DE::Handle hEvt(sizeof(Boss_Punch_END_Event));
-			new (hEvt) Boss_Punch_END_Event;
-			DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			((Boss*)m_pOwner)->SetState(Boss::IDLE);
+			ChangeStateTo("IDLE");
+			return true;
 		}
 		else if (strcmp(m_pCurrState->m_sName, "JUMP_ATTACK") == 0)
 		{
-			DE::Handle hEvt(sizeof(Boss_Jump_Attack_END_Event));
-			new (hEvt) Boss_Jump_Attack_END_Event;
-			DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+			((Boss*)m_pOwner)->SetState(Boss::IDLE);
+			ChangeStateTo("IDLE");
+			return true;
 		}
 		return true;
 	default:

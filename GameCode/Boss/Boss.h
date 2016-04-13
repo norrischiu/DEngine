@@ -19,7 +19,7 @@ public:
 
 	enum eState
 	{
-		WAITING, PUNCHING, JUMPATTACKING
+		WAITING, PUNCHING, JUMPATTACKING, IDLE
 	};
 
 	Boss(Player* player);
