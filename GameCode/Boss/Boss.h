@@ -62,6 +62,10 @@ private:
 	Player*							m_Player;
 
 	eState							m_eState;
+
+	DE::GameObject*					m_pLeftHand;
+
+	DE::GameObject*					m_pRightHand;
 };
 
 
