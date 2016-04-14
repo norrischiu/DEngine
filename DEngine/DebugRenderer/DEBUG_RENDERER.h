@@ -92,7 +92,6 @@ public:
 
 	void Render()
 	{
-		VSPerObjectCBuffer m_VSCBuffer;
 		m_VSCBuffer.BindToRenderer();
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 
@@ -132,6 +131,9 @@ private:
 
 	// Rende pass for 3D debug mesh
 	RenderPass									m_3DRenderPass;
+
+	// Constant buffer
+	VSPerObjectCBuffer							m_VSCBuffer;
 };
 
 };

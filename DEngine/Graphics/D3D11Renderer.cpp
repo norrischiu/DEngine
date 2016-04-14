@@ -117,7 +117,7 @@ void D3D11Renderer::Render()
 	ParticleSystem::GetInstance()->Render();
 
 	// HUD drawing
-	HUD::getInstance()->Render();
+//	HUD::getInstance()->Render();
 
 	// Debug drawing
 	DEBUG_RENDERER::GetInstance()->Render();
