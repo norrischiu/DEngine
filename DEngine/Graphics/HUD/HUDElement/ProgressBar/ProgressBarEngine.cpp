@@ -30,7 +30,10 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		if (m_cache[id].Raw()) {
 			m_cache[id].Free();
 			m_cache.erase(id);
-			TextEngine::getInstance()->removeCacheByID(id);
+			if (progressBar->isShowText())
+			{
+				TextEngine::getInstance()->removeCacheByID(id);
+			}
 		}
 		progressBar->setHasUpdate(false);
 	}

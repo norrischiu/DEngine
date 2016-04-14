@@ -36,7 +36,7 @@ void AIBehavior::BossBehavior()
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
 
 	}
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
+	//DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
 	
 	if (!direction.iszero() && distance > 1.0f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
 	{
@@ -51,7 +51,7 @@ void AIBehavior::BossBehavior()
 	}
 
 	
-	if (((Boss*)m_pOwner)->GetHP() == 0.0f)
+	if (((Boss*)m_pOwner)->GetHP() < 0.0f)
 	{
 		((Boss*)m_pOwner)->SetState(Boss::DYING);
 		DE::Handle h(sizeof(Boss_Dying_START_Event));

@@ -158,28 +158,12 @@ bool PlayerASM::HandleEvent(DE::Handle hEvt)
 			ChangeStateTo("ATTACK");
 			return true;
 		case GameEventID::Player_Attack_2_START_Event:
+			((Player*)m_pOwner)->m_bHitBoss = false;
 			ChangeStateTo("ATTACK2");
 			return true;
 		case GameEventID::Player_Attack_3_START_Event:
+			((Player*)m_pOwner)->m_bHitBoss = false;
 			ChangeStateTo("ATTACK3");
-			return true;
-		case GameEventID::Player_Attack_1_END_Event:
-			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
-			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[0] = false;
-			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
-			ChangeStateTo(m_pPrevState->m_sName);
-			return true;
-		case GameEventID::Player_Attack_2_END_Event:
-			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
-			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[1] = false;
-			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
-			ChangeStateTo("IDLE");
-			return true;
-		case GameEventID::Player_Attack_3_END_Event:
-			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
-			m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[2] = false;
-			m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
-			ChangeStateTo("IDLE");
 			return true;
 		case GameEventID::Player_Dodge_START_Event:
 			ChangeStateTo("DODGE");
@@ -192,34 +176,35 @@ bool PlayerASM::HandleEvent(DE::Handle hEvt)
 				m_pCurrState->m_BlendTree->m_fBlendFactor = 0.0f;
 			}
 			return true;
-		case GameEventID::Player_Dodge_END_Event:
-			((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
-			ChangeStateTo(m_pPrevState->m_sName);
-			return true;
 		case DE::EngineEventID::Animation_END_Event:
 			if (strcmp(m_pCurrState->m_sName, "ATTACK") == 0)
 			{
-				DE::Handle hEvt(sizeof(Player_Attack_1_END_Event));
-				new (hEvt) Player_Attack_1_END_Event;
-				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+				((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+				m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[0] = false;
+				m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
+				ChangeStateTo(m_pPrevState->m_sName);
+				return true;
 			}
 			else if (strcmp(m_pCurrState->m_sName, "ATTACK2") == 0)
 			{
-				DE::Handle hEvt(sizeof(Player_Attack_2_END_Event));
-				new (hEvt) Player_Attack_2_END_Event;
-				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+				((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+				m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[1] = false;
+				m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
+				ChangeStateTo("IDLE");
+				return true;
 			}
 			else if (strcmp(m_pCurrState->m_sName, "ATTACK3") == 0)
 			{
-				DE::Handle hEvt(sizeof(Player_Attack_3_END_Event));
-				new (hEvt) Player_Attack_3_END_Event;
-				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+				((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+				m_pOwner->GetComponent<PlayerMC>()->m_ComboSequence[2] = false;
+				m_pOwner->GetComponent<PlayerMC>()->m_fComboTime = 0.0f;
+				ChangeStateTo("IDLE");
 			}
 			else if (strcmp(m_pCurrState->m_sName, "DODGE") == 0)
 			{
-				DE::Handle hEvt(sizeof(Player_Dodge_END_Event));
-				new (hEvt) Player_Dodge_END_Event;
-				DE::EventQueue::GetInstance()->Add(hEvt, DE::GAME_EVENT);
+				((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+				ChangeStateTo(m_pPrevState->m_sName);
+				return true;
 			}
 			return true;
 		}

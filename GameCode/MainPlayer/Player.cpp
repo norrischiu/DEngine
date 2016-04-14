@@ -3,6 +3,7 @@
 // Game include
 #include "PlayerASM.h"
 #include "PlayerMC.h"
+#include "..\Boss\Boss.h"
 
 // Engine include
 #include "DEngine\Memory\Handle.h"
@@ -23,6 +24,7 @@ Player::Player()
 	: DE::GameObject()
 	, m_fHP(100.0f)
 	, m_eState(IDLING_MOVING)
+	, m_bHitBoss(false)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
 	new (hMeshComponent) DE::MeshComponent("maria", DE::eMeshType::SKELETAL_MESH);
@@ -97,14 +99,39 @@ Player::Player()
 
 	// Fire
 	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
+	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 0.5f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
 }
 
 void Player::Update(float deltaTime)
 {
 	DE::GameObject::Update(deltaTime);
-	DE::AABB aabb = *m_Weapon->GetComponent<DE::AABB>();
-	aabb.Transform(*m_Weapon->GetTransform());
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(aabb);
+
+	// check attack collision
+	if (m_pBoss && m_eState == ATTACKING && !m_bHitBoss)
+	{
+		if (m_Weapon->isCollided((GameObject*)m_pBoss))
+		{
+			m_bHitBoss = true;
+			m_pBoss->m_fHP -= 10.0f;
+		}
+	}
+
+	// set player to look at boss
+/*	DE::Vector3 direction = m_pBoss->GetPosition() - GetPosition();
+	if (!direction.iszero())
+	{
+		direction.Normalize();
+		DE::Vector3 cross = Cross(GetTransform()->GetForward().Normal(), direction);
+		float dot = cross.Dot(DE::Vector3::UnitY);
+		float theta = asinf(cross.Length());
+		if (dot < 0.0f)
+		{
+			theta = 2 * PI - theta;
+		}
+		DE::Quaternion quat(DE::Vector3(0, 1, 0), theta);
+		TransformBy(quat.GetRotationMatrix());
+	}
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetForward() * 5);
+*/
 }

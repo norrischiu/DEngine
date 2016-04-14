@@ -9,6 +9,8 @@
 class Player : public DE::GameObject
 {
 
+	friend class Boss;
+
 public:
 
 	enum eState
@@ -43,6 +45,18 @@ public:
 		return m_eState;
 	}
 
+	inline void SetBoss(Boss* pBoss)
+	{
+		m_pBoss = pBoss;
+	}
+
+	inline Boss* GetBoss()
+	{
+		return m_pBoss;
+	}
+
+	bool								m_bHitBoss;
+
 private:
 
 	DE::GameObject*						m_Weapon;
@@ -52,7 +66,10 @@ private:
 	// Health point
 	float								m_fHP;
 
+	// Player action state
 	eState								m_eState;
+
+	Boss*								m_pBoss;
 
 };
 

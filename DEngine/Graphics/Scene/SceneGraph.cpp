@@ -143,40 +143,13 @@ void SceneGraph::ShadowMapGeneration()
 						m_MatrixPalette.Update();
 				
 					// TODO: separete skeletal and static mesh
-					m_ShadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
+					//m_ShadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());
+					m_ShadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
 					itr->m_pMeshData->RenderUsingPass(m_ShadowPass);
 				}
 			}
 		}
 	}
-}
-
-void SceneGraph::RENDER_DEBUG_DRAWING()
-{
-#ifdef _DEBUG
-
-	m_VSCBuffer.BindToRenderer();
-
-	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
-
-	RenderPass* pass = new RenderPass;
-	pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
-	pass->SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
-	pass->SetBlendState(State::NULL_STATE);
-	pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-	pass->SetRasterizerState(State::CULL_NONE_RS);
-	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
-	for (auto itr : DEBUG_DRAWING_TREE)
-	{
-		ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
-		m_VSCBuffer.Update();
-
-		itr->m_pMeshData->RenderUsingPass(pass);
-		//itr->m_pMeshData->Render();
-	}
-	delete pass;
-
-#endif
 }
 
 void SceneGraph::AddComponent(MeshComponent * meshComponent)

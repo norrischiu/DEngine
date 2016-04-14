@@ -126,6 +126,7 @@ Texture::Texture(int type, ID3D11Texture2D* texSrc)
 		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateDepthStencilView(texSrc, &depthStencilViewDesc, &m_pDSV);
 		assert(hr == S_OK);
 	}
+	m_pTexture = texSrc;
 	m_pSampler = (ID3D11SamplerState*)State::GetState(State::NULL_STATE);
 }
 

@@ -34,8 +34,6 @@ public:
 
 	~MeshData();
 
-	void Update();
-
 	void Render();
 
 	void RenderUsingPass(RenderPass* pass);

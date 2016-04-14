@@ -64,26 +64,6 @@ MeshData::~MeshData()
 		m_pIndexBuffer->Release();
 }
 
-void MeshData::Update()
-{
-	// Set constant buffer description
-	Matrix4 ProjectionMat;
-	ProjectionMat.CreatePerspectiveFOV(
-		0.785398163f,
-		1024.0f / 768.0f,
-		1.0f,
-		100.0f
-		);
-	ProjectionMat.Multiply(D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix());
-
-	D3D11_MAPPED_SUBRESOURCE mappedResources;
-	//D3D11Renderer::GetInstance()->m_pD3D11Context->Map(m_pVSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResources);
-	//	VS_CONSTANT_BUFFER* pCBuffer = (VS_CONSTANT_BUFFER*)mappedResources.pData;
-	//pCBuffer->ProjectionMat = ProjectionMat;
-	//	pCBuffer->TransformationMat = m_transformationMat;
-	//D3D11Renderer::GetInstance()->m_pD3D11Context->Unmap(m_pVSConstantBuffer, 0);
-}
-
 void MeshData::Render()
 {
 	RenderTechnique* technique = m_Material.GetRenderTechnique();

@@ -28,7 +28,7 @@ public:
 		DE::Camera::Update(deltaTime);
 
 		DE::Matrix4 trans;
-		DE::Vector3 cameraDir = (GetComponent<DE::CameraComponent>()->GetWorldLookAt() - GetPosition()).Normalize();
+		DE::Vector3 cameraDir = (GetComponent<DE::CameraComponent>()->GetWorldLookAt() - GetPosition()).Normal();
 		DE::Vector3 rayEnd = GetPosition() + cameraDir * 0.1f;
 		DE::Vector3 rayStart = GetPosition();
 		while (DE::GameWorld::GetInstance()->RayCast(rayStart, rayEnd))

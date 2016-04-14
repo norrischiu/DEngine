@@ -36,9 +36,13 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		{
 			m_TexFlag |= DIFFUSE;
 		}
-		else if (!str.compare("NormalMap"))
+		else if (!str.compare("NormalMap") || !str.compare("Bump"))
 		{
 			m_TexFlag |= NORMAL;
+		}
+		else if (!str.compare("SpecularColor"))
+		{
+			m_TexFlag |= SPECULAR;
 		}
 		fscanf(pFile, "%s", &c);
 		Handle hTexture(sizeof(Texture));
@@ -61,7 +65,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
 		break;
 	}
-	if (m_TexFlag == (DIFFUSE | NORMAL))
+	if (m_TexFlag == (DIFFUSE | NORMAL | SPECULAR) || m_TexFlag == (DIFFUSE | NORMAL))
 	{
 		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_deferred.hlsl");
 		pass->SetBlendState(State::NULL_STATE);

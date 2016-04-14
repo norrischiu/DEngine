@@ -70,6 +70,9 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 
+	// Hide mouse
+	ShowCursor(false);
+
 	GameLoop::GetInstance()->Construct();		//Load the game content first before entering to the main loop
 
 	/// Timer

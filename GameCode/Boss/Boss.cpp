@@ -1,15 +1,18 @@
-
+// Game include
 #include "Boss.h"
 #include "AIBehavior.h"
 #include "BossASM.h"
+
+// Engine include
 #include "DEngine\Graphics\MeshComponent.h"
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Graphics\Animation\AnimationController.h"
+#include "DEngine\Graphics\HUD\HUD.h"
 
 
 Boss::Boss(Player* player)
 	: DE::GameObject()
-	, m_fHP(0.0f)
+	, m_fHP(1000.0f)
 	, m_Player(player)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
@@ -49,7 +52,7 @@ Boss::Boss(Player* player)
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 6.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 17, 6.5);
+	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 6.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 7, 6.5);
 	AddComponent((DE::Component*) hPointLight.Raw());
 }
 
@@ -57,7 +60,13 @@ Boss::Boss(Player* player)
 void Boss::Update(float deltaTime)
 {
 	DE::GameObject::Update(deltaTime);
-	//m_Weapon->TransformBy(*m_pTransform->m_mWorldTransform);
+
+	// update of HUD bar
+	((DE::ProgressBar*)DE::HUD::getInstance()->getHUDElementById("BossHP"))->setProgress(m_fHP / 1000.0f * 100.0f);
+	
+	DE::AABB aabb = *GetComponent<DE::AABB>();
+	aabb.Transform(*GetTransform());
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(aabb);
 }
 
 Boss::~Boss()

@@ -120,7 +120,6 @@ void D3D11Renderer::Render()
 	HUD::getInstance()->Render();
 
 	// Debug drawing
-//	SceneGraph::GetInstance()->RENDER_DEBUG_DRAWING();
 	DEBUG_RENDERER::GetInstance()->Render();
 
 	HRESULT hr = m_pSwapChain->Present(0, 0);
