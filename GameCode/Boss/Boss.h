@@ -19,7 +19,7 @@ public:
 
 	enum eState
 	{
-		WAITING, PUNCHING, JUMPATTACKING, IDLE
+		WAITING, PUNCHING, JUMPATTACKING, IDLE, DYING
 	};
 
 	Boss(Player* player);
@@ -48,6 +48,11 @@ public:
 	eState GetState()
 	{
 		return m_eState;
+	}
+
+	float GetHP()
+	{
+		return m_fHP;
 	}
 
 private:

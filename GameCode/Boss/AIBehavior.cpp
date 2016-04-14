@@ -38,7 +38,7 @@ void AIBehavior::BossBehavior()
 	}
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
 	
-	if (!direction.iszero() && distance > 1.0f)
+	if (!direction.iszero() && distance > 1.0f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
 	{
 
 		if (((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING)
@@ -51,7 +51,14 @@ void AIBehavior::BossBehavior()
 	}
 
 	
-	if (distance > short_attack_dist && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
+	if (((Boss*)m_pOwner)->GetHP() == 0.0f)
+	{
+		((Boss*)m_pOwner)->SetState(Boss::DYING);
+		DE::Handle h(sizeof(Boss_Dying_START_Event));
+		new (h) Boss_Dying_START_Event;
+		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+	}
+	else if (distance > short_attack_dist && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
 	{	
 		((Boss*)m_pOwner)->SetState(Boss::WAITING);
 		DE::Handle h(sizeof(Boss_Walk_START_Event));

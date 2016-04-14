@@ -9,7 +9,7 @@
 
 Boss::Boss(Player* player)
 	: DE::GameObject()
-	, m_fHP(1000.0f)
+	, m_fHP(0.0f)
 	, m_Player(player)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
@@ -36,9 +36,11 @@ Boss::Boss(Player* player)
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_idle");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_jump_attack");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_punch");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_dying");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
+
 
 	DE::Handle hASM(sizeof(BossASM));
 	new (hASM) BossASM((DE::AnimationController*) hAnimController.Raw());

@@ -12,6 +12,7 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddState("WALK", "walk");
 	AddState("PUNCH", "punch");
 	AddState("JUMP_ATTACK", "jump_attack");
+	AddState("DYING", "dying");
 
 	AddTransistion("IDLE", "WALK", 1, 0.5f);
 	AddTransistion("WALK", "IDLE", 1, 0.5f);
@@ -25,6 +26,11 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddTransistion("JUMP_ATTACK", "WALK", 1, 0.5f);
 	AddTransistion("JUMP_ATTACK", "PUNCH", 1, 0.5f);
 	AddTransistion("PUNCH", "JUMP_ATTACK", 1, 0.5f);
+	AddTransistion("PUNCH", "DYING", 1, 0.5f);
+	AddTransistion("JUMP_ATTACK", "DYING", 1, 0.5f);
+	AddTransistion("IDLE", "DYING", 1, 0.5f);
+	AddTransistion("WALK", "DYING", 1, 0.5f);
+	AddTransistion("DYING", "IDLE", 1, 0.5f);
 }
 
 void BossASM::Update(float deltaTime)
@@ -73,6 +79,14 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;
+	case GameEventID::Boss_Dying_START_Event:
+		((Boss*)m_pOwner)->SetState(Boss::DYING);
+		ChangeStateTo("DYING");
+		break;
+	case GameEventID::Boss_Dying_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
+		ChangeStateTo("IDLE");
+		break;
 	case DE::EngineEventID::Animation_END_Event:
 		if (strcmp(m_pCurrState->m_sName, "PUNCH") == 0)
 		{
@@ -81,6 +95,12 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 			return true;
 		}
 		else if (strcmp(m_pCurrState->m_sName, "JUMP_ATTACK") == 0)
+		{
+			((Boss*)m_pOwner)->SetState(Boss::IDLE);
+			ChangeStateTo("IDLE");
+			return true;
+		}
+		else if (strcmp(m_pCurrState->m_sName, "DYING") == 0)
 		{
 			((Boss*)m_pOwner)->SetState(Boss::IDLE);
 			ChangeStateTo("IDLE");
