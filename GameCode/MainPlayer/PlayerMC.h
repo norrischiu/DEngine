@@ -12,6 +12,7 @@ public:
 	PlayerMC()
 		: DE::MovementController()
 		, m_bDodge(false)
+		, m_bWalk(false)
 		, m_fComboTime(0.0f)
 	{
 		m_ComboSequence[0] = false;
@@ -43,6 +44,8 @@ private:
 	void Dispatch() override;
 
 	bool								m_bDodge;
+
+	bool								m_bWalk;
 
 	DE::Vector3							m_vDodgeDir;
 

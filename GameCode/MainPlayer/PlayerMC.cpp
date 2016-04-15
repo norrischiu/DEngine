@@ -1,6 +1,7 @@
 // Game include
 #include "PlayerMC.h"
 #include "Player.h"
+#include "..\Boss\Boss.h"
 #include "ThirdPersonCamera.h"
 #include "Event\GameEvent.h"
 
@@ -49,8 +50,8 @@ bool PlayerMC::HandleMouseEvent(DE::Event * pEvt)
 			offset.Transform(rot);
 			//rot.CreateRotationX(camera->m_fPitch);
 			//offset.Transform(rot);
-			*camera->GetLocalTransform() = rot;
-			camera->GetLocalTransform()->SetPosition(offset);
+			//*camera->GetLocalTransform() = rot;
+			//camera->GetLocalTransform()->SetPosition(offset);
 
 			DE::Mouse::ResetWindowCursorPos();
 		}
@@ -103,26 +104,49 @@ bool PlayerMC::HandleMouseEvent(DE::Event * pEvt)
 
 void PlayerMC::Dispatch()
 {
-	if (m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING)
+	if (m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING && m_bWalk)
 	{
 		DE::Handle h(sizeof(Player_Walk_END_Event));
 		new (h) Player_Walk_END_Event;
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+		m_bWalk = false;
 	}
 	else if (m_bDodge && !m_vTrans.iszero())
 	{
 		m_vDodgeDir = m_vTrans.Normal();
+		m_bDodge = false;
 
 		((Player*)m_pOwner)->SetState(Player::DOGDING);
 		DE::Handle h(sizeof(Player_Dodge_START_Event));
 		new (h) Player_Dodge_START_Event;
 		((Player_Dodge_START_Event*)h.Raw())->m_vDir = m_vTrans.Normal();
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
-		m_bDodge = false;
 	}
 	else if (!m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING)
 	{
+		// set player to look at boss
+		DE::Vector3 direction = ((Player*)m_pOwner)->GetBoss()->GetPosition() - m_pOwner->GetPosition();
+		if (!direction.iszero())
+		{
+			float length = direction.Length();
+			DE::Vector3 cross = Cross(m_pOwner->GetTransform()->GetForward().Normal(), direction.Normal());
+			float dot = cross.Dot(DE::Vector3::UnitY);
+			float theta = asinf(cross.Length());
+			int y = 1;
+			if (dot < 0.0f)
+			{
+				y = -1;
+			}
+			DE::Vector3 pos = ((Player*)m_pOwner)->GetBoss()->GetPosition() - DE::Vector3(length * sinf(theta), 0.0f, length * cosf(theta));
+			static wchar_t s[64];
+			swprintf(s, 64, L"theta: %f\n", theta);
+			OutputDebugStringW(s);
+
+			DE::Quaternion quat(DE::Vector3(0, y, 0), theta);
+			m_pOwner->TransformBy(quat.GetRotationMatrix());
+		}
 		Move(m_vTrans);
+		m_bWalk = true;
 
 		DE::Handle h(sizeof(Player_Walk_PLAYING_Event));
 		new (h) Player_Walk_PLAYING_Event;
@@ -142,4 +166,5 @@ void PlayerMC::Dispatch()
 		Move(m_pOwner->GetTransform()->GetForward().Normal() * m_fSpeed * m_fDeltaTime * 0.5f);
 	}
 	m_vTrans = DE::Vector3::Zero;
+	m_bDodge = false;
 }

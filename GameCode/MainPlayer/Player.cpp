@@ -118,21 +118,7 @@ void Player::Update(float deltaTime)
 		}
 	}
 
-	// set player to look at boss
-/*	DE::Vector3 direction = m_pBoss->GetPosition() - GetPosition();
-	if (!direction.iszero())
-	{
-		direction.Normalize();
-		DE::Vector3 cross = Cross(GetTransform()->GetForward().Normal(), direction);
-		float dot = cross.Dot(DE::Vector3::UnitY);
-		float theta = asinf(cross.Length());
-		if (dot < 0.0f)
-		{
-			theta = 2 * PI - theta;
-		}
-		DE::Quaternion quat(DE::Vector3(0, 1, 0), theta);
-		TransformBy(quat.GetRotationMatrix());
-	}
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetForward() * 5);
-*/
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetForward());
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetRight());
+
 }

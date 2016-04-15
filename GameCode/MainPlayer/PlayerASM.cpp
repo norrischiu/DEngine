@@ -52,17 +52,17 @@ PlayerASM::PlayerASM(DE::AnimationController * animController)
 	AddTransistion("IDLE", "WALK", 1, 0.2f);
 	AddTransistion("WALK", "IDLE", 1, 0.2f);
 	AddTransistion("IDLE", "ATTACK", 1, 0.1f);
-	AddTransistion("ATTACK", "IDLE", 1, 0.1f);
+	AddTransistion("ATTACK", "IDLE", 1, 0.2f);
 	AddTransistion("WALK", "ATTACK", 1, 0.1f);
 	AddTransistion("ATTACK", "WALK", 1, 0.1f);
-	AddTransistion("WALK", "DODGE", 1, 0.1f);
-	AddTransistion("DODGE", "WALK", 1, 0.1f);
-	AddTransistion("DODGE", "IDLE", 1, 0.2f);
+	AddTransistion("WALK", "DODGE", 1, 0.3f);
+	AddTransistion("DODGE", "WALK", 1, 0.3f);
+	AddTransistion("DODGE", "IDLE", 1, 0.3f);
 	AddTransistion("IDLE", "DODGE", 1, 0.2f);
 	AddTransistion("ATTACK", "ATTACK2", 1, 0.1f);
-	AddTransistion("ATTACK2", "IDLE", 1, 0.2f);
+	AddTransistion("ATTACK2", "IDLE", 1, 0.1f);
 	AddTransistion("ATTACK2", "ATTACK3", 1, 0.1f);
-	AddTransistion("ATTACK3", "IDLE", 1, 0.3f);
+	AddTransistion("ATTACK3", "IDLE", 1, 0.1f);
 }
 
 void PlayerASM::Update(float deltaTime)
