@@ -31,7 +31,7 @@ Player::Player()
 	AddComponent((DE::Component*) hMeshComponent.Raw());
 
 	DE::Handle hAABB(sizeof(DE::AABB));
-	new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
+	new (hAABB) DE::AABB(DE::AABB(DE::Vector3(-0.2f, -0.001f, -0.08f), DE::Vector3(0.2f, 1.5f, 0.08f)));
 	AddComponent((DE::Component*) hAABB.Raw());
 
 	DE::Handle hMC(sizeof(PlayerMC));
@@ -117,8 +117,4 @@ void Player::Update(float deltaTime)
 			m_pBoss->m_fHP -= 10.0f;
 		}
 	}
-
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetForward());
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(GetPosition(), GetPosition() + GetTransform()->GetRight());
-
 }

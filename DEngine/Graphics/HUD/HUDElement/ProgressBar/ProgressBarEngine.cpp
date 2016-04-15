@@ -134,6 +134,7 @@ void ProgressBarEngine::removeCacheByID(const char* id)
 	if (m_cache[id])
 	{
 		m_cache[id].Free();
+		((MeshComponent*)m_cache[id].Raw())->Destruct();
 		m_cache.erase(id);
 	}
 }

@@ -63,6 +63,13 @@ PlayerASM::PlayerASM(DE::AnimationController * animController)
 	AddTransistion("ATTACK2", "IDLE", 1, 0.1f);
 	AddTransistion("ATTACK2", "ATTACK3", 1, 0.1f);
 	AddTransistion("ATTACK3", "IDLE", 1, 0.1f);
+	AddTransistion("ATTACK", "IMPACT", 1, 0.1f);
+	AddTransistion("ATTACK2", "IMPACT", 1, 0.1f);
+	AddTransistion("ATTACK3", "IMPACT", 1, 0.1f);
+	AddTransistion("WALK", "IMPACT", 1, 0.1f);
+	AddTransistion("IMPACT", "WALK", 1, 0.1f);
+	AddTransistion("IDLE", "IMPACT", 1, 0.1f);
+	AddTransistion("IMPACT", "IDLE", 1, 0.1f);
 }
 
 void PlayerASM::Update(float deltaTime)
@@ -177,6 +184,10 @@ bool PlayerASM::HandleEvent(DE::Handle hEvt)
 				m_pCurrState->m_BlendTree->m_fBlendFactor = 0.0f;
 			}
 			return true;
+		case GameEventID::Player_Impact_START_Event:
+			((Player*)m_pOwner)->SetState(Player::IMPACTING);
+			ChangeStateTo("IMPACT");
+			return true;
 		case DE::EngineEventID::Animation_END_Event:
 			if (strcmp(m_pCurrState->m_sName, "ATTACK") == 0)
 			{
@@ -207,8 +218,18 @@ bool PlayerASM::HandleEvent(DE::Handle hEvt)
 				ChangeStateTo(m_pPrevState->m_sName);
 				return true;
 			}
+			else if (strcmp(m_pCurrState->m_sName, "IMPACT") == 0)
+			{
+				((Player*)m_pOwner)->SetState(Player::IDLING_MOVING);
+				ChangeStateTo("IDLE");
+				return true;
+			}
 			return true;
 		}
+	}
+	if (strcmp(m_pCurrState->m_sName, "IMPACT") == 0)
+	{
+		return true;
 	}
 	return false;
 }

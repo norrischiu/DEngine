@@ -15,7 +15,7 @@ public:
 
 	enum eState
 	{
-		ATTACKING, IDLING_MOVING, DOGDING
+		ATTACKING, IDLING_MOVING, DOGDING, IMPACTING
 	};
 
 	Player();

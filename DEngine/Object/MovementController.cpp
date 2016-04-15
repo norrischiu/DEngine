@@ -42,8 +42,8 @@ bool MovementController::HandleKeyboardEvent(Event* pEvt)
 	}
 	else if (pEvt->m_ID == InputEventID::Key_S_Hold_Event)
 	{
-		Vector3 vForward = DE::Vector3::UnitZ;
-		m_vTrans += (-vForward * m_fDeltaTime * m_fSpeed);
+		Vector3 vBackward = DE::Vector3::NegativeUnitZ;
+		m_vTrans += (vBackward * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	else if (pEvt->m_ID == InputEventID::Key_D_Hold_Event)
@@ -54,8 +54,8 @@ bool MovementController::HandleKeyboardEvent(Event* pEvt)
 	}
 	else if (pEvt->m_ID == InputEventID::Key_A_Hold_Event)
 	{
-		Vector3 vRight = DE::Vector3::UnitX;
-		m_vTrans += (-vRight * m_fDeltaTime * m_fSpeed);
+		Vector3 vLeft = DE::Vector3::NegativeUnitX;
+		m_vTrans += (vLeft * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	return false;

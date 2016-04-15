@@ -2,13 +2,14 @@
 #include "Boss.h"
 #include "AIBehavior.h"
 #include "BossASM.h"
+#include "Event\GameEvent.h"
 
 // Engine include
 #include "DEngine\Graphics\MeshComponent.h"
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Graphics\Animation\AnimationController.h"
 #include "DEngine\Graphics\HUD\HUD.h"
-#include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
+#include "DEngine\Event\EventQueue.h"
 
 
 Boss::Boss(Player* player)
@@ -26,9 +27,9 @@ Boss::Boss(Player* player)
 	new (hAABB) DE::AABB(DE::Vector3(-0.4f, -0.2f, -0.4f), DE::Vector3(0.6f, 1.8f, 0.6f));
 	AddComponent((DE::Component*) hAABB.Raw());
 
-	//DE::Handle hAI(sizeof(AIBehavior));
-	//new (hAI) AIBehavior();
-	//AddComponent((DE::Component*) hAI.Raw());
+	DE::Handle hAI(sizeof(AIBehavior));
+	new (hAI) AIBehavior();
+	AddComponent((DE::Component*) hAI.Raw());
 
 	DE::Handle hSkel(sizeof(DE::Skeleton));
 	new (hSkel) DE::Skeleton("mutant");
@@ -75,10 +76,6 @@ Boss::Boss(Player* player)
 
 	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
-
-	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 1.5f, DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector3(0.1f, 0.5f, 0.1f), GetTransform());
-	AddComponent((DE::Component*) hEmitter.Raw());
 }
 
 
@@ -97,8 +94,15 @@ void Boss::Update(float deltaTime)
 		{
 			if (m_pLeftHand->isCollided((GameObject*)m_Player) || m_pRightHand->isCollided((GameObject*)m_Player))
 			{
-				m_bHitPlayer = true;
-				m_Player->m_fHP -= 10.0f;
+				if (m_Player->GetState() != Player::DOGDING)
+				{
+					m_bHitPlayer = true;
+					m_Player->m_fHP -= 10.0f;
+
+					DE::Handle h(sizeof(Player_Impact_START_Event));
+					new (h) Player_Impact_START_Event;
+					DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+				}
 			}
 		}
 	}

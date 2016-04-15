@@ -24,6 +24,8 @@ namespace GameEventID
 		Player_Charged_Attack_END_Event,
 		Player_Dodge_START_Event,
 		Player_Dodge_END_Event,
+		Player_Impact_START_Event,
+		Player_Impact_END_Event,
 		Boss_Walk_START_Event,
 		Boss_Walk_END_Event,
 		Boss_Jump_Attack_START_Event,
@@ -124,6 +126,21 @@ struct Player_Dodge_END_Event : public DE::Event
 {
 	Player_Dodge_END_Event()
 		:DE::Event(GameEventID::Player_Dodge_END_Event)
+	{};
+};
+
+struct Player_Impact_START_Event : public DE::Event
+{
+	Player_Impact_START_Event()
+		:DE::Event(GameEventID::Player_Impact_START_Event)
+	{};
+
+};
+
+struct Player_Impact_END_Event : public DE::Event
+{
+	Player_Impact_END_Event()
+		:DE::Event(GameEventID::Player_Impact_END_Event)
 	{};
 };
 
