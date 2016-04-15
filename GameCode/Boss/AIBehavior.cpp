@@ -12,8 +12,11 @@
 
 void AIBehavior::BossBehavior()
 {
-	DE::Vector3 playerPos = DE::Vector3(((Boss*)m_pOwner)->GetPlayerPostion().GetX(), 0.0f, ((Boss*)m_pOwner)->GetPlayerPostion().GetZ());
-	DE::Vector3	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
+	//DE::Vector3 playerPos = DE::Vector3(((Boss*)m_pOwner)->GetPlayerPostion().GetX(), 0.0f, ((Boss*)m_pOwner)->GetPlayerPostion().GetZ());
+	//DE::Vector3	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
+	DE::Vector3 playerPos = ((Boss*)m_pOwner)->GetPlayerPostion();
+	DE::Vector3 bossPos = ((Boss*)m_pOwner)->GetPosition();
+	
 	float distance = (playerPos - bossPos).Length();
 	float short_attack_dist = 3.1f;
 	float long_attack_dist = 5.0f;
@@ -21,34 +24,49 @@ void AIBehavior::BossBehavior()
 	float idleTime = 2.0f;
 	DE::Vector3 direction = playerPos-bossPos;
 	float playerMoveDir = distance - preDist;
+
 	if (!direction.iszero())
 	{
 		direction.Normalize();
 		DE::Vector3 cross = Cross(m_pOwner->GetTransform()->GetForward().Normal(), direction);
 		float dot = cross.Dot(DE::Vector3::UnitY);
-			float theta = asinf(cross.Length());
-			if (dot < 0.0f)
-			{
-				theta = 2 * PI - theta;
-			}
+		float theta = asinf(cross.Length());
+		if (dot < 0.0f)
+		{
+			theta = 2 * PI - theta;
+		}
 
+		if (theta > 0.0f)
+		{
 			DE::Quaternion quat(DE::Vector3(0, 1, 0), theta);
+			static wchar_t t[64];
+			swprintf(t, 64, L"theta: %f; before x: %f, y: %f, z: %f\n", theta, direction.GetX(), direction.GetY(), direction.GetZ());
+			OutputDebugStringW(t);
+			DE::Vector3 pos = m_pOwner->GetPosition();
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
+			m_pOwner->SetPosition(pos);
+		}
+	
 
 	}
 	//DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
-	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
-	direction = playerPos - bossPos;
+//	bossPos = ((Boss*)m_pOwner)->GetPosition();
+//	direction = m_pOwner->GetTransform()->GetForward().Normal();
+	static wchar_t s[64];
+	swprintf(s, 64, L"after  x: %f, y: %f, z: %f\n", direction.GetX(), direction.GetY(), direction.GetZ());
+	OutputDebugStringW(s);
+
+	//direction.Normalize();
 	if (!direction.iszero() && distance > 1.0f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
 	{
 		
 		if (((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING)
 		{	
-			Move(direction*speed*m_fDeltaTime*1.8f);
+			Move(DE::Vector3(0,0,1) *speed*m_fDeltaTime*1.8f);
 		}
 			
 		else if(((Boss*)m_pOwner)->GetState() != Boss::IDLE && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING)
-			Move(direction*speed*m_fDeltaTime);
+			Move(DE::Vector3(0, 0, 1)*speed*m_fDeltaTime);
 	}
 
 	

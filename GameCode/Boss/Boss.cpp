@@ -8,6 +8,7 @@
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Graphics\Animation\AnimationController.h"
 #include "DEngine\Graphics\HUD\HUD.h"
+#include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 
 
 Boss::Boss(Player* player)
@@ -74,6 +75,10 @@ Boss::Boss(Player* player)
 
 	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
+	DE::Handle hEmitter(sizeof(DE::Emitter));
+	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 1.5f, DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector3(0.1f, 0.5f, 0.1f), GetTransform());
+	AddComponent((DE::Component*) hEmitter.Raw());
 }
 
 
