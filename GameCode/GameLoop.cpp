@@ -41,7 +41,6 @@ void GameLoop::Construct()
 
 	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0, 0.0, 10.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	cam->SetAsRendererCamera();
-	cam->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f) * 30.0f + 30.0f, 0.0f));
 	DE::Handle hMC(sizeof(DE::MovementController));
 	new (hMC) DE::MovementController(100.0f);
 	cam->AddComponent((DE::Component*) hMC.Raw());
