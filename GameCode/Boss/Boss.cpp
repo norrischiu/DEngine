@@ -9,8 +9,6 @@
 #include "DEngine\Graphics\Animation\AnimationController.h"
 #include "DEngine\Graphics\HUD\HUD.h"
 
-#include <Windows.h>
-
 
 Boss::Boss(Player* player)
 	: DE::GameObject()
@@ -23,7 +21,6 @@ Boss::Boss(Player* player)
 	AddComponent((DE::Component*) hMeshComponent.Raw());
 
 	DE::Handle hAABB(sizeof(DE::AABB));
-	//new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
 	// hard code bounding box for the boss body
 	new (hAABB) DE::AABB(DE::Vector3(-0.4f, -0.2f, -0.4f), DE::Vector3(0.6f, 1.8f, 0.6f));
 	AddComponent((DE::Component*) hAABB.Raw());
@@ -89,7 +86,7 @@ void Boss::Update(float deltaTime)
 
 	// Check attack collision
 
-	if (m_Player && !m_bHitPlayer)
+	if (m_Player && !m_bHitPlayer && m_Player->m_fHP >= 10.0f)
 	{
 		if (m_eState == PUNCHING || m_eState == JUMPATTACKING)
 		{
@@ -97,15 +94,12 @@ void Boss::Update(float deltaTime)
 			{
 				m_bHitPlayer = true;
 				m_Player->m_fHP -= 10.0f;
-				static wchar_t s[64];
-				swprintf(s, 64, L"Unbind: %f\n", m_Player->m_fHP);
-				OutputDebugStringW(s);
 			}
 		}
 	}
 
 	// debug drawing
-	DE::AABB aabb = *GetComponent<DE::AABB>();
+/*	DE::AABB aabb = *GetComponent<DE::AABB>();
 	aabb.Transform(*GetTransform());
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(aabb);
 
@@ -115,7 +109,7 @@ void Boss::Update(float deltaTime)
 
 	DE::AABB RHaabb = *m_pRightHand->GetComponent<DE::AABB>();
 	RHaabb.Transform(*m_pRightHand->GetTransform());
-	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(RHaabb);
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(RHaabb);*/
 }
 
 Boss::~Boss()
