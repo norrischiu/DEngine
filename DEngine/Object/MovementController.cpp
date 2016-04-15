@@ -23,12 +23,12 @@ void MovementController::HandleKeyboardEvent(Event* pEvt)
 {
 	if (pEvt->m_ID == InputEventID::Key_W_Hold_Event)
 	{
-		Vector3 vForward = m_pOwner->GetTransform()->GetForward();
+		Vector3 vForward = DE::Vector3::UnitZ;
 		Move(vForward * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == InputEventID::Key_S_Hold_Event)
 	{
-		Vector3 vBackward = -m_pOwner->GetTransform()->GetForward();
+		Vector3 vBackward = DE::Vector3::NegativeUnitZ;
 		Move(vBackward * m_fDeltaTime * m_fSpeed);
 	}
 	else if (pEvt->m_ID == InputEventID::Key_D_Hold_Event)
