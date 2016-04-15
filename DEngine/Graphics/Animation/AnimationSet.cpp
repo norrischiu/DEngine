@@ -51,14 +51,16 @@ void AnimationSet::update(const float delta_time)
 	{
 		m_fCurrTime = m_fCurrTime + delta_time;
 
+		if (m_fCurrTime > m_fDuration && !m_bLooping) 
+		{
+			m_bActive = false;
+			m_fCurrTime = 0.0f;
+			return;
+		}
+
 		for (auto itr : m_vAnimations)
 		{
 			itr->update(delta_time);
-		}
-
-		if (m_fCurrTime > m_fDuration && !m_bLooping) {
-			m_bActive = false;
-			m_fCurrTime = 0.0f;
 		}
 	}
 }
