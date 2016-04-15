@@ -55,6 +55,8 @@ public:
 		return m_fHP;
 	}
 
+	bool							m_bHitPlayer;
+
 private:
 
 	float							m_fHP;

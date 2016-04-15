@@ -65,17 +65,21 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Jump_Attack_START_Event:
+		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		ChangeStateTo("JUMP_ATTACK");
 		return true;
 	case GameEventID::Boss_Jump_Attack_END_Event:
+		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Punch_START_Event:
+		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetState(Boss::PUNCHING);
 		ChangeStateTo("PUNCH");
 		return true;
 	case GameEventID::Boss_Punch_END_Event:
+		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		return true;

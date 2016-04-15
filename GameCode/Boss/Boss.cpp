@@ -9,11 +9,14 @@
 #include "DEngine\Graphics\Animation\AnimationController.h"
 #include "DEngine\Graphics\HUD\HUD.h"
 
+#include <Windows.h>
+
 
 Boss::Boss(Player* player)
 	: DE::GameObject()
 	, m_fHP(1000.0f)
 	, m_Player(player)
+	, m_bHitPlayer(false)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
 	new (hMeshComponent) DE::MeshComponent("mutant", DE::eMeshType::SKELETAL_MESH);
@@ -83,7 +86,25 @@ void Boss::Update(float deltaTime)
 
 	// update of HUD bar
 	((DE::ProgressBar*)DE::HUD::getInstance()->getHUDElementById("BossHP"))->setProgress(m_fHP / 1000.0f * 100.0f);
-	
+
+	// Check attack collision
+
+	if (m_Player && !m_bHitPlayer)
+	{
+		if (m_eState == PUNCHING || m_eState == JUMPATTACKING)
+		{
+			if (m_pLeftHand->isCollided((GameObject*)m_Player) || m_pRightHand->isCollided((GameObject*)m_Player))
+			{
+				m_bHitPlayer = true;
+				m_Player->m_fHP -= 10.0f;
+				static wchar_t s[64];
+				swprintf(s, 64, L"Unbind: %f\n", m_Player->m_fHP);
+				OutputDebugStringW(s);
+			}
+		}
+	}
+
+	// debug drawing
 	DE::AABB aabb = *GetComponent<DE::AABB>();
 	aabb.Transform(*GetTransform());
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(aabb);

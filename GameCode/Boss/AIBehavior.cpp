@@ -37,10 +37,11 @@ void AIBehavior::BossBehavior()
 
 	}
 	//DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
-	
+	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
+	direction = playerPos - bossPos;
 	if (!direction.iszero() && distance > 1.0f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
 	{
-
+		
 		if (((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING)
 		{	
 			Move(direction*speed*m_fDeltaTime*1.8f);
