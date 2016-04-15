@@ -21,6 +21,16 @@ public:
 		m_ComboDelays[1] = 0.7f;
 	};
 
+	void ResetCombo()
+	{
+		m_ComboSequence[0] = false;
+		m_ComboSequence[1] = false;
+		m_ComboSequence[2] = false;
+		m_ComboDelays[0] = false;
+		m_ComboDelays[1] = false;
+		m_fComboTime = 0.0f;
+	}
+
 	bool								m_ComboSequence[3];
 	float								m_ComboDelays[2];
 	float								m_fComboTime;

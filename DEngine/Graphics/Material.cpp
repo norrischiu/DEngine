@@ -40,7 +40,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		{
 			m_TexFlag |= NORMAL;
 		}
-		else if (!str.compare("SpecularColor"))
+		else if (!str.compare("SpecularColor") || !str.compare("Specular"))
 		{
 			m_TexFlag |= SPECULAR;
 		}
@@ -65,33 +65,31 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
 		break;
 	}
-	if (m_TexFlag == (DIFFUSE | NORMAL | SPECULAR) || m_TexFlag == (DIFFUSE | NORMAL))
+	if (m_TexFlag == (DIFFUSE | NORMAL | SPECULAR))
 	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_deferred.hlsl");
-		pass->SetBlendState(State::NULL_STATE);
-		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
-		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
-		pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		m_pRenderTechnique->AddPass(pass);
+		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl");
+	}
+	else if (m_TexFlag == (DIFFUSE | NORMAL))
+	{
+		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseBump_deferred.hlsl");
+	}
+	else if (m_TexFlag == (DIFFUSE | SPECULAR))
+	{
+		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecular_deferred.hlsl");
 	}
 	else if (m_TexFlag == DIFFUSE)
 	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_noBump_deferred.hlsl");
-		pass->SetBlendState(State::NULL_STATE);
-		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
-		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
-		pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		m_pRenderTechnique->AddPass(pass);
+		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_Diffuse_deferred.hlsl");
 	}
 	else
 	{
 		pass->SetPixelShader(nullptr);
-		pass->SetBlendState(State::NULL_STATE);
-		pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
-		pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
-		pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-		m_pRenderTechnique->AddPass(pass);
 	}
+	pass->SetBlendState(State::NULL_STATE);
+	pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
+	pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
+	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	m_pRenderTechnique->AddPass(pass);
 }
 
 void Material::UseDefault()

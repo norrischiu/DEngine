@@ -401,9 +401,6 @@
     <ClInclude Include="Math\Frustum.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Plane.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Math\simdmath.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -543,6 +540,9 @@
     <ClInclude Include="Math\MathHelper.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Plane.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
@@ -561,9 +561,6 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PS_diffuse.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PS_phong_gbuffer.hlsl">
@@ -617,7 +614,16 @@
     <FxCompile Include="Shaders\VS_terrain.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_noBump_deferred.hlsl">
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_Diffuse_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecular_deferred.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

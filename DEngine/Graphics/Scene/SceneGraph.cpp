@@ -22,7 +22,6 @@ SceneGraph* SceneGraph::m_pInstance;
 SceneGraph::SceneGraph()
 {
 	m_ShadowPass = new RenderPass;
-	m_ShadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
 	m_ShadowPass->SetPixelShader(nullptr);
 	m_ShadowPass->SetBlendState(State::NULL_STATE);
 	m_ShadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
@@ -105,7 +104,6 @@ void SceneGraph::Render()
 
 		itr->Draw();
 	}
-
 }
 
 void SceneGraph::ShadowMapGeneration()
@@ -128,19 +126,19 @@ void SceneGraph::ShadowMapGeneration()
 
 					m_ShadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
 
-						Skeleton* skel = anim->m_skeleton;
-						VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
-						for (auto itr : anim->m_animationSets)
+					Skeleton* skel = anim->m_skeleton;
+					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
+					for (auto itr : anim->m_animationSets)
+					{
+						if (itr.second->isActive())
 						{
-							if (itr.second->isActive())
+							for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
 							{
-								for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
-								{
-									palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
-								}
+								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 							}
 						}
-						m_MatrixPalette.Update();
+					}
+					m_MatrixPalette.Update();
 				
 					// TODO: separete skeletal and static mesh
 					//m_ShadowPass->SetVertexShader(itr->m_pMeshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0]->GetVertexShader());

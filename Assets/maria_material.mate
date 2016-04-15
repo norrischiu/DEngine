@@ -3,8 +3,10 @@ MATERIAL
 1.000000 1.000000 1.000000
 0.500000 0.500000 0.500000
 20.000000
-2
+3
 DiffuseColor
 maria_diffuse.dds
 NormalMap
 maria_normal.dds
+SpecularColor
+maria_specular.dds

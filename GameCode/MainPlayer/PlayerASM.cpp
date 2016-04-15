@@ -23,6 +23,7 @@ PlayerASM::PlayerASM(DE::AnimationController * animController)
 	AddState("ATTACK", "attack1");
 	AddState("ATTACK2", "attack2");
 	AddState("ATTACK3", "attack3");
+	AddState("IMPACT", "impact");
 
 	DE::Handle hWalkBTree(sizeof(DE::BlendTree));
 	new (hWalkBTree) DE::BlendTree();

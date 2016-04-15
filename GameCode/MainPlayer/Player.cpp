@@ -56,6 +56,7 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_strafe_left");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_right");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_left");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_impact");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk_back")->SetLooping(true);
@@ -70,7 +71,7 @@ Player::Player()
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 3.0f, 1.5f);
+	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 2.0f, 0.5f);
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
