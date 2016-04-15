@@ -34,13 +34,13 @@ void GameLoop::Construct()
 //	GameObject* terrain_gobj = terrain->CreateGameObject("terrain.dds", "terrain_normal.dds", "terrain_height.dds");
 
 //	HUD::getInstance()->addText("timer1", "FYP Progress:", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
-	DE::HUD::getInstance()->addProgress("BossHP", 100.0f, DE::HUDElement::Position(100, 700), DE::HUDElement::Size(800, 40), false);
+	DE::HUD::getInstance()->addProgress("BossHP", 100.0f, DE::HUDElement::Position(100, 700), DE::HUDElement::Size(800, 80), false);
 
 	Player* player = new Player();
-//	Boss* boss = new Boss(player);
-//	player->SetBoss(boss);
+	Boss* boss = new Boss(player);
+	player->SetBoss(boss);
 	
-	for (int i = 0; i < 381; ++i)
+	for (int i = 0; i < 0/*100*/; ++i)
 	{
 		std::string meshName = "church/church" + std::to_string(i);
 		DE::GameObject* levelMesh = new DE::GameObject;
@@ -55,14 +55,14 @@ void GameLoop::Construct()
 		levelMesh->AddComponent((DE::Component*) hAABB.Raw());
 	}
 
-	//DE::PointLight* light = new DE::PointLight(DE::Vector3(0.0f, 4.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 5.0f, 3.5f);
-	//DE::Handle hCamera(sizeof(DE::CameraComponent));
-	//new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
-	//light->AddComponent((DE::Component*)hCamera.Raw());
+	DE::PointLight* light = new DE::PointLight(DE::Vector3(0.0f, 10.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 10.0f, 5.0f, true);
+	DE::Handle hCamera(sizeof(DE::CameraComponent));
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	light->AddComponent((DE::Component*)hCamera.Raw());
 
-	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.0f);
-	new DE::PointLight(DE::Vector3(3.0f, 3.0f, 0.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.0f);
-	new DE::PointLight(DE::Vector3(-3.0f, 3.0f, 0.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.0f);
+	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 5.0f, 2.5f);
+	new DE::PointLight(DE::Vector3(3.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 5.0f, 2.5f);
+	new DE::PointLight(DE::Vector3(-3.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 5.0f, 2.5f);
 }
 
 void GameLoop::Update(float deltaTime)

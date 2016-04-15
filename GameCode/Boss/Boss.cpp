@@ -59,19 +59,20 @@ Boss::Boss(Player* player)
 	// Left hand
 	m_pLeftHand = new DE::GameObject();
 	DE::Handle hLeftHandAABB(sizeof(DE::AABB));
-	new (hLeftHandAABB) DE::AABB(DE::Vector3(-2, -2, -2), DE::Vector3(2, 2, 2));
+	//new (hLeftHandAABB) DE::AABB(DE::Vector3(0, 0.4, 0.6), DE::Vector3(0.1, 0.7, 0.9));
+	new (hLeftHandAABB) DE::AABB(DE::Vector3(-0.1, -0.1, -0.1), DE::Vector3(0.2, 0.2, 0.1));
 	m_pLeftHand->AddComponent((DE::Component*) hLeftHandAABB.Raw());
 
-	m_pLeftHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 9);
+	m_pLeftHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 10);
 	m_pLeftHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// Right hand
 	m_pRightHand = new DE::GameObject();
 	DE::Handle hRightHandAABB(sizeof(DE::AABB));
-	new (hRightHandAABB) DE::AABB(DE::Vector3(-1, -1, -1), DE::Vector3(1, 1, 1));
+	new (hRightHandAABB) DE::AABB(DE::Vector3(-0.1, -0.1, -0.1), DE::Vector3(0.2, 0.2, 0.1));
 	m_pRightHand->AddComponent((DE::Component*) hRightHandAABB.Raw());
 
-	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 29);
+	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 }
 
@@ -86,6 +87,14 @@ void Boss::Update(float deltaTime)
 	DE::AABB aabb = *GetComponent<DE::AABB>();
 	aabb.Transform(*GetTransform());
 	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(aabb);
+
+	DE::AABB LHaabb = *m_pLeftHand->GetComponent<DE::AABB>();
+	LHaabb.Transform(*m_pLeftHand->GetTransform());
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(LHaabb);
+
+	DE::AABB RHaabb = *m_pRightHand->GetComponent<DE::AABB>();
+	RHaabb.Transform(*m_pRightHand->GetTransform());
+	DE::DEBUG_RENDERER::GetInstance()->DRAW_AABB(RHaabb);
 }
 
 Boss::~Boss()
