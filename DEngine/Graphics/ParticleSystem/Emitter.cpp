@@ -15,7 +15,7 @@ Emitter::Emitter() : Component()
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
 }
 
-Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emitDir) : Component()
+Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emitDir, Matrix4* OwnerTransform) : Component()
 	, m_pTransform(new Matrix4())
 {
 	*m_pTransform = Matrix4::Identity;
@@ -28,6 +28,7 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	m_EffectType = type;
 	m_vEmitPosW = emitPos;
 	m_vEmitDirW = emitDir;
+	m_pOwnerTransform = OwnerTransform;
 	m_pVSGSPSCBuffer = new VSGSPSPerFrameCBuffer;
 	m_Flag = true;
 	m_FirstRun = true;
@@ -113,6 +114,7 @@ void Emitter::Draw()
 
 	ptr->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
 	ptr->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
+	ptr->gOwnerTransform = *m_pOwnerTransform;
 	Vector3 emitPos = m_vEmitPosW;
 	emitPos.Transform(*m_pTransform);
 	ptr->gEmitPosW = emitPos;

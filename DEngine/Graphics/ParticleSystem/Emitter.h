@@ -33,7 +33,7 @@ public:
 	Emitter(int Type, Vector3& emitPos, Vector3& emitDir);
 
 
-	Emitter(char* id, int Type, float size, Vector3& emitPos, Vector3& emitDir);
+	Emitter(char* id, int Type, float size, Vector3& emitPos, Vector3& emitDir, Matrix4* OwnerTransform);
 
 	~Emitter();
 
@@ -84,6 +84,9 @@ private:
 
 	// transform matrix
 	Matrix4*						m_pTransform;
+
+	// transform matrix of Owner
+	Matrix4*						m_pOwnerTransform;
 
 	// Mesh for emitter
 	MeshData*						m_InitMesh;

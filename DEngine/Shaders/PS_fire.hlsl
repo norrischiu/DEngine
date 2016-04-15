@@ -6,6 +6,7 @@ cbuffer CB_PER_FRAME : register(b0)
 {
 	float4x4	gViewProj;
 	float4x4	gClipToView;
+	float4x4	gOwnerTransform;
 	float4		gEyePosW;
 
 	float4		gEmitPosW;

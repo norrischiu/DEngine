@@ -9,6 +9,8 @@ cbuffer CB_PER_FRAME : register(b0)
 {
 	float4x4	gViewProj;
 	float4x4	gClipToView;
+	float4x4	gOwnerTransform;
+
 	float4		gEyePosW;
 
 	float4		gEmitPosW;
@@ -16,7 +18,7 @@ cbuffer CB_PER_FRAME : register(b0)
 
 	float		gTimeStep;
 	float		gFlareAge;
-	float	gSize;
+	float		gSize;
 	unsigned int gMaxParts;
 	unsigned int gEffectType;
 };
@@ -65,7 +67,13 @@ VS_OUTPUT VS(VS_INPUT vin)
 	{
 		vout.SizeW = t * vin.SizeW / 1.8;
 	}
+
+	// apply formula
+
+	//float4 transformVel = mul(vin.InitialVelW, gOwnerTransform);
+
 	vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
+	//vout.PosW.xyz = (mul(float4(vout.PosW.xyz, 1.0f), gOwnerTransform)).xyz;
 	float opacity = 1.0f - smoothstep(0.0f, 1.0f, t / 1.0f);
 	vout.Color = float4(1.0f, 0.5f, 0.0f, opacity);
 	vout.Type = vin.Type;
