@@ -59,7 +59,7 @@ namespace DE
 		scData.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		scData.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-		HRESULT hr = D3D11CreateDevice(vAdapters[0], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
+		HRESULT hr = D3D11CreateDevice(vAdapters[1], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
 			D3D11_SDK_VERSION, &m_pD3D11Device, NULL, &m_pD3D11Context);
 		assert(hr == S_OK);
 		hr = pFactory->CreateSwapChain(m_pD3D11Device, &scData, &m_pSwapChain);
@@ -143,13 +143,13 @@ namespace DE
 		m_GBuffer->Render();
 
 		// Post process effect
-		m_PPE->Render();
+//		m_PPE->Render();
 
 		// Particle system drawing
 		ParticleSystem::GetInstance()->Render();
 
 		// HUD drawing
-		//	HUD::getInstance()->Render();
+//		HUD::getInstance()->Render();
 
 		// Debug drawing
 		DEBUG_RENDERER::GetInstance()->Render();

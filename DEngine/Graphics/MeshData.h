@@ -57,6 +57,14 @@ public:
 	{
 		return m_pVertexBuffer;
 	}
+
+	void Destruct()
+	{
+		m_Material.Destruct();
+		m_pVertexBuffer->Release();
+		m_pIndexBuffer->Release();
+	}
+
 	// Mesh material
 	Material								m_Material;
 

@@ -110,6 +110,7 @@ public:
 	{
 		for (MeshData* meshData : m_vDbgMeshs)
 		{
+			meshData->m_Material.Destruct();
 			delete meshData;
 			meshData = nullptr;
 		}

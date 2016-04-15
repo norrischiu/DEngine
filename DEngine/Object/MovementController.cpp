@@ -36,26 +36,26 @@ bool MovementController::HandleKeyboardEvent(Event* pEvt)
 {
 	if (pEvt->m_ID == InputEventID::Key_W_Hold_Event)
 	{
-		Vector3 vForward = m_pOwner->GetTransform()->GetForward();
+		Vector3 vForward = DE::Vector3::UnitZ;
 		m_vTrans += (vForward * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	else if (pEvt->m_ID == InputEventID::Key_S_Hold_Event)
 	{
-		Vector3 vBackward = -m_pOwner->GetTransform()->GetForward();
-		m_vTrans += (vBackward * m_fDeltaTime * m_fSpeed);
+		Vector3 vForward = DE::Vector3::UnitZ;
+		m_vTrans += (-vForward * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	else if (pEvt->m_ID == InputEventID::Key_D_Hold_Event)
 	{
-		Vector3 vRight = m_pOwner->GetTransform()->GetRight();
+		Vector3 vRight = DE::Vector3::UnitX;
 		m_vTrans += (vRight * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	else if (pEvt->m_ID == InputEventID::Key_A_Hold_Event)
 	{
-		Vector3 vLeft = -m_pOwner->GetTransform()->GetRight();
-		m_vTrans += (vLeft * m_fDeltaTime * m_fSpeed);
+		Vector3 vRight = DE::Vector3::UnitX;
+		m_vTrans += (-vRight * m_fDeltaTime * m_fSpeed);
 		return true;
 	}
 	return false;
@@ -68,8 +68,8 @@ bool MovementController::HandleMouseEvent(Event* pEvt)
 		Mouse_Move_Event* pMouseEvt = (Mouse_Move_Event*) pEvt;
 		if (pMouseEvt->cursorPosChange[0] != 0 && pMouseEvt->cursorPosChange[1] != 0)
 		{
-			Matrix4 rot;
-			rot.CreateRotationX(pMouseEvt->cursorPosChange[0] / 150.0f);
+			//Matrix4 rot;
+			//rot.CreateRotationX(pMouseEvt->cursorPosChange[0] / 150.0f);
 			//m_pOwner->Transform(rot);
 		}
 		return true;

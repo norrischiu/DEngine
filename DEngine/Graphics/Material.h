@@ -14,8 +14,9 @@ public:
 
 	// Empty constructor
 	Material()
+		: m_hRenderTechnique(sizeof(RenderTechnique))
 	{
-		m_pRenderTechnique = new RenderTechnique;
+		new (m_hRenderTechnique) RenderTechnique();
 	};
 
 	// Overload constructor
@@ -25,8 +26,9 @@ public:
 		, m_vSpecular(spec)
 		, m_fShininess(shin)
 		, m_TexFlag(NULL)
+		, m_hRenderTechnique(sizeof(RenderTechnique))
 	{
-		m_pRenderTechnique = new RenderTechnique;
+		new (m_hRenderTechnique) RenderTechnique();
 	}
 
 	void ReadFromFile(const char* filename, int meshType);
@@ -37,12 +39,17 @@ public:
 
 	RenderTechnique* GetRenderTechnique()
 	{
-		return m_pRenderTechnique;
+		return (RenderTechnique*) m_hRenderTechnique.Raw();
+	}
+
+	void Destruct()
+	{
+		m_hRenderTechnique.Free();
 	}
 
 	void AddPassToTechnique(RenderPass* pass)
 	{
-		m_pRenderTechnique->AddPass(pass);
+		((RenderTechnique*)m_hRenderTechnique.Raw())->AddPass(pass);
 	}
 
 	inline Vector4 GetSpecular()
@@ -74,7 +81,7 @@ private:
 
 	char						m_TexFlag;
 
-	RenderTechnique*			m_pRenderTechnique;
+	Handle						m_hRenderTechnique;
 };
 
 };

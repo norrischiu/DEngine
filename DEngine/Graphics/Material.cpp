@@ -89,7 +89,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 	pass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
 	pass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
 	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-	m_pRenderTechnique->AddPass(pass);
+	((RenderTechnique*)m_hRenderTechnique.Raw())->AddPass(pass);
 }
 
 void Material::UseDefault()

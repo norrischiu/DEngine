@@ -27,7 +27,9 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 	char* id = progressBar->getID();
 
 	if (progressBar->hasUpdate()) {
-		if (m_cache[id].Raw()) {
+		MeshComponent* mesh = (MeshComponent*)m_cache[id].Raw();
+		if (mesh) {
+			mesh->Destruct();
 			m_cache[id].Free();
 			m_cache.erase(id);
 			if (progressBar->isShowText())

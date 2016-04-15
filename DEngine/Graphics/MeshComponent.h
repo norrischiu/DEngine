@@ -21,7 +21,14 @@ public:
 	// Overload constructor: create with given mesh file name
 	MeshComponent(const char* meshName, int type = eMeshType::STANDARD_MESH);
 
-	~MeshComponent();
+	~MeshComponent() {};
+
+	void Destruct()
+	{
+		m_pMeshData->Destruct();
+		delete m_pTransform;
+		delete m_pMeshData;
+	}
 
 	// Inherited via Component
 	void SetOwner(GameObject* ptr) override;

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "RenderPass.h"
+#include "Memory\Handle.h"
 
 namespace DE
 {
@@ -11,6 +12,8 @@ class RenderTechnique
 {
 
 public:
+
+	CUSTOM_MEMORY_DEFINE();
 
 	// Empty constructor
 	RenderTechnique()
