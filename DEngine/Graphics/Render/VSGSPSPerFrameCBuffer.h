@@ -17,7 +17,6 @@ public:
 
 		Matrix4 gViewProj;
 		Matrix4 gClipToView;
-		Matrix4 gOwnerTransform;
 		Vector3 gEyePosW;
 		Vector3 gEmitPosW;
 		Vector3 gEmitDirW;
