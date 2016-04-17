@@ -147,6 +147,7 @@
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="GameObject\GameObjectSpawner.cpp" />
     <ClCompile Include="GameObject\GameWorld.cpp" />
     <ClCompile Include="Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Graphics\Animation\AnimationController.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Event\EventQueue.h" />
     <ClInclude Include="Event\InputEvent.h" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="GameObject\GameObjectSpawner.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />

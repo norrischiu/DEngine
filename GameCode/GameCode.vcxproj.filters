@@ -20,6 +20,9 @@
       <Filter>MainPlayer</Filter>
     </ClCompile>
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="MainPlayer\PlayerGOS.cpp">
+      <Filter>MainPlayer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -33,6 +36,9 @@
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="MainPlayer\PlayerMC.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\PlayerGOS.h">
       <Filter>MainPlayer</Filter>
     </ClInclude>
   </ItemGroup>

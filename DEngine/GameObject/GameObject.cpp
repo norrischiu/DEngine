@@ -63,4 +63,10 @@ void GameObject::AddComponent(Component * pComponent)
 	m_vComponents.push_back(pComponent);
 }
 
+
+std::vector<Component*>* GameObject::getAllComponents()
+{
+	return &m_vComponents;
+}
+
 }; // namespace DE

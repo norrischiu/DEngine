@@ -13,7 +13,7 @@ class AIController : public Component
 public:
 	static const int ComponentID = ComponentID::AI_CONTROLLER;
 
-	AIController(FlowField& flowField, Terrain* terrain = nullptr);
+	AIController(FlowField* flowField, Terrain* terrain = nullptr);
 	~AIController();
 
 
@@ -24,8 +24,8 @@ public:
 	void Move(Vector3 vTrans);
 	void updateFlowField(const Vector3& start, const Vector3& destination);
 
-private:
-	FlowField m_flowField;
+public:
+	FlowField* m_flowField;
 	Terrain* m_terrain;
 };
 

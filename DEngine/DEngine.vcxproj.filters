@@ -279,6 +279,9 @@
     <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp">
       <Filter>Graphics\Skydome</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\GameObjectSpawner.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -548,6 +551,9 @@
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
       <Filter>Graphics\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObjectSpawner.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

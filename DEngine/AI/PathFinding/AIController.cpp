@@ -5,7 +5,7 @@
 namespace DE
 {
 
-AIController::AIController(FlowField& flowField, Terrain* terrain)
+AIController::AIController(FlowField* flowField, Terrain* terrain)
 	: Component(nullptr), m_flowField(flowField), m_terrain(terrain)
 {
 	m_ID = ComponentID;
@@ -18,7 +18,7 @@ AIController::~AIController()
 
 void AIController::updateFlowField(const Vector3& start, const Vector3& destination)
 {
-	m_flowField = FlowFieldBuilder::getInstance()->generateFlowField(start, destination, m_flowField.getObstacles(), destination);
+	m_flowField = FlowFieldBuilder::getInstance()->generateFlowField(start, destination, m_flowField->getObstacles(), destination);
 }
 
 float AIController::LookUp(const float x, const float z)
@@ -43,7 +43,8 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 void AIController::Update(float deltaTime)
 {
 	Vector3 currPos = m_pOwner->GetPosition();
-	Vector3 direction = m_flowField.getDirection(currPos);
+
+	Vector3 direction = m_flowField->getDirection(currPos);
 	Vector3 newPos = m_pOwner->GetPosition() + direction * deltaTime * 3.0f;
 	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
 	newPos.SetY(newY);
@@ -57,11 +58,15 @@ void AIController::Update(float deltaTime)
 		if (true || angle < 30.0f)
 		{
 			Move(newPos - currPos);
+
 			CameraComponent* cam = m_pOwner->GetComponent<DE::CameraComponent>();
-			const float cam_x = cam->GetPosition().GetX();
-			const float cam_z = cam->GetPosition().GetZ();
-			const float owner_y = m_pOwner->GetPosition().GetY();
-			cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 5.0f, 5.0f));
+			if (cam != nullptr)
+			{
+				const float cam_x = cam->GetPosition().GetX();
+				const float cam_z = cam->GetPosition().GetZ();
+				const float owner_y = m_pOwner->GetPosition().GetY();
+				cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 5.0f, 5.0f));
+			}
 		}
 	}
 }

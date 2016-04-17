@@ -17,7 +17,9 @@
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Math\simdmath.h"
+#include "PlayerGOS.h"
 
+PlayerGOS* spawner = nullptr;
 
 Player::Player()
 	: DE::GameObject()
@@ -84,6 +86,19 @@ Player::Player()
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
+}
+
+void Player::Clone(const int spawnNum, const DE::Vector3& spawnPos, const float spawnTimeDelay)
+{
+	spawner = new PlayerGOS(this, spawnNum, spawnPos, spawnTimeDelay);
+}
+
+void Player::UpdateSpawner(float deltaTime)
+{
+	if (spawner != nullptr)
+	{
+		spawner->Update(deltaTime);
+	}
 }
 
 void Player::Update(float deltaTime)

@@ -37,6 +37,8 @@ public:
 
 	void				AddComponent(Component* pComponent);
 
+	std::vector<Component*>* getAllComponents();
+
 	// Return specific component pointer
 	template<class T>
 	T*			GetComponent()
@@ -66,6 +68,11 @@ public:
 		return m_pTransform->m_mWorldTransform->GetPosition();
 	}
 
+	int GetGameObjectID()
+	{
+		return m_iGameObjectID;
+	}
+
 	void SetPosition(Vector3 vPos)
 	{
 		Matrix4 trans;
@@ -73,7 +80,7 @@ public:
 		*m_pTransform->m_mWorldTransform = trans;
 	}
 
-protected:
+public:
 
 	Collide*						m_pContact;
 
