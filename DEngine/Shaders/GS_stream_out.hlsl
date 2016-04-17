@@ -43,7 +43,7 @@ void GS(point VS_INPUT gin[1],
 		if (gin[0].Type == PT_EMITTER)
 		{
 			// time to emit a new particle?
-			if (gin[0].Age > 0.1f)
+			if (gin[0].Age > 0.01f)
 			{
 				// temp random vector3
 				float3 random = rand_1_05(input) * 0.5;
@@ -52,7 +52,8 @@ void GS(point VS_INPUT gin[1],
 				{
 					VS_INPUT p;
 					//p.InitialPosW = float4(gEmitPosW.xyz + random, 1.0f);
-					p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
+					//p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
+					p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
 					p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
 					p.SizeW = gSize;
 					if (gEffectType == 2)
@@ -73,7 +74,7 @@ void GS(point VS_INPUT gin[1],
 		else
 		{
 			// Specify conditions to keep particle; this may vary from system to system.
-			if (gin[0].Age <= 1.8f)
+			if (gin[0].Age <= 0.3f)
 				ptStream.Append(gin[0]);
 		}
 	

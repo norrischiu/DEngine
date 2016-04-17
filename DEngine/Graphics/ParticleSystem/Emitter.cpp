@@ -73,7 +73,7 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	Handle hTexture(sizeof(Texture));
 	if (type == TORCH_FLAME)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "flare.dds");
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "yellow_light.dds");
 		drawPass->AddTexture(hTexture);
 	}
 	else if (type == SMOKE)

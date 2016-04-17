@@ -100,7 +100,7 @@ Player::Player()
 
 	// Fire
 	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 1.5f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.1f, 0.5f, 0.1f), m_Weapon->GetTransform());
+	new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
 }
 
