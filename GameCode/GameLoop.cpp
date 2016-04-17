@@ -49,7 +49,7 @@ void GameLoop::Construct()
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(255.0f, 0.0f, 255.0f), obstacles, DE::Vector3(255.0f, 0.0f, 0.0f));
+	DE::FlowField flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(128.0f, 0.0f, 0.0f));
 	//flowField.Draw();
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
