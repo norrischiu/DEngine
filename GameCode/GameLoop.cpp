@@ -16,15 +16,15 @@
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
 #include "DEngine\GameObject\GameObjectSpawner.h"
+#include "MainPlayer\PlayerGOS.h"
 
 // Game include
 #include "MainPlayer\Player.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
-Player* player = nullptr;
+PlayerGOS* playerGOS = nullptr;
 
 GameLoop::GameLoop()
-	: m_timer(0.0f)
 {
 
 }
@@ -43,7 +43,7 @@ void GameLoop::Construct()
 	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
-	player = new Player();
+	Player* player = new Player();
 	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
@@ -51,14 +51,13 @@ void GameLoop::Construct()
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(128.0f, 0.0f, 0.0f));
+	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(127.0f, 0.0f, 0.0f));
 	flowField->Draw();
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
-	player->Clone(1, player->GetPosition(), 1.0f);
 
-	//	player->AddComponent(DE::ParticleSystem::GetInstance()->AddParticles("torch_flame_1", 1, DE::Vector3(-2.5f, 0.5f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f)));
+	playerGOS = new PlayerGOS(player, 1, player->GetPosition(), 0.5f);
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
@@ -68,8 +67,11 @@ void GameLoop::Construct()
 
 void GameLoop::Update(float deltaTime)
 {
-	DE::GameWorld::GetInstance()->Update(deltaTime);
-	player->UpdateSpawner(deltaTime);
+	static float m_timer = 0.0f;
 	m_timer += deltaTime;
+
+	DE::GameWorld::GetInstance()->Update(deltaTime);
+	playerGOS->Update(deltaTime);
+
 	((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
 }

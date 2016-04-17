@@ -26,7 +26,6 @@ private:
 	
 	// Singleton instance
 	static GameLoop* m_pInstance;
-	float m_timer;
 };
 
 #endif GAMELOOP_H

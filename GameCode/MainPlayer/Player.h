@@ -15,10 +15,6 @@ public:
 	// Inherited via GameObject
 	void Update(float deltaTime) override;
 
-	void UpdateSpawner(float deltaTime);
-
-	void Clone(const int spawnNum, const DE::Vector3& spawnPos, const float spawnTimeDelay);
-
 	//~Player();
 
 public:
