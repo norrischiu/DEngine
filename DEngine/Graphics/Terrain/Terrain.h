@@ -57,7 +57,7 @@ namespace DE
 
 	private:
 		std::vector<float2> CalcAllPatchBoundsY();
-		float2 CalcPatchBoundsY(const int patch_id);
+		float2 CalcPatchBoundsY(const int start_j, const int start_i);
 		std::vector<float2> calculateTextureCoordiate();
 
 	private:

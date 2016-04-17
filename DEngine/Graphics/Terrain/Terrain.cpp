@@ -69,32 +69,35 @@ float Terrain::GetHeight(float x, float z) const
 
 std::vector<float2> Terrain::CalcAllPatchBoundsY()
 {
-	std::vector<float2> patchBoundsY(m_HeightMap.size() / m_initInfo.CellsPerPatch);
+	std::vector<float2> patchBoundsY(m_initInfo.HeightmapHeight *  (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch));
+	int patch_id = 0;
 
-	for (int j = 0; j < m_initInfo.HeightmapHeight; j++)
+	for (int j = 0; j < m_initInfo.HeightmapHeight; j += 8)
 	{
-		for (int i = 0; i < m_initInfo.HeightmapWidth; i += m_initInfo.CellsPerPatch)
+		for (int i = 0; i < m_initInfo.HeightmapWidth; i += 8)
 		{
-			const int patch_id = j + (i / m_initInfo.CellsPerPatch);
-			patchBoundsY[patch_id] = CalcPatchBoundsY(patch_id);
+			patchBoundsY[patch_id] = CalcPatchBoundsY(j, i);
+			patch_id++;
 		}
 	}
 
 	return patchBoundsY;
 }
 
-float2 Terrain::CalcPatchBoundsY(const int patch_id)
+float2 Terrain::CalcPatchBoundsY(const int start_j, const int start_i)
 {
 	float minY = (std::numeric_limits<float>::max)();
 	float maxY = -(std::numeric_limits<float>::min)();
 
-	const int start = patch_id *  m_initInfo.CellsPerPatch;
-	const int end = (patch_id + 1) *  m_initInfo.CellsPerPatch;
 
-	for (int i = start; i < end; i++)
+	for (int j = start_j; j < start_j + 8; j++)
 	{
-		minY = min(minY, m_HeightMap[i]);
-		maxY = max(maxY, m_HeightMap[i]);
+		for (int i = start_i; i < start_i + 8; i++)
+		{
+			const int index = j * m_initInfo.HeightmapWidth + i;
+			minY = min(minY, m_HeightMap[index]);
+			maxY = max(maxY, m_HeightMap[index]);
+		}
 	}
 
 	const float2 boundY(minY, maxY);
@@ -155,7 +158,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	std::vector<float2> texture_coordinate = calculateTextureCoordiate();
 	std::vector<float2> boundsY = CalcAllPatchBoundsY();
 
-	const int iNumVertices = m_initInfo.HeightmapWidth / 8 * (m_initInfo.HeightmapHeight) / 8 * 4;
+	const int iNumVertices = ((m_initInfo.HeightmapHeight - 8) / 8) * ((m_initInfo.HeightmapWidth - 8) / 8) * 4;
 	const int iNumIndices = iNumVertices;
 	VertexTerrain* vertices = new VertexTerrain[iNumVertices];
 	unsigned int* indices = new unsigned int[iNumIndices];
@@ -203,7 +206,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 			ul.Transform(translate);
 			ur.Transform(translate);
 
-			const int patch_id = j + (i / m_initInfo.CellsPerPatch);
+			const int patch_id = (j / 8) * (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch) + (i / m_initInfo.CellsPerPatch);
 			// bottom left
 			{
 				vertices[indexCounter].m_pos = bl;

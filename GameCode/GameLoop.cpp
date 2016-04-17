@@ -42,14 +42,14 @@ void GameLoop::Construct()
 	DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
-	player->SetPosition(DE::Vector3(-8.0f, terrain->GetHeight(-8.0f, -8.0f), -8.0f));
+	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(128.0f, 0.0f, 0.0f));
+	DE::FlowField flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(255.0f, 0.0f, 255.0f), obstacles, DE::Vector3(255.0f, 0.0f, 0.0f));
 	//flowField.Draw();
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
