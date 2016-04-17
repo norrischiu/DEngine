@@ -43,8 +43,8 @@ std::vector<float> TerrainBuilder::LoadHeightMap(const char* heightMapFile, cons
 		for (int i = 0; i < heightmapWidth; i++)
 		{
 			const int index = (heightmapWidth * j) + i;
-
-			m_HeightMap[index] = ((float) bitmapImage[index] / 255.0f) * heightScale;
+			const float height = ((float) bitmapImage[index] / 255.0f) * heightScale;
+			m_HeightMap[index] = height;
 		}
 	}
 

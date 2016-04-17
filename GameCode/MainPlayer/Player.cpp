@@ -81,9 +81,11 @@ Player::Player()
 	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// Fire
+	/*
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
+	*/
 }
 
 void Player::Update(float deltaTime)

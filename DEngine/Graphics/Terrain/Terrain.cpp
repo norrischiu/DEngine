@@ -31,12 +31,12 @@ float Terrain::GetDepth() const
 float Terrain::GetHeight(float x, float z) const
 {
 	// Transform from terrain local space to "cell" space.
-	float c = x + GetWidth() / 2.0f;
-	float d = z + GetDepth() / 2.0f;
+	float c = (x + GetWidth() / 2.0f);
+	float d = (z + GetDepth() / 2.0f);
 
 	// Get the row and column we are in.
-	int row = (int)floorf(d);
-	int col = (int)floorf(c);
+	int row = (int) floorf(d);
+	int col = (int) floorf(c);
 
 	// Grab the heights of the cell we are in.
 	float A = m_HeightMap[row * m_initInfo.HeightmapWidth + col];

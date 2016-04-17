@@ -42,12 +42,12 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 
 void AIController::Update(float deltaTime)
 {
-	Vector3 direction = m_flowField.getDirection(m_pOwner->GetPosition());
+	Vector3 currPos = m_pOwner->GetPosition();
+	Vector3 direction = m_flowField.getDirection(currPos);
 	Vector3 vTrans = direction * deltaTime * 3.0f;
 	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
-	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
-	newPos.SetY(newY);
-
+	newPos.SetY(LookUp(newPos.GetX(), newPos.GetZ()));
+	Move(newPos - currPos);
 	if (!(newPos - m_pOwner->GetPosition()).iszero())
 	{
 		const Vector3 vec1 = (newPos - m_pOwner->GetPosition()).Normalize();
@@ -56,8 +56,7 @@ void AIController::Update(float deltaTime)
 
 		if (true || angle < 30.0f)
 		{
-			vTrans.SetY(newY - m_pOwner->GetPosition().GetY());
-			Move(vTrans);
+			Move(newPos - currPos);
 		}
 	}
 

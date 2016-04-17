@@ -44,7 +44,7 @@ void GameLoop::Construct()
 	DE::HUD::getInstance()->addText("debug1", "", DE::HUDElement::Position(10, 200), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 
 	Player* player = new Player();
-	player->SetPosition(DE::Vector3(8.0f, terrain->GetHeight(-512, -512), 8.0f));
+	player->SetPosition(DE::Vector3(8.0f, terrain->GetHeight(8.0f, 8.0f), 8.0f));
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
