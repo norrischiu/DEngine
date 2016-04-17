@@ -543,6 +543,9 @@
     <ClInclude Include="Math\Plane.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
+      <Filter>Graphics\Skydome</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
