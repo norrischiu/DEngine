@@ -24,7 +24,7 @@ void AIController::updateFlowField(const Vector3& start, const Vector3& destinat
 float AIController::LookUp(const float x, const float z)
 {
 	if (m_terrain) {
-		return m_terrain->GetHeight(x, z) * 60.0f;
+		return m_terrain->GetHeight(x, z);
 	}
 
 	return 0.0f;
@@ -61,11 +61,13 @@ void AIController::Update(float deltaTime)
 		}
 	}
 
+	/*
 	CameraComponent* cam = m_pOwner->GetComponent<DE::CameraComponent>();
 	float cam_x = cam->GetPosition().GetX();
 	float cam_z = cam->GetPosition().GetZ();
 	float cam_y = m_pOwner->GetPosition().GetY();
-	cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - cam_y + 5.0f, 5.0f));
+	cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - cam_y, 5.0f));
+	*/
 }
 
 void AIController::Move(Vector3 vTrans)

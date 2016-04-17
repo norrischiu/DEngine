@@ -19,20 +19,20 @@ Terrain::~Terrain()
 
 float Terrain::GetWidth() const
 {
-	return (m_initInfo.HeightmapWidth - 1) * m_initInfo.CellSpacing;
+	return m_initInfo.HeightmapWidth;
 }
 
 float Terrain::GetDepth() const
 {
 	// Total terrain depth.
-	return (m_initInfo.HeightmapHeight - 1) * m_initInfo.CellSpacing;
+	return m_initInfo.HeightmapHeight;
 }
 
 float Terrain::GetHeight(float x, float z) const
 {
 	// Transform from terrain local space to "cell" space.
-	float c = (x + 0.5f*GetWidth()) / m_initInfo.CellSpacing;
-	float d = (z - 0.5f*GetDepth()) / -m_initInfo.CellSpacing;
+	float c = x + GetWidth() / 2.0f;
+	float d = z + GetDepth() / 2.0f;
 
 	// Get the row and column we are in.
 	int row = (int)floorf(d);

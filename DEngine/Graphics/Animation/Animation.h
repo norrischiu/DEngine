@@ -13,23 +13,23 @@ class Animation
 {
 
 public:
-	Animation(const float animationFPS = 30.0f, const int frame = 1);
+	Animation(const float animationFPS = 30.0f, const float frame = 1.0f);
 	~Animation();
 
 	void AddPose(SQT sqt);
 
 	int getCurrentKeyframe() const;
 	int getNumKeyframes() const;
-	void setCurrentKeyframe(const int frame);
+	void setCurrentKeyframe(const float frame);
 	float getAnimationFPS();
 	void setAnimationFPS(const float animationFPS);
 
-	SQT GetCurrentPose(const float delta_time);
+	SQT GetCurrentPose();
 
 	void update(const float delta_time);
 
 	//private:
-	int m_currKeyframe;
+	float m_currKeyframe;
 	float m_animationFPS;
 	std::vector<SQT> m_Poses;
 };
