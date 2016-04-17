@@ -1,7 +1,6 @@
 #include "AIController.h"
 #include "../../GameObject/GameObject.h"
 #include "FlowFieldBuilder.h"
-#include "../../Graphics/HUD/HUD.h"
 
 namespace DE
 {
@@ -45,12 +44,11 @@ void AIController::Update(float deltaTime)
 {
 	Vector3 currPos = m_pOwner->GetPosition();
 	Vector3 direction = m_flowField.getDirection(currPos);
-	Vector3 vTrans = direction * deltaTime * 3.0f;
-	Vector3 newPos = currPos + vTrans;
+	Vector3 newPos = m_pOwner->GetPosition() + direction * deltaTime * 3.0f;
 	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
 	newPos.SetY(newY);
 
-	if (!(newPos - m_pOwner->GetPosition()).iszero())
+	if (!(newPos - currPos).iszero())
 	{
 		const Vector3 vec1 = (newPos - currPos).Normalize();
 		const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
@@ -59,20 +57,14 @@ void AIController::Update(float deltaTime)
 		if (true || angle < 30.0f)
 		{
 			Move(newPos - currPos);
-			Vector3 a = m_pOwner->GetPosition();
-			float b = 1;
 		}
 	}
 
-	((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("debug1"))->setText("newY: %.3f", newY);
-
-	/*
 	CameraComponent* cam = m_pOwner->GetComponent<DE::CameraComponent>();
 	float cam_x = cam->GetPosition().GetX();
 	float cam_z = cam->GetPosition().GetZ();
-	float cam_y = m_pOwner->GetPosition().GetY();
-	cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - cam_y + 5.0f, 5.0f));
-	*/
+	float owner_y = m_pOwner->GetPosition().GetY();
+	cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 5.0f, 5.0f));
 }
 
 void AIController::Move(Vector3 vTrans)

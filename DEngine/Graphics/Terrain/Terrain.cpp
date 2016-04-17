@@ -19,20 +19,20 @@ Terrain::~Terrain()
 
 float Terrain::GetWidth() const
 {
-	return m_initInfo.HeightmapWidth;
+	return (m_initInfo.HeightmapWidth - 1) * m_initInfo.CellSpacing;
 }
 
 float Terrain::GetDepth() const
 {
 	// Total terrain depth.
-	return m_initInfo.HeightmapHeight;
+	return (m_initInfo.HeightmapHeight - 1) * m_initInfo.CellSpacing;
 }
 
 float Terrain::GetHeight(float x, float z) const
 {
 	// Transform from terrain local space to "cell" space.
-	float c = (x + GetWidth() / 2.0f);
-	float d = (z + GetDepth() / 2.0f);
+	float c = (x + 0.5f*GetWidth()) / m_initInfo.CellSpacing;
+	float d = (z - 0.5f*GetDepth()) / -m_initInfo.CellSpacing;
 
 	// Get the row and column we are in.
 	int row = (int)floorf(d);
@@ -179,24 +179,24 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 
 			const float2 bl_uv(
 				texture_coordinate[index_bl].x, texture_coordinate[index_bl].y
-				);
+			);
 			const float2 br_uv(
 				(texture_coordinate[index_br].x == 0.0f ? 1.0f : texture_coordinate[index_br].x),
 				texture_coordinate[index_br].y
-				);
+			);
 			const float2 ul_uv(
 				texture_coordinate[index_ul].x,
 				(texture_coordinate[index_ul].y == 1.0f ? 0.0f : texture_coordinate[index_ul].y)
-				);
+			);
 			const float2 ur_uv(
 				(texture_coordinate[index_ur].x == 0.0f ? 1.0f : texture_coordinate[index_ur].x),
 				(texture_coordinate[index_ur].y == 1.0f ? 0.0f : texture_coordinate[index_ur].y)
-				);
+			);
 
-			Vector3 bl(i * m_initInfo.CellSpacing, m_HeightMap[index_bl] * m_initInfo.CellSpacing, j* m_initInfo.CellSpacing);
-			Vector3 br((i + 8)* m_initInfo.CellSpacing, m_HeightMap[index_br] * m_initInfo.CellSpacing, j* m_initInfo.CellSpacing);
-			Vector3 ul(i* m_initInfo.CellSpacing, m_HeightMap[index_ul] * m_initInfo.CellSpacing, (j + 8)* m_initInfo.CellSpacing);
-			Vector3 ur((i + 8)* m_initInfo.CellSpacing, m_HeightMap[index_ur] * m_initInfo.CellSpacing, (j + 8)* m_initInfo.CellSpacing);
+			Vector3 bl(i * m_initInfo.CellSpacing, m_HeightMap[index_bl] * m_initInfo.CellSpacing, j * m_initInfo.CellSpacing);
+			Vector3 br((i + 8) * m_initInfo.CellSpacing, m_HeightMap[index_br] * m_initInfo.CellSpacing, j * m_initInfo.CellSpacing);
+			Vector3 ul(i * m_initInfo.CellSpacing, m_HeightMap[index_ul] * m_initInfo.CellSpacing, (j + 8) * m_initInfo.CellSpacing);
+			Vector3 ur((i + 8) * m_initInfo.CellSpacing, m_HeightMap[index_ur] * m_initInfo.CellSpacing, (j + 8) * m_initInfo.CellSpacing);
 
 			bl.Transform(translate);
 			br.Transform(translate);
