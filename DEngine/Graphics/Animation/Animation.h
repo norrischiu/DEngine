@@ -13,7 +13,7 @@ class Animation
 {
 
 public:
-	Animation(const float animationFPS = 30.0f, const int frame = 1);
+	Animation(const float animationFPS = 30.0f, const float frame = 1.0f);
 	~Animation();
 
 	void AddPose(SQT sqt);

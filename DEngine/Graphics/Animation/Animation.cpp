@@ -3,7 +3,7 @@
 namespace DE
 {
 
-Animation::Animation(const float animationFPS, const int frame) :
+Animation::Animation(const float animationFPS, const float frame) :
 	m_animationFPS(animationFPS), m_currKeyframe(frame)
 {
 
@@ -31,7 +31,7 @@ int Animation::getNumKeyframes() const
 
 void Animation::setCurrentKeyframe(const float frame)
 {
-	if (frame >= 1.0f && frame <= (float)m_Poses.size()) {
+	if (frame >= 1.0f && frame <= (float)(m_Poses.size() + 1)) {
 		m_currKeyframe = frame;
 	}
 }
@@ -52,8 +52,8 @@ SQT Animation::GetCurrentPose()
 
 	if (interpolant > std::numeric_limits<float>::epsilon()) {
 		const int numFrame = m_Poses.size();
-		const int lowerFrame = (int)std::floor(m_currKeyframe);
-		const int upperFrame = (int)std::fmod(ceil(m_currKeyframe), numFrame);
+		const int lowerFrame = ((int)std::fmod(std::floor(m_currKeyframe - 1.0f), numFrame));
+		const int upperFrame = ((int)std::fmod(std::ceil(m_currKeyframe - 1.0f), numFrame));
 		return SQT::LerpSQT(m_Poses[lowerFrame], m_Poses[upperFrame], interpolant);
 	}
 
@@ -66,7 +66,7 @@ void Animation::update(const float delta_time)
 	const float frameOffset = delta_time / (1.0f / m_animationFPS);
 
 	float newFrame = std::fmod(m_currKeyframe + frameOffset, numFrame);
-	if (newFrame <= 0) {
+	if (newFrame <= 1.0f) {
 		newFrame = numFrame - (-newFrame);
 	}
 
