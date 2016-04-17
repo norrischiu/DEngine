@@ -99,6 +99,9 @@ GameObject* SkydomeBuilder::CreateGameObject(const char* filename, const Vector3
 {
 	GameObject* skydome = nullptr;
 
+	DE::Matrix4 transform;
+	transform.CreateScale(33.75f);
+
 	if (LoadSkyDomeModel(filename))
 	{
 		Vertex1P1N1D* vertices = new Vertex1P1N1D[m_iNumVertices];

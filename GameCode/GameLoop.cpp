@@ -12,6 +12,7 @@
 #include "DEngine\Math\simdmath.h"
 #include "DEngine\Graphics\HUD\HUD.h"
 #include "DEngine\AI\PathFinding\FlowFieldBuilder.h"
+#include "DEngine\Graphics\Skydome\SkydomeBuilder.h"
 #include "DEngine\AI\PathFinding\AIController.h"
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
@@ -31,6 +32,16 @@ GameLoop::GameLoop()
 
 void GameLoop::Construct()
 {
+	/*
+	DE::GameObject* skydome = DE::SkydomeBuilder::getInstance()->CreateGameObject();
+	DE::Matrix4 transform;
+	transform.CreateTranslation(DE::Vector3(0.0f, 30.0f, 5.0f));
+	skydome->TransformBy(transform);
+	transform.CreateScale(33.75f);
+	skydome->TransformBy(transform);
+	skydome->GetComponent<DE::MeshComponent>()->m_pMeshData->SetBoundingBox(DE::AABB(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(128.0f, 10.0f, 128.0f)));
+	*/
+
 	DE::Terrain* terrain = DE::TerrainBuilder::getInstance()->generateTerrain("terrain_height.pbm", "", 256, 256, 30.0f, 1.0f);
 	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain_diffuse.dds", "terrain_normal.dds", "terrain_height.dds");
 
@@ -45,10 +56,16 @@ void GameLoop::Construct()
 
 	Player* player = new Player();
 	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
+	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
+	
+	/*
+	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 30.0f, -10.0f), DE::Vector3(0.0f, 30.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	cam->SetAsRendererCamera();
+	*/
 
 	std::vector<DE::GameObject*> obstacles;
 	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(127.0f, 0.0f, 0.0f));
