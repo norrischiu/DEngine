@@ -273,7 +273,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	Handle hTexture2(sizeof(Texture));
 	new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, normalTxt_filepath.c_str());
 	Handle hTexture3(sizeof(Texture));
-	new (hTexture3) Texture(m_HeightMap);
+	new (hTexture3) Texture(m_HeightMap, m_initInfo.HeightmapWidth, m_initInfo.HeightmapWidth);
 	//new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, heightTxt_filepath.c_str());
 	renderPass->AddTexture(hTexture1);
 	renderPass->AddTexture(hTexture2);

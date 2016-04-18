@@ -35,7 +35,7 @@ public:
 
 	Texture(int type, ID3D11Texture2D* texSrc);
 
-	Texture::Texture(std::vector<float> data);
+	Texture::Texture(std::vector<float> data, const int width, const int height);
 
 	ID3D11ShaderResourceView* GetSRV()
 	{

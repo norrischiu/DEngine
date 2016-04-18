@@ -9,11 +9,11 @@
 namespace DE
 {
 
-Texture::Texture(std::vector<float> vData)
+Texture::Texture(std::vector<float> vData, const int width, const int height)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width = 256;
-	texDesc.Height = 256;
+	texDesc.Width = width;
+	texDesc.Height = height;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	texDesc.Format = DXGI_FORMAT_R16_FLOAT;
@@ -30,20 +30,17 @@ Texture::Texture(std::vector<float> vData)
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &hmap[0];
-	data.SysMemPitch = 256 * sizeof(uint16_t);
+	data.SysMemPitch = width * sizeof(uint16_t);
 	data.SysMemSlicePitch = 0;
 	HRESULT hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateTexture2D(&texDesc, &data, &m_pTexture);
 	assert(hr == S_OK);
 
-	D3D11_TEXTURE2D_DESC desc;
-
-	m_pTexture->GetDesc(&desc);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = texDesc.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = desc.MipLevels - 1;
-	srvDesc.Texture2D.MipLevels = desc.MipLevels;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = -1;
 	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateShaderResourceView(m_pTexture, &srvDesc, &m_pSRV);
 	assert(hr == S_OK);
 
