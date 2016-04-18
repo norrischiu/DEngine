@@ -42,6 +42,7 @@ struct WinMsgHandler
 				case VK_S:
 				case VK_A:
 				case VK_D:
+				case VK_SHIFT:
 					Keyboard::SetInputKey(wParam, true);
 			}
 		}
@@ -53,6 +54,7 @@ struct WinMsgHandler
 				case VK_S:
 				case VK_A:
 				case VK_D:
+				case VK_SHIFT:
 					Keyboard::SetInputKey(wParam, false);
 			}
 		}

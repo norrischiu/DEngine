@@ -28,6 +28,8 @@ namespace InputEventID
 		Key_S_Hold_Event,
 		Key_A_Hold_Event,
 		Key_D_Hold_Event,
+		Key_LSHIFT_Hold_Event,
+		Key_LSHIFT_Press_Event
 	};
 }
 
@@ -160,6 +162,23 @@ struct Key_D_Release_Event : public Event
 		:Event(InputEventID::Key_D_Release_Event)
 	{};
 };
+
+struct Key_LSHIFT_Hold_Event : public Event
+{
+	Key_LSHIFT_Hold_Event()
+		:Event(InputEventID::Key_LSHIFT_Hold_Event)
+	{};
+};
+
+struct Key_LSHIFT_Press_Event : public Event
+{
+	Key_LSHIFT_Press_Event()
+		:Event(InputEventID::Key_LSHIFT_Press_Event)
+	{};
+};
+
+
+
 }
 
 #endif

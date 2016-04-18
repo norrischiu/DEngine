@@ -30,6 +30,17 @@ bool PlayerMC::HandleKeyboardEvent(DE::Event * pEvt)
 	{
 		return true;
 	}
+	else if (pEvt->m_ID == DE::InputEventID::Key_LSHIFT_Press_Event)
+	{
+		m_bRunLock = false;
+		return true;
+	}
+	else if (pEvt->m_ID == DE::InputEventID::Key_LSHIFT_Hold_Event)
+	{
+		m_bRun = true;
+		m_vTrans = m_vTrans * m_fRunSpeed;
+		return true;
+	}
 	return false;
 }
 
@@ -59,7 +70,7 @@ bool PlayerMC::HandleMouseEvent(DE::Event * pEvt)
 	}
 	else if (pEvt->m_ID == DE::InputEventID::Mouse_Left_Press_Event)
 	{
-		if (((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING)
+		if (((Player*)m_pOwner)->GetState() == Player::LOCOMOTION)
 		{
 			((Player*)m_pOwner)->SetState(Player::ATTACKING);
 			DE::Handle h(sizeof(Player_Attack_1_START_Event));
@@ -67,27 +78,30 @@ bool PlayerMC::HandleMouseEvent(DE::Event * pEvt)
 			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 			m_ComboSequence[0] = true;
 		}
-		else if (m_ComboSequence[0] && m_fComboTime > m_ComboDelays[0])
+		if (((Player*)m_pOwner)->GetState() == Player::LOCOMOTION || ((Player*)m_pOwner)->GetState() == Player::ATTACKING)
 		{
-			DE::Handle h(sizeof(Player_Attack_2_START_Event));
-			new (h) Player_Attack_2_START_Event;
-			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
-			m_ComboSequence[0] = false;
-			m_ComboSequence[1] = true;
-			m_fComboTime = 0.0f;
-		}
-		else if (m_ComboSequence[1] && m_fComboTime > m_ComboDelays[1])
-		{
-			DE::Handle h(sizeof(Player_Attack_3_START_Event));
-			new (h) Player_Attack_3_START_Event;
-			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
-			m_ComboSequence[1] = false;
-			m_ComboSequence[2] = true;
-			m_fComboTime = 0.0f;
+			if (m_ComboSequence[0] && m_fComboTime > m_ComboDelays[0])
+			{
+				DE::Handle h(sizeof(Player_Attack_2_START_Event));
+				new (h) Player_Attack_2_START_Event;
+				DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+				m_ComboSequence[0] = false;
+				m_ComboSequence[1] = true;
+				m_fComboTime = 0.0f;
+			}
+			else if (m_ComboSequence[1] && m_fComboTime > m_ComboDelays[1])
+			{
+				DE::Handle h(sizeof(Player_Attack_3_START_Event));
+				new (h) Player_Attack_3_START_Event;
+				DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+				m_ComboSequence[1] = false;
+				m_ComboSequence[2] = true;
+				m_fComboTime = 0.0f;
+			}
 		}
 		return true;
 	}
-	else if (pEvt->m_ID == DE::InputEventID::Mouse_Right_Press_Event && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING)
+	else if (pEvt->m_ID == DE::InputEventID::Mouse_Right_Press_Event && ((Player*)m_pOwner)->GetState() == Player::LOCOMOTION)
 	{
 		m_bDodge = true;
 		return true;
@@ -122,34 +136,49 @@ void PlayerMC::Dispatch()
 		m_pOwner->TransformBy(quat.GetRotationMatrix());
 	}
 
+	// only send new animation event when player is not being impacted
 	if (((Player*)m_pOwner)->GetState() != Player::IMPACTING)
 	{
-		if (m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING && m_bWalk)
+		if (m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::LOCOMOTION && m_bWalk)
 		{
 			DE::Handle h(sizeof(Player_Walk_END_Event));
 			new (h) Player_Walk_END_Event;
 			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 			m_bWalk = false;
 		}
-		else if (m_bDodge && !m_vTrans.iszero())
+		else if (m_bDodge && !m_vTrans.iszero() && ((Player*)m_pOwner)->GetStamina() >= 20.0f)
 		{
 			m_vDodgeDir = m_vTrans.Normal();
 			m_bDodge = false;
 
 			((Player*)m_pOwner)->SetState(Player::DOGDING);
+			((Player*)m_pOwner)->AddStamina(-20.0f);
 			DE::Handle h(sizeof(Player_Dodge_START_Event));
 			new (h) Player_Dodge_START_Event;
 			((Player_Dodge_START_Event*)h.Raw())->m_vDir = m_vTrans.Normal();
 			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 		}
-		else if (!m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::IDLING_MOVING)
+		else if (!m_vTrans.iszero() && ((Player*)m_pOwner)->GetState() == Player::LOCOMOTION)
 		{
 			Move(m_vTrans);
 			m_bWalk = true;
+			if (m_bRun)
+			{
+				if (!m_bRunLock && ((Player*)m_pOwner)->GetStamina() >= 4.0f)
+				{
+					((Player*)m_pOwner)->AddStamina(-2.0f);
+				}
+				else
+				{
+					m_bRunLock = true;
+					m_bRun = false;
+				}
+			}
 
 			DE::Handle h(sizeof(Player_Walk_PLAYING_Event));
 			new (h) Player_Walk_PLAYING_Event;
 			((Player_Walk_PLAYING_Event*)h.Raw())->m_vDir = m_vTrans.Normal();
+			((Player_Walk_PLAYING_Event*)h.Raw())->m_bRun = m_bRun;
 			DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 		}
 		if (((Player*)m_pOwner)->GetState() == Player::DOGDING)
@@ -168,4 +197,5 @@ void PlayerMC::Dispatch()
 	}
 	m_vTrans = DE::Vector3::Zero;
 	m_bDodge = false;
+	m_bRun = false;
 }

@@ -21,6 +21,7 @@
 #define VK_D 0x44
 #define VK_W 0x57
 #define VK_S 0x53
+#define VK_SHIFT 0x10
 
 namespace DE
 {
@@ -35,6 +36,7 @@ class Keyboard
 				{ VK_S, false },
 				{ VK_A, false },
 				{ VK_D, false },
+				{ VK_SHIFT, false }
 		});
 	};
 
@@ -70,6 +72,12 @@ public:
 					new (hEvt) Key_D_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
+				if (itr.first == VK_SHIFT)
+				{
+					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_LSHIFT_Hold_Event));
+					new (hEvt) Key_LSHIFT_Hold_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
 			}
 			if (itr.second & !m_lastState.Keys[itr.first])
 			{
@@ -95,6 +103,12 @@ public:
 				{
 					Handle hEvt(sizeof(Key_D_Press_Event));
 					new (hEvt) Key_D_Press_Event;
+					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
+				}
+				if (itr.first == VK_SHIFT)
+				{
+					Handle hEvt(sizeof(Key_LSHIFT_Press_Event));
+					new (hEvt) Key_LSHIFT_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
 			}

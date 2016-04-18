@@ -34,14 +34,13 @@ void GameLoop::Construct()
 //	GameObject* terrain_gobj = terrain->CreateGameObject("terrain.dds", "terrain_normal.dds", "terrain_height.dds");
 
 //	HUD::getInstance()->addText("timer1", "FYP Progress:", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
-	DE::HUD::getInstance()->addProgress("BossHP", 100.0f, DE::HUDElement::Position(100, 700), DE::HUDElement::Size(800, 20), false);
 
 	Player* player = new Player();
 	Boss* boss = new Boss(player);
 	boss->SetPosition(DE::Vector3(0.0f, 0.0f, 5.0f));
 	player->SetBoss(boss);
 	
-	for (int i = 0; i < 50; ++i)
+	for (int i = 0; i < 381; ++i)
 	{
 		std::string meshName = "church/church" + std::to_string(i);
 		DE::GameObject* levelMesh = new DE::GameObject;
@@ -58,12 +57,14 @@ void GameLoop::Construct()
 
 	DE::PointLight* light = new DE::PointLight(DE::Vector3(0.0f, 8.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 10.0f, 3.5f);
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	//new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
-	//light->AddComponent((DE::Component*)hCamera.Raw());
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	light->AddComponent((DE::Component*)hCamera.Raw());
 
 	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.0f);
 	new DE::PointLight(DE::Vector3(3.0f, 3.0f, 0.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.0f);
 	new DE::PointLight(DE::Vector3(-3.0f, 3.0f, 0.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.0f);
+	new DE::PointLight(DE::Vector3(-8.0f, 8.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 10.0f, 3.5f);
+
 }
 
 void GameLoop::Update(float deltaTime)

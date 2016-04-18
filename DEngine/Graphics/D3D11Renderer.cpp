@@ -143,13 +143,13 @@ namespace DE
 		m_GBuffer->Render();
 
 		// Post process effect
-//		m_PPE->Render();
+		m_PPE->Render();
 
 		// Particle system drawing
 		ParticleSystem::GetInstance()->Render();
 
 		// HUD drawing
-		HUD::getInstance()->Render();
+//		HUD::getInstance()->Render();
 
 		// Debug drawing
 		DEBUG_RENDERER::GetInstance()->Render();

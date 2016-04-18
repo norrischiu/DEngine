@@ -15,7 +15,7 @@ public:
 
 	enum eState
 	{
-		ATTACKING, IDLING_MOVING, DOGDING, IMPACTING
+		ATTACKING, LOCOMOTION, DOGDING, IMPACTING
 	};
 
 	Player();
@@ -55,6 +55,16 @@ public:
 		return m_pBoss;
 	}
 
+	inline float GetStamina()
+	{
+		return m_fStamina;
+	}
+
+	inline void AddStamina(int diff)
+	{
+		m_fStamina += diff;
+	}
+
 	bool								m_bHitBoss;
 
 private:
@@ -66,9 +76,13 @@ private:
 	// Health point
 	float								m_fHP;
 
+	// Stamina point
+	float								m_fStamina;
+
 	// Player action state
 	eState								m_eState;
 
+	// Point to friend class boss
 	Boss*								m_pBoss;
 
 };

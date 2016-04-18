@@ -13,7 +13,10 @@ public:
 		: DE::MovementController()
 		, m_bDodge(false)
 		, m_bWalk(false)
+		, m_bRun(false)
+		, m_bRunLock(false)
 		, m_fComboTime(0.0f)
+		, m_fRunSpeed(2.5f)
 	{
 		m_ComboSequence[0] = false;
 		m_ComboSequence[1] = false;
@@ -47,7 +50,13 @@ private:
 
 	bool								m_bWalk;
 
+	bool								m_bRun;
+
+	bool								m_bRunLock;
+
 	DE::Vector3							m_vDodgeDir;
+
+	float								m_fRunSpeed;
 
 };
 

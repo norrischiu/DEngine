@@ -15,6 +15,11 @@ class DEBUG_RENDERER
 
 public:
 
+	enum DEBUG_RENDER_FLAG
+	{
+		TEXT2D, MESH2D_TEXTURE, MESH3D_WIREFRAME
+	};
+
 	void DRAW_FRUSTUM(Frustum frustum)
 	{
 		//Debug drawer;
@@ -35,17 +40,29 @@ public:
 		corners[6] = m_Max;
 		corners[7] = Vector3(m_Max.GetX(), m_Min.GetY(), m_Max.GetZ());
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[1]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[2]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[3]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[0]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[4], corners[5]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[5], corners[6]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[6], corners[7]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[7], corners[4]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[4]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[5]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[6]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[7]));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 	}
 
 	void DRAW_2D_TEXT(const char* text, unsigned int screenX, unsigned int screenY)
@@ -65,6 +82,10 @@ public:
 		//		SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComp);
 	}
 
+	void DRAW_2D_MESH(MeshData* meshdata)
+	{
+	}
+
 	void DRAW_LINE_LIST(Vector3* points)
 	{
 	}
@@ -73,6 +94,7 @@ public:
 	{
 		Debug drawer;
 		m_vDbgMeshs.push_back(drawer.draw_line(start, end));
+		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
 	}
 
 	static DEBUG_RENDERER* GetInstance()
@@ -95,13 +117,53 @@ public:
 		m_VSCBuffer.BindToRenderer();
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 
-		for (MeshData* meshData : m_vDbgMeshs)
+		for (int i = 0; i < m_vDbgMeshs.size(); ++i)
 		{
-			ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
-			m_VSCBuffer.Update();
+			/*if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
+			{
+				m_3DRenderPass.SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
+				m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
+				m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
 
-			meshData->RenderUsingPass(&m_3DRenderPass);
+				ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
+				m_VSCBuffer.Update();
+			}
+			else if (m_vRenderFlags[i] == MESH2D_TEXTURE)
+			{
+				m_3DRenderPass.SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
+				m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
+				m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
+
+				ptr->WVPTransform = m_m2DProjection;
+				m_VSCBuffer.Update();
+			}
+			m_vDbgMeshs[i]->RenderUsingPass(&m_3DRenderPass);*/
 		}
+		ptr->WVPTransform = m_m2DProjection;
+		m_VSCBuffer.Update();
+		hpMeterBorder->Render();
+
+		Matrix4 trans, scale;
+		scale.CreateScaleX(boosHPWidth / 800.0f);
+		trans.CreateTranslation(Vector3((boosHPWidth - 800.0f) / 2.0, 0.0f, 0.0f));
+		ptr->WVPTransform = m_m2DProjection * trans * scale;
+		m_VSCBuffer.Update();
+		hpMeter->Render();
+
+		Matrix4 trans2;
+		trans2.CreateTranslation(Vector3(430.0f, 0.0f, 0.0f));
+		scale.CreateScaleX(PlayerStaminaWidth / 100.0f);
+		trans.CreateTranslation(Vector3(-430.0f + (PlayerStaminaWidth - 100.0f) / 2.0, 0.0f, 0.0f));
+		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
+		m_VSCBuffer.Update();
+		staminaMeter->Render();
+
+		trans2.CreateTranslation(Vector3(405.0f, 0.0f, 0.0f));
+		scale.CreateScaleX(PlayerHpWidth / 150.0f);
+		trans.CreateTranslation(Vector3(-405.0f + (PlayerHpWidth - 150.0f) / 2.0, 0.0f, 0.0f));
+		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
+		m_VSCBuffer.Update();
+		playerHpMeter->Render();
 
 		PostRender();
 	}
@@ -115,6 +177,7 @@ public:
 			meshData = nullptr;
 		}
 		m_vDbgMeshs.clear();
+		m_vRenderFlags.clear();
 	}
 
 private:
@@ -127,6 +190,8 @@ private:
 	// Array of debug mesh
 	std::vector<MeshData*>						m_vDbgMeshs;
 
+	std::vector<int>							m_vRenderFlags;
+
 	// Default orthgraphic projection
 	Matrix4										m_m2DProjection;
 
@@ -135,6 +200,15 @@ private:
 
 	// Constant buffer
 	VSPerObjectCBuffer							m_VSCBuffer;
+
+	MeshData* hpMeter;
+	MeshData* hpMeterBorder;
+	MeshData* staminaMeter;
+	MeshData* playerHpMeter;
+public:
+	float boosHPWidth;
+	float PlayerStaminaWidth;
+	float PlayerHpWidth;
 };
 
 };

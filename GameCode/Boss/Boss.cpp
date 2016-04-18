@@ -55,7 +55,7 @@ Boss::Boss(Player* player)
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 6.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 7, 6.5);
+	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 6.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 6, 4);
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Left hand
@@ -83,11 +83,7 @@ void Boss::Update(float deltaTime)
 {
 	DE::GameObject::Update(deltaTime);
 
-	// update of HUD bar
-	((DE::ProgressBar*)DE::HUD::getInstance()->getHUDElementById("BossHP"))->setProgress(m_fHP / 1000.0f * 100.0f);
-
 	// Check attack collision
-
 	if (m_Player && !m_bHitPlayer && m_Player->m_fHP >= 10.0f)
 	{
 		if (m_eState == PUNCHING || m_eState == JUMPATTACKING)
@@ -106,6 +102,8 @@ void Boss::Update(float deltaTime)
 			}
 		}
 	}
+
+	DE::DEBUG_RENDERER::GetInstance()->boosHPWidth = 800.0f * m_fHP / 1000.0f;
 }
 
 Boss::~Boss()

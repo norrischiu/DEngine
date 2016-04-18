@@ -23,7 +23,8 @@
 Player::Player()
 	: DE::GameObject()
 	, m_fHP(100.0f)
-	, m_eState(IDLING_MOVING)
+	, m_fStamina(100.0f)
+	, m_eState(LOCOMOTION)
 	, m_bHitBoss(false)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
@@ -54,14 +55,24 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_walk_back");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_strafe_right");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_strafe_left");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_forward");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_right");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_left");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_dodge_backward");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_impact");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_run");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_run_left");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_run_right");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_run_back");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk_back")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("strafe_right")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("strafe_left")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("run")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("run_right")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("run_left")->SetLooping(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("run_back")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
 
 	DE::Handle hASM(sizeof(PlayerASM));
@@ -71,7 +82,7 @@ Player::Player()
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 2.0f, 0.5f);
+	new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 2.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 2.0f, 1.0f);
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
@@ -100,7 +111,7 @@ Player::Player()
 
 	// Fire
 	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f));
+	new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
 }
 
@@ -117,4 +128,12 @@ void Player::Update(float deltaTime)
 			m_pBoss->m_fHP -= 10.0f;
 		}
 	}
+
+	if (m_fStamina < 100.0f && m_eState == LOCOMOTION)
+	{
+		m_fStamina += 1.0f;
+	}
+	
+	DE::DEBUG_RENDERER::GetInstance()->PlayerStaminaWidth = m_fStamina;
+	DE::DEBUG_RENDERER::GetInstance()->PlayerHpWidth = m_fHP / 100.0f * 150.0f;
 }

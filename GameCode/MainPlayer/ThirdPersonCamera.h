@@ -31,13 +31,13 @@ public:
 		DE::Vector3 cameraDir = (GetComponent<DE::CameraComponent>()->GetWorldLookAt() - GetPosition()).Normal();
 		DE::Vector3 rayEnd = GetPosition() + cameraDir * 0.1f;
 		DE::Vector3 rayStart = GetPosition();
-		while (DE::GameWorld::GetInstance()->RayCast(rayStart, rayEnd))
+		/*while (DE::GameWorld::GetInstance()->RayCast(rayStart, rayEnd))
 		{
 			trans.CreateTranslation(cameraDir);
 			rayStart.Transform(trans);
 			rayEnd = rayStart + cameraDir * 0.1f;
 		}
-		SetPosition(rayStart);
+		SetPosition(rayStart);*/
 	}
 
 	DE::Vector3							m_vOffset;

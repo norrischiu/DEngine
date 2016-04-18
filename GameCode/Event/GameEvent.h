@@ -10,6 +10,8 @@ namespace GameEventID
 	{
 		Player_Walk_PLAYING_Event = 0xFFF,
 		Player_Walk_END_Event,
+		Player_Run_PLAYING_Event,
+		Player_Run_END_Event,
 		Player_strafe_left_START_Event,
 		Player_strafe_left_END_Event,
 		Player_strafe_right_START_Event,
@@ -45,8 +47,11 @@ struct Player_Walk_PLAYING_Event : public DE::Event
 		:DE::Event(GameEventID::Player_Walk_PLAYING_Event)
 	{};
 
-	// Movement direction, for non-pivot movement
+	// Movement direction, for targeted movement
 	DE::Vector3 m_vDir;
+
+	// Run or walk flag
+	bool m_bRun;
 };
 
 struct Player_Walk_END_Event : public DE::Event
@@ -55,6 +60,24 @@ struct Player_Walk_END_Event : public DE::Event
 		:DE::Event(GameEventID::Player_Walk_END_Event)
 	{};
 };
+
+struct Player_Run_PLAYING_Event : public DE::Event
+{
+	Player_Run_PLAYING_Event()
+		:DE::Event(GameEventID::Player_Run_PLAYING_Event)
+	{};
+
+	// Movement direction, for targeted movement
+	DE::Vector3 m_vDir;
+};
+
+struct Player_Run_END_Event : public DE::Event
+{
+	Player_Run_END_Event()
+		:DE::Event(GameEventID::Player_Run_END_Event)
+	{};
+};
+
 
 struct Player_Attack_1_START_Event : public DE::Event
 {

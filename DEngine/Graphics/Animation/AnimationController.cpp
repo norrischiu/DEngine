@@ -139,12 +139,12 @@ void AnimationController::Update(float deltaTime)
 
 	if (m_pASM->IsInTransition())
 	{
-		*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, 0, deltaTime), GetPoseFromState(m_pASM->m_pCurrState, 0, deltaTime), m_pASM->m_fBlendValue).Matrix();
+		*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, 0), GetPoseFromState(m_pASM->m_pCurrState, 0), m_pASM->m_fBlendValue).Matrix();
 		*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
 		for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 		{
 			const Joint& currJoint = m_skeleton->m_vJoints[i];
-			*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, i, deltaTime), GetPoseFromState(m_pASM->m_pCurrState, i, deltaTime), m_pASM->m_fBlendValue).Matrix();
+			*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, i), GetPoseFromState(m_pASM->m_pCurrState, i), m_pASM->m_fBlendValue).Matrix();
 			*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
 		}
 		m_bPlaying = true;
@@ -154,12 +154,12 @@ void AnimationController::Update(float deltaTime)
 	{
 		if (IsStateAnimationSetActive(m_pASM->m_pCurrState))
 		{
-			*m_skeleton->m_vGlobalPose[0] = GetPoseFromState(m_pASM->m_pCurrState, 0, deltaTime).Matrix();
+			*m_skeleton->m_vGlobalPose[0] = GetPoseFromState(m_pASM->m_pCurrState, 0).Matrix();
 			*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
 			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
 			{
 				const Joint& currJoint = m_skeleton->m_vJoints[i];
-				*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * GetPoseFromState(m_pASM->m_pCurrState, i, deltaTime).Matrix();
+				*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * GetPoseFromState(m_pASM->m_pCurrState, i).Matrix();
 				*m_skeleton->m_vWorldGlobalPose[i] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[i];
 			}
 			m_bPlaying = true;
@@ -174,24 +174,24 @@ void AnimationController::Update(float deltaTime)
 	}
 }
 
-SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex, float deltaTime)
+SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex)
 {
 	if (pState->m_bUseBlendTree)
 	{
-		return GetPoseFromBlendTree(pState->m_BlendTree, jointIndex, deltaTime);
+		return GetPoseFromBlendTree(pState->m_BlendTree, jointIndex);
 	}
 	else
 	{
-		return GetPoseFromSingleSet(m_animationSets.at(pState->m_sClipName), jointIndex, deltaTime);
+		return GetPoseFromSingleSet(m_animationSets.at(pState->m_sClipName), jointIndex);
 	}
 }
 
-SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, int jointIndex, float deltaTime)
+SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, int jointIndex)
 {
-	return set->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime);
+	return set->m_vAnimations[jointIndex]->GetCurrentPose();
 }
 
-SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, int jointIndex, float deltaTime)
+SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, int jointIndex)
 {
 	int numClips = btree->m_vClipnames.size();
 	float factor = btree->m_fBlendFactor;
@@ -222,7 +222,7 @@ SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, int jointIndex,
 	fromSet->setActive(true);
 	toSet->setActive(true);
 	assert(fromSet != nullptr && toSet != nullptr);
-	return SQT::LerpSQT(fromSet->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime), toSet->m_vAnimations[jointIndex]->GetCurrentPose(deltaTime), factor);
+	return SQT::LerpSQT(fromSet->m_vAnimations[jointIndex]->GetCurrentPose(), toSet->m_vAnimations[jointIndex]->GetCurrentPose(), factor);
 }
 
 bool AnimationController::IsStateAnimationSetActive(AnimationStateMachine::State * pState)
@@ -235,8 +235,8 @@ bool AnimationController::IsStateAnimationSetActive(AnimationStateMachine::State
 			{
 				return false;
 			}
-			return true;
 		}
+		return true;
 	}
 	else
 	{
