@@ -49,7 +49,7 @@ DS_OUTPUT DS(PatchTess patchTess,
 		lerp(quad[2].vTex, quad[3].vTex, uv.x),
 		uv.y);
 
-	OUT.vPos.y = shaderTexture[2].SampleLevel(SampleType, OUT.vTex, 0).r * 30.0f;
+	OUT.vPos.y = shaderTexture[2].SampleLevel(SampleType, OUT.vTex, 0).r;// *30.0f;
 	OUT.vPos = mul(OUT.vPos, gViewProj);
 
 	return OUT;

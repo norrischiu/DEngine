@@ -5,6 +5,7 @@
 // Engine include
 #include "DEngine\Event\InputEvent.h"
 #include "DEngine\Event\EventQueue.h"
+#include "DEngine\GameObject\GameObject.h"
 
 void PlayerMC::HandleKeyboardEvent(DE::Event * pEvt)
 {

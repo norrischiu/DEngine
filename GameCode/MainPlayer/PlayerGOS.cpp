@@ -7,6 +7,7 @@
 #include "DEngine/Object/MovementController.h"
 #include "DEngine/Graphics/ParticleSystem/Emitter.h"
 #include "DEngine\Light\PointLightComponent.h"
+#include "PlayerMC.h"
 
 
 PlayerGOS::PlayerGOS(Player* player, const int spawnNum, const DE::Vector3& spawnPos, const float spawnTimeDelay)
@@ -27,7 +28,7 @@ void PlayerGOS::Update(float deltaTime)
 	{
 		if (m_accuSpawnTime >(m_accuSpawnNum + 1) * m_spawnTimeDelay)
 		{
-			Player* player = (Player*)m_spawnTarget;
+			Player* player = (Player*) m_spawnTarget;
 
 			//Player
 			DE::GameObject* spawnPlayer = new DE::GameObject;

@@ -35,6 +35,8 @@ public:
 
 	Texture(int type, ID3D11Texture2D* texSrc);
 
+	Texture::Texture(std::vector<float> data);
+
 	ID3D11ShaderResourceView* GetSRV()
 	{
 		assert(m_pSRV != nullptr);

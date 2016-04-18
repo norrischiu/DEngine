@@ -44,15 +44,22 @@ PS_OUTPUT PS(DS_OUTPUT IN) : SV_TARGET
 	PS_OUTPUT OUT;
 	OUT.color = shaderTexture[0].Sample(SampleType, IN.vTex);
 
-	float2 left = IN.vTex + float2(-gTexelCellSpaceU, 0.0f);
-	float2 right = IN.vTex + float2(gTexelCellSpaceU, 0.0f);
-	float2 bottom = IN.vTex + float2(0.0f, gTexelCellSpaceU);
-	float2 top = IN.vTex + float2(0.0f, -gTexelCellSpaceU);
+	float2 left = IN.vTex + float2(-gTexelCellSpaceU, 0.0f) * 256.0f;
+	float2 right = IN.vTex + float2(gTexelCellSpaceU, 0.0f) * 256.0f;
+	float2 bottom = IN.vTex + float2(0.0f, gTexelCellSpaceU) * 256.0f;
+	float2 top = IN.vTex + float2(0.0f, -gTexelCellSpaceU) * 256.0f;
 
+	
 	float leftY = shaderTexture[2].SampleLevel(SampleType, left, 0).r;
 	float rightY = shaderTexture[2].SampleLevel(SampleType, right, 0).r;
 	float bottomY = shaderTexture[2].SampleLevel(SampleType, bottom, 0).r;
 	float topY = shaderTexture[2].SampleLevel(SampleType, top, 0).r;
+	
+
+	/*float leftY = shaderTexture[2].Load(int3(left, 0)).r;
+	float rightY = shaderTexture[2].Load(int3(right, 0)).r;
+	float bottomY = shaderTexture[2].Load(int3(bottom, 0)).r;
+	float topY = shaderTexture[2].Load(int3(top, 0)).r;*/
 
 	float3 tangent = normalize(float3(0.1f, rightY - leftY, 0.0f));
 	float3 bitan = normalize(float3(0.0f, bottomY - topY, -0.1f));

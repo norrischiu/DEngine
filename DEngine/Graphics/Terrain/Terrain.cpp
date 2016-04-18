@@ -31,12 +31,12 @@ float Terrain::GetDepth() const
 float Terrain::GetHeight(float x, float z) const
 {
 	// Transform from terrain local space to "cell" space.
-	float c = (x + 0.5f*GetWidth()) / m_initInfo.CellSpacing;
-	float d = (z - 0.5f*GetDepth()) / -m_initInfo.CellSpacing;
+	float c = (x + 0.5f * GetWidth()) / m_initInfo.CellSpacing;
+	float d = (z - 0.5f * GetDepth()) / -m_initInfo.CellSpacing;
 
 	// Get the row and column we are in.
-	int row = (int)floorf(d);
-	int col = (int)floorf(c);
+	int row = (int) floorf(d);
+	int col = (int) floorf(c);
 
 	// Grab the heights of the cell we are in.
 	float A = m_HeightMap[row * m_initInfo.HeightmapWidth + col];
@@ -273,7 +273,8 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	Handle hTexture2(sizeof(Texture));
 	new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, normalTxt_filepath.c_str());
 	Handle hTexture3(sizeof(Texture));
-	new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, heightTxt_filepath.c_str());
+	new (hTexture3) Texture(m_HeightMap);
+	//new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, heightTxt_filepath.c_str());
 	renderPass->AddTexture(hTexture1);
 	renderPass->AddTexture(hTexture2);
 	renderPass->AddTexture(hTexture3);
