@@ -63,7 +63,8 @@ bool AabbOutsideFrustumTest(float3 center, float3 extents, float4 frustumPlanes[
 		// then it is outside the frustum.
 		if (AabbBehindPlaneTest(center, extents, frustumPlanes[i]))
 		{
-			return true;
+			//return true;
+			return false;
 		}
 	}
 

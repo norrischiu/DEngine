@@ -68,13 +68,13 @@ void GameLoop::Construct()
 	*/
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(127.0f, 0.0f, 0.0f));
+	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(127.0f, 0.0f, 127.0f));
 	flowField->Draw();
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 1, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 100, player->GetPosition(), 0.5f);
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
