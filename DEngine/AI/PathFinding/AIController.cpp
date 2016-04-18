@@ -65,7 +65,7 @@ void AIController::Update(float deltaTime)
 				const float cam_x = cam->GetPosition().GetX();
 				const float cam_z = cam->GetPosition().GetZ();
 				const float owner_y = m_pOwner->GetPosition().GetY();
-				cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 50.0f, 5.0f));
+				cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 5.0f, 5.0f));
 			}
 		}
 	}

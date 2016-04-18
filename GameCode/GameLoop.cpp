@@ -48,7 +48,7 @@ void GameLoop::Construct()
 	DE::GameObject* pointlight = new DE::GameObject;
 	pointlight->SetPosition(DE::Vector4(0.0f, 0.0f, 0.0f));
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 420, 60);
+	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 800, 2);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
 
 	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
