@@ -36,12 +36,18 @@ void AIBehavior::BossBehavior()
 			theta = 2 * PI - theta;
 		}
 
+		static wchar_t t[64];
+		swprintf(t, 64, L"theta: %f\n", theta);
+		OutputDebugStringW(t);
+			
+		if (theta == 0.0f)
+		{
+			theta += 0.01f;
+		}
+
 		if (theta > 0.0f)
 		{
 			DE::Quaternion quat(DE::Vector3(0, 1, 0), theta);
-			static wchar_t t[64];
-			swprintf(t, 64, L"theta: %f; before x: %f, y: %f, z: %f\n", theta, direction.GetX(), direction.GetY(), direction.GetZ());
-			OutputDebugStringW(t);
 			DE::Vector3 pos = m_pOwner->GetPosition();
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
 			m_pOwner->SetPosition(pos);
@@ -52,9 +58,7 @@ void AIBehavior::BossBehavior()
 	//DE::DEBUG_RENDERER::GetInstance()->DRAW_RAY_SEGMENT(bossPos, playerPos);
 //	bossPos = ((Boss*)m_pOwner)->GetPosition();
 //	direction = m_pOwner->GetTransform()->GetForward().Normal();
-	static wchar_t s[64];
-	swprintf(s, 64, L"after  x: %f, y: %f, z: %f\n", direction.GetX(), direction.GetY(), direction.GetZ());
-	OutputDebugStringW(s);
+
 
 	//direction.Normalize();
 	if (!direction.iszero() && distance > 1.0f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
