@@ -63,7 +63,11 @@ void AudioSystem::HandleAudioPlayEvent(Event* pEvt)
 
 		std::string hashKey = std::to_string(pAudioPlayEvt->event_id) + '#' + pAudioPlayEvt->audio_id;
 
-		m_soundEffectIns[hashKey] = m_soundEffect[pAudioPlayEvt->audio_id]->CreateInstance();
+		if (!m_soundEffectIns[hashKey])
+		{
+			m_soundEffectIns[hashKey] = m_soundEffect[pAudioPlayEvt->audio_id]->CreateInstance();
+		}
+
 		m_soundEffectIns[hashKey]->SetVolume(pAudioPlayEvt->volume);
 		m_soundEffectIns[hashKey]->SetPitch(pAudioPlayEvt->pitch);
 		m_soundEffectIns[hashKey]->SetPan(pAudioPlayEvt->pan);
@@ -91,6 +95,7 @@ void AudioSystem::Update(float elapsedTime)
 	}
 	else
 	{
+		/*
 		for (auto itr = m_soundEffectIns.begin(); itr != m_soundEffectIns.end();)
 		{
 			if (!itr->second || itr->second->GetState() == DirectX::SoundState::STOPPED)
@@ -102,6 +107,7 @@ void AudioSystem::Update(float elapsedTime)
 				itr++;
 			}
 		}
+		*/
 
 		while (!EventQueue::GetInstance()->Empty(AUDIO_EVENT))
 		{

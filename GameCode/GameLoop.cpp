@@ -76,9 +76,10 @@ void GameLoop::Construct()
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 5, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 2, player->GetPosition(), 0.5f);
 
 	/*
+	//Background Music
 	DE::AudioSystem::GetInstance()->AddAudio("bg_song", L"BackgroundMusic");
 	DE::Handle hEvt(sizeof(DE::Audio_Play_Event));
 	DE::Audio_Play_Event* evt = new (hEvt) DE::Audio_Play_Event
