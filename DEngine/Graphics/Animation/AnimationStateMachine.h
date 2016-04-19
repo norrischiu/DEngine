@@ -19,6 +19,19 @@ class AnimationStateMachine : public Component
 {
 
 public:
+	struct State
+	{
+		CUSTOM_MEMORY_DEFINE();
+
+		State(const char* name, const char* clipname, unsigned int index)
+			: m_sName(name)
+			, m_sClipName(clipname)
+			, m_iIndex(index)
+		{};
+		unsigned int m_iIndex;
+		const char* m_sName;
+		const char* m_sClipName; // TODO: extend to multiple clips
+	};
 
 	static const int ComponentID = ComponentID::ANIMATION_STATE_MACHINE;
 
@@ -55,23 +68,14 @@ public:
 
 	void ChangeStateTo(const char* stateName);
 
+	State* GetCurrentState()
+	{
+		return m_pCurrState;
+	}
+
 	~AnimationStateMachine();
 
 protected:
-
-	struct State
-	{
-		CUSTOM_MEMORY_DEFINE();
-
-		State(const char* name, const char* clipname, unsigned int index)
-			: m_sName(name)
-			, m_sClipName(clipname)
-			, m_iIndex(index)
-		{};
-		unsigned int m_iIndex;
-		const char* m_sName;
-		const char* m_sClipName; // TODO: extend to multiple clips
-	};
 
 	struct Transition
 	{

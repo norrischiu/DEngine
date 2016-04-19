@@ -282,7 +282,10 @@
     <ClCompile Include="GameObject\GameObjectSpawner.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\GameAudio.cpp">
+    <ClCompile Include="Audio\AudioComponent.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSystem.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
   </ItemGroup>
@@ -558,7 +561,13 @@
     <ClInclude Include="GameObject\GameObjectSpawner.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\GameAudio.h">
+    <ClInclude Include="Audio\AudioComponent.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\AudioEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioSystem.h">
       <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>

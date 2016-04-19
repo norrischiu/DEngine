@@ -17,6 +17,8 @@
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
 #include "DEngine\GameObject\GameObjectSpawner.h"
+#include "DEngine\Audio\AudioSystem.h"
+#include "Event\AudioEvent.h"
 #include "MainPlayer\PlayerGOS.h"
 
 // Game include
@@ -74,7 +76,23 @@ void GameLoop::Construct()
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 50, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 5, player->GetPosition(), 0.5f);
+
+	/*
+	DE::AudioSystem::GetInstance()->AddAudio("bg_song", L"BackgroundMusic");
+	DE::Handle hEvt(sizeof(DE::Audio_Play_Event));
+	DE::Audio_Play_Event* evt = new (hEvt) DE::Audio_Play_Event
+	(
+		"bg_song",							//audio id
+		-1,									//event id
+		0.5f,								//volumn
+		0.0f,								//pitch
+		0.0f,								//pan
+		true								//looping
+	);
+
+	DE::EventQueue::GetInstance()->Add(hEvt, DE::AUDIO_EVENT);
+	*/
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));

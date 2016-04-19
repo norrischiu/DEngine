@@ -34,7 +34,7 @@ MeshComponent::MeshComponent(const char* meshName, int type)
 
 MeshComponent::~MeshComponent()
 {
-	delete m_pMeshData;
+	delete[] m_pMeshData;
 	delete m_pTransform;
 }
 

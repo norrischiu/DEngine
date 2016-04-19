@@ -16,6 +16,8 @@
 #include "DEngine\Object\CameraComponent.h"
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Light\PointLightComponent.h"
+#include "DEngine\Audio\AudioSystem.h"
+#include "DEngine\Audio\AudioComponent.h"
 #include "DEngine\Math\simdmath.h"
 
 Player::Player()
@@ -47,11 +49,16 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_attack1");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
-	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->setActive(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetActive(true);
 
 	DE::Handle hASM(sizeof(PlayerASM));
 	new (hASM) PlayerASM((DE::AnimationController*) hAnimController.Raw());
 	AddComponent((DE::Component*) hASM.Raw());
+
+	DE::AudioSystem::GetInstance()->AddAudio("walk", L"footstep");
+	DE::Handle hAudio(sizeof(DE::AudioComponent));
+	new (hAudio) DE::AudioComponent((DE::AnimationStateMachine*) hASM.Raw());
+	AddComponent((DE::Component*) hAudio.Raw());
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));
@@ -80,11 +87,9 @@ Player::Player()
 	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// Fire
-	/*
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("flare", DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
-	*/
 }
 
 void Player::Update(float deltaTime)

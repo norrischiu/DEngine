@@ -7,7 +7,7 @@
 #include "DEngine\System\WinMsgHandler.h"
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
-#include "DEngine\Audio\GameAudio.h"
+#include "DEngine\Audio\AudioSystem.h"
 #include "GameLoop.h"
 #include <windows.h>
 
@@ -74,9 +74,6 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	//Load the game content first before entering to the main loop
 	GameLoop::GetInstance()->Construct();
 
-	//const int audio_id = GameAudio::GetInstance()->AddAudio(L"../Assets/BackgroundMusic.wav");
-	//GameAudio::GetInstance()->Play(audio_id);
-
 	/// Timer
 	Timer m_Timer;
 	const float FPS = 60.0f;
@@ -113,6 +110,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Render this frame
 			D3D11Renderer::GetInstance()->Render();
+
+			AudioSystem::GetInstance()->Update(elaspedTime);
 
 			// Debug text
 			std::stringstream str;
