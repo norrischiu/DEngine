@@ -74,8 +74,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	//Load the game content first before entering to the main loop
 	GameLoop::GetInstance()->Construct();
 
-	GameAudio::GetInstance()->Init(L"../Assets/BackgroundMusic.wav");
-	GameAudio::GetInstance()->Play(true);
+	//const int audio_id = GameAudio::GetInstance()->AddAudio(L"../Assets/BackgroundMusic.wav");
+	//GameAudio::GetInstance()->Play(audio_id);
 
 	/// Timer
 	Timer m_Timer;
@@ -106,8 +106,6 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 			// send input event by checking state change
 			DE::Keyboard::Update(elaspedTime);
 			DE::Mouse::Update(elaspedTime);
-
-			GameAudio::GetInstance()->Update(elaspedTime);
 
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);

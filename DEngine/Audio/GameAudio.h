@@ -7,19 +7,21 @@ namespace DE
 class GameAudio
 {
 public:
+	static int SOUND_EFFECT_ID;
+
 	GameAudio();
 	~GameAudio();
 
 	static GameAudio* GetInstance();
 
-	void Init(const wchar_t* filename);
-	void Play(const bool looping = false);
+	int AddAudio(const wchar_t* filename);
+	void Play(const int id, const bool looping = true);
 	void Update(float elapsedTime);
 
 private:
 	static GameAudio* m_pInstance;
 	std::unique_ptr<DirectX::AudioEngine> m_audEngine;
-	std::unique_ptr<DirectX::SoundEffect> m_soundEffect;
+	std::vector<std::unique_ptr<DirectX::SoundEffect>> m_soundEffect;
 };
 
 };
