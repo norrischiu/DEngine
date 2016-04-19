@@ -72,9 +72,9 @@ PS_OUTPUT PS(DS_OUTPUT IN) : SV_TARGET
 		bitan.x, bitan.y, bitan.z,
 		normal.x, normal.y, normal.z
 	};
-	//OUT.normal = normalize(float4(mul(bump.xyz, TBN), 0));
+	OUT.normal = normalize(float4(mul(bump.xyz, TBN), 0));
 
-	OUT.normal = mul(gViewProj, float4(normal, 1.0f));
+	//OUT.normal = mul(gViewProj, float4(normal, 1.0f));
 
 	// pack specular factor and shininess into gbuffer
 	OUT.color.a = material.vSpecular.x;

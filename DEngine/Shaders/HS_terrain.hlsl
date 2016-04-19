@@ -63,8 +63,7 @@ bool AabbOutsideFrustumTest(float3 center, float3 extents, float4 frustumPlanes[
 		// then it is outside the frustum.
 		if (AabbBehindPlaneTest(center, extents, frustumPlanes[i]))
 		{
-			//return true;
-			return false;
+			return true;
 		}
 	}
 
@@ -96,11 +95,11 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 			minZ = patch[i].vPos.z;
 	}
 
-//	float3 vMin = float3(minX, minY, minZ);
-//	float3 vMax = float3(maxX, maxY, maxZ);
+	float3 vMin = float3(minX, minY, minZ);
+	float3 vMax = float3(maxX, maxY, maxZ);
 
-	float3 vMin = float3(minX, 0.0f, minZ);
-	float3 vMax = float3(maxX, 5.0f, maxZ);
+//	float3 vMin = float3(minX, 0.0f, minZ);
+//	float3 vMax = float3(maxX, 5.0f, maxZ);
 	float3 boxCenter = 0.5f*(vMin + vMax);
 	float3 boxExtents = vMax - boxCenter;
 
