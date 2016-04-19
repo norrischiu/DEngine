@@ -53,12 +53,10 @@ std::vector<float> TerrainBuilder::LoadHeightMap(const char* heightMapFile, cons
 	return m_HeightMap;
 }
 
-Terrain* TerrainBuilder::generateTerrain(const char* heightMapFile, const char* layerMapFile, const unsigned int heightMapWidth, const unsigned int heightMapHeight, const float heightScale, const float cellSpacing, const int cellsPerPatch)
+Terrain* TerrainBuilder::generateTerrain(const char* heightMapFile, const unsigned int heightMapWidth, const unsigned int heightMapHeight, const float heightScale, const float cellSpacing, const int cellsPerPatch)
 {
 	std::string heightMapPath(heightMapFile);
-	std::string layerMapPath(layerMapFile);
-	heightMapPath = "../Assets/" + heightMapPath;
-	//layerMapPath = "../Assets/" + layerMapPath;
+	heightMapPath = "../Assets/" + heightMapPath + ".pbm";
 
 	Terrain::InitInfo initInfo(heightMapWidth, heightMapHeight, heightScale, cellSpacing, cellsPerPatch);
 	std::vector<float> m_heightMap = LoadHeightMap(heightMapPath.c_str(), heightScale, heightMapWidth, heightMapHeight);

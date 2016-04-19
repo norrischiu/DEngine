@@ -84,10 +84,12 @@ void PlayerGOS::Update(float deltaTime)
 			spawnWeapon->GetComponent<DE::Transform>()->AttachToJoint(spawnPlayer->GetComponent<DE::Skeleton>(), 31);
 			spawnWeapon->GetComponent<DE::Transform>()->AttachTo(spawnPlayer->m_pTransform);
 					
+			/*
 			std::string id = "flare" + std::to_string(m_accuSpawnNum);
 			DE::Handle hEmitter(sizeof(DE::Emitter));
 			new (hEmitter) DE::Emitter(const_cast<char*>(id.c_str()), DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 			spawnWeapon->AddComponent((DE::Component*) hEmitter.Raw());
+			*/
 
 			m_accuSpawnNum++;
 		}

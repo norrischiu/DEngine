@@ -44,8 +44,8 @@ void GameLoop::Construct()
 	skydome->GetComponent<DE::MeshComponent>()->m_pMeshData->SetBoundingBox(DE::AABB(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(128.0f, 10.0f, 128.0f)));
 	*/
 
-	DE::Terrain* terrain = DE::TerrainBuilder::getInstance()->generateTerrain("terrain_height.pbm", "", 256, 256, 30.0f, 1.0f);
-	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain_diffuse.dds", "terrain_normal.dds", "terrain_height.dds");
+	DE::Terrain* terrain = DE::TerrainBuilder::getInstance()->generateTerrain("terrain_height", 256, 256, 30.0f, 1.0f);
+	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain_diffuse", "terrain_normal");
 
 	DE::GameObject* pointlight = new DE::GameObject;
 	pointlight->SetPosition(DE::Vector4(0.0f, 0.0f, 0.0f));
@@ -60,7 +60,7 @@ void GameLoop::Construct()
 	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 5.0f) + 5.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	
@@ -76,7 +76,7 @@ void GameLoop::Construct()
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 2, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 10, player->GetPosition(), 0.5f);
 
 	/*
 	//Background Music

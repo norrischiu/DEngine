@@ -153,7 +153,7 @@ std::vector<float2> Terrain::calculateTextureCoordiate()
 	return texture_coordinate;
 }
 
-GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename, const char* heightTxt_filemane)
+GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename)
 {
 	std::vector<float2> texture_coordinate = calculateTextureCoordiate();
 	std::vector<float2> boundsY = CalcAllPatchBoundsY();
@@ -253,9 +253,8 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 		}
 	}
 
-	std::string diffuseTxt_filepath = std::string("../Assets/") + diffuseTxt_filename;
-	std::string normalTxt_filepath = std::string("../Assets/") + normalTxt_filename;
-	std::string heightTxt_filepath = std::string("../Assets/") + heightTxt_filemane;
+	std::string diffuseTxt_filepath = std::string("../Assets/") + diffuseTxt_filename + ".dds";
+	std::string normalTxt_filepath = std::string("../Assets/") + normalTxt_filename + ".dds";
 
 	MeshData* meshData = new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(VertexTerrain));
 	meshData->SetBoundingBox(AABB(Vector3(0, 0, 0), Vector3(m_initInfo.HeightmapHeight, 0, m_initInfo.HeightmapWidth)));
@@ -274,7 +273,6 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, normalTxt_filepath.c_str());
 	Handle hTexture3(sizeof(Texture));
 	new (hTexture3) Texture(m_HeightMap, m_initInfo.HeightmapWidth, m_initInfo.HeightmapWidth);
-	//new (hTexture3) Texture(Texture::SHADER_RESOURCES, 1, heightTxt_filepath.c_str());
 	renderPass->AddTexture(hTexture1);
 	renderPass->AddTexture(hTexture2);
 	renderPass->AddTexture(hTexture3);

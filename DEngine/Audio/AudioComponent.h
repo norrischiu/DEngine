@@ -13,7 +13,7 @@ public:
 	AudioComponent(AnimationStateMachine* ASM);
 	~AudioComponent();
 
-	void Update(float deltaTime) override;
+	virtual void Update(float deltaTime) override;
 
 private:
 	static AnimationStateMachine* m_ASM;
