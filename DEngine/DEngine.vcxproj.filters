@@ -82,6 +82,9 @@
     <Filter Include="Graphics\Skydome">
       <UniqueIdentifier>{bfadadb6-38c0-4248-a5bd-be9197362dd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{758d34dc-3d52-4cb2-87e4-bb83cc5bfc2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -281,6 +284,9 @@
     </ClCompile>
     <ClCompile Include="GameObject\GameObjectSpawner.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\GameAudio.cpp">
+      <Filter>Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -554,6 +560,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\GameObjectSpawner.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\GameAudio.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

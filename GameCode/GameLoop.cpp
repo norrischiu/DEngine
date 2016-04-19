@@ -51,7 +51,7 @@ void GameLoop::Construct()
 	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 800, 2);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
 
-	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
+	//DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
@@ -74,7 +74,7 @@ void GameLoop::Construct()
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 100, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 50, player->GetPosition(), 0.5f);
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
@@ -90,5 +90,5 @@ void GameLoop::Update(float deltaTime)
 	DE::GameWorld::GetInstance()->Update(deltaTime);
 	playerGOS->Update(deltaTime);
 
-	((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
+	//((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
 }

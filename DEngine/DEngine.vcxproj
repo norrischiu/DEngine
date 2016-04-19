@@ -143,6 +143,7 @@
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="Audio\GameAudio.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="Audio\GameAudio.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -301,6 +303,9 @@
     <ClInclude Include="Utilities\Geometry.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectXTK\Audio\DirectXTKAudio_Desktop_2015_DXSDK.vcxproj">
+      <Project>{4f150a30-cecb-49d1-8283-6a3f57438cf5}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
       <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
     </ProjectReference>

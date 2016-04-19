@@ -85,9 +85,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(SolutionDir);$(SolutionDir)DEngine;$(IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir);$(SolutionDir);$(SolutionDir)DEngine;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x64;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,8 +110,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTK\Bin\Desktop_2015\x64\Debug;$(SolutionDir)Build\DEngine\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DEngine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTK\Bin\Desktop_2015\x64\Debug;$(SolutionDir)Build\DEngine\x64\Debug;$(SolutionDir)DirectXTK\Audio\Bin\Desktop_2015_DXSDK\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTKAudioDX.lib;DEngine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -7,6 +7,7 @@
 #include "DEngine\System\WinMsgHandler.h"
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
+#include "DEngine\Audio\GameAudio.h"
 #include "GameLoop.h"
 #include <windows.h>
 
@@ -70,7 +71,11 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 
-	GameLoop::GetInstance()->Construct();		//Load the game content first before entering to the main loop
+	//Load the game content first before entering to the main loop
+	GameLoop::GetInstance()->Construct();
+
+	GameAudio::GetInstance()->Init(L"../Assets/BackgroundMusic.wav");
+	GameAudio::GetInstance()->Play(true);
 
 	/// Timer
 	Timer m_Timer;
@@ -101,6 +106,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 			// send input event by checking state change
 			DE::Keyboard::Update(elaspedTime);
 			DE::Mouse::Update(elaspedTime);
+
+			GameAudio::GetInstance()->Update(elaspedTime);
 
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);
