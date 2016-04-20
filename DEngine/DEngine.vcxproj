@@ -143,10 +143,13 @@
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="Audio\AudioComponent.cpp" />
+    <ClCompile Include="Audio\AudioSystem.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="GameObject\GameObjectSpawner.cpp" />
     <ClCompile Include="GameObject\GameWorld.cpp" />
     <ClCompile Include="Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Graphics\Animation\AnimationController.cpp" />
@@ -210,6 +213,9 @@
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="Audio\AudioComponent.h" />
+    <ClInclude Include="Audio\AudioSystem.h" />
+    <ClInclude Include="C:\Users\faifa\Desktop\DEngine\Event\AudioEvent.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -217,6 +223,7 @@
     <ClInclude Include="Event\EventQueue.h" />
     <ClInclude Include="Event\InputEvent.h" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="GameObject\GameObjectSpawner.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
@@ -299,6 +306,9 @@
     <ClInclude Include="Utilities\Geometry.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectXTK\Audio\DirectXTKAudio_Desktop_2015_DXSDK.vcxproj">
+      <Project>{4f150a30-cecb-49d1-8283-6a3f57438cf5}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
       <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
     </ProjectReference>

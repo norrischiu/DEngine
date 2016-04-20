@@ -25,9 +25,9 @@ public:
 
 	static FlowFieldBuilder* getInstance();
 
-	FlowField generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
-	FlowField generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
-	FlowField generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
+	FlowField* generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
+	FlowField* generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
+	FlowField* generateFlowField(const Vector3& minXYZ, const Vector3& maxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing = 1.0f);
 
 private:
 	void initializeFlowField(const FlowField::InitInfo initInfo);

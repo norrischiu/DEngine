@@ -76,11 +76,11 @@
     <Filter Include="Graphics\Terrain">
       <UniqueIdentifier>{b7469f27-1663-4808-a7a2-c27810066f1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Animation\BlendMode">
-      <UniqueIdentifier>{756a5e9a-ff4a-41e8-82d7-cf6d4688839b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Skydome">
       <UniqueIdentifier>{bfadadb6-38c0-4248-a5bd-be9197362dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{6d6f2f58-d4d0-4631-9f6e-83451f12bdf3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -128,24 +128,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\VertexBufferEngine.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\Animation.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\AnimationController.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\AnimationSet.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\AnimationStateMachine.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\Joint.cpp">
-      <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Animation\Skeleton.cpp">
-      <Filter>Graphics\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Render\CBuffer.cpp">
       <Filter>Graphics\Render</Filter>
@@ -279,6 +261,33 @@
     <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp">
       <Filter>Graphics\Skydome</Filter>
     </ClCompile>
+    <ClCompile Include="Audio\AudioSystem.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioComponent.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationStateMachine.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Joint.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Skeleton.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Animation.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationController.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationSet.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObjectSpawner.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -334,24 +343,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\VertexFormat.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\Animation.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\AnimationController.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\AnimationSet.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\AnimationStateMachine.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\Joint.h">
-      <Filter>Graphics\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Animation\Skeleton.h">
-      <Filter>Graphics\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Render\CBuffer.h">
       <Filter>Graphics\Render</Filter>
@@ -548,6 +539,36 @@
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
       <Filter>Graphics\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioSystem.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioComponent.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\faifa\Desktop\DEngine\Event\AudioEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationSet.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationStateMachine.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\Joint.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\Skeleton.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\Animation.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationController.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObjectSpawner.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

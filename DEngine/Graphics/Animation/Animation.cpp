@@ -49,15 +49,20 @@ void Animation::setAnimationFPS(const float animationFPS)
 SQT Animation::GetCurrentPose()
 {
 	const float interpolant = m_currKeyframe - std::floor(m_currKeyframe);
+	SQT resultPose;
 
 	if (interpolant > std::numeric_limits<float>::epsilon()) {
 		const int numFrame = m_Poses.size();
 		const int lowerFrame = ((int)std::fmod(std::floor(m_currKeyframe - 1.0f), numFrame));
 		const int upperFrame = ((int)std::fmod(std::ceil(m_currKeyframe - 1.0f), numFrame));
-		return SQT::LerpSQT(m_Poses[lowerFrame], m_Poses[upperFrame], interpolant);
+		resultPose = SQT::LerpSQT(m_Poses[lowerFrame], m_Poses[upperFrame], interpolant);
+	} else {
+		const int numFrame = m_Poses.size();
+		const int frame = ((int)std::fmod(std::floor(m_currKeyframe - 1.0f), numFrame));
+		resultPose = m_Poses[frame];
 	}
 
-	return m_Poses[m_currKeyframe - 1];
+	return resultPose;
 }
 
 void Animation::update(const float delta_time)

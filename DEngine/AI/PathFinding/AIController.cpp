@@ -5,7 +5,7 @@
 namespace DE
 {
 
-AIController::AIController(FlowField& flowField, Terrain* terrain)
+AIController::AIController(FlowField* flowField, Terrain* terrain)
 	: Component(nullptr), m_flowField(flowField), m_terrain(terrain)
 {
 	m_ID = ComponentID;
@@ -18,7 +18,7 @@ AIController::~AIController()
 
 void AIController::updateFlowField(const Vector3& start, const Vector3& destination)
 {
-	m_flowField = FlowFieldBuilder::getInstance()->generateFlowField(start, destination, m_flowField.getObstacles(), destination);
+	m_flowField = FlowFieldBuilder::getInstance()->generateFlowField(start, destination, m_flowField->getObstacles(), destination);
 }
 
 float AIController::LookUp(const float x, const float z)
@@ -42,7 +42,7 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 
 void AIController::Update(float deltaTime)
 {
-	Vector3 direction = m_flowField.getDirection(m_pOwner->GetPosition());
+	Vector3 direction = m_flowField->getDirection(m_pOwner->GetPosition());
 	Vector3 vTrans = direction * deltaTime * 3.0f;
 	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
 	const float newY = LookUp(newPos.GetX(), newPos.GetZ());

@@ -48,7 +48,7 @@ Player::Player()
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("maria_attack1");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
-	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
+	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetActive(true);
 
 	DE::Handle hASM(sizeof(PlayerASM));
 	new (hASM) PlayerASM((DE::AnimationController*) hAnimController.Raw());

@@ -11,7 +11,8 @@ namespace DE
 enum EventQueueType
 {
 	INPUT_EVENT,
-	GAME_EVENT
+	GAME_EVENT,
+	AUDIO_EVENT
 };
 
 class EventQueue
@@ -24,6 +25,10 @@ public:
 		{
 			m_inputQueue.push(evt);
 		}
+		else if (type == AUDIO_EVENT)
+		{
+			m_audioQueue.push(evt);
+		}
 		else
 		{
 			m_gameQueue.push(evt);
@@ -35,6 +40,10 @@ public:
 		if (type == INPUT_EVENT)
 		{
 			return m_inputQueue.front();
+		}
+		else if (type == AUDIO_EVENT)
+		{
+			return m_audioQueue.front();
 		}
 		else
 		{
@@ -49,6 +58,11 @@ public:
 			m_inputQueue.front().Free();
 			m_inputQueue.pop();
 		}
+		else if (type == AUDIO_EVENT)
+		{
+			m_audioQueue.front().Free();
+			m_audioQueue.pop();
+		}
 		else
 		{
 			m_gameQueue.front().Free();
@@ -61,6 +75,10 @@ public:
 		if (type == INPUT_EVENT)
 		{
 			return m_inputQueue.empty();
+		}
+		else if (type == AUDIO_EVENT)
+		{
+			return m_audioQueue.empty();
 		}
 		else
 		{
@@ -83,6 +101,8 @@ private:
 	std::queue<Handle>					m_inputQueue;
 
 	std::queue<Handle>					m_gameQueue;
+
+	std::queue<Handle>					m_audioQueue;
 };
 
 };

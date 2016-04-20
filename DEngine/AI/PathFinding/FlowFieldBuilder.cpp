@@ -172,7 +172,7 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 
 }
 
-FlowField FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Vector3& mapMaxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing)
+FlowField* FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Vector3& mapMaxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing)
 {
 	const int gridWidth = ceil(abs(mapMaxXYZ.GetX() - mapMinXYZ.GetX()));
 	const int gridDepth = ceil(abs(mapMaxXYZ.GetZ() - mapMinXYZ.GetZ()));
@@ -185,13 +185,13 @@ FlowField FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Ve
 	auto dijkstraGrid = calculateDijkstraGrid(initInfo, destination, offset);
 	setFlowFieldDirection(initInfo, dijkstraGrid, offset, destination);
 
-	FlowField flowField(initInfo, m_flowField, obstacles, offset, destination);
+	FlowField* flowField = new FlowField(initInfo, m_flowField, obstacles, offset, destination);
 	m_flowField.clear();
 
 	return flowField;
 }
 
-FlowField FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Vector3& mapMaxXYZ, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing)
+FlowField* FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Vector3& mapMaxXYZ, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing)
 {
 	std::vector<Vector3> vec3;
 
@@ -219,7 +219,7 @@ FlowField FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Ve
 	return generateFlowField(mapMinXYZ, mapMaxXYZ, vec3, destination);
 }
 
-FlowField FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing)
+FlowField* FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<GameObject*> obstacles, const Vector3& destination, const float cellSpacing)
 {
 	const AABB mapBoundingBox = map->GetComponent<MeshComponent>()->GetMeshData()->GetBoundingBox();
 	const Vector3 mapMinXYZ = mapBoundingBox.getMin();

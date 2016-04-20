@@ -112,7 +112,7 @@ void AnimationController::setActiveAnimationSet(const char* set_name, const bool
 	AnimationSet* animationSet = getAnimationSet(set_name);
 
 	if (animationSet) {
-		animationSet->setActive(active);
+		animationSet->SetActive(active);
 		animationSet->reset();
 	}
 }
@@ -123,7 +123,7 @@ bool AnimationController::triggerAnimation(const char* set_name, const float cur
 	Animation* animation = nullptr;
 
 	if (animationSet && !animationSet->isActive()) {
-		animationSet->setActive(true);
+		animationSet->SetActive(true);
 		animationSet->setCurrTime(currTime);
 	}
 
