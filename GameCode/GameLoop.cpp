@@ -42,8 +42,8 @@ void GameLoop::Construct()
 	skydome->GetComponent<DE::MeshComponent>()->m_pMeshData->SetBoundingBox(DE::AABB(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(128.0f, 10.0f, 128.0f)));
 	*/
 
-	DE::Terrain* terrain = DE::TerrainBuilder::getInstance()->generateTerrain("terrain_height.pbm", 256, 256, 15.0f, 1.0f);
-	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain_diffuse.dds", "terrain_normal.dds");
+	DE::Terrain* terrain = DE::TerrainBuilder::getInstance()->generateTerrain("terrain_height", 256, 256, 15.0f, 1.0f, 64);
+	DE::GameObject* terrain_gobj = terrain->CreateGameObject("terrain_diffuse", "terrain_normal");
 
 	DE::GameObject* pointlight = new DE::GameObject;
 	pointlight->SetPosition(DE::Vector4(0.0f, 0.0f, 0.0f));
