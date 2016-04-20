@@ -19,7 +19,7 @@ public:
 
 	enum eState
 	{
-		WAITING, PUNCHING, JUMPATTACKING, IDLE, DYING
+		WALKING, WAITING, PUNCHING, JUMPATTACKING, IDLE, DYING, ATTACKED
 	};
 
 	Boss(Player* player);
@@ -50,9 +50,24 @@ public:
 		return m_eState;
 	}
 
+	void SetAttackState(eState state)
+	{
+		m_eAttacked = state;
+	}
+
+	eState GetAttackState()
+	{
+		return m_eAttacked;
+	}
+
 	float GetHP()
 	{
 		return m_fHP;
+	}
+
+	void SetAttackTime(float attactTime)
+	{
+		m_fAttackTime = attactTime;
 	}
 
 	bool							m_bHitPlayer;
@@ -61,9 +76,13 @@ private:
 
 	float							m_fHP;
 
+	float							m_fAttackTime;
+
 	Player*							m_Player;
 
 	eState							m_eState;
+
+	eState							m_eAttacked;
 
 	DE::GameObject*					m_pLeftHand;
 

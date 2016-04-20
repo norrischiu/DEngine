@@ -58,6 +58,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 	switch (p_Evt->m_ID)
 	{
 	case GameEventID::Boss_Walk_START_Event:
+		((Boss*)m_pOwner)->SetState(Boss::WALKING);
 		ChangeStateTo("WALK");
 		return true;
 	case GameEventID::Boss_Walk_END_Event:
@@ -66,6 +67,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		return true;
 	case GameEventID::Boss_Jump_Attack_START_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
+		((Boss*)m_pOwner)->SetAttackState(Boss::WAITING);
 		ChangeStateTo("JUMP_ATTACK");
 		return true;
 	case GameEventID::Boss_Jump_Attack_END_Event:
@@ -76,6 +78,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 	case GameEventID::Boss_Punch_START_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetState(Boss::PUNCHING);
+		((Boss*)m_pOwner)->SetAttackState(Boss::WAITING);
 		ChangeStateTo("PUNCH");
 		return true;
 	case GameEventID::Boss_Punch_END_Event:

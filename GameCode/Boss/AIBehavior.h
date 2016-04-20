@@ -16,6 +16,7 @@ public:
 		m_ID = DE::ComponentID::CUSTOM_COMPONENT_1;
 		time = 0.0f;
 		preDist = 0.0f;
+		jumpAttackTime = 0.0f;
 	};
 
 private:
@@ -28,6 +29,8 @@ private:
 	void Move(DE::Vector3 move);
 
 	float time;
+
+	float jumpAttackTime;
 
 	float preDist;
 };
