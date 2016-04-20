@@ -17,6 +17,7 @@ public:
 
 private:
 	AnimationStateMachine* m_ASM;
+	std::string m_playing;
 };
 
 }

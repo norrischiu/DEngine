@@ -7,6 +7,7 @@
 #include "DEngine\System\WinMsgHandler.h"
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
+#include "DEngine\Audio\AudioSystem.h"
 #include "GameLoop.h"
 #include <windows.h>
 
@@ -74,7 +75,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 	/// Timer
 	Timer m_Timer;
-	const float FPS = 30.0f;
+	const float FPS = 60.0f;
 	float elaspedTime = 0.0f;
 
 	// Main loop
@@ -108,6 +109,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Render this frame
 			D3D11Renderer::GetInstance()->Render();
+
+			AudioSystem::GetInstance()->Update(elaspedTime);
 
 			// Debug text
 			std::stringstream str;

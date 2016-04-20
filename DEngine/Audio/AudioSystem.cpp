@@ -56,6 +56,16 @@ void AudioSystem::AddAudio(const char* audio_id, const wchar_t* filename)
 	m_soundEffect[std::string(audio_id)] = std::unique_ptr<DirectX::SoundEffect>(new DirectX::SoundEffect(m_audEngine.get(), filepath.c_str()));
 }
 
+bool AudioSystem::HasSoundEffect(const char* audio_id)
+{
+	if (m_soundEffect[std::string(audio_id)])
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void AudioSystem::Play(const int event_id, const char* audio_id, const float volume, const float pitch, const float pan, const bool looping)
 {
 	std::string hashKey = std::to_string(event_id) + '#' + audio_id;

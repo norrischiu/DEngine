@@ -22,6 +22,7 @@ public:
 	static AudioSystem* GetInstance();
 
 	void AddAudio(const char* audio_id, const wchar_t* filename);
+	bool HasSoundEffect(const char* audio_id);
 	AudioState GetAudioState(const int event_id, const char* audio_id);
 
 	void Play(const int event_id, const char* audio_id, const float volume, const float pitch, const float pan, const bool looping);

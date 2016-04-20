@@ -17,7 +17,7 @@ public:
 
 	//~Player();
 
-private:
+public:
 
 	GameObject*				m_Weapon;
 

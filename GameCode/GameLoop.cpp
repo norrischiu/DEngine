@@ -15,14 +15,18 @@
 #include "DEngine\AI\PathFinding\AIController.h"
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
+#include "DEngine\GameObject\GameObjectSpawner.h"
+#include "DEngine\Audio\AudioSystem.h"
+#include "Event\AudioEvent.h"
+#include "MainPlayer\PlayerGOS.h"
 
 // Game include
 #include "MainPlayer\Player.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
+// PlayerGOS* playerGOS = nullptr;
 
 GameLoop::GameLoop()
-	: m_timer(0.0f)
 {
 
 }
@@ -39,17 +43,21 @@ void GameLoop::Construct()
 	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 400, 50);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
 
+	/*
 	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0, 0.0, 10.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	cam->SetAsRendererCamera();
 	DE::Handle hMC(sizeof(DE::MovementController));
 	new (hMC) DE::MovementController(100.0f);
 	cam->AddComponent((DE::Component*) hMC.Raw());
+	*/
 
 	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
-	//Player* player = new Player();
-	//player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
+	Player* player = new Player();
+	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
+
+	// playerGOS = new PlayerGOS(player, 10, player->GetPosition(), 0.5f);
 
 	//	std::vector<GameObject*> obstacles;
 	//	FlowField flowField = FlowFieldBuilder::getInstance()->generateFlowField(floor, obstacles, Vector3(5.0f, 0.0f, 5.0f));
@@ -65,7 +73,12 @@ void GameLoop::Construct()
 
 void GameLoop::Update(float deltaTime)
 {
-	DE::GameWorld::GetInstance()->Update(deltaTime);
+	static float m_timer = 0.0f;
 	m_timer += deltaTime;
+
+	DE::GameWorld::GetInstance()->Update(deltaTime);
+	
+	//playerGOS->Update(deltaTime);
+
 	((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
 }

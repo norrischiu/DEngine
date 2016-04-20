@@ -33,7 +33,8 @@ void AudioComponent::Update(float deltaTime)
 	{
 		AnimationStateMachine::State* currState = m_ASM->GetCurrentState();
 
-		if (AudioSystem::GetInstance()->GetAudioState(GetOwner()->GetGameObjectID(), currState->m_sClipName) != AudioSystem::PLAYING)
+		if (AudioSystem::GetInstance()->HasSoundEffect(currState->m_sClipName) &&
+			AudioSystem::GetInstance()->GetAudioState(GetOwner()->GetGameObjectID(), currState->m_sClipName) != AudioSystem::PLAYING)
 		{
 			DE::Handle hEvt(sizeof(Audio_Play_Event));
 			Audio_Play_Event* evt = new (hEvt) Audio_Play_Event
@@ -47,6 +48,15 @@ void AudioComponent::Update(float deltaTime)
 			);
 
 			EventQueue::GetInstance()->Add(hEvt, AUDIO_EVENT);
+			m_playing = currState->m_sClipName;
+		}
+
+		// Stop sound effect if the current state not the same as the previous
+		if (m_playing != currState->m_sClipName &&
+			AudioSystem::GetInstance()->HasSoundEffect(m_playing.c_str()) &&
+			AudioSystem::GetInstance()->GetAudioState(GetOwner()->GetGameObjectID(), m_playing.c_str()) == AudioSystem::PLAYING)
+		{
+			AudioSystem::GetInstance()->Stop(GetOwner()->GetGameObjectID(), m_playing.c_str());
 		}
 	}
 }

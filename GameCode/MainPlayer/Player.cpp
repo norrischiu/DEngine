@@ -16,6 +16,8 @@
 #include "DEngine\Object\CameraComponent.h"
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Light\PointLightComponent.h"
+#include "DEngine\Audio\AudioSystem.h"
+#include "DEngine\Audio\AudioComponent.h"
 #include "DEngine\Math\simdmath.h"
 
 
@@ -53,6 +55,11 @@ Player::Player()
 	DE::Handle hASM(sizeof(PlayerASM));
 	new (hASM) PlayerASM((DE::AnimationController*) hAnimController.Raw());
 	AddComponent((DE::Component*) hASM.Raw());
+
+	DE::AudioSystem::GetInstance()->AddAudio("walk", L"footstep");
+	DE::Handle hAudio(sizeof(DE::AudioComponent));
+	new (hAudio) DE::AudioComponent((DE::AnimationStateMachine*) hASM.Raw());
+	AddComponent((DE::Component*) hAudio.Raw());
 
 	// Small surrounding light
 	DE::Handle hPointLight(sizeof(DE::PointLightComponent));

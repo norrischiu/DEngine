@@ -42,22 +42,31 @@ float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 
 void AIController::Update(float deltaTime)
 {
-	Vector3 direction = m_flowField->getDirection(m_pOwner->GetPosition());
-	Vector3 vTrans = direction * deltaTime * 3.0f;
-	Vector3 newPos = m_pOwner->GetPosition() + vTrans;
+	Vector3 currPos = m_pOwner->GetPosition();
+
+	Vector3 direction = m_flowField->getDirection(currPos);
+	Vector3 newPos = m_pOwner->GetPosition() + direction * deltaTime * 3.0f;
 	const float newY = LookUp(newPos.GetX(), newPos.GetZ());
 	newPos.SetY(newY);
 
-	if (!(newPos - m_pOwner->GetPosition()).iszero())
+	if (!(newPos - currPos).iszero())
 	{
-		const Vector3 vec1 = (newPos - m_pOwner->GetPosition()).Normalize();
+		const Vector3 vec1 = (newPos - currPos).Normalize();
 		const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
 		const float angle = angleBetween(vec1, vec2);
 
 		if (true || angle < 30.0f)
 		{
-			vTrans.SetY(newY - m_pOwner->GetPosition().GetY());
-			Move(vTrans);
+			Move(newPos - currPos);
+
+			CameraComponent* cam = m_pOwner->GetComponent<DE::CameraComponent>();
+			if (cam != nullptr)
+			{
+				const float cam_x = cam->GetPosition().GetX();
+				const float cam_z = cam->GetPosition().GetZ();
+				const float owner_y = m_pOwner->GetPosition().GetY();
+				cam->SetLocalPosition(Vector3(0.0f, LookUp(cam_x, cam_z) - owner_y + 5.0f, 5.0f));
+			}
 		}
 	}
 }
