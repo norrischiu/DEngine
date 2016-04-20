@@ -36,6 +36,10 @@ namespace GameEventID
 		Boss_Punch_END_Event,
 		Boss_Dying_START_Event,
 		Boss_Dying_END_Event,
+		Boss_Roaring_START_Event,
+		Boss_Roaring_END_Event,
+		Boss_Swiping_START_Event,
+		Boss_Swiping_END_Event,
 		Animation_clip_END_Event
 	};
 }
@@ -223,4 +227,31 @@ struct Boss_Dying_END_Event : public DE::Event
 	{};
 };
 
+struct Boss_Roaring_START_Event : public DE::Event
+{
+	Boss_Roaring_START_Event()
+		:DE::Event(GameEventID::Boss_Roaring_START_Event)
+	{};
+};
+
+struct Boss_Roaring_END_Event : public DE::Event
+{
+	Boss_Roaring_END_Event()
+		:DE::Event(GameEventID::Boss_Roaring_END_Event)
+	{};
+};
+
+struct Boss_Swiping_START_Event : public DE::Event
+{
+	Boss_Swiping_START_Event()
+		:DE::Event(GameEventID::Boss_Swiping_START_Event)
+	{};
+};
+
+struct Boss_Swiping_END_Event : public DE::Event
+{
+	Boss_Swiping_END_Event()
+		:DE::Event(GameEventID::Boss_Swiping_END_Event)
+	{};
+};
 #endif // !GAME_EVENT_H

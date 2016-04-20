@@ -19,7 +19,11 @@ public:
 
 	enum eState
 	{
-		WALKING, WAITING, PUNCHING, JUMPATTACKING, IDLE, DYING, ATTACKED
+		// normal state
+		WAITING, PUNCHING, JUMPATTACKING, IDLE, DYING,
+
+		// attacking state
+		WALKING, ATTACKED
 	};
 
 	Boss(Player* player);
@@ -70,6 +74,16 @@ public:
 		m_fAttackTime = attactTime;
 	}
 
+	void SetJumpingTime(float jumpingTime)
+	{
+		m_fJumpingTime = jumpingTime;
+	}
+
+	float GetJumpingTime()
+	{
+		return m_fJumpingTime;
+	}
+
 	bool							m_bHitPlayer;
 
 private:
@@ -77,6 +91,8 @@ private:
 	float							m_fHP;
 
 	float							m_fAttackTime;
+
+	float							m_fJumpingTime;
 
 	Player*							m_Player;
 

@@ -13,6 +13,8 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddState("PUNCH", "punch");
 	AddState("JUMP_ATTACK", "jump_attack");
 	AddState("DYING", "dying");
+	AddState("ROARING", "roaring");
+	AddState("SWIPING", "swiping");
 
 	AddTransistion("IDLE", "WALK", 1, 0.5f);
 	AddTransistion("WALK", "IDLE", 1, 0.5f);
@@ -31,6 +33,19 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddTransistion("IDLE", "DYING", 1, 0.5f);
 	AddTransistion("WALK", "DYING", 1, 0.5f);
 	AddTransistion("DYING", "IDLE", 1, 0.5f);
+	AddTransistion("PUNCH", "ROARING", 1, 0.5f);
+	AddTransistion("ROARING", "PUNCH", 1, 0.5f);
+	AddTransistion("ROARING", "IDLE", 1, 0.5f);
+	AddTransistion("ROARING", "WALK", 1, 0.5f);
+	AddTransistion("ROARING", "JUMP_ATTACK", 1, 0.5f);
+	AddTransistion("IDLE", "ROARING", 1, 0.5f);
+	AddTransistion("JUMP_ATTACK", "ROARING", 1, 0.5f);
+	AddTransistion("IDLE", "SWIPING", 1, 0.5f);
+	AddTransistion("WALK", "SWIPING", 1, 0.5f);
+	AddTransistion("JUMP_ATTACK", "SWIPING", 1, 0.5f);
+	AddTransistion("SWIPING", "IDLE", 1, 0.5f);
+	AddTransistion("SWIPING", "PUNCH", 1, 0.5f);
+	AddTransistion("SWIPING", "WALK", 1, 0.5f);
 }
 
 void BossASM::Update(float deltaTime)
@@ -66,6 +81,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		ChangeStateTo("IDLE");
 		return true;
 	case GameEventID::Boss_Jump_Attack_START_Event:
+		((Boss*)m_pOwner)->SetJumpingTime(0.0f);
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetAttackState(Boss::WAITING);
 		ChangeStateTo("JUMP_ATTACK");
@@ -73,7 +89,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 	case GameEventID::Boss_Jump_Attack_END_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
-		ChangeStateTo("IDLE");
+		ChangeStateTo("ROARING");
 		return true;
 	case GameEventID::Boss_Punch_START_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
@@ -83,8 +99,8 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		return true;
 	case GameEventID::Boss_Punch_END_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
-		((Boss*)m_pOwner)->SetState(Boss::IDLE);
-		ChangeStateTo("IDLE");
+		//((Boss*)m_pOwner)->SetState(Boss::IDLE);
+		ChangeStateTo("ROARING");
 		return true;
 	case GameEventID::Boss_Dying_START_Event:
 		((Boss*)m_pOwner)->SetState(Boss::DYING);
@@ -94,20 +110,45 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("IDLE");
 		break;
+	case GameEventID::Boss_Roaring_START_Event:
+		ChangeStateTo("ROARING");
+		break;
+	case GameEventID::Boss_Roaring_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
+		ChangeStateTo("IDLE");
+		break;
+	case GameEventID::Boss_Swiping_START_Event:
+		((Boss*)m_pOwner)->SetState(Boss::PUNCHING);
+		ChangeStateTo("SWIPING");
+		break;
+	case GameEventID::Boss_Swiping_END_Event:
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
+		ChangeStateTo("IDLE");
+		break;
 	case DE::EngineEventID::Animation_END_Event:
 		if (strcmp(m_pCurrState->m_sName, "PUNCH") == 0)
 		{
-			((Boss*)m_pOwner)->SetState(Boss::IDLE);
-			ChangeStateTo("IDLE");
+			ChangeStateTo("ROARING");
 			return true;
 		}
 		else if (strcmp(m_pCurrState->m_sName, "JUMP_ATTACK") == 0)
+		{
+			ChangeStateTo("ROARING");
+			return true;
+		}
+		else if (strcmp(m_pCurrState->m_sName, "SWIPING") == 0)
 		{
 			((Boss*)m_pOwner)->SetState(Boss::IDLE);
 			ChangeStateTo("IDLE");
 			return true;
 		}
 		else if (strcmp(m_pCurrState->m_sName, "DYING") == 0)
+		{
+			((Boss*)m_pOwner)->SetState(Boss::IDLE);
+			ChangeStateTo("IDLE");
+			return true;
+		}
+		else if (strcmp(m_pCurrState->m_sName, "ROARING") == 0)
 		{
 			((Boss*)m_pOwner)->SetState(Boss::IDLE);
 			ChangeStateTo("IDLE");

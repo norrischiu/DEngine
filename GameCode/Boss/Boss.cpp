@@ -17,6 +17,7 @@
 Boss::Boss(Player* player)
 	: DE::GameObject()
 	, m_fHP(1000.0f)
+	, m_fJumpingTime(0.0f)
 	, m_Player(player)
 	, m_bHitPlayer(false)
 {
@@ -46,6 +47,8 @@ Boss::Boss(Player* player)
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_jump_attack");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_punch");
 	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_dying");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_roaring");
+	((DE::AnimationController*) hAnimController.Raw())->CreateAnimationSets("mutant_swiping");
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("walk")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->SetLooping(true);
 	((DE::AnimationController*) hAnimController.Raw())->getAnimationSet("idle")->setActive(true);
@@ -93,7 +96,7 @@ void Boss::Update(float deltaTime)
 	DE::GameObject::Update(deltaTime);
 	DE::DEBUG_RENDERER::GetInstance()->boosHPWidth = 800.0f * m_fHP / 1000.0f;
 	m_fAttackTime += deltaTime;
-
+	m_fJumpingTime += deltaTime;
 	// Check attack collision
 	if (m_Player && !m_bHitPlayer && m_Player->m_fHP >= 10.0f)
 	{
