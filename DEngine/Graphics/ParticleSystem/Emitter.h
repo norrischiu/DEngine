@@ -55,6 +55,8 @@ public:
 
 	void	SetOwner(GameObject* ptr) override;
 
+	void	SetSize(float size);
+
 private:
 
 	// Maximum number of particles

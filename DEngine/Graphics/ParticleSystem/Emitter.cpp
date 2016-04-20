@@ -205,4 +205,9 @@ void Emitter::SetOwner(GameObject * ptr)
 	m_pTransform = m_pOwner->GetTransform();
 }
 
+void Emitter::SetSize(float size)
+{
+	m_fSize = size;
+}
+
 };
