@@ -53,7 +53,7 @@ namespace DE
 		float GetHeight(float x, float z) const;
 
 	public:
-		GameObject* CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename, const char* heightTxt_filemane);
+		GameObject* CreateGameObject(const char* diffuseTxt_filename, const char* normalTxt_filename);
 
 	private:
 		std::vector<float2> CalcAllPatchBoundsY();

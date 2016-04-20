@@ -7,6 +7,7 @@
 #include "DEngine\System\WinMsgHandler.h"
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
+#include "DEngine\Audio\AudioSystem.h"
 #include "GameLoop.h"
 #include <windows.h>
 
@@ -70,7 +71,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 
-	GameLoop::GetInstance()->Construct();		//Load the game content first before entering to the main loop
+	//Load the game content first before entering to the main loop
+	GameLoop::GetInstance()->Construct();
 
 	/// Timer
 	Timer m_Timer;
@@ -108,6 +110,8 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Render this frame
 			D3D11Renderer::GetInstance()->Render();
+
+			AudioSystem::GetInstance()->Update(elaspedTime);
 
 			// Debug text
 			std::stringstream str;

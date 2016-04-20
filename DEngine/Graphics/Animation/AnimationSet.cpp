@@ -3,8 +3,8 @@
 namespace DE
 {
 
-AnimationSet::AnimationSet(const float currTime, const float duration, const float weight, const bool active, const bool looping) :
-	m_currTime(currTime), m_duration(duration), m_weight(weight), m_active(active), m_bLooping(looping)
+AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
+	m_currTime(currTime), m_duration(duration), m_active(active), m_bLooping(looping)
 {
 
 }
@@ -88,22 +88,12 @@ void AnimationSet::setDuration(const float duration)
 	m_duration = duration;
 }
 
-float AnimationSet::getWeighting() const
-{
-	return m_weight;
-}
-
-void AnimationSet::setWeighting(const float weight)
-{
-	m_weight = weight;
-}
-
 bool AnimationSet::isActive() const
 {
 	return m_active;
 }
 
-void AnimationSet::setActive(const bool active)
+void AnimationSet::SetActive(const bool active)
 {
 	m_active = active;
 }
