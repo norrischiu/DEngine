@@ -72,9 +72,9 @@ std::vector<float2> Terrain::CalcAllPatchBoundsY()
 	std::vector<float2> patchBoundsY(m_initInfo.HeightmapHeight *  (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch));
 	int patch_id = 0;
 
-	for (int j = 0; j < m_initInfo.HeightmapHeight; j += 8)
+	for (int j = 0; j < m_initInfo.HeightmapHeight-8; j += 8)
 	{
-		for (int i = 0; i < m_initInfo.HeightmapWidth; i += 8)
+		for (int i = 0; i < m_initInfo.HeightmapWidth-8; i += 8)
 		{
 			patchBoundsY[patch_id] = CalcPatchBoundsY(j, i);
 			patch_id++;
@@ -169,6 +169,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 
 	// Initialize the index to the vertex buffer.
 	int indexCounter = 0;
+	int patch_id = 0;
 
 	// Load the vertex and index array with the terrain data.
 	for (int j = 0; j < m_initInfo.HeightmapHeight - 8; j += 8)
@@ -206,7 +207,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 			ul.Transform(translate);
 			ur.Transform(translate);
 
-			const int patch_id = (j / 8) * (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch) + (i / m_initInfo.CellsPerPatch);
+			//const int patch_id = (j / 8) * (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch) + (i / m_initInfo.CellsPerPatch);
 			// bottom left
 			{
 				vertices[indexCounter].m_pos = bl;
@@ -250,8 +251,10 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 				indices[indexCounter] = indexCounter;
 				indexCounter++;
 			}
+			patch_id++;
 		}
 	}
+	
 
 	std::string diffuseTxt_filepath = std::string("../Assets/") + diffuseTxt_filename;
 	std::string normalTxt_filepath = std::string("../Assets/") + normalTxt_filename;

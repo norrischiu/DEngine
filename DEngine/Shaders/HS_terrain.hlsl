@@ -99,7 +99,7 @@ PatchTess ConstantHS(InputPatch<VS_OUTPUT, 4> patch, uint patchID : SV_Primitive
 	float3 vMax = float3(maxX, maxY, maxZ);
 
 //	float3 vMin = float3(minX, 0.0f, minZ);
-//	float3 vMax = float3(maxX, 5.0f, maxZ);
+//	float3 vMax = float3(maxX, 1.0f, maxZ);
 	float3 boxCenter = 0.5f*(vMin + vMax);
 	float3 boxExtents = vMax - boxCenter;
 
