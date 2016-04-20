@@ -21,11 +21,17 @@ public:
 
 	static AudioSystem* GetInstance();
 
-	void AddAudio(const char* id, const wchar_t* filename);
+	void AddAudio(const char* audio_id, const wchar_t* filename);
 	AudioState GetAudioState(const int event_id, const char* audio_id);
-	void HandleAudioPlayEvent(Event* pEvt);
-	void HandleAudioStopEvent(Event* pEvt);
-	void Update(float elapsedTime);
+
+	void Play(const int event_id, const char* audio_id, const float volume, const float pitch, const float pan, const bool looping);
+	void Pause(const int event_id, const char* audio_id);
+	void Stop(const int event_id, const char* audio_id);
+
+	virtual void HandleAudioPlayEvent(Event* pEvt);
+	virtual void HandleAudioPauseEvent(Event* pEvt);
+	virtual void HandleAudioStopEvent(Event* pEvt);
+	virtual void Update(float elapsedTime);
 
 private:
 	static AudioSystem* m_pInstance;

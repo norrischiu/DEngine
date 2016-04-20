@@ -31,7 +31,8 @@ AudioSystem::AudioSystem()
 
 AudioSystem::~AudioSystem()
 {
-
+	m_soundEffect.clear();
+	m_soundEffectIns.clear();
 }
 
 AudioSystem::AudioState AudioSystem::GetAudioState(const int event_id, const char* audio_id)
@@ -48,11 +49,78 @@ AudioSystem::AudioState AudioSystem::GetAudioState(const int event_id, const cha
 	}
 }
 
-void AudioSystem::AddAudio(const char* id, const wchar_t* filename)
+void AudioSystem::AddAudio(const char* audio_id, const wchar_t* filename)
 {
 	std::wstring filepath = std::wstring(L"../Assets/") + filename + L".wav";
 
-	m_soundEffect[std::string(id)] = std::unique_ptr<DirectX::SoundEffect>(new DirectX::SoundEffect(m_audEngine.get(), filepath.c_str()));
+	m_soundEffect[std::string(audio_id)] = std::unique_ptr<DirectX::SoundEffect>(new DirectX::SoundEffect(m_audEngine.get(), filepath.c_str()));
+}
+
+void AudioSystem::Play(const int event_id, const char* audio_id, const float volume, const float pitch, const float pan, const bool looping)
+{
+	std::string hashKey = std::to_string(event_id) + '#' + audio_id;
+
+	if (!m_soundEffectIns[hashKey])
+	{
+		m_soundEffectIns[hashKey] = m_soundEffect[audio_id]->CreateInstance();
+	}
+	else
+	{
+		m_soundEffectIns[hashKey]->Stop();
+	}
+
+	m_soundEffectIns[hashKey]->SetVolume(volume);
+	m_soundEffectIns[hashKey]->SetPitch(pitch);
+	m_soundEffectIns[hashKey]->SetPan(pan);
+	m_soundEffectIns[hashKey]->Play(looping);
+}
+
+void AudioSystem::Pause(const int event_id, const char* audio_id)
+{
+	std::string hashKey = std::to_string(event_id) + '#' + audio_id;
+
+	if (m_soundEffectIns[hashKey])
+	{
+		m_soundEffectIns[hashKey]->Pause();
+	}
+}
+
+void AudioSystem::Stop(const int event_id, const char* audio_id)
+{
+	std::string hashKey = std::to_string(event_id) + '#' + audio_id;
+
+	if (m_soundEffectIns[hashKey])
+	{
+		m_soundEffectIns[hashKey]->Stop();
+	}
+}
+
+void AudioSystem::HandleAudioStopEvent(Event* pEvt)
+{
+	if (pEvt->m_ID == AudioEventID::Audio_Stop_Event)
+	{
+		Audio_Stop_Event* pAudioPlayEvt = (Audio_Stop_Event*)pEvt;
+
+		Pause(
+			pAudioPlayEvt->event_id,
+			pAudioPlayEvt->audio_id
+		);
+	}
+}
+
+void AudioSystem::HandleAudioPauseEvent(Event* pEvt)
+{
+	if (pEvt->m_ID == AudioEventID::Audio_Pause_Event)
+	{
+		Audio_Pause_Event* pAudioPlayEvt = (Audio_Pause_Event*)pEvt;
+
+		Pause(
+			pAudioPlayEvt->event_id,
+			pAudioPlayEvt->audio_id
+		);
+
+		//Play will return false if too many sounds already are playing.
+	}
 }
 
 void AudioSystem::HandleAudioPlayEvent(Event* pEvt)
@@ -61,25 +129,17 @@ void AudioSystem::HandleAudioPlayEvent(Event* pEvt)
 	{
 		Audio_Play_Event* pAudioPlayEvt = (Audio_Play_Event*)pEvt;
 
-		std::string hashKey = std::to_string(pAudioPlayEvt->event_id) + '#' + pAudioPlayEvt->audio_id;
-
-		if (!m_soundEffectIns[hashKey])
-		{
-			m_soundEffectIns[hashKey] = m_soundEffect[pAudioPlayEvt->audio_id]->CreateInstance();
-		}
-
-		m_soundEffectIns[hashKey]->SetVolume(pAudioPlayEvt->volume);
-		m_soundEffectIns[hashKey]->SetPitch(pAudioPlayEvt->pitch);
-		m_soundEffectIns[hashKey]->SetPan(pAudioPlayEvt->pan);
-		m_soundEffectIns[hashKey]->Play(pAudioPlayEvt->looping);
+		Play(
+			pAudioPlayEvt->event_id,
+			pAudioPlayEvt->audio_id,
+			pAudioPlayEvt->volume,
+			pAudioPlayEvt->pitch,
+			pAudioPlayEvt->pan,
+			pAudioPlayEvt->looping
+		);
 
 		//Play will return false if too many sounds already are playing.
 	}
-}
-
-void AudioSystem::HandleAudioStopEvent(Event* pEvt)
-{
-
 }
 
 void AudioSystem::Update(float elapsedTime)
@@ -117,7 +177,11 @@ void AudioSystem::Update(float elapsedTime)
 			{
 				HandleAudioPlayEvent(pEvt);
 			}
-			if (pEvt->m_ID == AudioEventID::Audio_Stop_Event)
+			else if (pEvt->m_ID == AudioEventID::Audio_Pause_Event)
+			{
+				HandleAudioPauseEvent(pEvt);
+			}
+			else if (pEvt->m_ID == AudioEventID::Audio_Stop_Event)
 			{
 				HandleAudioStopEvent(pEvt);
 			}

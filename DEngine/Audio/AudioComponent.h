@@ -16,7 +16,7 @@ public:
 	virtual void Update(float deltaTime) override;
 
 private:
-	static AnimationStateMachine* m_ASM;
+	AnimationStateMachine* m_ASM;
 };
 
 }
