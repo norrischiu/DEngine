@@ -20,7 +20,7 @@ public:
 
 	enum
 	{
-		YELLOW_LIGHT = 1,
+		TORCH_FLAME = 1,
 		SMOKE = 2,
 		ROCKET_TRAIL = 3,
 		FIRE = 4,

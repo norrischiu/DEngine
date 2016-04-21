@@ -70,7 +70,7 @@ Boss::Boss(Player* player)
 	new (hLeftHandAABB) DE::AABB(DE::Vector3(-0.1, -0.1, -0.1), DE::Vector3(0.2, 0.2, 0.1));
 	m_pLeftHand->AddComponent((DE::Component*) hLeftHandAABB.Raw());
 	DE::Handle hLeftHandEmitter(sizeof(DE::Emitter));
-	new (hLeftHandEmitter) DE::Emitter("lefthand", DE::Emitter::YELLOW_LIGHT, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
+	new (hLeftHandEmitter) DE::Emitter("lefthand", DE::Emitter::TORCH_FLAME, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_pLeftHand->AddComponent((DE::Component*) hLeftHandEmitter.Raw());
 	m_pLeftHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 10);
 	m_pLeftHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
@@ -83,7 +83,7 @@ Boss::Boss(Player* player)
 	new (hRightHandAABB) DE::AABB(DE::Vector3(-0.1, -0.1, -0.1), DE::Vector3(0.2, 0.2, 0.1));
 	m_pRightHand->AddComponent((DE::Component*) hRightHandAABB.Raw());
 	DE::Handle hRightHandEmitter(sizeof(DE::Emitter));
-	new (hRightHandEmitter) DE::Emitter("righthand", DE::Emitter::YELLOW_LIGHT, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
+	new (hRightHandEmitter) DE::Emitter("righthand", DE::Emitter::TORCH_FLAME, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_pRightHand->AddComponent((DE::Component*) hRightHandEmitter.Raw());
 	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);

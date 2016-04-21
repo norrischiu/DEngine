@@ -16,14 +16,6 @@ cbuffer CONSTANT_BUFFER_PER_FRAME
 #define PT_EMITTER 0
 #define PT_FLARE 1
 
-enum 
-{
-	YELLOW_LIGHT = 1,
-	SMOKE = 2,
-	ROCKET_TRAIL = 3,
-	FIRE = 4,
-};
-
 struct VS_INPUT
 {
 	float4	InitialPosW : POSITION;
@@ -61,14 +53,7 @@ void GS(point VS_INPUT gin[1],
 					VS_INPUT p;
 					//p.InitialPosW = float4(gEmitPosW.xyz + random, 1.0f);
 					//p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
-					
-					switch(gEffectType):
-						case YELLOW_LIGHT:
-							p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
-							break;
-						default:
-							p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
-			
+					p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
 					p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
 					p.SizeW = gSize;
 					if (gEffectType == 2)
