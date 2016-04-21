@@ -1,25 +1,30 @@
 #pragma once
 
 #include "GameObject.h"
-#include "../Graphics/VertexFormat.h"
+#include "SpawnConfig.h"
+#include "../Graphics/Terrain/Terrain.h"
 
 namespace DE
 {
 
 class GameObjectSpawner
 {
+
 public:
-	GameObjectSpawner(GameObject* spawnTarget, const int spawnNum, const Vector3& spawnPos, const float spawnTimeDelay);
+	GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType spawnConfigType, Terrain* terrain);
 	~GameObjectSpawner();
 
-	virtual void Update(float deltaTime);
+	void Update(float deltaTime);
+	virtual int Spawn(GameObject*& gameObj);
 
-	GameObject* m_spawnTarget;
-	int m_spawnNum;
-	int m_accuSpawnNum;
-	float m_spawnTimeDelay;
+public:
+	SpawnConfig* m_spawnConfig;
+	SpawnConfigType m_spawnConfigType;
+
+private:
+	Terrain* m_terrain;
 	float m_accuSpawnTime;
-	Vector3 m_spawnPos;
+	int m_accuSpawnNum;
 };
 
 }

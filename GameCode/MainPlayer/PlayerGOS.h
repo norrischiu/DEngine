@@ -1,16 +1,16 @@
 #pragma once
 #include "DEngine\GameObject\GameObjectSpawner.h"
 #include "DEngine\Graphics\VertexFormat.h"
+#include "DEngine\GameObject\SpawnConfig.h"
 #include "Player.h"
 
 class PlayerGOS : public DE::GameObjectSpawner
 {
 public:
-	PlayerGOS(Player* player, const int spawnNum, const DE::Vector3& spawnPos, const float spawnTimeDelay);
+	PlayerGOS(DE::SpawnConfig* spawnConfig, DE::SpawnConfigType spawnConfigType, DE::Terrain* terrain = nullptr);
 	~PlayerGOS();
 
-	// Inherited via AnimationStateMachine
-	void Update(float deltaTime) override;
+	int Spawn(DE::GameObject*& gameObj) override;
 
 private:
 	DE::Vector3 weaponSpawnPos;

@@ -225,6 +225,7 @@
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameObjectSpawner.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
+    <ClInclude Include="GameObject\SpawnConfig.h" />
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
     <ClInclude Include="Graphics\Animation\AnimationController.h" />

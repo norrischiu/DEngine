@@ -1,15 +1,11 @@
 #include "GameObjectSpawner.h"
-#include "../Graphics/MeshComponent.h"
 #include "../Graphics/Scene/SceneGraph.h"
-#include "../AI/PathFinding/AIController.h"
-#include "../Graphics/Animation/AnimationController.h"
-#include "../Object/MovementController.h"
 
 namespace DE
 {
 
-GameObjectSpawner::GameObjectSpawner(GameObject* spawnTarget, const int spawnNum, const Vector3& spawnPos, const float spawnTimeDelay)
-	: m_spawnTarget(spawnTarget), m_spawnNum(spawnNum), m_spawnPos(spawnPos), m_spawnTimeDelay(spawnTimeDelay), m_accuSpawnNum(0), m_accuSpawnTime(0.0f)
+GameObjectSpawner::GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType spawnConfigType, Terrain* terrain)
+	: m_spawnConfig(spawnConfig), m_spawnConfigType(spawnConfigType), m_terrain(terrain)
 {
 
 }
@@ -19,40 +15,104 @@ GameObjectSpawner::~GameObjectSpawner()
 {
 }
 
+int GameObjectSpawner::Spawn(GameObject*& gameObj)
+{
+	gameObj = new GameObject;
+
+	for (auto itr : *(m_spawnConfig->spawnTarget)->getAllComponents())
+	{
+		gameObj->AddComponent(itr);
+
+		if (itr->GetID() == ComponentID::MESH)
+		{
+			DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*) itr);
+		}
+	}
+
+	return 1;
+}
+
 void GameObjectSpawner::Update(float deltaTime)
 {
-	m_accuSpawnTime += deltaTime;
-
-	if (m_accuSpawnNum < m_spawnNum)
+	if (m_accuSpawnNum < m_spawnConfig->spawnNum)
 	{
-		if (m_accuSpawnTime > (m_accuSpawnNum + 1) * m_spawnTimeDelay)
+		m_accuSpawnTime += deltaTime;
+
+		if (m_accuSpawnTime > (m_accuSpawnNum + 1) * m_spawnConfig->spawnTimeDelay)
 		{
-			DE::GameObject* gameObject = new GameObject;
+			GameObject* gameObj = nullptr;
+			const int numGameObj = Spawn(gameObj);
 
-			for (auto itr : *m_spawnTarget->getAllComponents())
+			Vector3 pos = m_spawnConfig->spawnTarget->GetPosition();
+
+			if (m_spawnConfigType == SpawnConfigType::SPAWN_CONFIG_POSITION)
 			{
-				if (itr->GetID() == DE::AIController::ComponentID)
-				{
-					DE::Handle hAIController(sizeof(DE::AIController));
-					new (hAIController) DE::AIController(((DE::AIController*)itr)->m_flowField, ((DE::AIController*)itr)->m_terrain);
-					gameObject->AddComponent((DE::Component*) hAIController.Raw());
-				}
-				else if (itr->GetID() == DE::MeshComponent::ComponentID)
-				{
-					DE::Handle hMeshComp(sizeof(DE::MeshComponent));
-					new (hMeshComp) DE::MeshComponent(m_spawnTarget->GetComponent<DE::MeshComponent>()->m_pMeshData);
-					gameObject->AddComponent((DE::Component*)hMeshComp.Raw());
-					gameObject->SetPosition(m_spawnPos);
+				SpawnConfig_Position* spawnConfig = (SpawnConfig_Position*) m_spawnConfig;
+				pos = spawnConfig->positions[m_accuSpawnNum % spawnConfig->numPosition];
+			}
+			else if (m_spawnConfigType == SpawnConfigType::SPAWN_CONFIG_OFFSET)
+			{
+				SpawnConfig_Offset* spawnConfig = (SpawnConfig_Offset*)m_spawnConfig;
+				pos = (spawnConfig->drawStartPos + spawnConfig->posOffset * m_accuSpawnNum);
+			}
+			else if (m_spawnConfigType == SpawnConfigType::SPAWN_CONFIG_AREA)
+			{
+				SpawnConfig_Area* spawnConfig = (SpawnConfig_Area*)m_spawnConfig;
 
-					DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*)hMeshComp.Raw());
+				float offsetX = spawnConfig->posOffset.GetX();
+				float offsetZ = spawnConfig->posOffset.GetZ();
+
+				if (offsetX < std::numeric_limits<float>::epsilon())
+				{
+					offsetX = std::numeric_limits<float>::epsilon();
 				}
-				else if (
-					itr->GetID() != DE::CameraComponent::ComponentID && 
-					itr->GetID() != DE::AnimationController::ComponentID &&
-					itr->GetID() != DE::MovementController::ComponentID
-				) {
-					gameObject->AddComponent(itr);
+
+				if (offsetZ < std::numeric_limits<float>::epsilon())
+				{
+					offsetZ = std::numeric_limits<float>::epsilon();
 				}
+
+				const int numCellX = (int)floor((spawnConfig->drawEndPos.GetX() - spawnConfig->drawStartPos.GetX()) / offsetX);
+				const int numCellZ = (int)floor((spawnConfig->drawEndPos.GetZ() - spawnConfig->drawStartPos.GetZ()) / offsetZ);
+
+				float pos_x, pos_z;
+				
+				if (numCellX == 0)
+				{
+					pos_x = spawnConfig->drawStartPos.GetX();
+				}
+				else
+				{
+					pos_x = spawnConfig->drawStartPos.GetX() + spawnConfig->posOffset.GetX() * (m_accuSpawnNum % numCellX);
+				}
+
+				if (numCellZ == 0)
+				{
+					pos_z = spawnConfig->drawStartPos.GetZ();
+				}
+				else
+				{
+					if (numCellX == 0)
+					{
+						pos_x = spawnConfig->drawStartPos.GetX() + spawnConfig->posOffset.GetX() * (m_accuSpawnNum % numCellZ);
+					}
+					else
+					{
+						pos_z = spawnConfig->drawStartPos.GetZ() + spawnConfig->posOffset.GetZ() * (m_accuSpawnNum / numCellX);
+					}
+				}
+
+				pos = Vector3(pos_x, 0.0f, pos_z);
+			}
+
+			if (m_terrain)
+			{
+				pos.SetY(m_terrain->GetHeight(pos.GetX(), pos.GetZ()));
+			}
+
+			for (int i = 0; i < numGameObj; i++)
+			{
+				gameObj[i].SetPosition(pos);
 			}
 
 			m_accuSpawnNum++;
