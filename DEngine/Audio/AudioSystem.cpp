@@ -17,6 +17,11 @@ AudioSystem* AudioSystem::GetInstance()
 
 AudioSystem::AudioSystem()
 {
+	Init();
+}
+
+void AudioSystem::Init()
+{
 	// This is only needed in Windows desktop apps
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
@@ -28,9 +33,18 @@ AudioSystem::AudioSystem()
 	m_audEngine = std::unique_ptr<DirectX::AudioEngine>(new DirectX::AudioEngine(eflags));
 }
 
+void AudioSystem::Reset()
+{
+	m_audEngine.release();
+	m_soundEffect.clear();
+	m_soundEffectIns.clear();
+
+	Init();
+}
 
 AudioSystem::~AudioSystem()
 {
+	m_audEngine.release();
 	m_soundEffect.clear();
 	m_soundEffectIns.clear();
 }
@@ -54,6 +68,23 @@ void AudioSystem::AddAudio(const char* audio_id, const wchar_t* filename)
 	std::wstring filepath = std::wstring(L"../Assets/") + filename + L".wav";
 
 	m_soundEffect[std::string(audio_id)] = std::unique_ptr<DirectX::SoundEffect>(new DirectX::SoundEffect(m_audEngine.get(), filepath.c_str()));
+}
+
+void AudioSystem::RemoveAudio(const char* audio_id)
+{
+	std::string hashKey = std::string(audio_id);
+
+	if (m_soundEffect[hashKey])
+	{
+		m_soundEffect[hashKey].release();
+		m_soundEffect.erase(hashKey);
+	}
+
+	if (m_soundEffectIns[hashKey])
+	{
+		m_soundEffectIns[hashKey].release();
+		m_soundEffectIns.erase(hashKey);
+	}
 }
 
 bool AudioSystem::HasSoundEffect(const char* audio_id)
@@ -114,7 +145,7 @@ void AudioSystem::HandleAudioStopEvent(Event* pEvt)
 		Pause(
 			pAudioPlayEvt->event_id,
 			pAudioPlayEvt->audio_id
-		);
+			);
 	}
 }
 
@@ -127,7 +158,7 @@ void AudioSystem::HandleAudioPauseEvent(Event* pEvt)
 		Pause(
 			pAudioPlayEvt->event_id,
 			pAudioPlayEvt->audio_id
-		);
+			);
 
 		//Play will return false if too many sounds already are playing.
 	}
@@ -146,7 +177,7 @@ void AudioSystem::HandleAudioPlayEvent(Event* pEvt)
 			pAudioPlayEvt->pitch,
 			pAudioPlayEvt->pan,
 			pAudioPlayEvt->looping
-		);
+			);
 
 		//Play will return false if too many sounds already are playing.
 	}
@@ -168,14 +199,14 @@ void AudioSystem::Update(float elapsedTime)
 		/*
 		for (auto itr = m_soundEffectIns.begin(); itr != m_soundEffectIns.end();)
 		{
-			if (!itr->second || itr->second->GetState() == DirectX::SoundState::STOPPED)
-			{
-				itr = m_soundEffectIns.erase(itr);
-			}
-			else
-			{
-				itr++;
-			}
+		if (!itr->second || itr->second->GetState() == DirectX::SoundState::STOPPED)
+		{
+		itr = m_soundEffectIns.erase(itr);
+		}
+		else
+		{
+		itr++;
+		}
 		}
 		*/
 
