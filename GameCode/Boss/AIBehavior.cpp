@@ -24,7 +24,7 @@ void AIBehavior::BossBehavior()
 	DE::Vector3 direction = playerPos-bossPos;
 	float playerMoveDir = distance - preDist;
 
-	if (!direction.iszero())
+	if (!direction.iszero() && ((Boss*)m_pOwner)->GetHP() > 0.0f)
 	{
 		direction.Normalize();
 		DE::Vector3 cross = Cross(m_pOwner->GetTransform()->GetForward().Normal(), direction);
@@ -56,7 +56,7 @@ void AIBehavior::BossBehavior()
 	}
 
 	//direction.Normalize();
-	if (!direction.iszero() && distance > 1.4f && ((Boss*)m_pOwner)->GetHP() != 0.0f)
+	if (!direction.iszero() && distance > 1.4f && ((Boss*)m_pOwner)->GetHP() != 0.0f && ((Boss*)m_pOwner)->GetHP() > 0.0f)
 	{
 		
 		if (((Boss*)m_pOwner)->GetState() == Boss::JUMPATTACKING && ((Boss*)m_pOwner)->GetJumpingTime() < 2.3f)
@@ -69,7 +69,7 @@ void AIBehavior::BossBehavior()
 	}
 
 	
-	if (((Boss*)m_pOwner)->GetHP() < 0.0f)
+	if (((Boss*)m_pOwner)->GetHP() <= 0.0f)
 	{
 		((Boss*)m_pOwner)->SetState(Boss::DYING);
 		DE::Handle h(sizeof(Boss_Dying_START_Event));

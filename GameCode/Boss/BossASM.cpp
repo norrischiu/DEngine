@@ -32,6 +32,7 @@ BossASM::BossASM(DE::AnimationController * animController)
 	AddTransistion("JUMP_ATTACK", "DYING", 1, 0.5f);
 	AddTransistion("IDLE", "DYING", 1, 0.5f);
 	AddTransistion("WALK", "DYING", 1, 0.5f);
+	AddTransistion("ROARING", "DYING", 1, 0.5f);
 	AddTransistion("DYING", "IDLE", 1, 0.5f);
 	AddTransistion("PUNCH", "ROARING", 1, 0.5f);
 	AddTransistion("ROARING", "PUNCH", 1, 0.5f);
@@ -99,7 +100,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		return true;
 	case GameEventID::Boss_Punch_END_Event:
 		((Boss*)m_pOwner)->m_bHitPlayer = false;
-		//((Boss*)m_pOwner)->SetState(Boss::IDLE);
+		((Boss*)m_pOwner)->SetState(Boss::IDLE);
 		ChangeStateTo("ROARING");
 		return true;
 	case GameEventID::Boss_Dying_START_Event:
@@ -108,7 +109,7 @@ bool BossASM::HandleEvent(DE::Handle hEvt)
 		break;
 	case GameEventID::Boss_Dying_END_Event:
 		((Boss*)m_pOwner)->SetState(Boss::IDLE);
-		ChangeStateTo("IDLE");
+		//ChangeStateTo("IDLE");
 		break;
 	case GameEventID::Boss_Roaring_START_Event:
 		ChangeStateTo("ROARING");
