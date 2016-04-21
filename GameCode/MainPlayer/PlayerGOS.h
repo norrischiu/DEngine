@@ -11,8 +11,5 @@ public:
 	~PlayerGOS();
 
 	int Spawn(DE::GameObject*& gameObj) override;
-
-private:
-	DE::Vector3 weaponSpawnPos;
 };
 

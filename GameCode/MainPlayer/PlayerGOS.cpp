@@ -26,15 +26,8 @@ int PlayerGOS::Spawn(DE::GameObject*& gameObj)
 {
 	gameObj = new DE::GameObject[2];
 
-	Player* player = (Player*)m_spawnConfig->spawnTarget;
+	Player* player = (Player*) m_spawnConfig->spawnTarget;
 	DE::GameObject* spawnPlayer = &gameObj[0];
-
-	if (player->GetComponent<DE::AIController>())
-	{
-		DE::Handle hAIController(sizeof(DE::AIController));
-		new (hAIController) DE::AIController(player->GetComponent<DE::AIController>()->m_flowField, player->GetComponent<DE::AIController>()->m_terrain);
-		spawnPlayer->AddComponent((DE::Component*) hAIController.Raw());
-	}
 
 	if (player->GetComponent<DE::MeshComponent>())
 	{
@@ -42,6 +35,14 @@ int PlayerGOS::Spawn(DE::GameObject*& gameObj)
 		new (hMeshComp) DE::MeshComponent(player->GetComponent<DE::MeshComponent>()->m_pMeshData);
 		spawnPlayer->AddComponent((DE::Component*)hMeshComp.Raw());
 		DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*)hMeshComp.Raw());
+	}
+
+	if (player->GetComponent<DE::AIController>())
+	{
+		DE::Handle hAIController(sizeof(DE::AIController));
+		DE::AIController* aiController = new (hAIController) DE::AIController(player->GetComponent<DE::AIController>()->m_flowField, player->GetComponent<DE::AIController>()->m_terrain);
+		spawnPlayer->AddComponent((DE::Component*) aiController);
+		aiController->Init();
 	}
 
 	if (player->GetComponent<DE::PointLightComponent>())

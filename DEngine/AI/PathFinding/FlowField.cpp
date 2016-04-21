@@ -126,8 +126,12 @@ void FlowField::Draw(Terrain* terrain)
 		}
 	}
 
+	Matrix4 translate;
+	translate.CreateTranslation(m_offset);
+
 	for (int i = 0; i < index_ver - 1; i++)
 	{
+		vertices[i].m_pos.Transform(translate);
 		vertices[i].m_pos.SetY(terrain->GetHeight(vertices[i].m_pos.GetX(), vertices[i].m_pos.GetZ()));
 	}
 
@@ -143,9 +147,6 @@ void FlowField::Draw(Terrain* terrain)
 	renderPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 	renderPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 	renderPass->SetRasterizerState(State::CULL_NONE_RS);
-	Matrix4 translate;
-	translate.CreateTranslation(m_offset);
-	meshComponent->m_pTransform->Multiply(translate);
 
 	GameObject* flowField = new GameObject;
 	flowField->AddComponent(meshComponent);
@@ -210,10 +211,8 @@ GameObject* FlowField::getPositionOwner(const Vector3& position)
 	return nullptr;
 }
 
-void FlowField::setPositionOwner(GameObject* gameObj)
+void FlowField::setPositionOwner(const Vector3& position, GameObject* gameObj)
 {
-	const Vector3& position = gameObj->GetPosition();
-
 	if (isValid(position))
 	{
 		Matrix4 transform;

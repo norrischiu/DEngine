@@ -16,6 +16,16 @@ AIController::~AIController()
 {
 }
 
+void AIController::Init()
+{
+	if (GetOwner())
+	{
+		LockPosition(GetOwner()->GetPosition());
+		SetPositionOwner(GetOwner()->GetPosition(), GetOwner());
+		m_enableAI = true;
+	}
+}
+
 float AIController::angleBetween(Vector3 vec1, Vector3 vec2)
 {
 	if (vec1.iszero() && vec2.iszero()) {
@@ -40,15 +50,31 @@ bool AIController::IsSlopeSteep(const Vector3& newPos, const Vector3& currPos)
 	return false && angle > 30.0f;
 }
 
+bool AIController::IsPositionOwner(const Vector3& position)
+{
+	GameObject* owner = m_flowField->getPositionOwner(position);
+
+	if (!owner) {
+		return false;
+	}
+
+	return owner->GetGameObjectID() == GetOwner()->GetGameObjectID();
+}
+
 bool AIController::IsBlockedByOther(const Vector3& position)
 {
-	return	m_flowField->getPositionOwner(position) != nullptr &&
-			m_flowField->getPositionOwner(position)->GetGameObjectID() != m_pOwner->GetGameObjectID();
+	GameObject* owner = m_flowField->getPositionOwner(position);
+
+	if (!owner) {
+		return false;
+	}
+
+	return	owner->GetGameObjectID() != GetOwner()->GetGameObjectID();
 }
 
 bool AIController::IsDesintationArrived()
 {
-	const Vector3 currPos = m_pOwner->GetPosition();
+	const Vector3 currPos = GetOwner()->GetPosition();
 	const Vector3 destination = m_flowField->getDestination();
 	
 	const Vector3 difference = Vector3(
@@ -58,6 +84,11 @@ bool AIController::IsDesintationArrived()
 	);
 
 	return difference.iszero();
+}
+
+bool AIController::IsActive()
+{
+	return m_enableAI;
 }
 
 void AIController::SetActive(const bool setActive)
@@ -81,66 +112,99 @@ float AIController::LookUpHeight(const Vector3& currPos)
 
 Vector3 AIController::GetNewPosition(const float deltaTime)
 {
-	Vector3 direction = LookUpDirection(m_pOwner->GetPosition());
-	Vector3 newPos = m_pOwner->GetPosition() + direction * deltaTime * 3.0f;
+	Vector3 currPos = GetOwner()->GetPosition();
+	Vector3 direction = LookUpDirection(currPos);
+	Vector3 newPos = currPos + direction * deltaTime * 3.0f;
+
 	const float newY = LookUpHeight(newPos);
 	newPos.SetY(newY);
 
 	return newPos;
 }
 
-void AIController::Update(float deltaTime)
+void AIController::UpdateCamera()
 {
-	if (!m_enableAI) { return; }
-
-	if (IsDesintationArrived()) { return; }
-
-	Vector3 currPos = m_pOwner->GetPosition();
-	Vector3 newPos = GetNewPosition(deltaTime);
-
-	if (!HasPositionChange(newPos, currPos)) { return; }
-
-	if (IsBlockedByOther(newPos)) { return; }
-
-	/*
-	while (!m_flowField->isPositionMovable(newPos))
-	{
-		newPos.SetX(newPos.GetX() * 2.0f / 3.0f);
-		newPos.SetZ(newPos.GetZ() * 2.0f / 3.0f);
-		newPos.SetY(LookUpHeight(newPos));
-				
-		if (std::abs(newPos.Length()) < std::numeric_limits<float>::epsilon()) {
-			return;
-		}
-	}
-	*/
-
-	if (IsSlopeSteep(newPos, currPos)) { return; }
-
-	m_flowField->setPositionMovable(m_pOwner->GetPosition(), true);
-	Move(newPos - currPos);
-	m_flowField->setPositionMovable(m_pOwner->GetPosition(), false);
-
 	//Update Camera
-	CameraComponent* camera = m_pOwner->GetComponent<DE::CameraComponent>();
+	CameraComponent* camera = GetOwner()->GetComponent<DE::CameraComponent>();
 	if (camera != nullptr)
 	{
-		const float owner_y = m_pOwner->GetPosition().GetY();
+		const float owner_y = GetOwner()->GetPosition().GetY();
 		const Vector3 camLocalPos = camera->GetLocalPosition();
 
 		camera->SetLocalPosition(Vector3(
-			camLocalPos.GetX(), 
+			camLocalPos.GetX(),
 			LookUpHeight(camera->GetPosition()) - owner_y + 5.0f,
 			camLocalPos.GetZ())
 		);
 	}
 }
 
+void AIController::SetPositionOwner(const Vector3& position, GameObject* gameObj)
+{
+	m_flowField->setPositionOwner(position, gameObj);
+}
+
+void AIController::UnLockPosition(const Vector3& position)
+{
+	m_flowField->setPositionMovable(position, true);
+}
+
+void AIController::LockPosition(const Vector3& position)
+{
+	m_flowField->setPositionMovable(position, false);
+}
+
+void AIController::Update(float deltaTime)
+{
+	if (!IsActive()) { 
+		return; 
+	}
+
+	if (IsDesintationArrived()) { 
+		return; 
+	}
+
+	const Vector3 currPos = GetOwner()->GetPosition();
+
+	if (IsBlockedByOther(currPos)) {
+		LockPosition(currPos);
+		return;
+	}
+
+	UnLockPosition(currPos);
+
+	const Vector3 newPos = GetNewPosition(deltaTime);
+
+	if (!HasPositionChange(newPos, currPos)) {
+		LockPosition(currPos);
+		return; 
+	}
+
+	if (IsBlockedByOther(newPos)) { 
+		LockPosition(currPos);
+		return; 
+	}
+
+	if (IsSlopeSteep(newPos, currPos)) { 
+		LockPosition(currPos);
+		return; 
+	}
+
+	Move(newPos - currPos);
+	UpdateCamera();
+}
+
 void AIController::Move(Vector3 vTrans)
 {
+	SetPositionOwner(GetOwner()->GetPosition(), nullptr);
+	UnLockPosition(GetOwner()->GetPosition());
+
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
-	m_pOwner->TransformBy(trans);
+	GetOwner()->TransformBy(trans);
+
+	SetPositionOwner(GetOwner()->GetPosition(), GetOwner());
+	LockPosition(GetOwner()->GetPosition());
 }
 
 };

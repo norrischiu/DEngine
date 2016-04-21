@@ -27,7 +27,7 @@ void AudioComponent::Update(float deltaTime)
 
 	//distance between game object and render camera position
 	const float distance = (camPos - ownerPos).Length();
-	const float DISTANCE_THRESHOLD = 10.0f;
+	const float DISTANCE_THRESHOLD = 15.0f;
 
 	if (distance < DISTANCE_THRESHOLD)
 	{

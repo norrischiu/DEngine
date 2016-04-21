@@ -16,11 +16,21 @@ public:
 	AIController(FlowField* flowField, Terrain* terrain = nullptr);
 	~AIController();
 
+	void Init();
+
+	bool IsActive();
 	void SetActive(const bool setActive);
 	// Inherited via Component
 	virtual void Update(float deltaTime) override;
 	
+	void UpdateCamera();
+
+	void LockPosition(const Vector3& position);
+	void UnLockPosition(const Vector3& position);
+	void SetPositionOwner(const Vector3& position, GameObject* gameObj);
+
 	bool HasPositionChange(const Vector3& newPos, const Vector3& currPos);
+	bool IsPositionOwner(const Vector3& currPos);
 	bool IsBlockedByOther(const Vector3& position);
 	bool IsDesintationArrived();
 	bool IsSlopeSteep(const Vector3& newPos, const Vector3& currPos);

@@ -38,7 +38,7 @@ public:
 	void setPositionMovable(const Vector3& position, const bool movable);
 	bool isPositionMovable(const Vector3& position);
 
-	void setPositionOwner(GameObject* gameObj);
+	void setPositionOwner(const Vector3& position, GameObject* gameObj);
 	GameObject* getPositionOwner(const Vector3& position);
 	const Vector3 getDirection(const Vector3& position);
 
