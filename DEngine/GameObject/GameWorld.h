@@ -19,6 +19,7 @@ public:
 
 	void AddGameObject(GameObject* gameObj);
 
+	std::vector<GameObject*>*	GetGameObjectList();
 	GameObject* GetGameObjectAt(unsigned int index);
 
 	// Destructor

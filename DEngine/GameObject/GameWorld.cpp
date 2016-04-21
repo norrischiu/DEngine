@@ -25,6 +25,11 @@ void GameWorld::AddGameObject(GameObject* gameObj)
 	m_GameObjectList.push_back(gameObj);
 }
 
+std::vector<GameObject*>* GameWorld::GetGameObjectList()
+{
+	return &m_GameObjectList;
+}
+
 GameObject* GameWorld::GetGameObjectAt(unsigned int index)
 {
 	return m_GameObjectList[index];

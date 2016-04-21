@@ -21,7 +21,7 @@ FlowField::~FlowField()
 {
 }
 
-void FlowField::Draw()
+void FlowField::Draw(Terrain* terrain)
 {
 	const int iNumVertices = (m_initInfo.FlowFieldWidth + 1) * 2 + (m_initInfo.FlowFieldDepth + 1) * 2 + 4 * m_initInfo.FlowFieldWidth * m_initInfo.FlowFieldDepth;
 	const int iNumIndices = (m_initInfo.FlowFieldWidth + 1) * 2 + (m_initInfo.FlowFieldDepth + 1) * 2 + 6 * m_initInfo.FlowFieldWidth * m_initInfo.FlowFieldDepth;
@@ -126,6 +126,11 @@ void FlowField::Draw()
 		}
 	}
 
+	for (int i = 0; i < index_ver - 1; i++)
+	{
+		vertices[i].m_pos.SetY(terrain->GetHeight(vertices[i].m_pos.GetX(), vertices[i].m_pos.GetZ()));
+	}
+
 	Handle hMesh(sizeof(MeshComponent));
 	new (hMesh) MeshComponent(new MeshData(vertices, iNumVertices, indices, iNumIndices, sizeof(Vertex1P)));
 	MeshComponent* meshComponent = (MeshComponent*)hMesh.Raw();
@@ -185,6 +190,62 @@ bool FlowField::isValid(const Vector3& position)
 	);
 }
 
+GameObject* FlowField::getPositionOwner(const Vector3& position)
+{
+	if (isValid(position))
+	{
+		Matrix4 transform;
+		transform.CreateTranslation(-m_offset);
+		Vector3 pos = position;
+		pos.Transform(transform);
+
+		const int x = floor(pos.GetX());
+		const int z = floor(pos.GetZ());
+
+		const int index = z * m_initInfo.FlowFieldWidth + x;
+		
+		return m_flowField[index].ownerGameObj;
+	}
+
+	return nullptr;
+}
+
+void FlowField::setPositionOwner(GameObject* gameObj)
+{
+	const Vector3& position = gameObj->GetPosition();
+
+	if (isValid(position))
+	{
+		Matrix4 transform;
+		transform.CreateTranslation(-m_offset);
+		Vector3 pos = position;
+		pos.Transform(transform);
+
+		const int x = floor(pos.GetX());
+		const int z = floor(pos.GetZ());
+
+		const int index = z * m_initInfo.FlowFieldWidth + x;
+		m_flowField[index].ownerGameObj = gameObj;
+	}
+}
+
+void FlowField::setPositionMovable(const Vector3& position, const bool movable)
+{
+	if (isValid(position))
+	{
+		Matrix4 transform;
+		transform.CreateTranslation(-m_offset);
+		Vector3 pos = position;
+		pos.Transform(transform);
+
+		const int x = floor(pos.GetX());
+		const int z = floor(pos.GetZ());
+
+		const int index = z * m_initInfo.FlowFieldWidth + x;
+		m_flowField[index].isMovable = movable;
+	}
+}
+
 bool FlowField::isPositionMovable(const Vector3& position)
 {
 	Matrix4 transform;
@@ -223,51 +284,46 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 	transform.CreateTranslation(-m_offset);
 	Vector3 pos = position;
 
-	if (isPositionMovable(pos))
+	const int intMax = (std::numeric_limits<int>::max)();
+	const int f00 = isPositionMovable(pos) ? distance(pos, m_destination) : intMax;
+	const int f01 = isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(0.0f, 0.0f, 1.0f), m_destination) : intMax;
+	const int f10 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 0.0f), m_destination) : intMax;
+	const int f11 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 1.0f), m_destination) : intMax;
+
+	int minVal = min(min(f00, f01), min(f10, f11));
+	std::vector<Vector3> minCoord;
+
+	if (f00 == minVal) minCoord.push_back(pos);
+	if (f01 == minVal) minCoord.push_back(pos + Vector3(0.0f, 0.0f, 1.0f));
+	if (f10 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 0.0f));
+	if (f11 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 1.0f));
+
+	Vector3 currDirection = m_currDir;
+	Vector3 desiredDirection;
+	minVal = intMax;
+
+	for (int i = 0; i < minCoord.size(); i++)
 	{
-		const int intMax = (std::numeric_limits<int>::max)();
-		const int f00 = isPositionMovable(pos) ? distance(pos, m_destination) : intMax;
-		const int f01 = isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(0.0f, 0.0f, 1.0f), m_destination) : intMax;
-		const int f10 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 0.0f), m_destination) : intMax;
-		const int f11 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 1.0f), m_destination) : intMax;
+		Vector3 m = minCoord[i];
+		Vector3 p = pos;
+		m = transfromAndFloor(m);
+		p = transfromAndFloor(p);
 
-		int minVal = min(min(f00, f01), min(f10, f11));
-		std::vector<Vector3> minCoord;
+		const int index = p.GetZ() * m_initInfo.FlowFieldWidth + p.GetX();
 
-		if (f00 == minVal) minCoord.push_back(pos);
-		if (f01 == minVal) minCoord.push_back(pos + Vector3(0.0f, 0.0f, 1.0f));
-		if (f10 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 0.0f));
-		if (f11 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 1.0f));
+		const Vector3 directionTo = (m - p).iszero() ? m_flowField[index].direction : (m - p).Normalize();
+		const int length = (directionTo - currDirection).Length();
 
-		Vector3 currDirection = m_currDir;
-		Vector3 desiredDirection;
-		minVal = intMax;
-
-		for (int i = 0; i < minCoord.size(); i++)
+		if (length < minVal)
 		{
-			Vector3 m = minCoord[i];
-			Vector3 p = pos;
-			m = transfromAndFloor(m);
-			p = transfromAndFloor(p);
-
-			const int index = p.GetZ() * m_initInfo.FlowFieldWidth + p.GetX();
-
-			const Vector3 directionTo = (m - p).iszero() ? m_flowField[index].direction : (m - p).Normalize();
-			const int length = (directionTo - currDirection).Length();
-
-			if (length < minVal)
-			{
-				minVal = length;
-				desiredDirection = directionTo;
-			}
+			minVal = length;
+			desiredDirection = directionTo;
 		}
-
-		m_currDir = desiredDirection;
-
-		return m_currDir;
 	}
 
-	return Vector3(0.0f, 0.0f, 0.0f);
+	m_currDir = desiredDirection;
+
+	return m_currDir;
 }
 
 std::vector<Vector3>& FlowField::getObstacles()

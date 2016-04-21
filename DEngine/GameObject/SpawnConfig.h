@@ -58,21 +58,21 @@ struct SpawnConfig_Area : public SpawnConfig_Offset
 		drawEndPos(drawEndPos)
 	{
 		unsigned int _spawnNum_ = 0;
-		float offsetX = posOffset.GetX();
-		float offsetZ = posOffset.GetZ();
+		float absOffsetX = std::abs(posOffset.GetX());
+		float absOffsetZ = std::abs(posOffset.GetZ());
 
-		if (offsetX < std::numeric_limits<float>::epsilon())
+		if (absOffsetX < std::numeric_limits<float>::epsilon())
 		{
-			offsetX = std::numeric_limits<float>::epsilon();
+			absOffsetX = std::numeric_limits<float>::epsilon();
 		}
 
-		if (offsetZ < std::numeric_limits<float>::epsilon())
+		if (absOffsetZ < std::numeric_limits<float>::epsilon())
 		{
-			offsetZ = std::numeric_limits<float>::epsilon();
+			absOffsetZ = std::numeric_limits<float>::epsilon();
 		}
 
-		const int numCellX = (int)floor((drawEndPos.GetX() - drawStartPos.GetX()) / offsetX) + 1;
-		const int numCellZ = (int)floor((drawEndPos.GetZ() - drawStartPos.GetZ()) / offsetZ) + 1;
+		const int numCellX = (int)floor(std::abs(drawEndPos.GetX() - drawStartPos.GetX()) / absOffsetX) + 1;
+		const int numCellZ = (int)floor(std::abs(drawEndPos.GetZ() - drawStartPos.GetZ()) / absOffsetZ) + 1;
 
 		if (numCellX + numCellX > 0)
 		{

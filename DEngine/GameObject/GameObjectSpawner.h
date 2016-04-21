@@ -14,6 +14,8 @@ public:
 	GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType spawnConfigType, Terrain* terrain);
 	~GameObjectSpawner();
 
+	bool IsSpawnFinish();
+
 	void Update(float deltaTime);
 	virtual int Spawn(GameObject*& gameObj);
 
@@ -25,6 +27,7 @@ private:
 	Terrain* m_terrain;
 	float m_accuSpawnTime;
 	int m_accuSpawnNum;
+	bool m_spawnActive;
 };
 
 }

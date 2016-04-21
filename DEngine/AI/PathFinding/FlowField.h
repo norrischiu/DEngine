@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "Graphics/VertexFormat.h"
+#include "GameObject/GameObject.h"
+#include "Graphics/Terrain/Terrain.h"
 
 namespace DE
 {
@@ -11,10 +13,11 @@ public:
 	struct Cell {
 		Vector3 direction;
 		bool isMovable;
+		GameObject* ownerGameObj;
 
 		Cell() { }
 		Cell(const Vector3& direction, const bool isMovable)
-			: direction(direction), isMovable(isMovable)
+			: direction(direction), isMovable(isMovable), ownerGameObj(nullptr)
 		{ }
 	};
 
@@ -32,7 +35,11 @@ public:
 	FlowField(const InitInfo initInfo, std::vector<Cell> flowField, std::vector<Vector3> m_obstacles, const Vector3& m_offset, const Vector3& destination);
 	~FlowField();
 
+	void setPositionMovable(const Vector3& position, const bool movable);
 	bool isPositionMovable(const Vector3& position);
+
+	void setPositionOwner(GameObject* gameObj);
+	GameObject* getPositionOwner(const Vector3& position);
 	const Vector3 getDirection(const Vector3& position);
 
 	std::vector<Vector3>& getObstacles();
@@ -43,7 +50,7 @@ public:
 	bool isValid(const Vector3& position);
 	int distance(const Vector3& position, const Vector3& destination);
 
-	void Draw();
+	void Draw(Terrain* terrain);
 
 private:
 	InitInfo m_initInfo;

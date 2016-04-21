@@ -1,11 +1,13 @@
 #include "GameObjectSpawner.h"
+#include "Event\EventQueue.h"
+#include "Event\EngineEvent.h"
 #include "../Graphics/Scene/SceneGraph.h"
 
 namespace DE
 {
 
 GameObjectSpawner::GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType spawnConfigType, Terrain* terrain)
-	: m_spawnConfig(spawnConfig), m_spawnConfigType(spawnConfigType), m_terrain(terrain)
+	: m_spawnConfig(spawnConfig), m_spawnConfigType(spawnConfigType), m_terrain(terrain), m_spawnActive(true)
 {
 
 }
@@ -13,6 +15,11 @@ GameObjectSpawner::GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType s
 
 GameObjectSpawner::~GameObjectSpawner()
 {
+}
+
+bool GameObjectSpawner::IsSpawnFinish()
+{
+	return !m_spawnActive;
 }
 
 int GameObjectSpawner::Spawn(GameObject*& gameObj)
@@ -59,21 +66,21 @@ void GameObjectSpawner::Update(float deltaTime)
 			{
 				SpawnConfig_Area* spawnConfig = (SpawnConfig_Area*)m_spawnConfig;
 
-				float offsetX = spawnConfig->posOffset.GetX();
-				float offsetZ = spawnConfig->posOffset.GetZ();
+				float absOffsetX = std::abs(spawnConfig->posOffset.GetX());
+				float absOffsetZ = std::abs(spawnConfig->posOffset.GetZ());
 
-				if (offsetX < std::numeric_limits<float>::epsilon())
+				if (absOffsetX < std::numeric_limits<float>::epsilon())
 				{
-					offsetX = std::numeric_limits<float>::epsilon();
+					absOffsetX = std::numeric_limits<float>::epsilon();
 				}
 
-				if (offsetZ < std::numeric_limits<float>::epsilon())
+				if (absOffsetZ < std::numeric_limits<float>::epsilon())
 				{
-					offsetZ = std::numeric_limits<float>::epsilon();
+					absOffsetZ = std::numeric_limits<float>::epsilon();
 				}
 
-				const int numCellX = (int)floor((spawnConfig->drawEndPos.GetX() - spawnConfig->drawStartPos.GetX()) / offsetX) + 1;
-				const int numCellZ = (int)floor((spawnConfig->drawEndPos.GetZ() - spawnConfig->drawStartPos.GetZ()) / offsetZ) + 1;
+				const int numCellX = (int)floor(std::abs(spawnConfig->drawEndPos.GetX() - spawnConfig->drawStartPos.GetX()) / absOffsetX) + 1;
+				const int numCellZ = (int)floor(std::abs(spawnConfig->drawEndPos.GetZ() - spawnConfig->drawStartPos.GetZ()) / absOffsetZ) + 1;
 
 				float pos_x, pos_z;
 				
@@ -120,7 +127,11 @@ void GameObjectSpawner::Update(float deltaTime)
 	}
 	else
 	{
+		m_spawnActive = false;
 
+		Handle hEvt(sizeof(Spawn_END_Event));
+		new (hEvt) Spawn_END_Event;
+		EventQueue::GetInstance()->Add(hEvt, GAME_EVENT);
 	}
 
 }
