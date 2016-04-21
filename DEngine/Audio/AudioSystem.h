@@ -20,6 +20,7 @@ public:
 	~AudioSystem();
 
 	void Init();
+	void Destruct();
 	void Reset();
 
 	static AudioSystem* GetInstance();

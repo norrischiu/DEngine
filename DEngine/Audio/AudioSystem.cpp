@@ -15,11 +15,6 @@ AudioSystem* AudioSystem::GetInstance()
 	return m_pInstance;
 }
 
-AudioSystem::AudioSystem()
-{
-	Init();
-}
-
 void AudioSystem::Init()
 {
 	// This is only needed in Windows desktop apps
@@ -33,20 +28,38 @@ void AudioSystem::Init()
 	m_audEngine = std::unique_ptr<DirectX::AudioEngine>(new DirectX::AudioEngine(eflags));
 }
 
-void AudioSystem::Reset()
+AudioSystem::AudioSystem()
+{
+	Init();
+}
+
+void AudioSystem::Destruct()
 {
 	m_audEngine.release();
+
+	for (auto itr = m_soundEffect.begin(); itr != m_soundEffect.end(); itr++)
+	{
+		itr->second.release();
+	}
+
+	for (auto itr = m_soundEffectIns.begin(); itr != m_soundEffectIns.end(); itr++)
+	{
+		itr->second.release();
+	}
+
 	m_soundEffect.clear();
 	m_soundEffectIns.clear();
+}
 
+void AudioSystem::Reset()
+{
+	Destruct();
 	Init();
 }
 
 AudioSystem::~AudioSystem()
 {
-	m_audEngine.release();
-	m_soundEffect.clear();
-	m_soundEffectIns.clear();
+	Destruct();
 }
 
 AudioSystem::AudioState AudioSystem::GetAudioState(const int event_id, const char* audio_id)
