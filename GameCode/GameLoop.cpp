@@ -74,7 +74,7 @@ void GameLoop::Construct()
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	playerGOS = new PlayerGOS(player, 100, player->GetPosition(), 0.5f);
+	playerGOS = new PlayerGOS(player, 5, player->GetPosition(), 0.5f);
 
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));

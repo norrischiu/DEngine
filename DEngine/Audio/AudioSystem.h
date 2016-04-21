@@ -22,6 +22,7 @@ public:
 	static AudioSystem* GetInstance();
 
 	void AddAudio(const char* audio_id, const wchar_t* filename);
+	void RemoveAudio(const char* audio_id);
 	bool HasSoundEffect(const char* audio_id);
 	AudioState GetAudioState(const int event_id, const char* audio_id);
 

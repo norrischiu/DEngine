@@ -56,6 +56,23 @@ void AudioSystem::AddAudio(const char* audio_id, const wchar_t* filename)
 	m_soundEffect[std::string(audio_id)] = std::unique_ptr<DirectX::SoundEffect>(new DirectX::SoundEffect(m_audEngine.get(), filepath.c_str()));
 }
 
+void AudioSystem::RemoveAudio(const char* audio_id)
+{
+	std::string hashKey = std::string(audio_id);
+
+	if (m_soundEffect[hashKey])
+	{
+		m_soundEffect[hashKey].release();
+		m_soundEffect.erase(hashKey);
+	}
+
+	if (m_soundEffectIns[hashKey])
+	{
+		m_soundEffectIns[hashKey].release();
+		m_soundEffectIns.erase(hashKey);
+	}
+}
+
 bool AudioSystem::HasSoundEffect(const char* audio_id)
 {
 	if (m_soundEffect[std::string(audio_id)])

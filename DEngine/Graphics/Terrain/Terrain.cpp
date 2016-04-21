@@ -207,7 +207,6 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 			ul.Transform(translate);
 			ur.Transform(translate);
 
-			//const int patch_id = (j / 8) * (m_initInfo.HeightmapWidth / m_initInfo.CellsPerPatch) + (i / m_initInfo.CellsPerPatch);
 			// bottom left
 			{
 				vertices[indexCounter].m_pos = bl;
@@ -251,6 +250,7 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 				indices[indexCounter] = indexCounter;
 				indexCounter++;
 			}
+
 			patch_id++;
 		}
 	}
