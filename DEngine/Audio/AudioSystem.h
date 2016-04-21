@@ -19,6 +19,9 @@ public:
 	AudioSystem();
 	~AudioSystem();
 
+	void Init();
+	void Reset();
+
 	static AudioSystem* GetInstance();
 
 	void AddAudio(const char* audio_id, const wchar_t* filename);

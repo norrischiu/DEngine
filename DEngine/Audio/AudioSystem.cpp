@@ -17,20 +17,34 @@ AudioSystem* AudioSystem::GetInstance()
 
 AudioSystem::AudioSystem()
 {
+	Init();
+}
+
+void AudioSystem::Init()
+{
 	// This is only needed in Windows desktop apps
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
 
-#ifdef _DEBUG
-	eflags = eflags | DirectX::AudioEngine_Debug;
-#endif
+	#ifdef _DEBUG
+		eflags = eflags | DirectX::AudioEngine_Debug;
+	#endif
 
 	m_audEngine = std::unique_ptr<DirectX::AudioEngine>(new DirectX::AudioEngine(eflags));
 }
 
+void AudioSystem::Reset()
+{
+	m_audEngine.release();
+	m_soundEffect.clear();
+	m_soundEffectIns.clear();
+
+	Init();
+}
 
 AudioSystem::~AudioSystem()
 {
+	m_audEngine.release();
 	m_soundEffect.clear();
 	m_soundEffectIns.clear();
 }
