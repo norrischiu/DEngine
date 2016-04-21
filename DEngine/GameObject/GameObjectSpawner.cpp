@@ -72,8 +72,8 @@ void GameObjectSpawner::Update(float deltaTime)
 					offsetZ = std::numeric_limits<float>::epsilon();
 				}
 
-				const int numCellX = (int)floor((spawnConfig->drawEndPos.GetX() - spawnConfig->drawStartPos.GetX()) / offsetX);
-				const int numCellZ = (int)floor((spawnConfig->drawEndPos.GetZ() - spawnConfig->drawStartPos.GetZ()) / offsetZ);
+				const int numCellX = (int)floor((spawnConfig->drawEndPos.GetX() - spawnConfig->drawStartPos.GetX()) / offsetX) + 1;
+				const int numCellZ = (int)floor((spawnConfig->drawEndPos.GetZ() - spawnConfig->drawStartPos.GetZ()) / offsetZ) + 1;
 
 				float pos_x, pos_z;
 				

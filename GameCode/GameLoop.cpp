@@ -58,7 +58,7 @@ void GameLoop::Construct()
 	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 5.0f, 5.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	
@@ -67,19 +67,21 @@ void GameLoop::Construct()
 	cam->SetAsRendererCamera();
 	*/
 
+	/*
 	std::vector<DE::GameObject*> obstacles;
 	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(128.0f, 0.0f, 128.0f), obstacles, DE::Vector3(127.0f, 0.0f, 127.0f));
 	flowField->Draw();
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
 	player->AddComponent((DE::Component*) hAIController.Raw());
+	*/
 
 	DE::SpawnConfig_Area* spawnConfig = new DE::SpawnConfig_Area(
 		player,
 		9,
 		0.5f,
-		DE::Vector3(-1.0f, 0.0f, -1.0f),
-		DE::Vector3(1.0f, 0.0f, 1.0f),
+		DE::Vector3(0.0f, 0.0f, 0.0f),
+		DE::Vector3(2.0f, 0.0f, 2.0f),
 		DE::Vector3(1.0f, 0.0f, 1.0f)
 	);
 

@@ -40,7 +40,7 @@ struct SpawnConfig_Position : public SpawnConfig
 
 struct SpawnConfig_Offset : public SpawnConfig
 {
-	SpawnConfig_Offset(GameObject* spawnTarget, const unsigned int spawnNum, const float spawnTimeDelay, const Vector3& drawStartPos, const Vector3& offset) :
+	SpawnConfig_Offset(GameObject* spawnTarget, const unsigned int spawnNum, const float spawnTimeDelay, const Vector3& drawStartPos, const Vector3& posOffset) :
 		SpawnConfig(spawnTarget, spawnNum, spawnTimeDelay),
 		drawStartPos(drawStartPos),
 		posOffset(posOffset)
@@ -71,8 +71,8 @@ struct SpawnConfig_Area : public SpawnConfig_Offset
 			offsetZ = std::numeric_limits<float>::epsilon();
 		}
 
-		const int numCellX = (int)floor((drawEndPos.GetX() - drawStartPos.GetX()) / offsetX);
-		const int numCellZ = (int)floor((drawEndPos.GetZ() - drawStartPos.GetZ()) / offsetZ);
+		const int numCellX = (int)floor((drawEndPos.GetX() - drawStartPos.GetX()) / offsetX) + 1;
+		const int numCellZ = (int)floor((drawEndPos.GetZ() - drawStartPos.GetZ()) / offsetZ) + 1;
 
 		if (numCellX + numCellX > 0)
 		{
