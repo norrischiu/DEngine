@@ -71,7 +71,7 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	drawPass->SetBlendState(State::ALPHA_BS);
 
 	Handle hTexture(sizeof(Texture));
-	if (type == TORCH_FLAME)
+	if (type == YELLOW_LIGHT)
 	{
 		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "yellow_light.dds");
 		drawPass->AddTexture(hTexture);
