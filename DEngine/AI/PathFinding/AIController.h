@@ -45,13 +45,12 @@ public:
 	Vector3 GetNewPosition(const float deltaTime);
 	Matrix4 DirVecToMatrix(const Vector3& direction);
 	float AngleBetween(Vector3 vec1, Vector3 vec2);
-	void Move(Matrix4 rotation, Vector3 vTrans);
+	void Move(const Vector3& vTrans);
 
 public:
 	FlowField* m_flowField;
 	Terrain* m_terrain;
 	bool m_enableAI;
-	float currRadian;
 };
 
 };

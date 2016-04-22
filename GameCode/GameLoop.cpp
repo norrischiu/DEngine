@@ -58,7 +58,7 @@ void GameLoop::Construct()
 	player->SetPosition(DE::Vector3(2.0f, terrain->GetHeight(2.0f, 2.0f), 2.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 30.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 20.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	
@@ -68,7 +68,7 @@ void GameLoop::Construct()
 	*/
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(10.0f, terrain->GetHeight(10.0f, 10.0f), 10.0f));
+	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(10.0f, 0.0f, 10.0f));
 	flowField->Draw(terrain);
 	DE::Handle hAIController(sizeof(DE::AIController));
 	new (hAIController) DE::AIController(flowField, terrain);
@@ -79,9 +79,9 @@ void GameLoop::Construct()
 			player,
 			49,
 			0.1f,
-			DE::Vector3(-20.0f, 0.0f, -20.0f),
-			DE::Vector3(-5.0f, 0.0f, -5.0f),
-			DE::Vector3(2.5f, 0.0f, 2.5f)
+			DE::Vector3(-18.0f, 0.0f, -18.0f),
+			DE::Vector3(-6.0f, 0.0f, -6.0f),
+			DE::Vector3(4.0f, 0.0f, 4.0f)
 		), 
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
 		terrain
@@ -92,9 +92,9 @@ void GameLoop::Construct()
 			player,
 			49,
 			0.1f,
-			DE::Vector3(20.0f, 0.0f, -20.0f),
-			DE::Vector3(5.0f, 0.0f, -5.0f),
-			DE::Vector3(-2.5f, 0.0f, 2.5f)
+			DE::Vector3(18.0f, 0.0f, -18.0f),
+			DE::Vector3(6.0f, 0.0f, -6.0f),
+			DE::Vector3(-4.0f, 0.0f, 4.0f)
 		), 
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
 		terrain
@@ -105,9 +105,9 @@ void GameLoop::Construct()
 			player,
 			49,
 			0.1f,
-			DE::Vector3(20.0f, 0.0f, 20.0f),
-			DE::Vector3(5.0f, 0.0f, 5.0f),
-			DE::Vector3(-2.5f, 0.0f, -2.5f)
+			DE::Vector3(18.0f, 0.0f, 18.0f),
+			DE::Vector3(6.0f, 0.0f, 6.0f),
+			DE::Vector3(-4.0f, 0.0f, -4.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
@@ -118,9 +118,9 @@ void GameLoop::Construct()
 			player,
 			49,
 			0.1f,
-			DE::Vector3(-20.0f, 0.0f, 20.0f),
-			DE::Vector3(-5.0f, 0.0f, 5.0f),
-			DE::Vector3(2.5f, 0.0f, -2.5f)
+			DE::Vector3(-18.0f, 0.0f, 18.0f),
+			DE::Vector3(-6.0f, 0.0f, 6.0f),
+			DE::Vector3(4.0f, 0.0f, -4.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain

@@ -153,7 +153,7 @@ bool AIController::IsDesintationArrived()
 	
 	const Vector3 difference = Vector3(
 		floor(abs(currPos.GetX() - destination.GetX())),
-		floor(abs(currPos.GetY() - destination.GetY())),
+		0.0f,
 		floor(abs(currPos.GetZ() - destination.GetZ()))
 	);
 
@@ -188,7 +188,10 @@ Vector3 AIController::GetNewPosition(const float deltaTime)
 {
 	Vector3 currPos = GetOwner()->GetPosition();
 	Vector3 direction = LookUpDirection(currPos);
-	Vector3 newPos = currPos + (direction * deltaTime * 0.5f);
+	Vector3 newPos = currPos + (direction * deltaTime * 1.0f);
+
+	const float newY = LookUpHeight(newPos);
+	newPos.SetY(newY);
 
 	return newPos;
 }
@@ -303,17 +306,15 @@ void AIController::Update(float deltaTime)
 		return; 
 	}
 	
-	Matrix4 rotationMatrix = DirVecToMatrix(LookUpDirection(currPos));
-
-	Move(rotationMatrix, newPos - currPos);
+	Move(newPos - currPos);
 	UpdateCamera();
 }
 
-void AIController::Move(Matrix4 rotation, Vector3 vTrans)
+void AIController::Move(const Vector3& vTrans)
 {
 	UnLockCurrPosition();
 
-	// *GetOwner()->GetTransform() *= rotation;
+	// *GetOwner()->GetTransform() *= DirVecToMatrix(LookUpDirection(GetOwner()->GetPosition()));
 
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
