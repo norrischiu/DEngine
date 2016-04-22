@@ -1,6 +1,4 @@
 #include "GameObjectSpawner.h"
-#include "Event\EventQueue.h"
-#include "Event\EngineEvent.h"
 #include "../Graphics/Scene/SceneGraph.h"
 
 namespace DE
@@ -128,10 +126,6 @@ void GameObjectSpawner::Update(float deltaTime)
 	else
 	{
 		m_spawnActive = false;
-
-		Handle hEvt(sizeof(Spawn_END_Event));
-		new (hEvt) Spawn_END_Event;
-		EventQueue::GetInstance()->Add(hEvt, GAME_EVENT);
 	}
 
 }

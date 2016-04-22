@@ -37,12 +37,18 @@ int PlayerGOS::Spawn(DE::GameObject*& gameObj)
 		DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*)hMeshComp.Raw());
 	}
 
+	if (player->GetComponent<DE::AABB>())
+	{
+		DE::Handle hAABB(sizeof(DE::AABB));
+		new (hAABB) DE::AABB(player->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
+		spawnPlayer->AddComponent((DE::Component*) hAABB.Raw());
+	}
+
 	if (player->GetComponent<DE::AIController>())
 	{
 		DE::Handle hAIController(sizeof(DE::AIController));
-		DE::AIController* aiController = new (hAIController) DE::AIController(player->GetComponent<DE::AIController>()->m_flowField, player->GetComponent<DE::AIController>()->m_terrain);
-		spawnPlayer->AddComponent((DE::Component*) aiController);
-		aiController->Init();
+		new (hAIController) DE::AIController(player->GetComponent<DE::AIController>()->m_flowField, player->GetComponent<DE::AIController>()->m_terrain);
+		spawnPlayer->AddComponent((DE::Component*) hAIController.Raw());
 	}
 
 	if (player->GetComponent<DE::PointLightComponent>())

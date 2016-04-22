@@ -17,13 +17,13 @@
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
 #include "DEngine\GameObject\GameObjectSpawner.h"
+#include "DEngine\GameObject\SpawnManager.h"
 #include "MainPlayer\PlayerGOS.h"
 
 // Game include
 #include "MainPlayer\Player.h"
 
 GameLoop* GameLoop::m_pInstance = nullptr;
-PlayerGOS* playerGOS = nullptr;
 
 GameLoop::GameLoop()
 {
@@ -58,7 +58,7 @@ void GameLoop::Construct()
 	player->SetPosition(DE::Vector3(2.0f, terrain->GetHeight(2.0f, 2.0f), 2.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 5.0f, 10.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 30.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	
@@ -68,33 +68,63 @@ void GameLoop::Construct()
 	*/
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(0.0f, terrain->GetHeight(0.0f, 0.0f), 0.0f));
+	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(10.0f, terrain->GetHeight(10.0f, 10.0f), 10.0f));
 	flowField->Draw(terrain);
 	DE::Handle hAIController(sizeof(DE::AIController));
-	DE::AIController* aiController =  new (hAIController) DE::AIController(flowField, terrain);
-	player->AddComponent((DE::Component*) aiController);
-	aiController->Init();
+	new (hAIController) DE::AIController(flowField, terrain);
+	player->AddComponent((DE::Component*) hAIController.Raw());
 
-	DE::SpawnConfig_Area* spawnConfig = new DE::SpawnConfig_Area[2]{
-		DE::SpawnConfig_Area(
+	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+		new DE::SpawnConfig_Area(
 			player,
-			9,
+			49,
 			0.1f,
-			DE::Vector3(-18.0f, 0.0f, -18.0f),
-			DE::Vector3(-6.0f, 0.0f, -6.0f),
-			DE::Vector3(6.0f, 0.0f, 6.0f)
+			DE::Vector3(-20.0f, 0.0f, -20.0f),
+			DE::Vector3(-5.0f, 0.0f, -5.0f),
+			DE::Vector3(2.5f, 0.0f, 2.5f)
+		), 
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
+		terrain
+	));
+
+	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+		new DE::SpawnConfig_Area(
+			player,
+			49,
+			0.1f,
+			DE::Vector3(20.0f, 0.0f, -20.0f),
+			DE::Vector3(5.0f, 0.0f, -5.0f),
+			DE::Vector3(-2.5f, 0.0f, 2.5f)
+		), 
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
+		terrain
+	));
+
+	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+		new DE::SpawnConfig_Area(
+			player,
+			49,
+			0.1f,
+			DE::Vector3(20.0f, 0.0f, 20.0f),
+			DE::Vector3(5.0f, 0.0f, 5.0f),
+			DE::Vector3(-2.5f, 0.0f, -2.5f)
 		),
-		DE::SpawnConfig_Area(
-			player,
-			25,
-			0.1f,
-			DE::Vector3(18.0f, 0.0f, 18.0f),
-			DE::Vector3(6.0f, 0.0f, 6.0f),
-			DE::Vector3(-3.0f, 0.0f, -3.0f)
-		)
-	};
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
+		terrain
+	));
 
-	playerGOS = new PlayerGOS(&spawnConfig[0], DE::SpawnConfigType::SPAWN_CONFIG_AREA, terrain);
+	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+		new DE::SpawnConfig_Area(
+			player,
+			49,
+			0.1f,
+			DE::Vector3(-20.0f, 0.0f, 20.0f),
+			DE::Vector3(-5.0f, 0.0f, 5.0f),
+			DE::Vector3(2.5f, 0.0f, -2.5f)
+		),
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
+		terrain
+	));
 		
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
@@ -108,7 +138,20 @@ void GameLoop::Update(float deltaTime)
 	m_timer += deltaTime;
 
 	DE::GameWorld::GetInstance()->Update(deltaTime);
-	playerGOS->Update(deltaTime);
+	DE::SpawnManager::GetInstance()->Update(deltaTime);
 
-	((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
+	if (DE::SpawnManager::GetInstance()->GetSpawnState() == DE::SpawnManager::SpawnState::SPAWN_FINISHED)
+	{
+		for (auto itr : *DE::GameWorld::GetInstance()->GetGameObjectList())
+		{
+			DE::AIController* aiController = itr->GetComponent<DE::AIController>();
+
+			if (aiController)
+			{
+				aiController->Init();
+			}
+		}
+	}
+
+	//((DE::TextBox*) DE::HUD::getInstance()->getHUDElementById("timer1"))->setText("Timer: %.1f", m_timer);
 }

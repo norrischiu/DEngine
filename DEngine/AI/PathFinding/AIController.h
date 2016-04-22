@@ -25,13 +25,17 @@ public:
 	
 	void UpdateCamera();
 
+	void LockCurrPosition();
 	void LockPosition(const Vector3& position);
+	void UnLockCurrPosition();
 	void UnLockPosition(const Vector3& position);
-	void SetPositionOwner(const Vector3& position, GameObject* gameObj);
+	void SetPositionOwner(const Vector3& position, const int gameObjId);
 
 	bool HasPositionChange(const Vector3& newPos, const Vector3& currPos);
 	bool IsPositionOwner(const Vector3& currPos);
+	bool IsNewPositionOwner(const Vector3& newPos);
 	bool IsBlockedByOther(const Vector3& position);
+	bool IsNewPositionBlockedByOther(const Vector3& newPos);
 	bool IsDesintationArrived();
 	bool IsSlopeSteep(const Vector3& newPos, const Vector3& currPos);
 
@@ -39,14 +43,15 @@ public:
 	float LookUpHeight(const Vector3& currPos);
 
 	Vector3 GetNewPosition(const float deltaTime);
-
-	float angleBetween(Vector3 vec1, Vector3 vec2);
-	void Move(Vector3 vTrans);
+	Matrix4 DirVecToMatrix(const Vector3& direction);
+	float AngleBetween(Vector3 vec1, Vector3 vec2);
+	void Move(Matrix4 rotation, Vector3 vTrans);
 
 public:
 	FlowField* m_flowField;
 	Terrain* m_terrain;
 	bool m_enableAI;
+	float currRadian;
 };
 
 };

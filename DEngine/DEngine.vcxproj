@@ -151,6 +151,7 @@
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\GameObjectSpawner.cpp" />
     <ClCompile Include="GameObject\GameWorld.cpp" />
+    <ClCompile Include="GameObject\SpawnManager.cpp" />
     <ClCompile Include="Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Graphics\Animation\AnimationController.cpp" />
     <ClCompile Include="Graphics\Animation\AnimationSet.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="GameObject\GameObjectSpawner.h" />
     <ClInclude Include="GameObject\GameWorld.h" />
     <ClInclude Include="GameObject\SpawnConfig.h" />
+    <ClInclude Include="GameObject\SpawnManager.h" />
     <ClInclude Include="GlobalInclude.h" />
     <ClInclude Include="Graphics\Animation\Animation.h" />
     <ClInclude Include="Graphics\Animation\AnimationController.h" />

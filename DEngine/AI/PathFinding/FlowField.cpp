@@ -191,7 +191,7 @@ bool FlowField::isValid(const Vector3& position)
 	);
 }
 
-GameObject* FlowField::getPositionOwner(const Vector3& position)
+int FlowField::getPositionOwnerId(const Vector3& position)
 {
 	if (isValid(position))
 	{
@@ -205,13 +205,13 @@ GameObject* FlowField::getPositionOwner(const Vector3& position)
 
 		const int index = z * m_initInfo.FlowFieldWidth + x;
 		
-		return m_flowField[index].ownerGameObj;
+		return m_flowField[index].ownerGameObjId;
 	}
 
-	return nullptr;
+	return -1;
 }
 
-void FlowField::setPositionOwner(const Vector3& position, GameObject* gameObj)
+void FlowField::setPositionOwnerId(const Vector3& position, const int gameObjId)
 {
 	if (isValid(position))
 	{
@@ -224,7 +224,7 @@ void FlowField::setPositionOwner(const Vector3& position, GameObject* gameObj)
 		const int z = floor(pos.GetZ());
 
 		const int index = z * m_initInfo.FlowFieldWidth + x;
-		m_flowField[index].ownerGameObj = gameObj;
+		m_flowField[index].ownerGameObjId = gameObjId;
 	}
 }
 
