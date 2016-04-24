@@ -65,11 +65,18 @@ public:
 		m_fStamina += diff;
 	}
 
+	inline GameObject*	GetBlood()
+	{
+		return m_Blood;
+	}
+
 	bool								m_bHitBoss;
 
 private:
 
 	DE::GameObject*						m_Weapon;
+
+	DE::GameObject*						m_Blood;
 
 	ThirdPersonCamera*					m_FollowCamera;
 

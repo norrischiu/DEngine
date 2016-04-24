@@ -97,7 +97,7 @@ void GS(point VS_INPUT gin[1],
 			p.Type = PT_FLARE;
 			if (gEffectType == BLEEDING)
 			{
-				if (gDisableTime < 1.5f && gDisableTime > 0.1f)
+				if (gDisableTime < 1.0f && gDisableTime > 0.1f)
 				{
 					p.Type = PT_FLARE;
 				}

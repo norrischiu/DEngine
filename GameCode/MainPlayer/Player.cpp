@@ -112,7 +112,16 @@ Player::Player()
 	// Fire
 	DE::Handle hEmitter(sizeof(DE::Emitter));
 	new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::YELLOW_LIGHT, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f));
-	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw());
+	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw()); 
+
+	// bleeding
+	m_Blood = new DE::GameObject();
+	DE::Handle bleeding(sizeof(DE::Emitter));
+	new (bleeding) DE::Emitter("player", DE::Emitter::BLEEDING, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(1.0f, 1.0f, 0.5f));
+	m_Blood->AddComponent((DE::Component*) bleeding.Raw());
+	m_Blood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
+	m_Blood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
 }
 
 void Player::Update(float deltaTime)

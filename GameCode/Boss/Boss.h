@@ -35,13 +35,13 @@ public:
 
 	DE::Vector3 GetPlayerPostion()
 	{
-		return m_Player->GetPosition();
+		return m_pPlayer->GetPosition();
 		//return m_Player->GetTransform()->GetPosition();
 	}
 
 	void SetPlayer(Player* player)
 	{
-		m_Player = player;
+		m_pPlayer = player;
 	}
 
 	void SetState(eState state) 
@@ -89,6 +89,11 @@ public:
 		return m_pBlood;
 	}
 
+	Player*		GetPlayer()
+	{
+		return m_pPlayer;
+	}
+
 	bool							m_bHitPlayer;
 
 private:
@@ -99,7 +104,7 @@ private:
 
 	float							m_fJumpingTime;
 
-	Player*							m_Player;
+	Player*							m_pPlayer;
 
 	eState							m_eState;
 

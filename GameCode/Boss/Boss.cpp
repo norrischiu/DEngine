@@ -18,7 +18,7 @@ Boss::Boss(Player* player)
 	: DE::GameObject()
 	, m_fHP(1000.0f)
 	, m_fJumpingTime(0.0f)
-	, m_Player(player)
+	, m_pPlayer(player)
 	, m_bHitPlayer(false)
 {
 	DE::Handle hMeshComponent(sizeof(DE::MeshComponent));
@@ -105,21 +105,22 @@ void Boss::Update(float deltaTime)
 	m_fAttackTime += deltaTime;
 	m_fJumpingTime += deltaTime;
 	// Check attack collision
-	if (m_Player && !m_bHitPlayer && m_Player->m_fHP >= 10.0f)
+	if (m_pPlayer && !m_bHitPlayer && m_pPlayer->m_fHP >= 10.0f)
 	{
 		if (m_eState == PUNCHING || m_eState == JUMPATTACKING)
 		{
-			if (m_pLeftHand->isCollided((GameObject*)m_Player) || m_pRightHand->isCollided((GameObject*)m_Player))
+			if (m_pLeftHand->isCollided((GameObject*)m_pPlayer) || m_pRightHand->isCollided((GameObject*)m_pPlayer))
 			{
-				if (m_Player->GetState() != Player::DOGDING && m_eAttacked == WAITING)
+				if (m_pPlayer->GetState() != Player::DOGDING && m_eAttacked == WAITING)
 				{
 
 					m_bHitPlayer = true;
-					m_Player->m_fHP -= 10.0f;
+					m_pPlayer->m_fHP -= 10.0f;
 					m_eAttacked == ATTACKED;
 					DE::Handle h(sizeof(Player_Impact_START_Event));
 					new (h) Player_Impact_START_Event;
 					DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
+					GetPlayer()->GetBlood()->GetComponent<DE::Emitter>()->ResetDisableTime();
 				}
 			}
 		}
