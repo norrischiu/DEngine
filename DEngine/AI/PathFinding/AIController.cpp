@@ -2,6 +2,7 @@
 #include "../../GameObject/GameWorld.h"
 #include "../../GameObject/GameObject.h"
 #include "../../Graphics/MeshComponent.h"
+#include "FlowFieldBuilder.h"
 #include "FlowFieldManager.h"
 
 namespace DE
@@ -156,6 +157,7 @@ Vector3 AIController::GetNewPosition(const float deltaTime)
 
 	Vector3 currPos = GetOwner()->GetPosition();
 
+	FlowFieldBuilder::getInstance()->updateFlowField(m_flowField, currPos);
 	//FlowFieldManager::GetInstance()->UpdateFlowFieldDirection(currPos);
 
 	Vector3 direction = LookUpDirection(currPos);
