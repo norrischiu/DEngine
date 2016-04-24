@@ -89,10 +89,13 @@ void GS(point VS_INPUT gin[1],
 				p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
 				//p.InitialVelW = float4(gEmitDirW.x + random.x * 0.5, gEmitDirW.y, gEmitDirW.z + random.z * 0.5, 0.0f);
 			}
+			else if (gEffectType == BLUE_LIGHT)
+			{
+				p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
+				p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
+			}
 					
 			p.SizeW = gSize;
-			if (gEffectType == 2)
-				p.SizeW = gSize + 2.0f;
 			p.Age = 0.0f;
 			p.Type = PT_FLARE;
 			if (gEffectType == BLEEDING)
@@ -134,7 +137,7 @@ void GS(point VS_INPUT gin[1],
 		// Default case
 		else
 		{
-			if (gin[0].Age <= 0.3f)
+			if (gin[0].Age <= 0.03f)
 				ptStream.Append(gin[0]);
 		}
 			

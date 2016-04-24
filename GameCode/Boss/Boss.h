@@ -115,6 +115,8 @@ private:
 	DE::GameObject*					m_pRightHand;
 
 	DE::GameObject*					m_pBlood;
+
+	DE::GameObject*					m_pBlueEye;
 };
 
 

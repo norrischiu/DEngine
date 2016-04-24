@@ -63,7 +63,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 	}
 	else if (gEffectType == BLUE_LIGHT)
 	{
-		vout.SizeW = t * vin.SizeW / 1.8 /2;
+		vout.SizeW = vin.SizeW - t * vin.SizeW / 1.8;
 		vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
 	}
 	else if (gEffectType == BLEEDING)

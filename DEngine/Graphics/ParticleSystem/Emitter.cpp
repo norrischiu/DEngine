@@ -34,9 +34,9 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	m_Flag = true;
 	m_FirstRun = true;
 	m_fSize = size;
-	m_fRandMin = -3.5f;
-	m_fRandMax = 3.5f;
-	m_fDisableTime = 0.0f;
+	m_fRandMin = 0.0f;
+	m_fRandMax = 0.0f;
+	m_fDisableTime = 100.0f;
 
 	
 
@@ -85,7 +85,7 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	}
 	else if (type == BLUE_LIGHT)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "yellow_light.dds");
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "blue_light.dds");
 		drawPass->AddTexture(hTexture);
 	}
 	else if (type == BLEEDING)
@@ -138,6 +138,10 @@ void Emitter::Draw()
 		ptr->gEmitPosW = emitPos + random;
 	}
 	ptr->gEmitDirW = m_vEmitDirW + ran;
+	if (m_EffectType == BLUE_LIGHT)
+	{
+		ptr->gEmitDirW = m_vEmitDirW;
+	}
 	ptr->gFlareAge = m_fFlareAge;
 	ptr->gTimeStep = m_fTimeStep;
 	ptr->gDisableTime = m_fDisableTime;

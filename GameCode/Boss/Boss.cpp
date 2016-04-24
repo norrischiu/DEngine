@@ -72,17 +72,9 @@ Boss::Boss(Player* player)
 	DE::Handle hLeftHandEmitter(sizeof(DE::Emitter));
 	new (hLeftHandEmitter) DE::Emitter("lefthand", DE::Emitter::YELLOW_LIGHT, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
 	m_pLeftHand->AddComponent((DE::Component*) hLeftHandEmitter.Raw());
+	m_pLeftHand->GetComponent<DE::Emitter>()->SetRandomRange(-2.5f, 2.5f);
 	m_pLeftHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 10);
 	m_pLeftHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
-
-	// blood effect
-	m_pBlood = new DE::GameObject();
-	DE::Handle blood(sizeof(DE::Emitter));
-	new (blood) DE::Emitter("boss", DE::Emitter::BLEEDING, 3.0f, DE::Vector3(0.0f, 0.0f, 0.3f), DE::Vector3(2.0f, 3.0f, -5.0f));
-	m_pBlood->AddComponent((DE::Component*) blood.Raw());
-	m_pBlood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
-	m_pBlood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
-	
 
 	// Right hand
 	m_pRightHand = new DE::GameObject();
@@ -92,8 +84,31 @@ Boss::Boss(Player* player)
 	DE::Handle hRightHandEmitter(sizeof(DE::Emitter));
 	new (hRightHandEmitter) DE::Emitter("righthand", DE::Emitter::YELLOW_LIGHT, 1.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.1f, 0.0f));
 	m_pRightHand->AddComponent((DE::Component*) hRightHandEmitter.Raw());
+	m_pRightHand->GetComponent<DE::Emitter>()->SetRandomRange(-2.5f, 2.5f);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_pRightHand->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
+	// blood effect
+	m_pBlood = new DE::GameObject();
+	DE::Handle blood(sizeof(DE::Emitter));
+	new (blood) DE::Emitter("boss", DE::Emitter::BLEEDING, 3.0f, DE::Vector3(0.0f, 0.0f, 0.3f), DE::Vector3(2.0f, 3.0f, -5.0f));
+	m_pBlood->AddComponent((DE::Component*) blood.Raw());
+	m_pBlood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
+	m_pBlood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
+	// blue eye
+	m_pBlueEye = new DE::GameObject();
+	DE::Handle hLeftEye(sizeof(DE::Emitter));
+	new (hLeftEye) DE::Emitter("lefteye", DE::Emitter::BLUE_LIGHT, 0.5f, DE::Vector3(-0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
+	m_pBlueEye->AddComponent((DE::Component*) hLeftEye.Raw());
+	m_pBlueEye->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 5);
+	m_pBlueEye->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+
+	DE::Handle hRightEye(sizeof(DE::Emitter));
+	new (hRightEye) DE::Emitter("righteye", DE::Emitter::BLUE_LIGHT, 0.5f, DE::Vector3(0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
+	m_pBlueEye->AddComponent((DE::Component*) hRightEye.Raw());
+	m_pBlueEye->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 5);
+	m_pBlueEye->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 }
 
