@@ -15,6 +15,32 @@ GameObjectSpawner::~GameObjectSpawner()
 {
 }
 
+int GameObjectSpawner::FindOverrideComponent(int componentID)
+{
+	for (int i = 0; i < m_vOverrideComponents.size(); i++)
+	{
+		if (m_vOverrideComponents[i]->GetID() == componentID)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void GameObjectSpawner::AddOverrideComponent(Component* component)
+{
+	int index = FindOverrideComponent(component->GetID());
+
+	if (index != -1)
+	{
+		delete &m_vOverrideComponents[index];
+		m_vOverrideComponents.erase(m_vOverrideComponents.begin() + index);
+	}
+
+	m_vOverrideComponents.push_back(component);
+}
+
 bool GameObjectSpawner::IsSpawnFinish()
 {
 	return !m_spawnActive;
@@ -24,13 +50,21 @@ int GameObjectSpawner::Spawn(GameObject*& gameObj)
 {
 	gameObj = new GameObject;
 
-	for (auto itr : *(m_spawnConfig->spawnTarget)->getAllComponents())
+	for (auto itr : m_vOverrideComponents)
 	{
 		gameObj->AddComponent(itr);
+	}
 
-		if (itr->GetID() == ComponentID::MESH)
+	for (auto itr : *(m_spawnConfig->spawnTarget)->getAllComponents())
+	{
+		if (!FindOverrideComponent(itr->GetID()))
 		{
-			DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*) itr);
+			gameObj->AddComponent(itr);
+
+			if (itr->GetID() == ComponentID::MESH)
+			{
+				DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*) itr);
+			}
 		}
 	}
 

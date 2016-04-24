@@ -14,6 +14,8 @@ public:
 	GameObjectSpawner(SpawnConfig* spawnConfig, SpawnConfigType spawnConfigType, Terrain* terrain);
 	~GameObjectSpawner();
 
+	void AddOverrideComponent(Component* component);
+	int FindOverrideComponent(int componentID);
 	bool IsSpawnFinish();
 
 	void Update(float deltaTime);
@@ -22,6 +24,7 @@ public:
 public:
 	SpawnConfig* m_spawnConfig;
 	SpawnConfigType m_spawnConfigType;
+	std::vector<Component*> m_vOverrideComponents;
 
 private:
 	Terrain* m_terrain;

@@ -11,5 +11,9 @@ public:
 	~PlayerGOS();
 
 	int Spawn(DE::GameObject*& gameObj) override;
+
+private:
+	void CopyOverrideComponent(DE::GameObject* gameObj, DE::Component* component);
+	void CopyComponent(DE::GameObject* spawnTarget, DE::GameObject* gameObj, const int componentID);
 };
 

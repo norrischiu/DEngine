@@ -2,7 +2,7 @@
 #include "../../GameObject/GameWorld.h"
 #include "../../GameObject/GameObject.h"
 #include "../../Graphics/MeshComponent.h"
-#include "FlowFieldBuilder.h"
+#include "FlowFieldManager.h"
 
 namespace DE
 {
@@ -64,22 +64,15 @@ bool AIController::IsSlopeSteep(const Vector3& newPos, const Vector3& currPos)
 
 bool AIController::IsPositionOwner(const Vector3& position)
 {
-	int ownerId = m_flowField->getPositionOwnerId(position);
+	int ownerId = GetPositionOwnerId(position);
 
 	return ownerId == GetOwner()->GetGameObjectID();
 }
 
-bool AIController::IsNewPositionOwner(const Vector3& newPos)
+bool AIController::IsPositionOwner()
 {
-	const Vector3& vTrans = newPos - GetOwner()->GetPosition();
-
-	Matrix4 trans;
-	trans.CreateTranslation(vTrans);
-	Matrix4 transform = *GetOwner()->GetTransform();
-	transform = transform * trans;
-
 	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(transform);
+	boundingBox.Transform(*GetOwner()->GetTransform());
 	const Vector3& minXYZ = boundingBox.getMin();
 	const Vector3& maxXYZ = boundingBox.getMax();
 
@@ -106,44 +99,16 @@ bool AIController::IsNewPositionOwner(const Vector3& newPos)
 
 bool AIController::IsBlockedByOther(const Vector3& position)
 {
-	int ownerId = m_flowField->getPositionOwnerId(position);
+	int ownerId = GetPositionOwnerId(position);
 
 	return ownerId != -1 && ownerId != GetOwner()->GetGameObjectID();
 }
 
 bool AIController::IsNewPositionBlockedByOther(const Vector3& newPos)
 {
-	const Vector3& vTrans = newPos - GetOwner()->GetPosition();
-	
-	Matrix4 trans;
-	trans.CreateTranslation(vTrans);
-	Matrix4 transform = *GetOwner()->GetTransform();
-	transform = transform * trans;
+	const int newPosOwnerId = GetNewPositionOwnerId(newPos);
 
-	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(transform);
-	const Vector3& minXYZ = boundingBox.getMin();
-	const Vector3& maxXYZ = boundingBox.getMax();
-
-	const int minX = floor(minXYZ.GetX());
-	const int maxX = ceil(maxXYZ.GetX());
-	const int minZ = floor(minXYZ.GetZ());
-	const int maxZ = ceil(maxXYZ.GetZ());
-
-	for (int x = minX; x <= maxX; x++)
-	{
-		for (int z = minZ; z <= maxZ; z++)
-		{
-			const Vector3 position = Vector3(x, 0.0f, z);
-			
-			if (IsBlockedByOther(position))
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
+	return  newPosOwnerId != -1 && newPosOwnerId != GetOwner()->GetGameObjectID();
 }
 
 bool AIController::IsDesintationArrived()
@@ -186,9 +151,15 @@ float AIController::LookUpHeight(const Vector3& currPos)
 
 Vector3 AIController::GetNewPosition(const float deltaTime)
 {
+	UnLockCurrPosition();
+	//UnLockPosition(GetOwner()->GetPosition());
+
 	Vector3 currPos = GetOwner()->GetPosition();
+
+	//FlowFieldManager::GetInstance()->UpdateFlowFieldDirection(currPos);
+
 	Vector3 direction = LookUpDirection(currPos);
-	Vector3 newPos = currPos + (direction * deltaTime * 1.0f);
+	Vector3 newPos = currPos + (direction * deltaTime * 0.75f);
 
 	const float newY = LookUpHeight(newPos);
 	newPos.SetY(newY);
@@ -215,9 +186,50 @@ void AIController::UpdateCamera()
 	}
 }
 
-void AIController::SetPositionOwner(const Vector3& position, const int gameObjId)
+int AIController::GetPositionOwnerId(const Vector3& position)
 {
-	m_flowField->setPositionOwnerId(position, gameObjId);
+	return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
+}
+
+int AIController::GetNewPositionOwnerId(const Vector3& newPos)
+{
+	const Vector3& vTrans = newPos - GetOwner()->GetPosition();
+
+	Matrix4 trans;
+	trans.CreateTranslation(vTrans);
+	Matrix4 transform = *GetOwner()->GetTransform();
+	transform = transform * trans;
+
+	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
+	boundingBox.Transform(transform);
+	const Vector3& minXYZ = boundingBox.getMin();
+	const Vector3& maxXYZ = boundingBox.getMax();
+
+	const int minX = floor(minXYZ.GetX());
+	const int maxX = ceil(maxXYZ.GetX());
+	const int minZ = floor(minXYZ.GetZ());
+	const int maxZ = ceil(maxXYZ.GetZ());
+
+	for (int x = minX; x <= maxX; x++)
+	{
+		for (int z = minZ; z <= maxZ; z++)
+		{
+			const Vector3 position = Vector3(x, 0.0f, z);
+			const int positionOwnerId = GetPositionOwnerId(position);
+
+			if (positionOwnerId != -1 && positionOwnerId != GetOwner()->GetGameObjectID())
+			{
+				return positionOwnerId;
+			}
+		}
+	}
+
+	return -1;
+}
+
+void AIController::SetPositionOwnerId(const Vector3& position, const int gameObjId)
+{
+	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, gameObjId);
 }
 
 void AIController::UnLockCurrPosition()
@@ -244,8 +256,8 @@ void AIController::UnLockCurrPosition()
 
 void AIController::UnLockPosition(const Vector3& position)
 {
-	m_flowField->setPositionMovable(position, true);
-	SetPositionOwner(GetOwner()->GetPosition(), -1);
+	FlowFieldManager::GetInstance()->UnLockPosition(position);
+	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, -1);
 }
 
 void AIController::LockCurrPosition()
@@ -272,8 +284,8 @@ void AIController::LockCurrPosition()
 
 void AIController::LockPosition(const Vector3& position)
 {
-	m_flowField->setPositionMovable(position, false);
-	SetPositionOwner(GetOwner()->GetPosition(), GetOwner()->GetGameObjectID());
+	FlowFieldManager::GetInstance()->LockPosition(position);
+	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, GetOwner()->GetGameObjectID());
 }
 
 void AIController::Update(float deltaTime)
@@ -287,22 +299,23 @@ void AIController::Update(float deltaTime)
 	}
 
 	const Vector3 currPos = GetOwner()->GetPosition();
-
-	UnLockCurrPosition();
-
 	const Vector3 newPos = GetNewPosition(deltaTime);
 
-	LockCurrPosition();
-
 	if (!HasPositionChange(newPos, currPos)) {
+		//LockPosition(currPos);
+		LockCurrPosition();
 		return; 
 	}
 
 	if (IsNewPositionBlockedByOther(newPos)) { 
+		//LockPosition(currPos);
+		LockCurrPosition();
 		return; 
 	}
 
 	if (IsSlopeSteep(newPos, currPos)) { 
+		//LockPosition(currPos);
+		LockCurrPosition();
 		return; 
 	}
 	
@@ -312,14 +325,13 @@ void AIController::Update(float deltaTime)
 
 void AIController::Move(const Vector3& vTrans)
 {
-	UnLockCurrPosition();
-
 	// *GetOwner()->GetTransform() *= DirVecToMatrix(LookUpDirection(GetOwner()->GetPosition()));
 
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
 	GetOwner()->TransformBy(trans);
 
+	//LockPosition(GetOwner()->GetPosition());
 	LockCurrPosition();
 }
 

@@ -21,6 +21,11 @@ FlowField::~FlowField()
 {
 }
 
+FlowField::InitInfo FlowField::getInitInfo()
+{
+	return m_initInfo;
+}
+
 void FlowField::Draw(Terrain* terrain)
 {
 	const int iNumVertices = (m_initInfo.FlowFieldWidth + 1) * 2 + (m_initInfo.FlowFieldDepth + 1) * 2 + 4 * m_initInfo.FlowFieldWidth * m_initInfo.FlowFieldDepth;
@@ -228,6 +233,23 @@ void FlowField::setPositionOwnerId(const Vector3& position, const int gameObjId)
 	}
 }
 
+void FlowField::setPositionDirection(const Vector3& position, const Vector3& direction)
+{
+	if (isValid(position))
+	{
+		Matrix4 transform;
+		transform.CreateTranslation(-m_offset);
+		Vector3 pos = position;
+		pos.Transform(transform);
+
+		const int x = floor(pos.GetX());
+		const int z = floor(pos.GetZ());
+
+		const int index = z * m_initInfo.FlowFieldWidth + x;
+		m_flowField[index].direction = direction;
+	}
+}
+
 void FlowField::setPositionMovable(const Vector3& position, const bool movable)
 {
 	if (isValid(position))
@@ -325,9 +347,15 @@ const Vector3 FlowField::getDirection(const Vector3& position)
 	return m_currDir;
 }
 
-std::vector<Vector3>& FlowField::getObstacles()
+std::vector<FlowField::Cell>* FlowField::getFlowField()
 {
-	return m_obstacles;
+	return &m_flowField;
+}
+
+
+std::vector<Vector3>* FlowField::getObstacles()
+{
+	return &m_obstacles;
 }
 
 

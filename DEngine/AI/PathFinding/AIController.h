@@ -29,11 +29,13 @@ public:
 	void LockPosition(const Vector3& position);
 	void UnLockCurrPosition();
 	void UnLockPosition(const Vector3& position);
-	void SetPositionOwner(const Vector3& position, const int gameObjId);
+	int GetNewPositionOwnerId(const Vector3& newPos);
+	int GetPositionOwnerId(const Vector3& position);
+	void SetPositionOwnerId(const Vector3& position, const int gameObjId);
 
 	bool HasPositionChange(const Vector3& newPos, const Vector3& currPos);
-	bool IsPositionOwner(const Vector3& currPos);
-	bool IsNewPositionOwner(const Vector3& newPos);
+	bool IsPositionOwner(const Vector3& position);
+	bool IsPositionOwner();
 	bool IsBlockedByOther(const Vector3& position);
 	bool IsNewPositionBlockedByOther(const Vector3& newPos);
 	bool IsDesintationArrived();

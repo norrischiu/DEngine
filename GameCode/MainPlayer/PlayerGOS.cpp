@@ -22,68 +22,139 @@ PlayerGOS::~PlayerGOS()
 {
 }
 
+void PlayerGOS::CopyOverrideComponent(DE::GameObject* gameObj, DE::Component* component)
+{
+	switch (component->GetID())
+	{
+		case DE::ComponentID::AI_CONTROLLER:
+		{
+			DE::Handle hAIController(sizeof(DE::AIController));
+			new (hAIController) DE::AIController(((DE::AIController*) component)->m_flowField, ((DE::AIController*) component)->m_terrain);
+			gameObj->AddComponent((DE::Component*) hAIController.Raw());
+		}
+		break;
+	}
+}
+
+void PlayerGOS::CopyComponent(DE::GameObject* spawnTarget, DE::GameObject* gameObj, const int componentID)
+{
+	switch (componentID)
+	{
+	case DE::ComponentID::MESH:
+	{
+		DE::Handle hMeshComp(sizeof(DE::MeshComponent));
+		new (hMeshComp) DE::MeshComponent(spawnTarget->GetComponent<DE::MeshComponent>()->m_pMeshData);
+		gameObj->AddComponent((DE::Component*)hMeshComp.Raw());
+		DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*)hMeshComp.Raw());
+	}
+	break;
+	case DE::ComponentID::RIGIDBODY:
+	{
+		DE::Handle hAABB(sizeof(DE::AABB));
+		new (hAABB) DE::AABB(spawnTarget->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
+		gameObj->AddComponent((DE::Component*) hAABB.Raw());
+	}
+	break;
+	case DE::ComponentID::AI_CONTROLLER:
+	{
+		DE::Handle hAIController(sizeof(DE::AIController));
+		new (hAIController) DE::AIController(spawnTarget->GetComponent<DE::AIController>()->m_flowField, spawnTarget->GetComponent<DE::AIController>()->m_terrain);
+		gameObj->AddComponent((DE::Component*) hAIController.Raw());
+	}
+	break;
+	case DE::ComponentID::POINTLIGHT:
+	{
+		DE::Handle hPointLight(sizeof(DE::PointLightComponent));
+		new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4, 2);
+		gameObj->AddComponent((DE::Component*) hPointLight.Raw());
+	}
+	break;
+	case DE::ComponentID::SKELETON:
+	{
+		gameObj->AddComponent(spawnTarget->GetComponent<DE::Skeleton>());
+	}
+	break;
+	case DE::ComponentID::AUDIO_COMPONENT:
+	{
+		DE::Handle hAudio(sizeof(DE::AudioComponent));
+		new (hAudio) DE::AudioComponent(spawnTarget->GetComponent<DE::AnimationStateMachine>());
+		gameObj->AddComponent((DE::Component*) hAudio.Raw());
+	}
+	break;
+	}
+}
+
 int PlayerGOS::Spawn(DE::GameObject*& gameObj)
 {
 	gameObj = new DE::GameObject[2];
 
-	Player* player = (Player*) m_spawnConfig->spawnTarget;
+	Player* player = (Player*)m_spawnConfig->spawnTarget;
 	DE::GameObject* spawnPlayer = &gameObj[0];
 
-	if (player->GetComponent<DE::MeshComponent>())
+	for (auto itr : m_vOverrideComponents)
 	{
-		DE::Handle hMeshComp(sizeof(DE::MeshComponent));
-		new (hMeshComp) DE::MeshComponent(player->GetComponent<DE::MeshComponent>()->m_pMeshData);
-		spawnPlayer->AddComponent((DE::Component*)hMeshComp.Raw());
-		DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*)hMeshComp.Raw());
+		CopyOverrideComponent(spawnPlayer, itr);
 	}
 
-	if (player->GetComponent<DE::AABB>())
+	DE::MeshComponent* meshComponent = player->GetComponent<DE::MeshComponent>();
+	if (meshComponent && FindOverrideComponent(meshComponent->GetID()) == -1)
 	{
-		DE::Handle hAABB(sizeof(DE::AABB));
-		new (hAABB) DE::AABB(player->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
-		spawnPlayer->AddComponent((DE::Component*) hAABB.Raw());
+		CopyComponent(player, spawnPlayer, meshComponent->GetID());
 	}
 
-	if (player->GetComponent<DE::AIController>())
+	DE::AABB* aabbComponent = player->GetComponent<DE::AABB>();
+	if (aabbComponent && meshComponent && FindOverrideComponent(aabbComponent->GetID()) == -1)
 	{
-		DE::Handle hAIController(sizeof(DE::AIController));
-		new (hAIController) DE::AIController(player->GetComponent<DE::AIController>()->m_flowField, player->GetComponent<DE::AIController>()->m_terrain);
-		spawnPlayer->AddComponent((DE::Component*) hAIController.Raw());
+		CopyComponent(player, spawnPlayer, aabbComponent->GetID());
 	}
 
-	if (player->GetComponent<DE::PointLightComponent>())
+	DE::AIController* aiComponent = player->GetComponent<DE::AIController>();
+	if (aiComponent && FindOverrideComponent(aiComponent->GetID()) == -1)
 	{
-		DE::Handle hPointLight(sizeof(DE::PointLightComponent));
-		new (hPointLight) DE::PointLightComponent(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4, 2);
-		spawnPlayer->AddComponent((DE::Component*) hPointLight.Raw());
+		CopyComponent(player, spawnPlayer, aiComponent->GetID());
 	}
 
-	if (player->GetComponent<DE::Skeleton>())
+	DE::PointLightComponent* plComponent = player->GetComponent<DE::PointLightComponent>();
+	if (plComponent && FindOverrideComponent(plComponent->GetID()) == -1)
 	{
-		spawnPlayer->AddComponent(player->GetComponent<DE::Skeleton>());
+		CopyComponent(player, spawnPlayer, plComponent->GetID());
 	}
 
-	if (player->GetComponent<DE::AudioComponent>())
+	DE::Skeleton* sklComponent = player->GetComponent<DE::Skeleton>();
+	if (sklComponent && FindOverrideComponent(sklComponent->GetID()) == -1)
 	{
-		DE::Handle hAudio(sizeof(DE::AudioComponent));
-		new (hAudio) DE::AudioComponent(player->GetComponent<DE::AnimationStateMachine>());
-		spawnPlayer->AddComponent((DE::Component*) hAudio.Raw());
+		CopyComponent(player, spawnPlayer, sklComponent->GetID());
+	}
+
+	DE::AudioComponent* audioComponent = player->GetComponent<DE::AudioComponent>();
+	DE::AnimationStateMachine* asmComponent = player->GetComponent<DE::AnimationStateMachine>();
+	if (audioComponent && asmComponent  && FindOverrideComponent(audioComponent->GetID()) == -1)
+	{
+		CopyComponent(player, spawnPlayer, audioComponent->GetID());
 	}
 
 	// Weapon
 	DE::GameObject* spawnWeapon = &gameObj[1];
 
-	DE::Handle hWeaponMeshComponent(sizeof(DE::MeshComponent));
-	new (hWeaponMeshComponent) DE::MeshComponent(player->m_Weapon->GetComponent<DE::MeshComponent>()->m_pMeshData);
-	spawnWeapon->AddComponent((DE::Component*) hWeaponMeshComponent.Raw());
-	DE::SceneGraph::GetInstance()->AddComponent((DE::MeshComponent*) hWeaponMeshComponent.Raw());
 
-	DE::Handle hWeaponAABB(sizeof(DE::AABB));
-	new (hWeaponAABB) DE::AABB(spawnWeapon->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
-	spawnWeapon->AddComponent((DE::Component*) hWeaponAABB.Raw());
+	DE::MeshComponent* w_meshComponent = player->m_Weapon->GetComponent<DE::MeshComponent>();
+	if (w_meshComponent)
+	{
+		CopyComponent(player->m_Weapon, spawnWeapon, w_meshComponent->GetID());
+	}
 
-	spawnWeapon->GetComponent<DE::Transform>()->AttachToJoint(spawnPlayer->GetComponent<DE::Skeleton>(), 31);
-	spawnWeapon->GetComponent<DE::Transform>()->AttachTo(spawnPlayer->m_pTransform);
+	DE::AABB* w_aabbComponent = player->m_Weapon->GetComponent<DE::AABB>();
+	if (w_aabbComponent && w_meshComponent)
+	{
+		CopyComponent(spawnWeapon, spawnWeapon, w_aabbComponent->GetID());
+	}
+
+	DE::Transform* w_transformComponent = spawnWeapon->GetComponent<DE::Transform>();
+	if (w_transformComponent && sklComponent)
+	{
+		w_transformComponent->AttachToJoint(spawnPlayer->GetComponent<DE::Skeleton>(), 31);
+		w_transformComponent->AttachTo(spawnPlayer->m_pTransform);
+	}
 
 	/*
 	std::string id = "flare" + std::to_string(m_accuSpawnNum);

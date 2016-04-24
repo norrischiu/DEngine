@@ -24,19 +24,91 @@ FlowFieldBuilder* FlowFieldBuilder::getInstance()
 	return m_instance;
 }
 
-void FlowFieldBuilder::initializeFlowField(const FlowField::InitInfo initInfo)
+void FlowFieldBuilder::updateFlowField(FlowField* flowFieldObj, const Vector3& position)
+{
+	if (flowFieldObj->isValid(position))
+	{
+		std::vector<FlowField::Cell>* flowField = flowFieldObj->getFlowField();
+		FlowField::InitInfo initInfo = flowFieldObj->getInitInfo();
+		Vector3 offset = flowFieldObj->getOffset();
+		Vector3 destination = flowFieldObj->getDestination();
+
+		Matrix4 transform;
+		transform.CreateTranslation(Vector3(-offset.GetX(), -offset.GetY(), -offset.GetZ()));
+		Vector3 dest = destination;
+		dest.Transform(transform);
+
+		const int destX = floor(dest.GetX());
+		const int destZ = floor(dest.GetZ());
+
+		Vector3 _pos_ = position;
+		_pos_.Transform(transform);
+		const int _pos_x = floor(_pos_.GetX());
+		const int _pos_z = floor(_pos_.GetZ());
+		//flowField->at(_pos_z * initInfo.FlowFieldWidth + _pos_x).direction = Vector3(0.0f, 0.0f, 0.0f);
+
+		for (int z = _pos_z - 1; z <= _pos_z + 1; z++)
+		{
+			for (int x = _pos_x - 1; x <= _pos_x + 1; x++)
+			{
+				if (z < 0 || z > initInfo.FlowFieldWidth - 1) { continue; }
+				if (x < 0 || x > initInfo.FlowFieldDepth - 1) { continue; }
+				if (x == destX && z == destZ) { continue; }
+
+				const int index = z * initInfo.FlowFieldWidth + x;
+
+				if (flowField->at(index).isMovable)
+				{
+					FlowFieldBuilder::Position pos(x, 0, z);
+					FlowFieldBuilder::Position minNeighbour;
+					auto neighbours = getNeighbours(initInfo, pos);
+					bool isFoundValidNeighbour = false;
+					int minDist = initInfo.FlowFieldWidth + initInfo.FlowFieldDepth;
+
+					for (int l = 0; l < neighbours.size(); l++)
+					{
+						FlowFieldBuilder::Position n = neighbours[l];
+
+						if (flowField->at(n.z * initInfo.FlowFieldWidth + n.x).isMovable)
+						{
+							const int dist = abs(n.x - destX) + abs(n.z - destZ) - abs(pos.x - destX) + abs(pos.z - destZ);
+
+							if (n.x == destX && n.z == destZ) {			//destination
+								minNeighbour = n;
+								isFoundValidNeighbour = true;
+								break;
+							}
+							else if (dist < minDist) {
+								minDist = dist;
+								minNeighbour = n;
+								isFoundValidNeighbour = true;
+							}
+						}
+					}
+
+					if (isFoundValidNeighbour)
+					{
+						flowField->at(index).direction = (Vector3(minNeighbour.x, minNeighbour.y, minNeighbour.z) - Vector3(pos.x, pos.y, pos.z)).Normalize();
+					}
+				}
+			}
+		}
+	}
+}
+
+void FlowFieldBuilder::initializeFlowField(const FlowField::InitInfo initInfo, std::vector<FlowField::Cell>& flowField)
 {
 	//Initialize the grid
 	for (int z = 0; z <  initInfo.FlowFieldDepth; z++)
 	{
 		for (int x = 0; x < initInfo.FlowFieldWidth; x++)
 		{
-			m_flowField.push_back(FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true));
+			flowField.push_back(FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true));
 		}
 	}
 }
 
-void FlowFieldBuilder::setFlowFieldObstacles(const FlowField::InitInfo initInfo, std::vector<Vector3> obstacles, const Vector3& offset)
+void FlowFieldBuilder::setFlowFieldObstacles(const FlowField::InitInfo initInfo, std::vector<FlowField::Cell>& flowField, std::vector<Vector3> obstacles, const Vector3& offset)
 {
 	Matrix4 transform;
 	transform.CreateTranslation(offset);
@@ -52,12 +124,12 @@ void FlowFieldBuilder::setFlowFieldObstacles(const FlowField::InitInfo initInfo,
 			(z >= 0 && (z <= initInfo.FlowFieldDepth - 1))
 		) {
 			const int index = z * initInfo.FlowFieldWidth + x;
-			m_flowField[index].isMovable = false;
+			flowField[index].isMovable = false;
 		}
 	}
 }
 
-std::vector<int> FlowFieldBuilder::calculateDijkstraGrid(const FlowField::InitInfo initInfo, const Vector3& destination, const Vector3& offset)
+std::vector<int> FlowFieldBuilder::calculateDijkstraGrid(const FlowField::InitInfo initInfo, std::vector<FlowField::Cell>& flowField, const Vector3& destination, const Vector3& offset)
 {
 	std::vector<int> dijkstraGrid(initInfo.FlowFieldWidth * initInfo.FlowFieldDepth);
 
@@ -75,7 +147,7 @@ std::vector<int> FlowFieldBuilder::calculateDijkstraGrid(const FlowField::InitIn
 		{
 			const int index = z * initInfo.FlowFieldWidth + x;
 
-			if (m_flowField[index].isMovable) {
+			if (flowField[index].isMovable) {
 				dijkstraGrid[index] = abs(x - destX) + abs(z - destZ);
 			} else {
 				dijkstraGrid[index] = (std::numeric_limits<int>::max)();
@@ -107,7 +179,7 @@ std::vector<FlowFieldBuilder::Position> FlowFieldBuilder::getNeighbours(const Fl
 	return neighbours;
 }
 
-void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo, std::vector<int> dijkstraGrid, const Vector3& offset, const Vector3& destination)
+void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo, std::vector<FlowField::Cell>& flowField, std::vector<int> dijkstraGrid, const Vector3& offset, const Vector3& destination)
 {
 	Matrix4 transform;
 	transform.CreateTranslation(Vector3(-offset.GetX(), -offset.GetY(), -offset.GetZ()));
@@ -122,8 +194,8 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 		(destZ >= 0 && (destZ <= initInfo.FlowFieldDepth - 1))
 	) {
 		const int index = destZ * initInfo.FlowFieldWidth + destX;
-		m_flowField[index].isMovable = true;
-		m_flowField[index].direction = Vector3(0.0f, 0.0f, 0.0f);
+		flowField[index].isMovable = true;
+		flowField[index].direction = Vector3(0.0f, 0.0f, 0.0f);
 	}
 
 	for (int z = 0; z < initInfo.FlowFieldDepth; z++)
@@ -134,11 +206,11 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 
 			const int index = z * initInfo.FlowFieldWidth + x;
 
-			if (m_flowField[index].isMovable)
+			if (flowField[index].isMovable)
 			{
 				FlowFieldBuilder::Position pos(x, 0, z);
 				FlowFieldBuilder::Position minNeighbour;
-				auto neighbours = getNeighbours(initInfo, pos);
+				std::vector<FlowFieldBuilder::Position> neighbours = getNeighbours(initInfo, pos);
 				bool isFoundValidNeighbour = false;
 				int minDist = initInfo.FlowFieldWidth + initInfo.FlowFieldDepth;
 
@@ -146,7 +218,7 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 				{
 					FlowFieldBuilder::Position n = neighbours[l];
 
-					if (m_flowField[n.z * initInfo.FlowFieldWidth + n.x].isMovable)
+					if (flowField[n.z * initInfo.FlowFieldWidth + n.x].isMovable)
 					{
 						const int dist = dijkstraGrid[n.z * initInfo.FlowFieldWidth + n.x] - dijkstraGrid[pos.z * initInfo.FlowFieldWidth + pos.x];
 
@@ -164,12 +236,11 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 
 				if (isFoundValidNeighbour)
 				{
-					m_flowField[index].direction = (Vector3(minNeighbour.x, minNeighbour.y, minNeighbour.z) - Vector3(pos.x, pos.y, pos.z)).Normalize();
+					flowField[index].direction = (Vector3(minNeighbour.x, minNeighbour.y, minNeighbour.z) - Vector3(pos.x, pos.y, pos.z)).Normalize();
 				}
 			}
 		}
 	}
-
 }
 
 FlowField* FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const Vector3& mapMaxXYZ, std::vector<Vector3> obstacles, const Vector3& destination, const float cellSpacing)
@@ -179,14 +250,14 @@ FlowField* FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const V
 	const Vector3& offset = mapMinXYZ;
 
 	FlowField::InitInfo initInfo(gridWidth, gridDepth, cellSpacing);
+	std::vector<FlowField::Cell> v_flowField;
 
-	initializeFlowField(initInfo);
-	setFlowFieldObstacles(initInfo, obstacles, offset);
-	auto dijkstraGrid = calculateDijkstraGrid(initInfo, destination, offset);
-	setFlowFieldDirection(initInfo, dijkstraGrid, offset, destination);
+	initializeFlowField(initInfo, v_flowField);
+	setFlowFieldObstacles(initInfo, v_flowField, obstacles, offset);
+	auto dijkstraGrid = calculateDijkstraGrid(initInfo, v_flowField, destination, offset);
+	setFlowFieldDirection(initInfo, v_flowField, dijkstraGrid, offset, destination);
 
-	FlowField* flowField = new FlowField(initInfo, m_flowField, obstacles, offset, destination);
-	m_flowField.clear();
+	FlowField* flowField = new FlowField(initInfo, v_flowField, obstacles, offset, destination);
 
 	return flowField;
 }
@@ -202,10 +273,10 @@ FlowField* FlowFieldBuilder::generateFlowField(const Vector3& mapMinXYZ, const V
 		const Vector3& obsMinXYZ = boundingBox.getMin();
 		const Vector3& obsMaxXYZ = boundingBox.getMax();
 
-		const int minX = abs(floor(obsMinXYZ.GetX()));
-		const int maxX = abs(floor(obsMaxXYZ.GetX()));
-		const int minZ = abs(ceil(obsMinXYZ.GetZ()));
-		const int maxZ = abs(ceil(obsMaxXYZ.GetZ()));
+		const int minX = floor(obsMinXYZ.GetX());
+		const int maxX = ceil(obsMaxXYZ.GetX());
+		const int minZ = floor(obsMinXYZ.GetZ());
+		const int maxZ = ceil(obsMaxXYZ.GetZ());
 
 		for (int x = minX; x < maxX; x++)
 		{
@@ -236,10 +307,10 @@ FlowField* FlowFieldBuilder::generateFlowField(GameObject* map, std::vector<Game
 		const Vector3& obsMinXYZ = boundingBox.getMin();
 		const Vector3& obsMaxXYZ = boundingBox.getMax();
 
-		const int minX = abs(floor(obsMinXYZ.GetX()));
-		const int maxX = abs(floor(obsMaxXYZ.GetX()));
-		const int minZ = abs(ceil(obsMinXYZ.GetZ()));
-		const int maxZ = abs(ceil(obsMaxXYZ.GetZ()));
+		const int minX = floor(obsMinXYZ.GetX());
+		const int maxX = ceil(obsMaxXYZ.GetX());
+		const int minZ = floor(obsMinXYZ.GetZ());
+		const int maxZ = ceil(obsMaxXYZ.GetZ());
 
 		for (int x = minX; x < maxX; x++)
 		{

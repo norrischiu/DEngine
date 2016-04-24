@@ -143,6 +143,7 @@
     <ClCompile Include="AI\PathFinding\AIController.cpp" />
     <ClCompile Include="AI\PathFinding\FlowField.cpp" />
     <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
+    <ClCompile Include="AI\PathFinding\FlowFieldManager.cpp" />
     <ClCompile Include="Audio\AudioComponent.cpp" />
     <ClCompile Include="Audio\AudioSystem.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="AI\PathFinding\AIController.h" />
     <ClInclude Include="AI\PathFinding\FlowField.h" />
     <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
+    <ClInclude Include="AI\PathFinding\FlowFieldManager.h" />
     <ClInclude Include="Audio\AudioComponent.h" />
     <ClInclude Include="Audio\AudioSystem.h" />
     <ClInclude Include="DebugRenderer\debug.h" />

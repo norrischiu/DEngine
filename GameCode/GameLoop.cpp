@@ -11,6 +11,7 @@
 #include "DEngine\Object\Camera.h"
 #include "DEngine\Math\simdmath.h"
 #include "DEngine\Graphics\HUD\HUD.h"
+#include "DEngine\AI\PathFinding\FlowFieldManager.h"
 #include "DEngine\AI\PathFinding\FlowFieldBuilder.h"
 #include "DEngine\Graphics\Skydome\SkydomeBuilder.h"
 #include "DEngine\AI\PathFinding\AIController.h"
@@ -51,14 +52,14 @@ void GameLoop::Construct()
 	new (hPointLight) DE::PointLightComponent(DE::Vector4(128.0f, 370.0, 128.0), DE::Vector4(1, 1, 1), 800, 2);
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
 
-	DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
+	//DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
 	player->SetPosition(DE::Vector3(2.0f, terrain->GetHeight(2.0f, 2.0f), 2.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 20.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	
@@ -68,13 +69,19 @@ void GameLoop::Construct()
 	*/
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(10.0f, 0.0f, 10.0f));
-	flowField->Draw(terrain);
-	DE::Handle hAIController(sizeof(DE::AIController));
-	new (hAIController) DE::AIController(flowField, terrain);
-	player->AddComponent((DE::Component*) hAIController.Raw());
+	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));
+	DE::FlowField* flowField_right = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(-18.0f, 0.0f, -18.0f));
+	DE::FlowFieldManager::GetInstance()->AddFlowField(flowField_left);
+	DE::FlowFieldManager::GetInstance()->AddFlowField(flowField_right);
+	//flowField->Draw(terrain);
+	DE::Handle hAIController_left(sizeof(DE::AIController));
+	new (hAIController_left) DE::AIController(flowField_left, terrain);
+	player->AddComponent((DE::Component*) hAIController_left.Raw());
 
-	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+	DE::Handle hAIController_right(sizeof(DE::AIController));
+	new (hAIController_right) DE::AIController(flowField_right, terrain);
+
+	PlayerGOS* playerGOS_left = new PlayerGOS(
 		new DE::SpawnConfig_Area(
 			player,
 			49,
@@ -82,12 +89,14 @@ void GameLoop::Construct()
 			DE::Vector3(-18.0f, 0.0f, -18.0f),
 			DE::Vector3(-6.0f, 0.0f, -6.0f),
 			DE::Vector3(4.0f, 0.0f, 4.0f)
-		), 
-		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
+			),
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
-	));
+	);
+	playerGOS_left->AddOverrideComponent((DE::Component*) hAIController_left.Raw());
+	DE::SpawnManager::GetInstance()->AddSpawner(playerGOS_left);
 
-	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
+	PlayerGOS* playerGOS_right = new PlayerGOS(
 		new DE::SpawnConfig_Area(
 			player,
 			49,
@@ -95,11 +104,14 @@ void GameLoop::Construct()
 			DE::Vector3(18.0f, 0.0f, -18.0f),
 			DE::Vector3(6.0f, 0.0f, -6.0f),
 			DE::Vector3(-4.0f, 0.0f, 4.0f)
-		), 
-		DE::SpawnConfigType::SPAWN_CONFIG_AREA, 
+			),
+		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
-	));
+	);
+	playerGOS_right->AddOverrideComponent((DE::Component*) hAIController_right.Raw());
+	DE::SpawnManager::GetInstance()->AddSpawner(playerGOS_right);
 
+	/*
 	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
 		new DE::SpawnConfig_Area(
 			player,
@@ -125,7 +137,8 @@ void GameLoop::Construct()
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
 	));
-		
+	*/
+
 	//GameObject* spotlight = new GameObject;
 	//spotlight->SetPosition(Vector3(1.0f, 3.0f, 0.0f));
 	//spotlight->AddComponent(new SpotLightComponent(spotlight->GetPosition(), Vector3(0.0, 0.0, 0.0) - spotlight->GetPosition(), PI / 10.0f, PI / 18.0f, Vector4(1.0, 1.0, 1.0), 2, 8, false));

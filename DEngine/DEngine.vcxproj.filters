@@ -291,6 +291,9 @@
     <ClCompile Include="GameObject\SpawnManager.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowFieldManager.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event\Event.h">
@@ -578,6 +581,9 @@
     </ClInclude>
     <ClInclude Include="GameObject\SpawnManager.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowFieldManager.h">
+      <Filter>AI\PathFinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
