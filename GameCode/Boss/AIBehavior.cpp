@@ -107,9 +107,9 @@ void AIBehavior::BossBehavior()
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
 
-	static wchar_t t[64];
+/*	static wchar_t t[64];
 	swprintf(t, 64, L"distance: %f\n", ((Boss*)m_pOwner)->GetJumpingTime());
-	OutputDebugStringW(t);
+	OutputDebugStringW(t);*/
 	
 	preDist = distance;
 }

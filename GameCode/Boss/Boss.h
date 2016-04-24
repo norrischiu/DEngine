@@ -84,6 +84,11 @@ public:
 		return m_fJumpingTime;
 	}
 
+	GameObject*	GetBlood()
+	{
+		return m_pBlood;
+	}
+
 	bool							m_bHitPlayer;
 
 private:
@@ -103,6 +108,8 @@ private:
 	DE::GameObject*					m_pLeftHand;
 
 	DE::GameObject*					m_pRightHand;
+
+	DE::GameObject*					m_pBlood;
 };
 
 
