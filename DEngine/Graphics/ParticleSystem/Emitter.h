@@ -20,26 +20,22 @@ public:
 
 	enum
 	{
-		TORCH_FLAME = 1,
-		SMOKE = 2,
-		ROCKET_TRAIL = 3,
+		YELLOW_LIGHT = 1,
+		BLUE_LIGHT = 2,
+		BLEEDING = 3,
 		FIRE = 4,
+		DISABLE = 5,
 	};
 
 	static const int ComponentID = ComponentID::PARTICLE_SYSTEM;
 
 	Emitter();
 
-	Emitter(int Type, Vector3& emitPos, Vector3& emitDir);
-
-
 	Emitter(char* id, int Type, float size, Vector3& emitPos, Vector3& emitDir);
 
 	~Emitter();
 
 	float	GetAge();
-
-	void	AddParticle(int type, Vector3& emitPos, Vector3& emitDir);
 
 	void	Draw();
 
@@ -57,6 +53,10 @@ public:
 
 	void	SetSize(float size);
 
+	void	SetRandomRange(float min, float max);
+
+	void	ResetDisableTime();
+
 private:
 
 	// Maximum number of particles
@@ -67,11 +67,15 @@ private:
 
 	float							m_fFlareAge;
 
-	float							m_fGameTime;
+	float							m_fDisableTime;
 
 	float							m_fTimeStep;
 	// size of particles
 	float							m_fSize;
+
+	float							m_fRandMin;
+
+	float							m_fRandMax;
 
 	unsigned int					m_EffectType;
 

@@ -2,6 +2,8 @@
 #include "Graphics\MeshData.h"
 #include "ParticleSystem.h"
 
+#include <Windows.h>
+
 #define PT_EMITTER 0
 #define PT_FLARE 1
 
@@ -32,6 +34,11 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	m_Flag = true;
 	m_FirstRun = true;
 	m_fSize = size;
+	m_fRandMin = -3.5f;
+	m_fRandMax = 3.5f;
+	m_fDisableTime = 0.0f;
+
+	
 
 	// init data
 	Particle p;
@@ -71,25 +78,31 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	drawPass->SetBlendState(State::ALPHA_BS);
 
 	Handle hTexture(sizeof(Texture));
-	if (type == TORCH_FLAME)
+	if (type == YELLOW_LIGHT)
 	{
 		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "yellow_light.dds");
 		drawPass->AddTexture(hTexture);
 	}
-	else if (type == SMOKE)
+	else if (type == BLUE_LIGHT)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds");
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "yellow_light.dds");
 		drawPass->AddTexture(hTexture);
 	}
-	else if (type == ROCKET_TRAIL)
+	else if (type == BLEEDING)
 	{
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "smoke.dds");
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "blood.dds");
 		drawPass->AddTexture(hTexture);
 	}
 	else if (type == FIRE)
 	{
 		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "fire.dds");
 		drawPass->AddTexture(hTexture);
+	}
+	else
+	{
+		static wchar_t t[64];
+		swprintf(t, 64, L"the texture of type /i is missing.\n", type);
+		OutputDebugStringW(t);
 	}
 
 	ParticleSystem::GetInstance()->AddComponent(id, this);
@@ -106,6 +119,10 @@ float Emitter::GetAge()
 
 void Emitter::Draw()
 {
+	Vector3 ran = Vector3(RandF(m_fRandMin, m_fRandMax), 0.0f, RandF(m_fRandMin, m_fRandMax));
+
+	Vector3 random = Vector3(RandF(-0.05f, 0.05f), RandF(-0.05f, 0.05f), RandF(-0.05f, 0.05f));
+
 	// Pass the game time/step to geometry shader
 	m_pVSGSPSCBuffer->BindToRenderer();
 
@@ -116,9 +133,14 @@ void Emitter::Draw()
 	Vector3 emitPos = m_vEmitPosW;
 	emitPos.Transform(*m_pTransform);
 	ptr->gEmitPosW = emitPos;
-	ptr->gEmitDirW = m_vEmitDirW;
+	if (m_EffectType == BLEEDING)
+	{
+		ptr->gEmitPosW = emitPos + random;
+	}
+	ptr->gEmitDirW = m_vEmitDirW + ran;
 	ptr->gFlareAge = m_fFlareAge;
 	ptr->gTimeStep = m_fTimeStep;
+	ptr->gDisableTime = m_fDisableTime;
 	ptr->gMaxParts = m_iMaxParticles;
 	ptr->gEffectType = m_EffectType;
 	ptr->gParticleSize = m_fSize;
@@ -167,7 +189,10 @@ void Emitter::Draw()
 			m_Flag = true;
 		}
 	}
-
+	
+	static wchar_t t[64];
+	swprintf(t, 64, L"x: %f, y: %f, z: %f\n", m_vEmitDirW.GetX(), m_vEmitDirW.GetY(), m_vEmitDirW.GetZ());
+	OutputDebugStringW(t);
 }
 
 void Emitter::SetEyePosW(const Vector3 & eyePosW)
@@ -197,6 +222,7 @@ void Emitter::Update(const float dt)
 {
 	m_fFlareAge += dt;
 	m_fTimeStep = dt;
+	m_fDisableTime += dt;
 }
 
 void Emitter::SetOwner(GameObject * ptr)
@@ -208,6 +234,17 @@ void Emitter::SetOwner(GameObject * ptr)
 void Emitter::SetSize(float size)
 {
 	m_fSize = size;
+}
+
+void Emitter::SetRandomRange(float min, float max)
+{
+	m_fRandMin = min;
+	m_fRandMax = max;
+}
+
+void Emitter::ResetDisableTime()
+{
+	m_fDisableTime = 0.0f;
 }
 
 };

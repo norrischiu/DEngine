@@ -15,7 +15,7 @@ static float RandF()
 
 static float RandF(float a, float b)
 {
-	return (float)a - (float)RandF()* (b - a);
+	return (float)a + (float)RandF()* (b - a);
 }
 
 static Vector3 RandUnitVec3()

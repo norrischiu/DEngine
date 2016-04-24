@@ -12,6 +12,7 @@ cbuffer CB_PER_FRAME : register(b0)
 	float4		gEmitDirW;
 
 	float		gTimeStep;
+	float		gDisableTime;
 	float		gFlareAge;
 	float		gSize;
 	unsigned int gMaxParts;

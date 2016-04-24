@@ -12,6 +12,7 @@ cbuffer CB_PER_FRAME : register(b0)
 	float4		gEmitDirW;
 
 	float		gTimeStep;
+	float		gDisableTime;
 	float		gFlareAge;
 	float		gSize;
 	unsigned int gMaxParts;
@@ -58,7 +59,7 @@ void GS(point VS_OUTPUT gin[1],
 		float2(1.0f, 0.0f)
 	};
 
-	if (gin[0].Type != PT_EMITTER)
+	if (gin[0].Type == PT_FLARE)
 	{
 		//
 		// Compute world matrix so that billboard faces the camera.

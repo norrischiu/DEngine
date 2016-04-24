@@ -21,6 +21,7 @@ public:
 		Vector3 gEmitPosW;
 		Vector3 gEmitDirW;
 		float	gTimeStep;
+		float	gDisableTime;
 		float	gFlareAge;
 		float	gParticleSize;
 		unsigned int gMaxParts;
