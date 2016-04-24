@@ -64,8 +64,11 @@ void AIBehavior::BossBehavior()
 			Move(DE::Vector3(0,0,1) *speed*m_fDeltaTime*1.8f);
 		}
 			
-		else if(((Boss*)m_pOwner)->GetState() != Boss::PUNCHING && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
+		else if (((Boss*)m_pOwner)->GetState() != Boss::PUNCHING && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING)
+		{
 			Move(DE::Vector3(0, 0, 1)*speed*m_fDeltaTime);
+		}
+			
 	}
 
 	

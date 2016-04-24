@@ -91,21 +91,22 @@ Boss::Boss(Player* player)
 	// blood effect
 	m_pBlood = new DE::GameObject();
 	DE::Handle blood(sizeof(DE::Emitter));
-	new (blood) DE::Emitter("boss", DE::Emitter::BLEEDING, 3.0f, DE::Vector3(0.0f, 0.0f, 0.3f), DE::Vector3(2.0f, 3.0f, -5.0f));
+	new (blood) DE::Emitter("boss", DE::Emitter::BLEEDING, 6.0f, DE::Vector3(0.0f, 0.3f, 0.0f), DE::Vector3(0.0f, 0.0f, -0.5f));
 	m_pBlood->AddComponent((DE::Component*) blood.Raw());
+	m_pBlood->GetComponent<DE::Emitter>()->SetRandomRange(-2.5f, 2.5f);
 	m_pBlood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
 	m_pBlood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// blue eye
 	m_pBlueEye = new DE::GameObject();
 	DE::Handle hLeftEye(sizeof(DE::Emitter));
-	new (hLeftEye) DE::Emitter("lefteye", DE::Emitter::BLUE_LIGHT, 0.5f, DE::Vector3(-0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
+	new (hLeftEye) DE::Emitter("lefteye", DE::Emitter::BLUE_LIGHT, 0.4f, DE::Vector3(-0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
 	m_pBlueEye->AddComponent((DE::Component*) hLeftEye.Raw());
 	m_pBlueEye->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 5);
 	m_pBlueEye->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	DE::Handle hRightEye(sizeof(DE::Emitter));
-	new (hRightEye) DE::Emitter("righteye", DE::Emitter::BLUE_LIGHT, 0.5f, DE::Vector3(0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
+	new (hRightEye) DE::Emitter("righteye", DE::Emitter::BLUE_LIGHT, 0.4f, DE::Vector3(0.04f, 0.078f, 0.089f), DE::Vector3(0.0f, 0.05f, 0.0f));
 	m_pBlueEye->AddComponent((DE::Component*) hRightEye.Raw());
 	m_pBlueEye->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 5);
 	m_pBlueEye->GetComponent<DE::Transform>()->AttachTo(m_pTransform);

@@ -58,8 +58,8 @@ VS_OUTPUT VS(VS_INPUT vin)
 	if (gEffectType == YELLOW_LIGHT)
 	{
 		vout.SizeW = vin.SizeW - t * vin.SizeW / 1.8;
-		vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
-
+		//vout.PosW = float4(0.5f*t*t*gAccelW + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
+		vout.PosW = float4(0.5f*t*t*float3(0.0f, -9.8f, 0.0f) + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
 	}
 	else if (gEffectType == BLUE_LIGHT)
 	{
@@ -69,7 +69,7 @@ VS_OUTPUT VS(VS_INPUT vin)
 	else if (gEffectType == BLEEDING)
 	{
 		//gAccelW = { 1.0f, 0.0f, 0.0f };
-		vout.SizeW = vin.SizeW;
+		vout.SizeW = t * vin.SizeW / 0.4f;
 		vout.PosW = float4(0.5f*t*t*float3(0.0f, -9.8f, 0.0f) + t*vin.InitialVelW + vin.InitialPosW, 0.0f);
 	}
 	// Default case

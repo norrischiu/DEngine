@@ -121,7 +121,7 @@ void Emitter::Draw()
 {
 	Vector3 ran = Vector3(RandF(m_fRandMin, m_fRandMax), 0.0f, RandF(m_fRandMin, m_fRandMax));
 
-	Vector3 random = Vector3(RandF(-0.05f, 0.05f), RandF(-0.05f, 0.05f), RandF(-0.05f, 0.05f));
+	float random = RandF(-0.05f, 0.05f);
 
 	// Pass the game time/step to geometry shader
 	m_pVSGSPSCBuffer->BindToRenderer();
@@ -133,11 +133,8 @@ void Emitter::Draw()
 	Vector3 emitPos = m_vEmitPosW;
 	emitPos.Transform(*m_pTransform);
 	ptr->gEmitPosW = emitPos;
-	if (m_EffectType == BLEEDING)
-	{
-		ptr->gEmitPosW = emitPos + random;
-	}
 	ptr->gEmitDirW = m_vEmitDirW + ran;
+	
 	if (m_EffectType == BLUE_LIGHT)
 	{
 		ptr->gEmitDirW = m_vEmitDirW;
@@ -193,10 +190,6 @@ void Emitter::Draw()
 			m_Flag = true;
 		}
 	}
-	
-	static wchar_t t[64];
-	swprintf(t, 64, L"x: %f, y: %f, z: %f\n", m_vEmitDirW.GetX(), m_vEmitDirW.GetY(), m_vEmitDirW.GetZ());
-	OutputDebugStringW(t);
 }
 
 void Emitter::SetEyePosW(const Vector3 & eyePosW)
