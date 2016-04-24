@@ -190,7 +190,8 @@ void AIController::UpdateCamera()
 
 int AIController::GetPositionOwnerId(const Vector3& position)
 {
-	return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
+	return m_flowField->getPositionOwnerId(position);
+	// return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
 }
 
 int AIController::GetNewPositionOwnerId(const Vector3& newPos)
@@ -231,6 +232,7 @@ int AIController::GetNewPositionOwnerId(const Vector3& newPos)
 
 void AIController::SetPositionOwnerId(const Vector3& position, const int gameObjId)
 {
+	//m_flowField->setPositionOwnerId(position, gameObjId);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, gameObjId);
 }
 
@@ -258,6 +260,8 @@ void AIController::UnLockCurrPosition()
 
 void AIController::UnLockPosition(const Vector3& position)
 {
+	//m_flowField->setPositionMovable(position, true);
+	//m_flowField->setPositionOwnerId(position, -1);
 	FlowFieldManager::GetInstance()->UnLockPosition(position);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, -1);
 }
@@ -286,6 +290,8 @@ void AIController::LockCurrPosition()
 
 void AIController::LockPosition(const Vector3& position)
 {
+	//m_flowField->setPositionMovable(position, false);
+	//m_flowField->setPositionOwnerId(position, GetOwner()->GetGameObjectID());
 	FlowFieldManager::GetInstance()->LockPosition(position);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, GetOwner()->GetGameObjectID());
 }
