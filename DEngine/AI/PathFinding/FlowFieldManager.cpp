@@ -64,14 +64,6 @@ void FlowFieldManager::UnLockPosition(const Vector3& position)
 	}
 }
 
-void FlowFieldManager::UpdateFlowFieldDirection(const Vector3& position)
-{
-	for (auto itr : m_vFlowFieldList)
-	{
-		FlowFieldBuilder::getInstance()->updateFlowField(itr, position);
-	}
-}
-
 void FlowFieldManager::AddFlowField(FlowField* flowField)
 {
 	m_vFlowFieldList.push_back(flowField);

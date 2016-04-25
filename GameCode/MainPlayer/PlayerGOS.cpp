@@ -29,7 +29,7 @@ void PlayerGOS::CopyOverrideComponent(DE::GameObject* gameObj, DE::Component* co
 		case DE::ComponentID::AI_CONTROLLER:
 		{
 			DE::Handle hAIController(sizeof(DE::AIController));
-			new (hAIController) DE::AIController(((DE::AIController*) component)->m_flowField, ((DE::AIController*) component)->m_terrain);
+			new (hAIController) DE::AIController(((DE::AIController*) component)->m_aiConfig);
 			gameObj->AddComponent((DE::Component*) hAIController.Raw());
 		}
 		break;
@@ -52,14 +52,18 @@ void PlayerGOS::CopyComponent(DE::GameObject* spawnTarget, DE::GameObject* gameO
 	{
 		DE::Handle hAABB(sizeof(DE::AABB));
 		new (hAABB) DE::AABB(spawnTarget->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
-		gameObj->AddComponent((DE::Component*) hAABB.Raw());
+		DE::AABB* aabb = (DE::AABB*) hAABB.Raw();
+		aabb->setType(DE::typeAABB);
+		gameObj->AddComponent(aabb);
 	}
 	break;
 	case DE::ComponentID::AI_CONTROLLER:
 	{
 		DE::Handle hAIController(sizeof(DE::AIController));
-		new (hAIController) DE::AIController(spawnTarget->GetComponent<DE::AIController>()->m_flowField, spawnTarget->GetComponent<DE::AIController>()->m_terrain);
-		gameObj->AddComponent((DE::Component*) hAIController.Raw());
+		new (hAIController) DE::AIController(spawnTarget->GetComponent<DE::AIController>()->m_aiConfig);
+		DE::AIController* aiController = (DE::AIController*) (hAIController.Raw());
+		gameObj->AddComponent(aiController);
+		aiController->Init();
 	}
 	break;
 	case DE::ComponentID::POINTLIGHT:

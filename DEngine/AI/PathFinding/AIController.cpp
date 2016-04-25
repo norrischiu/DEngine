@@ -9,11 +9,23 @@ namespace DE
 {
 
 AIController::AIController(FlowField* flowField, Terrain* terrain)
-	: Component(GetOwner()), m_flowField(flowField), m_terrain(terrain), m_enableAI(false)
+	: Component(GetOwner())
 {
 	m_ID = ComponentID;
+
+	m_aiConfig.maxCohesion = 5.0f;
+	m_aiConfig.maxForce = 30.0f;
+	m_aiConfig.maxSpeed = 10.0f;
+	m_aiConfig.minSeperation = 5.0f;
+	m_aiConfig.velocity = Vector3(0.0f, 0.0f, 0.0f);
+	m_aiConfig.flowField = flowField;
+	m_aiConfig.terrain = terrain;
 }
 
+AIController::AIController(AIConfig aiConfig) : m_aiConfig(aiConfig)
+{
+
+}
 
 AIController::~AIController()
 {
@@ -23,8 +35,7 @@ void AIController::Init()
 {
 	if (GetOwner())
 	{
-		LockCurrPosition();
-		m_enableAI = true;
+		m_aiConfig.enableAI = true;
 	}
 }
 
@@ -49,73 +60,11 @@ Matrix4 AIController::DirVecToMatrix(const Vector3& direction)
 	return rotationMatrix;
 }
 
-bool AIController::HasPositionChange(const Vector3& newPos, const Vector3& currPos)
-{
-	return !(newPos - currPos).iszero();
-}
-
-bool AIController::IsSlopeSteep(const Vector3& newPos, const Vector3& currPos)
-{
-	const Vector3 vec1 = (newPos - currPos).Normalize();
-	const Vector3 vec2 = Vector3(vec1.GetX(), 0.0f, vec1.GetZ());
-	const float angle = AngleBetween(vec1, vec2) * 180.0f / PI;
-
-	return false && angle > 30.0f;
-}
-
-bool AIController::IsPositionOwner(const Vector3& position)
-{
-	int ownerId = GetPositionOwnerId(position);
-
-	return ownerId == GetOwner()->GetGameObjectID();
-}
-
-bool AIController::IsPositionOwner()
-{
-	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(*GetOwner()->GetTransform());
-	const Vector3& minXYZ = boundingBox.getMin();
-	const Vector3& maxXYZ = boundingBox.getMax();
-
-	const int minX = floor(minXYZ.GetX());
-	const int maxX = ceil(maxXYZ.GetX());
-	const int minZ = floor(minXYZ.GetZ());
-	const int maxZ = ceil(maxXYZ.GetZ());
-
-	for (int x = minX; x < maxX; x++)
-	{
-		for (int z = minZ; z < maxZ; z++)
-		{
-			const Vector3 position = Vector3(x, 0.0f, z);
-
-			if (!IsPositionOwner(position))
-			{
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-bool AIController::IsBlockedByOther(const Vector3& position)
-{
-	int ownerId = GetPositionOwnerId(position);
-
-	return ownerId != -1 && ownerId != GetOwner()->GetGameObjectID();
-}
-
-bool AIController::IsNewPositionBlockedByOther(const Vector3& newPos)
-{
-	const int newPosOwnerId = GetNewPositionOwnerId(newPos);
-
-	return  newPosOwnerId != -1 && newPosOwnerId != GetOwner()->GetGameObjectID();
-}
 
 bool AIController::IsDesintationArrived()
 {
 	const Vector3 currPos = GetOwner()->GetPosition();
-	const Vector3 destination = m_flowField->getDestination();
+	const Vector3 destination = m_aiConfig.flowField->getDestination();
 	
 	const Vector3 difference = Vector3(
 		floor(abs(currPos.GetX() - destination.GetX())),
@@ -128,55 +77,227 @@ bool AIController::IsDesintationArrived()
 
 bool AIController::IsActive()
 {
-	return m_enableAI;
+	return m_aiConfig.enableAI;
 }
 
 void AIController::SetActive(const bool setActive)
 {
-	m_enableAI = setActive;
+	m_aiConfig.enableAI = setActive;
 }
 
 Vector3 AIController::LookUpDirection(const Vector3& currPos)
 {
-	return m_flowField->getDirection(currPos);
+	return m_aiConfig.flowField->getDirection(currPos);
 }
 
 float AIController::LookUpHeight(const Vector3& currPos)
 {
-	if (m_terrain) {
-		return m_terrain->GetHeight(currPos.GetX(), currPos.GetZ());
+	if (m_aiConfig.terrain) {
+		return m_aiConfig.terrain->GetHeight(currPos.GetX(), currPos.GetZ());
 	}
 
 	return 0.0f;
 }
 
-Vector3 AIController::GetNewPosition(const float deltaTime)
+Vector3 AIController::SteeringBehaviourAvoid()
 {
-	Vector3 currPos = GetOwner()->GetPosition();
+	GameObject* gameObj = GetOwner();
 
-	FlowFieldBuilder::getInstance()->updateFlowField(m_flowField, currPos);
+	AABB gameObjBoundingBox = gameObj->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox();
+	Vector3 gameObjRadius = (gameObjBoundingBox.getMax() - gameObjBoundingBox.getMin()) * (1.0f / 2.0f);
 
-	Vector3 direction = LookUpDirection(currPos);
-	Vector3 newPos = currPos + (direction * deltaTime * 3.0f);
-	Vector3 step = direction * (deltaTime * 3.0f / 10.0f);
-	
-	const float newY = LookUpHeight(newPos);
-	newPos.SetY(newY);
+	if (m_aiConfig.velocity.LengthSquared() <= ((gameObjRadius.GetX() + gameObjRadius.GetZ()) / 2.0f)) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
 
-	while (IsNewPositionBlockedByOther(newPos))
+	//Do some ray casts to work out what is in front of us
+	float minFraction = 3.0f;
+	GameObject* closestFixture = nullptr;
+
+	int minDistance = (std::numeric_limits<int>::max)();
+	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
 	{
-		newPos = newPos - step;
-		const float newY = LookUpHeight(newPos);
-		newPos.SetY(newY);
-
-		if ((newPos - currPos).iszero())
+		if (itr != gameObj)
 		{
-			break;
+			gameObj->collision(itr);
+			const float fraction = gameObj->getContact()->getDistance();
+			if (fraction < minFraction)
+			{
+				minFraction = fraction;
+				closestFixture = itr;
+			}
 		}
 	}
 
-	return newPos;
+	//If we aren't going to collide, we don't need to avoid
+	if (closestFixture == nullptr) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	Vector3 resultVector;
+	Body collisionBody = *closestFixture->GetComponent<Body>();
+	float ourVelocityLengthSquared = m_aiConfig.velocity.LengthSquared();
+
+	//Add our velocity and the other Agents velocity
+	//If this makes the total length longer than the individual length of one of them, then we are going in the same direction
+	Vector3 combinedVelocity = m_aiConfig.velocity + collisionBody.GetOwner()->GetComponent<AIController>()->m_aiConfig.velocity;
+	float combinedVelocityLengthSquared = combinedVelocity.LengthSquared();
+
+	//We are going in the same direction and they aren't avoiding
+	if (combinedVelocityLengthSquared > ourVelocityLengthSquared && closestFixture->GetComponent<AIController>()->m_aiConfig.avoidanceDirection != NULL) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	//We need to Steer to go around it, we assume the other shape is also a circle
+
+	Vector3 vectorInOtherDirection = collisionBody.GetOwner()->GetPosition() - gameObj->GetPosition();
+
+	//Are we more left or right of them
+	bool isLeft;
+	if (!collisionBody.GetOwner()->GetComponent<AIController>()->m_aiConfig.avoidanceDirection != NULL) {
+		//If they are avoiding, avoid with the same direction as them, so we go the opposite way
+		isLeft = collisionBody.GetOwner()->GetComponent<AIController>()->m_aiConfig.avoidanceDirection;
+	}
+	else {
+		const int dot = gameObj->GetComponent<AIController>()->m_aiConfig.velocity.GetX() * -vectorInOtherDirection.GetZ() + gameObj->GetComponent<AIController>()->m_aiConfig.velocity.GetZ() * vectorInOtherDirection.GetX();
+		isLeft = dot > 0;
+	}
+	m_aiConfig.avoidanceDirection = isLeft;
+
+	//Calculate a right angle of the vector between us
+	resultVector = isLeft ? Vector3(-vectorInOtherDirection.GetZ(), 0.0f, vectorInOtherDirection.GetX()) : Vector3(vectorInOtherDirection.GetZ(), 0.0f, -vectorInOtherDirection.GetX());
+	resultVector.Normalize();
+
+	//Move it out based on our radius + theirs
+	AABB closestFixtureBoundingBox = closestFixture->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox();
+	Vector3 closestFixtureRadius = (closestFixtureBoundingBox.getMax() - closestFixtureBoundingBox.getMin()) * (1.0f / 2.0f);
+
+	resultVector.Multiply((gameObjRadius.GetX() + gameObjRadius.GetZ()) / 2.0f + (closestFixtureRadius.GetX() + closestFixtureRadius.GetZ()) / 2.0f);
+
+	//Steer torwards it, increasing force based on how close we are
+	return SteeringBehaviourSeek(resultVector) * (1.0f / minFraction);
 }
+
+Vector3 AIController::SteeringBehaviourAlignment()
+{
+	GameObject* gameObj = GetOwner();
+
+	Vector3 velocity = m_aiConfig.velocity;
+	Vector3 averageHeading = Vector3(0.0f, 0.0f, 0.0f);
+	int neighboursCount = 0;
+
+	//for each of our neighbours (including ourself)
+
+	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
+	{
+		int distance = (gameObj->GetPosition() - itr->GetPosition()).Length();
+
+		//That are within the max distance and are moving
+		if (distance < m_aiConfig.maxCohesion && velocity.Length() > 0) {
+			//Sum up our headings
+			averageHeading = averageHeading + velocity.Normalize();
+			neighboursCount++;
+		}
+	}
+
+	if (neighboursCount == 0) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	//Divide to get the average heading
+	averageHeading = averageHeading * (1.0f / neighboursCount);
+
+	//Steer towards that heading
+	Vector3 desired = averageHeading * m_aiConfig.maxSpeed;
+	Vector3 force = desired - velocity;
+	return force * (m_aiConfig.maxForce / m_aiConfig.maxSpeed);
+}
+
+Vector3 AIController::SteeringBehaviourSeek(const Vector3& centerOfMass)
+{
+	GameObject* gameObj = GetOwner();
+
+	const Vector3 velocity = m_aiConfig.velocity;
+
+	//Desired change of location
+	Vector3 desired = m_aiConfig.flowField->getDestination() - gameObj->GetPosition();
+
+	//Desired velocity (move there at maximum speed)
+	desired = desired * (m_aiConfig.maxSpeed / desired.Length());
+
+	//The velocity change we want
+	Vector3 force = desired - velocity;
+
+	//Convert to a force
+	return force * (m_aiConfig.maxForce / m_aiConfig.maxSpeed);
+}
+
+Vector3 AIController::SteeringBehaviourCohesion()
+{
+	GameObject* gameObj = GetOwner();
+
+	//Start with just our position
+	Vector3 centerOfMass = gameObj->GetPosition();
+	int neighboursCount = 1;
+
+	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
+	{
+		if (itr != gameObj)
+		{
+			float distance = (gameObj->GetPosition() - itr->GetPosition()).Length();
+			if (distance < m_aiConfig.maxCohesion) {
+				//sum up the position of our neighbours
+				centerOfMass = centerOfMass + itr->GetPosition();
+				neighboursCount++;
+			}
+		}
+	}
+
+	if (neighboursCount == 1) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	//Get the average position of ourself and our neighbours
+	centerOfMass = centerOfMass * (1.0f / neighboursCount);
+
+	//seek that position
+	return SteeringBehaviourSeek(centerOfMass);
+}
+
+Vector3 AIController::SteeringBehaviourSeparation()
+{
+	GameObject* gameObj = GetOwner();
+
+	Vector3 totalForce = Vector3(0.0f, 0.0f, 0.0f);
+	int neighboursCount = 0;
+
+	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
+	{
+		if (itr != gameObj)
+		{
+			float distance = (gameObj->GetPosition() - itr->GetPosition()).Length();
+
+			if (distance < m_aiConfig.minSeperation && distance > 0.0f)
+			{
+				AABB boundingBox = gameObj->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox();
+				Vector3 radius = (boundingBox.getMax() - boundingBox.getMin()) * (1.0f / 2.0f);
+
+				Vector3 pushForce = gameObj->GetPosition() - itr->GetPosition();
+				totalForce = totalForce + (pushForce * ((radius.GetX() + radius.GetZ() / 2.0f)));
+				neighboursCount++;
+			}
+		}
+	}
+
+	if (neighboursCount == 0) {
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	//Normalise the force back down and then back up based on the maximum force
+	totalForce = totalForce * (1 / neighboursCount);
+	return totalForce * m_aiConfig.maxForce;
+}
+
 
 void AIController::UpdateCamera()
 {
@@ -197,144 +318,31 @@ void AIController::UpdateCamera()
 	}
 }
 
-int AIController::GetPositionOwnerId(const Vector3& position)
-{
-	//return m_flowField->getPositionOwnerId(position);
-	return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
-}
-
-int AIController::GetNewPositionOwnerId(const Vector3& newPos)
-{
-	const Vector3& vTrans = newPos - GetOwner()->GetPosition();
-
-	Matrix4 trans;
-	trans.CreateTranslation(vTrans);
-	Matrix4 transform = *GetOwner()->GetTransform();
-	transform = transform * trans;
-
-	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(transform);
-	const Vector3& minXYZ = boundingBox.getMin();
-	const Vector3& maxXYZ = boundingBox.getMax();
-
-	const int minX = floor(minXYZ.GetX());
-	const int maxX = ceil(maxXYZ.GetX());
-	const int minZ = floor(minXYZ.GetZ());
-	const int maxZ = ceil(maxXYZ.GetZ());
-
-	for (int x = minX; x < maxX; x++)
-	{
-		for (int z = minZ; z < maxZ; z++)
-		{
-			const Vector3 position = Vector3(x, 0.0f, z);
-			const int positionOwnerId = GetPositionOwnerId(position);
-
-			if (positionOwnerId != -1 && positionOwnerId != GetOwner()->GetGameObjectID())
-			{
-				return positionOwnerId;
-			}
-		}
-	}
-
-	return -1;
-}
-
-void AIController::SetPositionOwnerId(const Vector3& position, const int gameObjId)
-{
-	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, gameObjId);
-}
-
-void AIController::UnLockCurrPosition()
-{
-	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(*GetOwner()->GetTransform());
-	const Vector3& minXYZ = boundingBox.getMin();
-	const Vector3& maxXYZ = boundingBox.getMax();
-
-	const int minX = floor(minXYZ.GetX());
-	const int maxX = ceil(maxXYZ.GetX());
-	const int minZ = floor(minXYZ.GetZ());
-	const int maxZ = ceil(maxXYZ.GetZ());
-
-	for (int x = minX; x < maxX; x++)
-	{
-		for (int z = minZ; z < maxZ; z++)
-		{
-			const Vector3 position = Vector3(x, 0.0f, z);
-			UnLockPosition(position);
-		}
-	}
-}
-
-void AIController::UnLockPosition(const Vector3& position)
-{
-	FlowFieldManager::GetInstance()->UnLockPosition(position);
-	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, -1);
-}
-
-void AIController::LockCurrPosition()
-{
-	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(*GetOwner()->GetTransform());
-	const Vector3& minXYZ = boundingBox.getMin();
-	const Vector3& maxXYZ = boundingBox.getMax();
-
-	const int minX = floor(minXYZ.GetX());
-	const int maxX = ceil(maxXYZ.GetX());
-	const int minZ = floor(minXYZ.GetZ());
-	const int maxZ = ceil(maxXYZ.GetZ());
-
-	for (int x = minX; x < maxX; x++)
-	{
-		for (int z = minZ; z < maxZ; z++)
-		{
-			const Vector3 position = Vector3(x, 0.0f, z);
-			LockPosition(position);
-		}
-	}
-}
-
-void AIController::LockPosition(const Vector3& position)
-{
-	FlowFieldManager::GetInstance()->LockPosition(position);
-	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, GetOwner()->GetGameObjectID());
-}
-
 void AIController::Update(float deltaTime)
 {
-	if (!IsActive()) { 
-		return; 
+	//Update the velocity;
+	m_aiConfig.velocity = m_aiConfig.flowField->getDirection(GetOwner()->GetPosition());
+
+	/*
+	//Work out our behaviours
+	Vector3 seek = SteeringBehaviourSeek(GetOwner(), m_aiConfig.flowField->getDestination());
+	Vector3 separation = SteeringBehaviourSeparation(GetOwner());
+	Vector3 cohesion = SteeringBehaviourCohesion(GetOwner());
+	Vector3 alignment = SteeringBehaviourAlignment(GetOwner());
+
+	//Combine them to come up with a total force to apply, decreasing the effect of cohesion
+	m_aiConfig.velocity = (seek + separation + (cohesion * 0.1f) + alignment) * deltaTime;
+	*/
+
+	m_aiConfig.velocity = SteeringBehaviourAvoid();
+
+	const float speed = m_aiConfig.velocity.Length();
+	if (speed > m_aiConfig.maxSpeed)
+	{
+		m_aiConfig.velocity = m_aiConfig.velocity * (m_aiConfig.maxSpeed / speed);
 	}
 
-	if (IsDesintationArrived()) { 
-		return; 
-	}
-
-	UnLockCurrPosition();
-	//UnLockPosition(currPos);
-
-	const Vector3 currPos = GetOwner()->GetPosition();
-	const Vector3 newPos = GetNewPosition(deltaTime);
-
-	if (!HasPositionChange(newPos, currPos)) {
-		//LockPosition(currPos);
-		LockCurrPosition();
-		return; 
-	}
-
-	if (IsNewPositionBlockedByOther(newPos)) { 
-		//LockPosition(currPos);
-		LockCurrPosition();
-		return; 
-	}
-
-	if (IsSlopeSteep(newPos, currPos)) { 
-		//LockPosition(currPos);
-		LockCurrPosition();
-		return; 
-	}
-	
-	Move(newPos - currPos);
+	Move(m_aiConfig.velocity * deltaTime);
 	UpdateCamera();
 }
 
@@ -345,9 +353,6 @@ void AIController::Move(const Vector3& vTrans)
 	Matrix4 trans;
 	trans.CreateTranslation(vTrans);
 	GetOwner()->TransformBy(trans);
-
-	//LockPosition(GetOwner()->GetPosition());
-	LockCurrPosition();
 }
 
 };

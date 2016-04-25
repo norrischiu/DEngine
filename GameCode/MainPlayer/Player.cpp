@@ -30,7 +30,9 @@ Player::Player()
 
 	DE::Handle hAABB(sizeof(DE::AABB));
 	new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
-	AddComponent((DE::Component*) hAABB.Raw());
+	DE::AABB* aabb = (DE::AABB*) hAABB.Raw();
+	aabb->setType(DE::typeAABB);
+	AddComponent(aabb);
 
 	DE::Handle hMC(sizeof(PlayerMC));
 	new (hMC) PlayerMC();
@@ -81,7 +83,9 @@ Player::Player()
 
 	DE::Handle hWeaponAABB(sizeof(DE::AABB));
 	new (hWeaponAABB) DE::AABB(m_Weapon->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
-	m_Weapon->AddComponent((DE::Component*) hWeaponAABB.Raw());
+	DE::AABB* w_aabb = (DE::AABB*) hWeaponAABB.Raw();
+	w_aabb->setType(DE::typeAABB);
+	m_Weapon->AddComponent(w_aabb);
 
 	m_Weapon->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);

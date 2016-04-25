@@ -52,6 +52,7 @@ public:
 	const Vector3 getOffset();
 	const Vector3 getDestination();
 
+	const Vector3 getTransformedPosition(const Vector3& position);
 	const Vector3 transfromAndFloor(const Vector3& position);
 	bool isValid(const Vector3& position);
 	int distance(const Vector3& position, const Vector3& destination);

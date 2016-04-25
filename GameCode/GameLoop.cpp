@@ -56,7 +56,7 @@ void GameLoop::Construct()
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
-	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, -4.0f), -4.0f));
+	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, -4.0f), -10.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);

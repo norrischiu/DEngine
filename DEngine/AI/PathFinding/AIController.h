@@ -13,6 +13,21 @@ class AIController : public Component
 public:
 	static const int ComponentID = ComponentID::AI_CONTROLLER;
 
+	struct AIConfig
+	{
+		float maxCohesion;
+		float minSeperation;
+		float maxForce;
+		float maxSpeed;
+		Vector3 velocity;
+		bool avoidanceDirection;
+		bool enableAI;
+
+		FlowField* flowField;
+		Terrain* terrain;
+	};
+
+	AIController(AIConfig m_aiConfig);
 	AIController(FlowField* flowField, Terrain* terrain = nullptr);
 	~AIController();
 
@@ -25,21 +40,13 @@ public:
 	
 	void UpdateCamera();
 
-	void LockCurrPosition();
-	void LockPosition(const Vector3& position);
-	void UnLockCurrPosition();
-	void UnLockPosition(const Vector3& position);
-	int GetNewPositionOwnerId(const Vector3& newPos);
-	int GetPositionOwnerId(const Vector3& position);
-	void SetPositionOwnerId(const Vector3& position, const int gameObjId);
+	Vector3 SteeringBehaviourAvoid();
+	Vector3 SteeringBehaviourAlignment();
+	Vector3 SteeringBehaviourSeek(const Vector3& centerOfMass);
+	Vector3 SteeringBehaviourSeparation();
+	Vector3 SteeringBehaviourCohesion();
 
-	bool HasPositionChange(const Vector3& newPos, const Vector3& currPos);
-	bool IsPositionOwner(const Vector3& position);
-	bool IsPositionOwner();
-	bool IsBlockedByOther(const Vector3& position);
-	bool IsNewPositionBlockedByOther(const Vector3& newPos);
 	bool IsDesintationArrived();
-	bool IsSlopeSteep(const Vector3& newPos, const Vector3& currPos);
 
 	Vector3 LookUpDirection(const Vector3& currPos);
 	float LookUpHeight(const Vector3& currPos);
@@ -50,9 +57,7 @@ public:
 	void Move(const Vector3& vTrans);
 
 public:
-	FlowField* m_flowField;
-	Terrain* m_terrain;
-	bool m_enableAI;
+	AIConfig m_aiConfig;
 };
 
 };
