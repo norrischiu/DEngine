@@ -15,15 +15,23 @@ public:
 
 	struct AIConfig
 	{
-		float maxCohesion;
+		//Move away from those entities we are too close too
 		float minSeperation;
+		//Move nearer to those entities we are near but not near enough to
+		float maxCohesion;
+		//rate of acceleration
 		float maxForce;
+		//grid squares / second
 		float maxSpeed;
+		//velocity
 		Vector3 velocity;
+		//avoidance direction
 		bool avoidanceDirection;
+		//enable flag;
 		bool enableAI;
-
+		//flowfield for lookup direction
 		FlowField* flowField;
+		//terrain for lookup height
 		Terrain* terrain;
 	};
 
@@ -40,16 +48,20 @@ public:
 	
 	void UpdateCamera();
 
+	bool IsBoundingBoxCollide(GameObject* gameObj1, GameObject* gameObj2);
+
+	//Avoid collision
 	Vector3 SteeringBehaviourAvoid();
 	Vector3 SteeringBehaviourAlignment();
+	//Move towards a fixed point
 	Vector3 SteeringBehaviourSeek(const Vector3& centerOfMass);
 	Vector3 SteeringBehaviourSeparation();
 	Vector3 SteeringBehaviourCohesion();
 
 	bool IsDesintationArrived();
 
-	Vector3 LookUpDirection(const Vector3& currPos);
-	float LookUpHeight(const Vector3& currPos);
+	Vector3 LookUpDirection(const Vector3& position);
+	float LookUpHeight(const Vector3& position);
 
 	Vector3 GetNewPosition(const float deltaTime);
 	Matrix4 DirVecToMatrix(const Vector3& direction);

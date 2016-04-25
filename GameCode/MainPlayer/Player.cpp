@@ -81,11 +81,13 @@ Player::Player()
 	new (hWeaponMeshComponent) DE::MeshComponent("sword", DE::eMeshType::STANDARD_MESH);
 	m_Weapon->AddComponent((DE::Component*) hWeaponMeshComponent.Raw());
 
+	/*
 	DE::Handle hWeaponAABB(sizeof(DE::AABB));
 	new (hWeaponAABB) DE::AABB(m_Weapon->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
 	DE::AABB* w_aabb = (DE::AABB*) hWeaponAABB.Raw();
 	w_aabb->setType(DE::typeAABB);
 	m_Weapon->AddComponent(w_aabb);
+	*/
 
 	m_Weapon->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);

@@ -68,12 +68,12 @@ void Collide::boxBoxCollide(const Body * box1, const Body * box2)
 
 	bool collide = false;
 	// max > min min< max
-	if (aabb1.getMax().GetX() > aabb2.getMin().GetX() &&
-		aabb1.getMin().GetX() < aabb2.getMax().GetX() &&
-		aabb1.getMax().GetY() > aabb2.getMin().GetY() &&
-		aabb1.getMin().GetY() < aabb2.getMax().GetY() &&
-		aabb1.getMax().GetZ() > aabb2.getMin().GetZ() &&
-		aabb1.getMin().GetZ() < aabb2.getMax().GetZ())
+	if (aabb1.getMax().GetX() >= aabb2.getMin().GetX() &&
+		aabb1.getMin().GetX() <= aabb2.getMax().GetX() &&
+		aabb1.getMax().GetY() >= aabb2.getMin().GetY() &&
+		aabb1.getMin().GetY() <= aabb2.getMax().GetY() &&
+		aabb1.getMax().GetZ() >= aabb2.getMin().GetZ() &&
+		aabb1.getMin().GetZ() <= aabb2.getMax().GetZ())
 		collide = true;
 
 	setCollide(collide);

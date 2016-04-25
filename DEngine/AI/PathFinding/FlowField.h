@@ -44,7 +44,7 @@ public:
 
 	void setPositionOwnerId(const Vector3& position, const int gameObjId);
 	int getPositionOwnerId(const Vector3& position);
-	const Vector3 getDirection(const Vector3& position);
+	const Vector3 getDirection(const Vector3& currDir, const Vector3& position);
 
 	FlowField::InitInfo getInitInfo();
 	std::vector<FlowField::Cell>* getFlowField();
@@ -53,7 +53,7 @@ public:
 	const Vector3 getDestination();
 
 	const Vector3 getTransformedPosition(const Vector3& position);
-	const Vector3 transfromAndFloor(const Vector3& position);
+	const Vector3 transformAndFloor(const Vector3& position);
 	bool isValid(const Vector3& position);
 	int distance(const Vector3& position, const Vector3& destination);
 
@@ -65,7 +65,6 @@ private:
 	std::vector<Vector3> m_obstacles;
 	Vector3 m_destination;
 	Vector3 m_offset;
-	Vector3 m_currDir;
 };
 
 };
