@@ -56,7 +56,7 @@ void GameLoop::Construct()
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
-	player->SetPosition(DE::Vector3(2.0f, terrain->GetHeight(2.0f, 2.0f), 2.0f));
+	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, -4.0f), -4.0f));
 	
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
@@ -69,14 +69,14 @@ void GameLoop::Construct()
 	*/
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));
-	DE::FlowField* flowField_right = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(-18.0f, 0.0f, -18.0f));
+	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-36.0f, 0.0f, -36.0f), DE::Vector3(36.0f, 0.0f, 36.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));
+	DE::FlowField* flowField_right = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-36.0f, 0.0f, -36.0f), DE::Vector3(36.0f, 0.0f, 36.0f), obstacles, DE::Vector3(-18.0f, 0.0f, -18.0f));
 	DE::FlowFieldManager::GetInstance()->AddFlowField(flowField_left);
 	DE::FlowFieldManager::GetInstance()->AddFlowField(flowField_right);
 	//flowField->Draw(terrain);
 	DE::Handle hAIController_left(sizeof(DE::AIController));
 	new (hAIController_left) DE::AIController(flowField_left, terrain);
-	player->AddComponent((DE::Component*) hAIController_left.Raw());
+	//player->AddComponent((DE::Component*) hAIController_left.Raw());
 
 	DE::Handle hAIController_right(sizeof(DE::AIController));
 	new (hAIController_right) DE::AIController(flowField_right, terrain);
@@ -88,7 +88,7 @@ void GameLoop::Construct()
 			0.1f,
 			DE::Vector3(-18.0f, 0.0f, -18.0f),
 			DE::Vector3(-6.0f, 0.0f, -6.0f),
-			DE::Vector3(4.0f, 0.0f, 4.0f)
+			DE::Vector3(6.0f, 0.0f, 6.0f)
 			),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
@@ -103,7 +103,7 @@ void GameLoop::Construct()
 			0.1f,
 			DE::Vector3(18.0f, 0.0f, -18.0f),
 			DE::Vector3(6.0f, 0.0f, -6.0f),
-			DE::Vector3(-4.0f, 0.0f, 4.0f)
+			DE::Vector3(-6.0f, 0.0f, 6.0f)
 			),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain

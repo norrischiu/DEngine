@@ -42,7 +42,7 @@ void SceneGraph::FrustumCulling(Frustum frustum)
 		}
 		else
 		{
-			itr->m_bVisible = true;
+			itr->m_bVisible = false;
 		}
 	}
 }

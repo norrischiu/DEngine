@@ -69,7 +69,9 @@ void FlowFieldBuilder::updateFlowField(FlowField* flowFieldObj, const Vector3& p
 					{
 						FlowFieldBuilder::Position n = neighbours[l];
 
-						if (flowField->at(n.z * initInfo.FlowFieldWidth + n.x).isMovable)
+						const int index = n.z * initInfo.FlowFieldWidth + n.x;
+
+						if (flowField->at(index).isMovable || flowField->at(index).ownerGameObjId == -1)
 						{
 							const int dist = abs(n.x - destX) + abs(n.z - destZ) - abs(pos.x - destX) + abs(pos.z - destZ);
 
@@ -103,7 +105,8 @@ void FlowFieldBuilder::initializeFlowField(const FlowField::InitInfo initInfo, s
 	{
 		for (int x = 0; x < initInfo.FlowFieldWidth; x++)
 		{
-			flowField.push_back(FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true));
+			const FlowField::Cell cell = FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true);
+			flowField.push_back(cell);
 		}
 	}
 }

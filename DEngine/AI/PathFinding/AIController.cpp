@@ -82,9 +82,9 @@ bool AIController::IsPositionOwner()
 	const int minZ = floor(minXYZ.GetZ());
 	const int maxZ = ceil(maxXYZ.GetZ());
 
-	for (int x = minX; x <= maxX; x++)
+	for (int x = minX; x < maxX; x++)
 	{
-		for (int z = minZ; z <= maxZ; z++)
+		for (int z = minZ; z < maxZ; z++)
 		{
 			const Vector3 position = Vector3(x, 0.0f, z);
 
@@ -152,19 +152,28 @@ float AIController::LookUpHeight(const Vector3& currPos)
 
 Vector3 AIController::GetNewPosition(const float deltaTime)
 {
-	UnLockCurrPosition();
-	//UnLockPosition(GetOwner()->GetPosition());
-
 	Vector3 currPos = GetOwner()->GetPosition();
 
 	FlowFieldBuilder::getInstance()->updateFlowField(m_flowField, currPos);
-	//FlowFieldManager::GetInstance()->UpdateFlowFieldDirection(currPos);
 
 	Vector3 direction = LookUpDirection(currPos);
-	Vector3 newPos = currPos + (direction * deltaTime * 0.75f);
-
+	Vector3 newPos = currPos + (direction * deltaTime * 3.0f);
+	Vector3 step = direction * (deltaTime * 3.0f / 10.0f);
+	
 	const float newY = LookUpHeight(newPos);
 	newPos.SetY(newY);
+
+	while (IsNewPositionBlockedByOther(newPos))
+	{
+		newPos = newPos - step;
+		const float newY = LookUpHeight(newPos);
+		newPos.SetY(newY);
+
+		if ((newPos - currPos).iszero())
+		{
+			break;
+		}
+	}
 
 	return newPos;
 }
@@ -190,8 +199,8 @@ void AIController::UpdateCamera()
 
 int AIController::GetPositionOwnerId(const Vector3& position)
 {
-	return m_flowField->getPositionOwnerId(position);
-	// return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
+	//return m_flowField->getPositionOwnerId(position);
+	return FlowFieldManager::GetInstance()->GetPositionOwnerId(position);
 }
 
 int AIController::GetNewPositionOwnerId(const Vector3& newPos)
@@ -213,9 +222,9 @@ int AIController::GetNewPositionOwnerId(const Vector3& newPos)
 	const int minZ = floor(minXYZ.GetZ());
 	const int maxZ = ceil(maxXYZ.GetZ());
 
-	for (int x = minX; x <= maxX; x++)
+	for (int x = minX; x < maxX; x++)
 	{
-		for (int z = minZ; z <= maxZ; z++)
+		for (int z = minZ; z < maxZ; z++)
 		{
 			const Vector3 position = Vector3(x, 0.0f, z);
 			const int positionOwnerId = GetPositionOwnerId(position);
@@ -232,7 +241,6 @@ int AIController::GetNewPositionOwnerId(const Vector3& newPos)
 
 void AIController::SetPositionOwnerId(const Vector3& position, const int gameObjId)
 {
-	//m_flowField->setPositionOwnerId(position, gameObjId);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, gameObjId);
 }
 
@@ -248,9 +256,9 @@ void AIController::UnLockCurrPosition()
 	const int minZ = floor(minXYZ.GetZ());
 	const int maxZ = ceil(maxXYZ.GetZ());
 
-	for (int x = minX; x <= maxX; x++)
+	for (int x = minX; x < maxX; x++)
 	{
-		for (int z = minZ; z <= maxZ; z++)
+		for (int z = minZ; z < maxZ; z++)
 		{
 			const Vector3 position = Vector3(x, 0.0f, z);
 			UnLockPosition(position);
@@ -260,8 +268,6 @@ void AIController::UnLockCurrPosition()
 
 void AIController::UnLockPosition(const Vector3& position)
 {
-	//m_flowField->setPositionMovable(position, true);
-	//m_flowField->setPositionOwnerId(position, -1);
 	FlowFieldManager::GetInstance()->UnLockPosition(position);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, -1);
 }
@@ -278,9 +284,9 @@ void AIController::LockCurrPosition()
 	const int minZ = floor(minXYZ.GetZ());
 	const int maxZ = ceil(maxXYZ.GetZ());
 
-	for (int x = minX; x <= maxX; x++)
+	for (int x = minX; x < maxX; x++)
 	{
-		for (int z = minZ; z <= maxZ; z++)
+		for (int z = minZ; z < maxZ; z++)
 		{
 			const Vector3 position = Vector3(x, 0.0f, z);
 			LockPosition(position);
@@ -290,8 +296,6 @@ void AIController::LockCurrPosition()
 
 void AIController::LockPosition(const Vector3& position)
 {
-	//m_flowField->setPositionMovable(position, false);
-	//m_flowField->setPositionOwnerId(position, GetOwner()->GetGameObjectID());
 	FlowFieldManager::GetInstance()->LockPosition(position);
 	FlowFieldManager::GetInstance()->SetPositionOwnerId(position, GetOwner()->GetGameObjectID());
 }
@@ -305,6 +309,9 @@ void AIController::Update(float deltaTime)
 	if (IsDesintationArrived()) { 
 		return; 
 	}
+
+	UnLockCurrPosition();
+	//UnLockPosition(currPos);
 
 	const Vector3 currPos = GetOwner()->GetPosition();
 	const Vector3 newPos = GetNewPosition(deltaTime);
