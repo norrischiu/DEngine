@@ -53,22 +53,22 @@ void GameLoop::Construct()
 	pointlight->AddComponent((DE::Component*)hPointLight.Raw());
 
 	//DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
-	DE::HUD::getInstance()->addText("debug1", "", DE::HUDElement::Position(10, 50), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
-	DE::HUD::getInstance()->addText("debug2", "", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
+	DE::HUD::getInstance()->addText("debug1", "", DE::HUDElement::Position(10, 450), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
+	DE::HUD::getInstance()->addText("debug2", "", DE::HUDElement::Position(10, 400), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
-	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, -4.0f), -4.0f));
+	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 50.f), 50.0f));
 	
+	/*
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
-	
-	/*
-	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 30.0f, -10.0f), DE::Vector3(0.0f, 30.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
-	cam->SetAsRendererCamera();
 	*/
+
+	DE::Camera* cam = new DE::Camera(DE::Vector3(0.0f, 22.0f, -8.0f), DE::Vector3(0.0f, 0.0f, -9.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	cam->SetAsRendererCamera();
 
 	std::vector<DE::GameObject*> obstacles;
 	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-36.0f, 0.0f, -36.0f), DE::Vector3(36.0f, 0.0f, 36.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));

@@ -14,7 +14,7 @@ AIController::AIController(FlowField* flowField, Terrain* terrain)
 {
 	m_ID = ComponentID;
 
-	m_aiConfig.minSeperation = 2.0f;
+	m_aiConfig.minSeperation = 2.5f;
 	m_aiConfig.maxCohesion = 0.5f;
 	m_aiConfig.maxForce = 10.0f;
 	m_aiConfig.maxSpeed = 1.0f;
@@ -44,7 +44,7 @@ void AIController::Init()
 		Vector3 difference = min - max;
 		difference.SetY(0.0f);
 
-		m_aiConfig.minSeperation = difference.Length();
+		m_aiConfig.minSeperation = difference.Length() + m_aiConfig.maxCohesion;
 	}
 
 	m_aiConfig.enableAI = true;
@@ -242,15 +242,15 @@ Vector3 AIController::SteeringBehaviourAlignment()
 		AIController* itrAIController = itr->GetComponent<AIController>();
 		if (distance < m_aiConfig.maxCohesion && itrAIController)
 		{
-			if (gameObj->GetComponent<AIController>()->m_aiConfig.flowField == itrAIController->m_aiConfig.flowField)
-			{
+			//if (gameObj->GetComponent<AIController>()->m_aiConfig.flowField == itrAIController->m_aiConfig.flowField)
+			//{
 				Vector3 itrVelocity = itrAIController->m_aiConfig.velocity;
 				if (!itrVelocity.iszero()) {
 					//Sum up our headings
 					averageHeading = averageHeading + itrVelocity.Normalize();
 					neighboursCount++;
 				}
-			}
+			//}
 		}
 	}
 
