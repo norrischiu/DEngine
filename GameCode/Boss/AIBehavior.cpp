@@ -78,7 +78,7 @@ void AIBehavior::BossBehavior()
 		new (h) Boss_Walk_START_Event;
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);	
 	}
-	else if (distance > 2.2f && distance <= short_attack_dist && playerMoveDir < 0.0f && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING && jumpAttackTime > 5.0f)
+	else if (distance > 2.8f && distance <= short_attack_dist && playerMoveDir < 0.0f && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING && jumpAttackTime > 5.0f)
 	{
 		((Boss*)m_pOwner)->SetAttackTime(0.0f);
 		((Boss*)m_pOwner)->SetState(Boss::JUMPATTACKING);
@@ -86,7 +86,7 @@ void AIBehavior::BossBehavior()
 		new (h) Boss_Jump_Attack_START_Event;
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
-	else if (distance < 2.2f && distance >= 1.6f && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING)
+	else if (distance < 2.8f && distance >= 1.6f && ((Boss*)m_pOwner)->GetState() != Boss::JUMPATTACKING && ((Boss*)m_pOwner)->GetState() != Boss::PUNCHING)
 	{
 		((Boss*)m_pOwner)->SetState(Boss::WALKING);
 		DE::Handle h(sizeof(Boss_Walk_START_Event));
@@ -102,9 +102,9 @@ void AIBehavior::BossBehavior()
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
 
-/*	static wchar_t t[64];
-	swprintf(t, 64, L"distance: %f\n", ((Boss*)m_pOwner)->GetJumpingTime());
-	OutputDebugStringW(t);*/
+	static wchar_t t[64];
+	swprintf(t, 64, L"distance: %f\n", distance);
+	OutputDebugStringW(t);
 	
 	preDist = distance;
 }
