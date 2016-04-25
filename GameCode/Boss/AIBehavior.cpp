@@ -12,8 +12,6 @@
 
 void AIBehavior::BossBehavior()
 {
-	//DE::Vector3 playerPos = DE::Vector3(((Boss*)m_pOwner)->GetPlayerPostion().GetX(), 0.0f, ((Boss*)m_pOwner)->GetPlayerPostion().GetZ());
-	//DE::Vector3	bossPos = DE::Vector3(((Boss*)m_pOwner)->GetTransform()->GetPosition().GetX(), 0.0f, ((Boss*)m_pOwner)->GetTransform()->GetPosition().GetZ());
 	DE::Vector3 playerPos = ((Boss*)m_pOwner)->GetPlayerPostion();
 	DE::Vector3 bossPos = ((Boss*)m_pOwner)->GetPosition();
 	
@@ -34,11 +32,7 @@ void AIBehavior::BossBehavior()
 		{
 			theta = 2 * PI - theta;
 		}
-
-/*		static wchar_t t[64];
-		swprintf(t, 64, L"theta: %f\n", theta);
-		OutputDebugStringW(t);*/
-			
+	
 		if (theta == 0.0f)
 		{
 			theta += 0.01f;
@@ -51,8 +45,6 @@ void AIBehavior::BossBehavior()
 			m_pOwner->TransformBy(quat.GetRotationMatrix());
 			m_pOwner->SetPosition(pos);
 		}
-	
-
 	}
 
 	//direction.Normalize();

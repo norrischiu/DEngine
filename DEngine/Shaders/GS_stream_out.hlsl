@@ -33,12 +33,6 @@ struct VS_INPUT
 	float	NoData : NODATA;
 };
 
-float rand_1_05(in float2 uv)
-{
-	float2 noise = (frac(sin(dot(uv, float2(12.9898, 78.233)*2.0)) * 43758.5453));
-	return abs(noise.x + noise.y) * 0.5;
-}
-
 [maxvertexcount(2)]
 void GS(point VS_INPUT gin[1],
 	inout PointStream<VS_INPUT> ptStream)
@@ -68,12 +62,7 @@ void GS(point VS_INPUT gin[1],
 		// time to emit a new particle?
 		if (gin[0].Age > timeToEmit)
 		{
-			// temp random vector3
-			float3 random = rand_1_05(input) * 0.5;
-			
 			VS_INPUT p;
-			//p.InitialPosW = float4(gEmitPosW.xyz + random, 1.0f);
-			//p.InitialPosW = float4(gEmitPosW.x + random.x * 0.5, gEmitPosW.y, gEmitPosW.z, 1.0f);
 			// Default case
 			p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
 			p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
@@ -87,7 +76,6 @@ void GS(point VS_INPUT gin[1],
 			{
 				p.InitialPosW = float4(gEmitPosW.xyz, 1.0f);
 				p.InitialVelW = float4(gEmitDirW.xyz, 0.0f);
-				//p.InitialVelW = float4(gEmitDirW.x + random.x * 0.5, gEmitDirW.y, gEmitDirW.z + random.z * 0.5, 0.0f);
 			}
 			else if (gEffectType == BLUE_LIGHT)
 			{
