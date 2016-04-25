@@ -54,7 +54,7 @@ void GS(point VS_INPUT gin[1],
 	}
 	else if (gEffectType == BLEEDING)
 	{
-		timeToEmit = 0.05f;
+		timeToEmit = 0.03f;
 	}
 
 	if (gin[0].Type == PT_EMITTER)
@@ -88,7 +88,7 @@ void GS(point VS_INPUT gin[1],
 			p.Type = PT_FLARE;
 			if (gEffectType == BLEEDING)
 			{
-				if (gDisableTime < 1.0f && gDisableTime > 0.1f)
+				if (gDisableTime < 0.4f && gDisableTime > 0.1f)
 				{
 					p.Type = PT_FLARE;
 				}
@@ -121,7 +121,7 @@ void GS(point VS_INPUT gin[1],
 		}
 		else if (gEffectType == BLEEDING)
 		{
-			if (gin[0].Age <= 0.4f)
+			if (gin[0].Age <= 0.5f)
 				ptStream.Append(gin[0]);
 			return;
 		}
