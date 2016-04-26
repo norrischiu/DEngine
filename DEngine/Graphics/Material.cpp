@@ -42,7 +42,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		}
 		fscanf(pFile, "%s", &c);
 		Handle hTexture(sizeof(Texture));
-		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c);
+		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c, 10);
 		pass->AddTexture(hTexture);
 	}
 

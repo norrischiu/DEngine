@@ -14,7 +14,7 @@ AIController::AIController(FlowField* flowField, Terrain* terrain)
 {
 	m_ID = ComponentID;
 
-	m_aiConfig.minSeperation = 2.5f;
+	m_aiConfig.minSeperation = 3.0f;
 	m_aiConfig.maxCohesion = 0.5f;
 	m_aiConfig.maxForce = 10.0f;
 	m_aiConfig.maxSpeed = 1.0f;
@@ -41,7 +41,7 @@ void AIController::Init()
 		AABB aabb = GetOwner()->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox();
 		Vector3 min = aabb.getMin();
 		Vector3 max = aabb.getMax();
-		Vector3 difference = min - max;
+		Vector3 difference = (min - max) * (1.0f / 2.0f);
 		difference.SetY(0.0f);
 
 		m_aiConfig.minSeperation = difference.Length() + m_aiConfig.maxCohesion;
@@ -52,21 +52,32 @@ void AIController::Init()
 
 float AIController::AngleBetween(Vector3 vec1, Vector3 vec2)
 {
-	if (vec1.iszero() && vec2.iszero()) {
+	if (vec1.iszero() || vec2.iszero()) {
 		return 0.0f;
 	}
 
 	const float c = vec1.Dot(vec2) / vec1.Length() * vec2.Length();
-	return acos(min(1, c));
+	return c;
 }
 
 Matrix4 AIController::DirVecToMatrix(const Vector3& direction)
 {
-	const Vector3 vec1 = direction;
-	const Vector3 vec2 = Vector3(0.0f, 0.0f, vec1.GetZ());
-	const float angle = AngleBetween(vec1, vec2);
+	Matrix4 rotationMatrix = Matrix4::Identity;
 
-	Matrix4 rotationMatrix = Quaternion(D3D11Renderer::GetInstance()->GetCamera()->GetUp(), angle).GetRotationMatrix();
+	Vector3 cross = Cross(
+		GetOwner()->GetTransform()->GetForward().Normal(), 
+		direction
+	);
+
+	const float dot = cross.Dot(Vector3::UnitY);
+	float theta = asinf(cross.Length());
+	
+	if (dot < 0.0f)
+	{
+		theta = 2 * PI - theta;
+	}
+
+	rotationMatrix = Quaternion(Vector3(0, 1, 0), theta).GetRotationMatrix();
 
 	return rotationMatrix;
 }
@@ -98,7 +109,7 @@ void AIController::SetActive(const bool setActive)
 
 Vector3 AIController::LookUpDirection(const Vector3& position)
 {
-	return m_aiConfig.flowField->getDirection(m_aiConfig.velocity.Normalize(), position);
+	return m_aiConfig.flowField->getDirection(Normal(m_aiConfig.velocity), position);
 }
 
 float AIController::LookUpHeight(const Vector3& position)
@@ -168,7 +179,6 @@ Vector3 AIController::SteeringBehaviourAvoid()
 				{
 					minFraction = fraction;
 					closestFixture = itr;
-					break;
 				}
 			}
 		}
@@ -247,7 +257,7 @@ Vector3 AIController::SteeringBehaviourAlignment()
 				Vector3 itrVelocity = itrAIController->m_aiConfig.velocity;
 				if (!itrVelocity.iszero()) {
 					//Sum up our headings
-					averageHeading = averageHeading + itrVelocity.Normalize();
+					averageHeading = averageHeading + Normal(itrVelocity);
 					neighboursCount++;
 				}
 			//}
@@ -407,7 +417,7 @@ void AIController::Update(float deltaTime)
 	Vector3 avoid = SteeringBehaviourAvoid();
 
 	//Combine them to come up with a total force to apply, decreasing the effect of cohesion
-	Vector3 forceToApply = seek + separation + (cohesion * 0.1f) + alignment + avoid;
+	Vector3 forceToApply = seek + separation + (cohesion * 0.1f) + alignment + avoid * 10.0f;
 
 	((TextBox*)HUD::getInstance()->getHUDElementById("debug1"))->setText("Seperation x: %.3f, z: %.3f\nCohesion x: %.3f, z: %.3f\nAlignment x: %.3f, z: %.3f\nAvoid x: %.3f, z:%.3f\nforceToApply: x: %.3f, z: %.3f", 
 		separation.GetX(), separation.GetZ(),
@@ -427,20 +437,27 @@ void AIController::Update(float deltaTime)
 
 	m_aiConfig.velocity = m_aiConfig.velocity * deltaTime;
 
-	Vector3 newPos = m_aiConfig.velocity;
-	newPos.SetY(LookUpHeight(newPos) - currPos.GetY());
+	Matrix4 rotationMatrix = DirVecToMatrix(m_aiConfig.velocity.Normal());
 
-	Move(newPos);
+	Move(rotationMatrix, deltaTime);
 	UpdateCamera();
 }
 
-void AIController::Move(const Vector3& vTrans)
+void AIController::Move(const Matrix4& rotationMatrix, const float deltaTime)
 {
-	// *GetOwner()->GetTransform() *= DirVecToMatrix(LookUpDirection(GetOwner()->GetPosition()));
+	//rotation
+	GetOwner()->TransformBy(rotationMatrix);
 
+	//translation
 	Matrix4 trans;
-	trans.CreateTranslation(vTrans);
+	Vector3 forward = Vector3::UnitZ;
+	trans.CreateTranslation(forward * m_aiConfig.velocity.Normal().Length() * deltaTime);
 	GetOwner()->TransformBy(trans);
+
+	//look up height
+	Vector3 newPos = GetOwner()->GetPosition();
+	newPos.SetY(LookUpHeight(newPos));
+	GetOwner()->SetPosition(newPos);
 }
 
 };

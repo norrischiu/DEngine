@@ -42,7 +42,7 @@ __declspec(align(16)) struct SQT
 		}
 		result.m_qQuat = Quaternion::Lerp(fixedA, b.m_qQuat, t);
 		result.m_qQuat.Normalize();
-		result.m_vTrans = Lerp(a.m_vTrans, b.m_vTrans, t);
+		result.m_vTrans = Vector3::Lerp(a.m_vTrans, b.m_vTrans, t);
 		return result;
 	}
 

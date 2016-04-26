@@ -75,9 +75,7 @@ public:
 
 	void SetPosition(Vector3 vPos)
 	{
-		Matrix4 trans;
-		trans.CreateTranslation(vPos);
-		*m_pTransform->m_mWorldTransform = trans;
+		m_pTransform->m_mWorldTransform->SetPosition(vPos);
 	}
 
 public:

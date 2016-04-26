@@ -349,6 +349,7 @@ public:
 	// Extract elements from matrix
 	SIMDVector3 GetPosition();
 	SIMDVector3 GetForward();
+	SIMDVector3 GetRight();
 	SIMDVector3 GetUp();
 
 	// Set a rotation transformation given a quaternion
@@ -406,7 +407,10 @@ public:
 	static const SIMDVector3 NegativeUnitZ;
 
 	// Default Constructor
-	inline SIMDVector3() {};
+	inline SIMDVector3()
+	{
+		_data = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+	};
 
 	// Construct with given float values
 	inline SIMDVector3(float x, float y, float z, float w = 1.0f)
@@ -559,15 +563,25 @@ public:
 	inline SIMDVector3& Normalize()
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0x77);
-		length = _mm_rsqrt_ps(length);
+		length = _mm_div_ps(_mm_set_ps1(1.0f), _mm_sqrt_ps(length)); // more accurate than _mm_rsqrt_ps
 		_data = _mm_mul_ps(_data, length);
 		return *this;
+	}
+
+	// Return normalized vector
+	inline SIMDVector3 Normal()
+	{
+		SIMDVector3 result;
+		__m128 length = _mm_dp_ps(_data, _data, 0x77);
+		length = _mm_div_ps(_mm_set_ps1(1.0f), _mm_sqrt_ps(length)); // more accurate than _mm_rsqrt_ps
+		result._data = _mm_mul_ps(_data, length);
+		return result;
 	}
 
 	inline SIMDVector3& NormalizeAll()
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
-		length = _mm_rsqrt_ps(length);
+		length = _mm_div_ps(_mm_set_ps1(1.0f), _mm_sqrt_ps(length));
 		_data = _mm_mul_ps(_data, length);
 		return *this;
 	}
@@ -611,7 +625,7 @@ public:
 
 	// Interpolate between two vectors with float t, return the resultant vector
 	// i.e. result = a * (1 - t) + b * t
-	inline friend SIMDVector3 Lerp(const SIMDVector3& a, const SIMDVector3& b, float t)
+	inline static SIMDVector3 Lerp(const SIMDVector3& a, const SIMDVector3& b, float t)
 	{
 		__m128 tempA = _mm_set_ps1(1.0f - t);
 		tempA = _mm_mul_ps(a._data, tempA);
@@ -777,17 +791,26 @@ public:
 		_data = DirectX::XMQuaternionMultiply(_data, other._data);
 	}
 
-	SIMDQuaternion operator+(const SIMDQuaternion other)
+	/*SIMDQuaternion operator+(const SIMDQuaternion& other)
 	{
-		// TODO
+	SIMDQuaternion result;
+	result._data = _mm_add_ps(_data, other._data);
+	return result;
+	}
+
+	void operator+=(const SIMDQuaternion& other)
+	{
+	_data = _mm_add_ps(_data, other._data);
+	}*/
+
+	inline void Multiply(float scalar)
+	{
+		__m128 temp = _mm_set_ps1(scalar);
+		_data = _mm_mul_ps(_data, temp);
 	}
 
 	SIMDMatrix4 GetRotationMatrix()
 	{
-		//DirectX::XMMATRIX result = DirectX::XMMatrixRotationQuaternion(_data);
-		//result = DirectX::XMMatrixTranspose(result);
-		//return SIMDMatrix4(result.r);
-
 		float x, y, z, w;
 		x = _data.m128_f32[0];
 		y = _data.m128_f32[1];
@@ -795,11 +818,6 @@ public:
 		w = _data.m128_f32[3];
 
 		__m128 rows[4];
-		//rows[0] = _mm_setr_ps(1 - 2 * (y * y + z * z), 2 * (x * y + w * z), 2 * (x * z - w * y), 0.0f);
-		//rows[1] = _mm_setr_ps(2 * (x * y - w * z), 1 - 2 * (x * x + z * z), 2 * (y * z + w * x), 0.0f);
-		//rows[2] = _mm_setr_ps(2 * (x * z + w * y), 2 * (y * z - w * x), 1 - 2 * (x * x + y * y), 0.0f);
-		//rows[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
-
 		rows[0] = _mm_setr_ps(1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y), 0.0f);
 		rows[1] = _mm_setr_ps(2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x), 0.0f);
 		rows[2] = _mm_setr_ps(2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y), 0.0f);
@@ -812,7 +830,7 @@ public:
 	inline void Normalize()
 	{
 		__m128 length = _mm_dp_ps(_data, _data, 0xFF);
-		length = _mm_rsqrt_ps(length);
+		length = _mm_div_ps(_mm_set_ps1(1.0f), _mm_sqrt_ps(length));
 		_data = _mm_mul_ps(_data, length);
 	}
 

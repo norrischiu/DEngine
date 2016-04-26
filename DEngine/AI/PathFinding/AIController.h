@@ -1,7 +1,7 @@
 #pragma once
-#include "../../Object/Component.h"
-#include "../../Graphics/VertexFormat.h"
-#include "../../Graphics/Terrain/Terrain.h"
+#include "Object/Component.h"
+#include "Graphics/VertexFormat.h"
+#include "Graphics/Terrain/Terrain.h"
 #include "FlowField.h"
 
 namespace DE
@@ -63,10 +63,9 @@ public:
 	Vector3 LookUpDirection(const Vector3& position);
 	float LookUpHeight(const Vector3& position);
 
-	Vector3 GetNewPosition(const float deltaTime);
 	Matrix4 DirVecToMatrix(const Vector3& direction);
 	float AngleBetween(Vector3 vec1, Vector3 vec2);
-	void Move(const Vector3& vTrans);
+	void Move(const Matrix4& rotationMatrix, const float deltaTime);
 
 public:
 	AIConfig m_aiConfig;

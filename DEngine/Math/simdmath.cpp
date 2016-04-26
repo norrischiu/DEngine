@@ -5,10 +5,10 @@ namespace DE
 
 // Matrix4 constant declaration
 float identityMatrix[4][4] = {
-	{1.0f, 0.0f, 0.0f, 0.0f},
-	{0.0f, 1.0f, 0.0f, 0.0f},
-	{0.0f, 0.0f, 1.0f, 0.0f},
-	{0.0f, 0.0f, 0.0f, 1.0f}
+	{ 1.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 1.0f, 0.0f, 0.0f },
+	{ 0.0f, 0.0f, 1.0f, 0.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f }
 };
 
 const SIMDMatrix4 SIMDMatrix4::Identity(identityMatrix);
@@ -49,12 +49,17 @@ SIMDVector3 SIMDMatrix4::GetPosition()
 
 SIMDVector3 SIMDMatrix4::GetForward()
 {
-	return SIMDVector3(_rows[2]);
+	return SIMDVector3(_rows[0].m128_f32[2], _rows[1].m128_f32[2], _rows[2].m128_f32[2]);
+}
+
+SIMDVector3 SIMDMatrix4::GetRight()
+{
+	return SIMDVector3(_rows[0].m128_f32[0], _rows[1].m128_f32[0], _rows[2].m128_f32[0]);
 }
 
 SIMDVector3 SIMDMatrix4::GetUp()
 {
-	return SIMDVector3(_rows[1]);
+	return SIMDVector3(_rows[0].m128_f32[1], _rows[1].m128_f32[1], _rows[2].m128_f32[1]);
 }
 
 void SIMDMatrix4::CreateLookAt(const SIMDVector3& vEye, const SIMDVector3& vAt, const SIMDVector3& vUp)

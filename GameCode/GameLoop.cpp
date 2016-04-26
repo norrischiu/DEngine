@@ -59,7 +59,7 @@ void GameLoop::Construct()
 
 	Player* player = new Player();
 	player->SetPosition(DE::Vector3(0.0f, terrain->GetHeight(0.0f, 50.f), 50.0f));
-	
+
 	/*
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
 	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
@@ -78,7 +78,7 @@ void GameLoop::Construct()
 	//flowField->Draw(terrain);
 	DE::Handle hAIController_left(sizeof(DE::AIController));
 	new (hAIController_left) DE::AIController(flowField_left, terrain);
-	player->AddComponent((DE::Component*) hAIController_left.Raw());
+	//player->AddComponent((DE::Component*) hAIController_left.Raw());
 
 	DE::Handle hAIController_right(sizeof(DE::AIController));
 	new (hAIController_right) DE::AIController(flowField_right, terrain);
@@ -91,7 +91,7 @@ void GameLoop::Construct()
 			DE::Vector3(-18.0f, 0.0f, -18.0f),
 			DE::Vector3(-10.0f, 0.0f, -10.0f),
 			DE::Vector3(2.0f, 0.0f, 2.0f)
-			),
+		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
 	);
@@ -107,7 +107,7 @@ void GameLoop::Construct()
 			DE::Vector3(18.0f, 0.0f, -18.0f),
 			DE::Vector3(10.0f, 0.0f, -10.0f),
 			DE::Vector3(-2.0f, 0.0f, 2.0f)
-			),
+		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
 	);
@@ -117,12 +117,12 @@ void GameLoop::Construct()
 	/*
 	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
 		new DE::SpawnConfig_Area(
-			player,
-			49,
-			0.1f,
-			DE::Vector3(18.0f, 0.0f, 18.0f),
-			DE::Vector3(6.0f, 0.0f, 6.0f),
-			DE::Vector3(-4.0f, 0.0f, -4.0f)
+		player,
+		49,
+		0.1f,
+		DE::Vector3(18.0f, 0.0f, 18.0f),
+		DE::Vector3(6.0f, 0.0f, 6.0f),
+		DE::Vector3(-4.0f, 0.0f, -4.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
@@ -130,12 +130,12 @@ void GameLoop::Construct()
 
 	DE::SpawnManager::GetInstance()->AddSpawner(new PlayerGOS(
 		new DE::SpawnConfig_Area(
-			player,
-			49,
-			0.1f,
-			DE::Vector3(-18.0f, 0.0f, 18.0f),
-			DE::Vector3(-6.0f, 0.0f, 6.0f),
-			DE::Vector3(4.0f, 0.0f, -4.0f)
+		player,
+		49,
+		0.1f,
+		DE::Vector3(-18.0f, 0.0f, 18.0f),
+		DE::Vector3(-6.0f, 0.0f, 6.0f),
+		DE::Vector3(4.0f, 0.0f, -4.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain

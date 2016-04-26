@@ -47,7 +47,7 @@ Texture::Texture(std::vector<float> vData, const int width, const int height)
 	m_pSampler = (ID3D11SamplerState*)State::GetState(State::LINEAR_MIPMAP_MAX_LOD_SS);
 }
 
-Texture::Texture(int type, int sampleCount, const char * filename)
+Texture::Texture(int type, int sampleCount, const char* filename, int mipsLevel)
 	: m_type(type)
 {
 	if (type & SHADER_RESOURCES && filename != nullptr)
@@ -123,7 +123,7 @@ Texture::Texture(int type, int sampleCount, const char * filename)
 		shaderResourceViewDesc.Format = textureDesc.Format;
 		shaderResourceViewDesc.ViewDimension = (sampleCount > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D);
 		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+		shaderResourceViewDesc.Texture2D.MipLevels = mipsLevel;
 
 		if (type & DEPTH_STENCIL)
 		{
