@@ -24,7 +24,7 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	m_fFlareAge = 0.0f;
 	m_fTimeStep = 0.0f;
 	m_iMaxParticles = 20;
-	m_vEyePosW = Vector3(0.0f, 0.0f, 0.0f);
+	m_vEyePosW = Vector3::Zero;
 	m_EffectType = type;
 	m_vEmitPosW = emitPos;
 	m_vEmitDirW = emitDir;

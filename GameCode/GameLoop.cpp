@@ -62,7 +62,7 @@ void GameLoop::Construct()
 
 	/*
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 22.0f, 1.0f), DE::Vector3::Zero, DE::Vector3::UnitY, PI / 2.0f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 	player->AddComponent((DE::Component*) hCamera.Raw());
 	player->GetComponent<DE::CameraComponent>()->SetAsRendererCamera();
 	*/
@@ -89,11 +89,11 @@ void GameLoop::Construct()
 	PlayerGOS* playerGOS_left = new PlayerGOS(
 		new DE::SpawnConfig_Area(
 			player,
-			49,
+			25,
 			0.1f,
 			DE::Vector3(-18.0f, 0.0f, -18.0f),
-			DE::Vector3(-10.0f, 0.0f, -10.0f),
-			DE::Vector3(2.0f, 0.0f, 2.0f)
+			DE::Vector3(-6.0f, 0.0f, -6.0f),
+			DE::Vector3(3.0f, 0.0f, 3.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain
@@ -105,11 +105,11 @@ void GameLoop::Construct()
 	PlayerGOS* playerGOS_right = new PlayerGOS(
 		new DE::SpawnConfig_Area(
 			player,
-			49,
+			25,
 			0.1f,
 			DE::Vector3(18.0f, 0.0f, -18.0f),
-			DE::Vector3(10.0f, 0.0f, -10.0f),
-			DE::Vector3(-2.0f, 0.0f, 2.0f)
+			DE::Vector3(6.0f, 0.0f, -6.0f),
+			DE::Vector3(-3.0f, 0.0f, 3.0f)
 		),
 		DE::SpawnConfigType::SPAWN_CONFIG_AREA,
 		terrain

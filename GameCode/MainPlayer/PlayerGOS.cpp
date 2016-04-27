@@ -162,7 +162,7 @@ int PlayerGOS::Spawn(DE::GameObject*& gameObj)
 	/*
 	std::string id = "flare" + std::to_string(m_accuSpawnNum);
 	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter(const_cast<char*>(id.c_str()), DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 1.0f, 0.0f));
+	new (hEmitter) DE::Emitter(const_cast<char*>(id.c_str()), DE::Emitter::TORCH_FLAME, 2.0f, DE::Vector3::Zero, DE::Vector3(0.0f, 1.0f, 0.0f));
 	spawnWeapon->AddComponent((DE::Component*) hEmitter.Raw());
 	*/
 

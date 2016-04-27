@@ -56,7 +56,7 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 	const int iNumIndices = 6 * slice * (stack - 1);
 	Vector3* pVertices = new Vector3[iNumVerts];
 	unsigned int* pIndices = new unsigned int[iNumIndices];
-	const Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
+	const Vector3 center = Vector3::Zero;
 
 	for (int i = 0, index = 0;
 	i < stack;
@@ -116,7 +116,7 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 	const int iNumIndices = 6 * slice * (stack - 1) + (slice - 2) * 3;
 	Vector3* pVertices = new Vector3[iNumVerts];
 	unsigned int* pIndices = new unsigned int[iNumIndices];
-	const Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
+	const Vector3 center = Vector3::Zero;
 
 	for (int i = 0, index = 0;
 	i < stack;
@@ -180,7 +180,7 @@ MeshComponent* Debug::draw_ellipsoid(const Vector3& dimension, const int slice, 
 	const int iNumIndices = 6 * slice + (slice - 2) * 3 * 2;
 	Vector3* pVertices = new Vector3[iNumVerts];
 	unsigned int* pIndices = new unsigned int[iNumIndices];
-	const Vector3 center = Vector3(0.0f, 0.0f, 0.0f);
+	const Vector3 center = Vector3::Zero;
 
 	float theta = 0.0f;
 	for (int i = 0, indexUpper = 0, indexLower = iNumVerts / 2;

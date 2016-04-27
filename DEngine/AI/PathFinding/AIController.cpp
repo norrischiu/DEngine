@@ -16,10 +16,10 @@ AIController::AIController(FlowField* flowField, Terrain* terrain, PositioningSy
 
 	m_aiConfig.minSeperation = 0.0f;
 	m_aiConfig.maxCohesion = 0.0f;
-	m_aiConfig.maxForce = 10.0f;
-	m_aiConfig.maxSpeed = 1.0f;
-	m_aiConfig.forceToApply = Vector3(0.0f, 0.0f, 0.0f);
-	m_aiConfig.velocity = Vector3(0.0f, 0.0f, 0.0f);
+	m_aiConfig.maxForce = 15.0f;
+	m_aiConfig.maxSpeed = 5.0f;
+	m_aiConfig.forceToApply = Vector3::Zero;
+	m_aiConfig.velocity = Vector3::Zero;
 	m_aiConfig.avoidanceDirection = NULL;
 	m_aiConfig.flowField = flowField;
 	m_aiConfig.terrain = terrain;
@@ -35,10 +35,10 @@ AIController::AIController(const Vector3& destination, Terrain* terrain, Positio
 
 	m_aiConfig.minSeperation = 0.0f;
 	m_aiConfig.maxCohesion = 0.0f;
-	m_aiConfig.maxForce = 10.0f;
-	m_aiConfig.maxSpeed = 1.0f;
-	m_aiConfig.forceToApply = Vector3(0.0f, 0.0f, 0.0f);
-	m_aiConfig.velocity = Vector3(0.0f, 0.0f, 0.0f);
+	m_aiConfig.maxForce = 15.0f;
+	m_aiConfig.maxSpeed = 5.0f;
+	m_aiConfig.forceToApply = Vector3::Zero;
+	m_aiConfig.velocity = Vector3::Zero;
 	m_aiConfig.avoidanceDirection = NULL;
 	m_aiConfig.flowField = nullptr;
 	m_aiConfig.terrain = terrain;
@@ -263,10 +263,10 @@ Vector3 AIController::SteeringBehaviourFlowField()
 	//bilinear-interpolation
 	Vector3 pos = GetOwner()->GetPosition();
 
-	Vector3 f00 = m_aiConfig.flowField->isPositionMovable(pos) ? m_aiConfig.flowField->getDirection(pos) : Vector3(0.0f, 0.0f, 0.0f);
-	Vector3 f01 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(0.0f, 0.0f, 1.0f)) : Vector3(0.0f, 0.0f, 0.0f);
-	Vector3 f10 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(1.0f, 0.0f, 0.0f)) : Vector3(0.0f, 0.0f, 0.0f);
-	Vector3 f11 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(1.0f, 0.0f, 1.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(1.0f, 0.0f, 1.0f)) : Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 f00 = m_aiConfig.flowField->isPositionMovable(pos) ? m_aiConfig.flowField->getDirection(pos) : Vector3::Zero;
+	Vector3 f01 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(0.0f, 0.0f, 1.0f)) : Vector3::Zero;
+	Vector3 f10 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(1.0f, 0.0f, 0.0f)) : Vector3::Zero;
+	Vector3 f11 = m_aiConfig.flowField->isPositionMovable(pos + Vector3(1.0f, 0.0f, 1.0f)) ? m_aiConfig.flowField->getDirection(pos + Vector3(1.0f, 0.0f, 1.0f)) : Vector3::Zero;
 
 	//Do the x interpolations
 	const float xWeight = pos.GetX() - floor(pos.GetX());
@@ -283,7 +283,7 @@ Vector3 AIController::SteeringBehaviourFlowField()
 
 	//If we are centered on a grid square with no vector this will happen
 	if (std::isnan(desiredDirection.LengthSquared())) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	return SteerTowards(desiredDirection);
@@ -299,7 +299,7 @@ Vector3 AIController::SteeringBehaviourAvoid()
 	/*
 	//If we aren't moving much, we don't need to try avoid
 	if (m_aiConfig.velocity.LengthSquared() <= ((gameObjRadius.GetX() + gameObjRadius.GetZ()) / 2.0f)) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 	*/
 
@@ -356,7 +356,7 @@ Vector3 AIController::SteeringBehaviourAvoid()
 
 	//If we aren't going to collide, we don't need to avoid
 	if (closestFixture == nullptr) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	Vector3 resultVector;
@@ -370,7 +370,7 @@ Vector3 AIController::SteeringBehaviourAvoid()
 
 	//We are going in the same direction and they aren't avoiding
 	if (combinedVelocityLengthSquared > ourVelocityLengthSquared && closestFixture->GetComponent<AIController>()->m_aiConfig.avoidanceDirection == NULL) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	//We need to Steer to go around it, we assume the other shape is also a circle
@@ -409,7 +409,7 @@ Vector3 AIController::SteeringBehaviourAlignment()
 {
 	GameObject* gameObj = GetOwner();
 
-	Vector3 averageHeading = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 averageHeading = Vector3::Zero;
 	int neighboursCount = 0;
 
 	//for each of our neighbours (including ourself)
@@ -436,7 +436,7 @@ Vector3 AIController::SteeringBehaviourAlignment()
 	}
 
 	if (neighboursCount == 0) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	//Divide to get the average heading
@@ -494,7 +494,7 @@ Vector3 AIController::SteeringBehaviourCohesion()
 	}
 
 	if (neighboursCount == 1) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	//Get the average position of ourself and our neighbours
@@ -510,7 +510,7 @@ Vector3 AIController::SteeringBehaviourSeparation()
 {
 	GameObject* gameObj = GetOwner();
 
-	Vector3 totalForce = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 totalForce = Vector3::Zero;
 	int neighboursCount = 0;
 
 	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
@@ -535,7 +535,7 @@ Vector3 AIController::SteeringBehaviourSeparation()
 	}
 
 	if (neighboursCount == 0) {
-		return Vector3(0.0f, 0.0f, 0.0f);
+		return Vector3::Zero;
 	}
 
 	//Normalise the force back down and then back up based on the maximum force
@@ -593,7 +593,7 @@ void AIController::Update(float deltaTime)
 	Vector3 alignmentForce = SteeringBehaviourAlignment() * 0.5f;
 
 	//Avoid collision
-	Vector3 avoidanceForce = SteeringBehaviourAvoid() * 10.0f;
+	Vector3 avoidanceForce = SteeringBehaviourAvoid() * 5.0f;
 
 	//Combine them to come up with a total force to apply, decreasing the effect of cohesion
 	m_aiConfig.forceToApply += separationForce + cohesionForce + alignmentForce + avoidanceForce;

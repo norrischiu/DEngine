@@ -40,7 +40,7 @@ void FlowFieldBuilder::initializeFlowField(const FlowField::InitInfo initInfo, s
 	{
 		for (int x = 0; x < initInfo.FlowFieldWidth; x++)
 		{
-			const FlowField::Cell cell = FlowField::Cell(Vector3(0.0f, 0.0f, 0.0f), true);
+			const FlowField::Cell cell = FlowField::Cell(Vector3::Zero, true);
 			flowField.push_back(cell);
 		}
 	}
@@ -163,7 +163,7 @@ void FlowFieldBuilder::setFlowFieldDirection(const FlowField::InitInfo initInfo,
 	) {
 		const int index = destZ * initInfo.FlowFieldWidth + destX;
 		flowField[index].isMovable = true;
-		flowField[index].direction = Vector3(0.0f, 0.0f, 0.0f);
+		flowField[index].direction = Vector3::Zero;
 	}
 
 	for (int z = 0; z < initInfo.FlowFieldDepth; z++)
