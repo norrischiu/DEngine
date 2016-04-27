@@ -629,7 +629,6 @@ void AIController::Move(const float deltaTime)
 	Matrix4 trans;
 	Vector3 forward = Vector3::UnitZ;
 	forward = forward * m_aiConfig.velocity.Length();
-	forward.SetW(1.0f);
 	trans.CreateTranslation(forward);
 	GetOwner()->TransformBy(trans);
 
