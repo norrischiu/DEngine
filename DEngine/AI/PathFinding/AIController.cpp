@@ -214,7 +214,7 @@ std::unordered_map<GameObject*, bool> AIController::GetPossibleCollisionGameObje
 	trans.CreateTranslation(offset);
 
 	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(*GetOwner()->GetTransform() * trans);
+	boundingBox.Transform(*GetOwner()->GetTransform() /* * trans */);
 	const Vector3 minXYZ = boundingBox.getMin();
 	const Vector3 maxXYZ = boundingBox.getMax();
 
