@@ -101,7 +101,7 @@ Matrix4 AIController::GetRotationMatrix(const Vector3& direction)
 		direction
 	);
 
-	const float dot = cross.Dot(Vector3::UnitY);
+	const float dot = cross.Dot(Vector3(0.0f, 1.0f, 0.0f));
 	float theta = asinf(cross.Length());
 	
 	if (dot < 0.0f)
@@ -109,7 +109,7 @@ Matrix4 AIController::GetRotationMatrix(const Vector3& direction)
 		theta = 2 * PI - theta;
 	}
 
-	rotationMatrix = Quaternion(Vector3(0, 1, 0), theta).GetRotationMatrix();
+	rotationMatrix = Quaternion(Vector3(0.0f, 1.0f, 0.0f), theta).GetRotationMatrix();
 
 	return rotationMatrix;
 }
@@ -622,13 +622,10 @@ void AIController::Move(const float deltaTime)
 
 	m_aiConfig.velocity = m_aiConfig.velocity * deltaTime;
 
-	Vector3 currPos = GetOwner()->GetPosition();
+	const Vector3 currPos = GetOwner()->GetPosition();
 
 	//rotation
-	if (!m_aiConfig.velocity.iszero())
-	{
-		GetOwner()->TransformBy(GetRotationMatrix(m_aiConfig.velocity.Normal()));
-	}
+	GetOwner()->TransformBy(GetRotationMatrix(m_aiConfig.velocity.Normal()));
 
 	//translation
 	Matrix4 trans;
