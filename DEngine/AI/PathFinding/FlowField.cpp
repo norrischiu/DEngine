@@ -284,58 +284,14 @@ const Vector3 FlowField::transformAndFloor(const Vector3& position)
 	return pos;
 }
 
-const Vector3 FlowField::getDirection(const Vector3& currDir, const Vector3& position)
+const Vector3 FlowField::getDirection(const Vector3& position)
 {
-	/*
 	Vector3 pos = transformAndFloor(position);
 	const int x = pos.GetX();
 	const int z = pos.GetZ();
 	const int index = z * m_initInfo.FlowFieldWidth + x;
 
 	return m_flowField[index].direction;
-	*/
-
-	//bilinear-interpolation
-	Vector3 pos = position;
-
-	const int intMax = (std::numeric_limits<int>::max)();
-	const int f00 = isPositionMovable(pos) ? distance(pos, m_destination) : intMax;
-	const int f01 = isPositionMovable(pos + Vector3(0.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(0.0f, 0.0f, 1.0f), m_destination) : intMax;
-	const int f10 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 0.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 0.0f), m_destination) : intMax;
-	const int f11 = isPositionMovable(pos + Vector3(1.0f, 0.0f, 1.0f)) ? distance(pos + Vector3(1.0f, 0.0f, 1.0f), m_destination) : intMax;
-
-	int minVal = min(min(f00, f01), min(f10, f11));
-	std::vector<Vector3> minCoord;
-
-	if (f00 == minVal) minCoord.push_back(pos);
-	if (f01 == minVal) minCoord.push_back(pos + Vector3(0.0f, 0.0f, 1.0f));
-	if (f10 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 0.0f));
-	if (f11 == minVal) minCoord.push_back(pos + Vector3(1.0f, 0.0f, 1.0f));
-
-	Vector3 currDirection = currDir;
-	Vector3 desiredDirection;
-	minVal = intMax;
-	pos = transformAndFloor(pos);
-
-	for (int i = 0; i < minCoord.size(); i++)
-	{
-		Vector3 m = minCoord[i];
-		m = transformAndFloor(m);
-
-		const int index = ((int) pos.GetZ()) * m_initInfo.FlowFieldWidth + ((int)pos.GetX());
-
-		const Vector3 directionTo = (m - pos).iszero() ? m_flowField[index].direction : (m - pos).Normal();
-		Vector3 differnce = directionTo - currDirection;
-		const float length = differnce.Length();
-
-		if (length < minVal)
-		{
-			minVal = length;
-			desiredDirection = directionTo;
-		}
-	}
-
-	return desiredDirection;
 }
 
 std::vector<FlowField::Cell>* FlowField::getFlowField()

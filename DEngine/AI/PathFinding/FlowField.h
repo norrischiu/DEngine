@@ -41,7 +41,7 @@ public:
 
 	void setPositionOwnerId(const Vector3& position, const int gameObjId);
 	int getPositionOwnerId(const Vector3& position);
-	const Vector3 getDirection(const Vector3& currDir, const Vector3& position);
+	const Vector3 getDirection(const Vector3& position);
 
 	FlowField::InitInfo getInitInfo();
 	std::vector<FlowField::Cell>* getFlowField();

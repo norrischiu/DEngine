@@ -30,16 +30,19 @@ public:
 		Vector3 velocity;
 		//avoidance direction
 		bool avoidanceDirection;
-		//enable flag;
-		bool enableAI;
 		//flowfield for lookup direction
 		FlowField* flowField;
 		//terrain for lookup height
 		Terrain* terrain;
+		//destination;
+		Vector3 destination;
+		//enable flag;
+		bool enableAI;
 	};
 
 	AIController(AIConfig m_aiConfig);
-	AIController(FlowField* flowField, Terrain* terrain = nullptr);
+	AIController(const Vector3& destination, Terrain* terrain);
+	AIController(FlowField* flowField, Terrain* terrain);
 	~AIController();
 
 	void Init();
@@ -57,6 +60,8 @@ public:
 	std::unordered_map<GameObject*, bool> GetPossibleCollisionGameObject();
 
 	//Avoid collision
+	Vector3 SteerTowards(const Vector3& desiredDirection);
+	Vector3 SteeringBehaviourFlowField();
 	Vector3 SteeringBehaviourAvoid();
 	Vector3 SteeringBehaviourAlignment();
 	//Move towards a fixed point

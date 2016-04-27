@@ -71,16 +71,18 @@ void GameLoop::Construct()
 	cam->SetAsRendererCamera();
 
 	std::vector<DE::GameObject*> obstacles;
-	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));
-	DE::FlowField* flowField_right = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(-18.0f, 0.0f, -18.0f));
-	DE::PositioningSystem::GetInstance()->Init(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f));
-	//flowField->Draw(terrain);
+//	DE::FlowField* flowField_left = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(18.0f, 0.0f, -18.0f));
+//	DE::FlowField* flowField_right = DE::FlowFieldBuilder::getInstance()->generateFlowField(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f), obstacles, DE::Vector3(-18.0f, 0.0f, -18.0f));
+//	DE::PositioningSystem::GetInstance()->Init(DE::Vector3(-127.0f, 0.0f, -127.0f), DE::Vector3(127.0f, 0.0f, 127.0f));
+
 	DE::Handle hAIController_left(sizeof(DE::AIController));
-	new (hAIController_left) DE::AIController(flowField_left, terrain);
+	new (hAIController_left) DE::AIController(DE::Vector3(18.0f, 0.0f, -18.0f), terrain);
+	//new (hAIController_left) DE::AIController(flowField_left, terrain);
 	//player->AddComponent((DE::Component*) hAIController_left.Raw());
 
 	DE::Handle hAIController_right(sizeof(DE::AIController));
-	new (hAIController_right) DE::AIController(flowField_right, terrain);
+	new (hAIController_right) DE::AIController(DE::Vector3(-18.0f, 0.0f, -18.0f), terrain);
+	//new (hAIController_left) DE::AIController(flowField_right, terrain);
 
 	PlayerGOS* playerGOS_left = new PlayerGOS(
 		new DE::SpawnConfig_Area(
@@ -156,7 +158,24 @@ void GameLoop::Update(float deltaTime)
 	DE::GameWorld::GetInstance()->Update(deltaTime);
 	DE::SpawnManager::GetInstance()->Update(deltaTime);
 
-	if (!hasAIInited && DE::SpawnManager::GetInstance()->GetSpawnState() == DE::SpawnManager::SpawnState::SPAWN_FINISHED)
+	if (!hasAIInited)
+	{
+		if (DE::SpawnManager::GetInstance()->GetSpawnState() == DE::SpawnManager::SpawnState::SPAWN_FINISHED)
+		{
+
+			for (auto itr : *DE::GameWorld::GetInstance()->GetGameObjectList())
+			{
+				DE::AIController* aiController = itr->GetComponent<DE::AIController>();
+
+				if (aiController)
+				{
+					aiController->Init();
+				}
+			}
+			hasAIInited = true;
+		}
+	}
+	else
 	{
 		for (auto itr : *DE::GameWorld::GetInstance()->GetGameObjectList())
 		{
@@ -164,19 +183,8 @@ void GameLoop::Update(float deltaTime)
 
 			if (aiController)
 			{
-				aiController->Init();
+				aiController->Move(deltaTime);
 			}
-		}
-		hasAIInited = true;
-	}
-
-	for (auto itr : *DE::GameWorld::GetInstance()->GetGameObjectList())
-	{
-		DE::AIController* aiController = itr->GetComponent<DE::AIController>();
-
-		if (aiController && !aiController->IsDesintationArrived())
-		{
-			aiController->Move(deltaTime);
 		}
 	}
 
