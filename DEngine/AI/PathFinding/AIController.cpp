@@ -574,7 +574,7 @@ void AIController::Update(float deltaTime)
 	}
 	else
 	{
-		Vector3 seek = SteeringBehaviourSeek(m_aiConfig.destination);
+		Vector3 seek = SteeringBehaviourSeek(m_aiConfig.destination) * 1.2f;
 		m_aiConfig.forceToApply = seek;
 	}
 
