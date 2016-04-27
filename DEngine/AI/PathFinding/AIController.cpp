@@ -569,36 +569,36 @@ void AIController::Update(float deltaTime)
 	//Work out our behaviours
 	if (m_aiConfig.flowField)
 	{
-		Vector3 flowField = SteeringBehaviourFlowField() * 1.0f;
-		m_aiConfig.forceToApply = flowField;
+		Vector3 flowFieldForce = SteeringBehaviourFlowField() * 1.0f;
+		m_aiConfig.forceToApply = flowFieldForce;
 	}
 	else
 	{
-		Vector3 seek = SteeringBehaviourSeek(m_aiConfig.destination) * 1.2f;
-		m_aiConfig.forceToApply = seek;
+		Vector3 seekForce = SteeringBehaviourSeek(m_aiConfig.destination) * 1.2f;
+		m_aiConfig.forceToApply = seekForce;
 	}
 
 	// Move away from those entities we are too close to.
-	Vector3 separation = SteeringBehaviourSeparation() * 2.0f;
+	Vector3 separationForce = SteeringBehaviourSeparation() * 2.0f;
 
 	//Move nearer to those entities we are near but not near enough to
-	Vector3 cohesion = SteeringBehaviourCohesion() * 0.2f;
+	Vector3 cohesionForce = SteeringBehaviourCohesion() * 0.2f;
 
 	//Change our direction to be closer to our neighbours;
-	Vector3 alignment = SteeringBehaviourAlignment() * 0.5f;
+	Vector3 alignmentForce = SteeringBehaviourAlignment() * 0.5f;
 
 	//Avoid collision
-	Vector3 avoid = SteeringBehaviourAvoid() * 10.0f;
+	Vector3 avoidanceForce = SteeringBehaviourAvoid() * 10.0f;
 
 	//Combine them to come up with a total force to apply, decreasing the effect of cohesion
-	m_aiConfig.forceToApply += separation + cohesion + alignment + avoid;
+	m_aiConfig.forceToApply += separationForce + cohesionForce + alignmentForce + avoidanceForce;
 
 	((TextBox*)HUD::getInstance()->getHUDElementById("debug1"))->setText(
 		"Seperation x: %.3f, z: %.3f\nCohesion x: %.3f, z: %.3f\nAlignment x: %.3f, z: %.3f\nAvoid x: %.3f, z:%.3f\nforceToApply: x: %.3f, z: %.3f", 
-		separation.GetX(), separation.GetZ(),
-		cohesion.GetX(), cohesion.GetZ(),
-		alignment.GetX(), alignment.GetZ(),
-		avoid.GetX(), avoid.GetZ(),
+		separationForce.GetX(), separationForce.GetZ(),
+		cohesionForce.GetX(), cohesionForce.GetZ(),
+		alignmentForce.GetX(), alignmentForce.GetZ(),
+		avoidanceForce.GetX(), avoidanceForce.GetZ(),
 		m_aiConfig.forceToApply.GetX(), m_aiConfig.forceToApply.GetZ()
 	);
 }
