@@ -286,16 +286,17 @@ const Vector3 FlowField::transformAndFloor(const Vector3& position)
 
 const Vector3 FlowField::getDirection(const Vector3& currDir, const Vector3& position)
 {
+	/*
 	Vector3 pos = transformAndFloor(position);
 	const int x = pos.GetX();
 	const int z = pos.GetZ();
 	const int index = z * m_initInfo.FlowFieldWidth + x;
 
 	return m_flowField[index].direction;
+	*/
 
 	//bilinear-interpolation
 
-	/*
 	Vector3 pos = position;
 
 	const int intMax = (std::numeric_limits<int>::max)();
@@ -324,7 +325,7 @@ const Vector3 FlowField::getDirection(const Vector3& currDir, const Vector3& pos
 
 		const int index = ((int) pos.GetZ()) * m_initInfo.FlowFieldWidth + ((int)pos.GetX());
 
-		const Vector3 directionTo = (m - pos).iszero() ? m_flowField[index].direction : (m - pos).Normalize();
+		const Vector3 directionTo = (m - pos).iszero() ? m_flowField[index].direction : (m - pos).Normal();
 		Vector3 differnce = directionTo - currDirection;
 		const float length = differnce.Length();
 
@@ -336,7 +337,6 @@ const Vector3 FlowField::getDirection(const Vector3& currDir, const Vector3& pos
 	}
 
 	return desiredDirection;
-	*/
 }
 
 std::vector<FlowField::Cell>* FlowField::getFlowField()

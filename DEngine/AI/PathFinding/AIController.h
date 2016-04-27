@@ -63,9 +63,9 @@ public:
 	Vector3 LookUpDirection(const Vector3& position);
 	float LookUpHeight(const Vector3& position);
 
-	Matrix4 DirVecToMatrix(const Vector3& direction);
+	Matrix4 GetRotationMatrix(const Vector3& direction);
 	float AngleBetween(Vector3 vec1, Vector3 vec2);
-	void Move(const Matrix4& rotationMatrix, const float deltaTime);
+	void Move(const float deltaTime);
 
 public:
 	AIConfig m_aiConfig;

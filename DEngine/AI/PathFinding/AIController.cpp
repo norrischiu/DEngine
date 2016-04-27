@@ -14,7 +14,7 @@ AIController::AIController(FlowField* flowField, Terrain* terrain)
 {
 	m_ID = ComponentID;
 
-	m_aiConfig.minSeperation = 3.0f;
+	m_aiConfig.minSeperation = 2.5f;
 	m_aiConfig.maxCohesion = 0.5f;
 	m_aiConfig.maxForce = 10.0f;
 	m_aiConfig.maxSpeed = 1.0f;
@@ -41,7 +41,7 @@ void AIController::Init()
 		AABB aabb = GetOwner()->GetComponent<MeshComponent>()->m_pMeshData->GetBoundingBox();
 		Vector3 min = aabb.getMin();
 		Vector3 max = aabb.getMax();
-		Vector3 difference = (min - max) * (1.0f / 2.0f);
+		Vector3 difference = min - max;
 		difference.SetY(0.0f);
 
 		m_aiConfig.minSeperation = difference.Length() + m_aiConfig.maxCohesion;
@@ -57,10 +57,10 @@ float AIController::AngleBetween(Vector3 vec1, Vector3 vec2)
 	}
 
 	const float c = vec1.Dot(vec2) / vec1.Length() * vec2.Length();
-	return c;
+	return acos(min(1, c));
 }
 
-Matrix4 AIController::DirVecToMatrix(const Vector3& direction)
+Matrix4 AIController::GetRotationMatrix(const Vector3& direction)
 {
 	Matrix4 rotationMatrix = Matrix4::Identity;
 
@@ -109,7 +109,7 @@ void AIController::SetActive(const bool setActive)
 
 Vector3 AIController::LookUpDirection(const Vector3& position)
 {
-	return m_aiConfig.flowField->getDirection(Normal(m_aiConfig.velocity), position);
+	return m_aiConfig.flowField->getDirection(m_aiConfig.velocity.Normal(), position);
 }
 
 float AIController::LookUpHeight(const Vector3& position)
@@ -257,7 +257,7 @@ Vector3 AIController::SteeringBehaviourAlignment()
 				Vector3 itrVelocity = itrAIController->m_aiConfig.velocity;
 				if (!itrVelocity.iszero()) {
 					//Sum up our headings
-					averageHeading = averageHeading + Normal(itrVelocity);
+					averageHeading = averageHeading + itrVelocity.Normal();
 					neighboursCount++;
 				}
 			//}
@@ -437,21 +437,28 @@ void AIController::Update(float deltaTime)
 
 	m_aiConfig.velocity = m_aiConfig.velocity * deltaTime;
 
-	Matrix4 rotationMatrix = DirVecToMatrix(m_aiConfig.velocity.Normal());
-
-	Move(rotationMatrix, deltaTime);
+	Move(deltaTime);
 	UpdateCamera();
 }
 
-void AIController::Move(const Matrix4& rotationMatrix, const float deltaTime)
+void AIController::Move(const float deltaTime)
 {
+	/*
+	Matrix4 trans;
+	Vector3 offset = m_aiConfig.velocity;
+	offset.SetY(LookUpHeight(offset) - GetOwner()->GetPosition().GetY());
+	trans.CreateTranslation(offset);
+	GetOwner()->TransformBy(trans);
+	*/
+
 	//rotation
-	GetOwner()->TransformBy(rotationMatrix);
+	GetOwner()->TransformBy(GetRotationMatrix(m_aiConfig.velocity.Normal()));
 
 	//translation
 	Matrix4 trans;
 	Vector3 forward = Vector3::UnitZ;
-	trans.CreateTranslation(forward * m_aiConfig.velocity.Normal().Length() * deltaTime);
+	forward = forward * m_aiConfig.velocity.Length();
+	trans.CreateTranslation(forward);
 	GetOwner()->TransformBy(trans);
 
 	//look up height

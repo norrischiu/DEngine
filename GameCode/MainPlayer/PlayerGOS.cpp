@@ -61,9 +61,8 @@ void PlayerGOS::CopyComponent(DE::GameObject* spawnTarget, DE::GameObject* gameO
 	{
 		DE::Handle hAIController(sizeof(DE::AIController));
 		new (hAIController) DE::AIController(spawnTarget->GetComponent<DE::AIController>()->m_aiConfig);
-		DE::AIController* aiController = (DE::AIController*) (hAIController.Raw());
-		gameObj->AddComponent(aiController);
-		aiController->Init();
+		gameObj->AddComponent((DE::Component*) hAIController.Raw());
+
 	}
 	break;
 	case DE::ComponentID::POINTLIGHT:
