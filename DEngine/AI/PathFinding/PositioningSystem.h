@@ -22,12 +22,8 @@ public:
 		std::vector<int> positionOwnerId;
 	};
 
-	PositioningSystem();
+	PositioningSystem(const Vector3& startXYZ, const Vector3& endXYZ, const float CellSpacing = 1.0f);
 	~PositioningSystem();
-
-	static PositioningSystem* GetInstance();
-
-	void Init(const Vector3& startXYZ, const Vector3& endXYZ, const float CellSpacing = 1.0f);
 
 	const Vector3 GetTransformedPosition(const Vector3& position);
 	const Vector3 TransformAndFloor(const Vector3& position);
@@ -37,7 +33,6 @@ public:
 	void UpdatePositionOwner(const Vector3& oldPos, const Vector3& newPos, const int ownerId);
 
 private:
-	static PositioningSystem* m_pInstance;
 	InitInfo m_initInfo;
 	std::vector<PositioningSystem::Cell> m_positioning;
 };

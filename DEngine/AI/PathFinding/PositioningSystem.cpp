@@ -4,17 +4,7 @@
 namespace DE
 {
 
-PositioningSystem* PositioningSystem::m_pInstance = nullptr;
-
-PositioningSystem::PositioningSystem()
-{
-}
-
-PositioningSystem::~PositioningSystem()
-{
-}
-
-void PositioningSystem::Init(const Vector3& startXYZ, const Vector3& endXYZ, const float CellSpacing)
+PositioningSystem::PositioningSystem(const Vector3& startXYZ, const Vector3& endXYZ, const float CellSpacing)
 {
 	m_initInfo.startXYZ = startXYZ;
 	m_initInfo.GridWidth = (unsigned int)abs(floor(startXYZ.GetX()) - ceil(endXYZ.GetX()));
@@ -24,14 +14,8 @@ void PositioningSystem::Init(const Vector3& startXYZ, const Vector3& endXYZ, con
 	m_positioning = std::vector<PositioningSystem::Cell>(m_initInfo.GridWidth * m_initInfo.GridDepth);
 }
 
-PositioningSystem* PositioningSystem::GetInstance()
+PositioningSystem::~PositioningSystem()
 {
-	if (!m_pInstance)
-	{
-		m_pInstance = new PositioningSystem;
-	}
-
-	return m_pInstance;
 }
 
 const Vector3 PositioningSystem::GetTransformedPosition(const Vector3& position)

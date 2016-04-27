@@ -9,7 +9,7 @@
 namespace DE
 {
 
-AIController::AIController(FlowField* flowField, Terrain* terrain)
+AIController::AIController(FlowField* flowField, Terrain* terrain, PositioningSystem* positioningSystem)
 	: Component(GetOwner())
 {
 	m_ID = ComponentID;
@@ -23,11 +23,12 @@ AIController::AIController(FlowField* flowField, Terrain* terrain)
 	m_aiConfig.avoidanceDirection = NULL;
 	m_aiConfig.flowField = flowField;
 	m_aiConfig.terrain = terrain;
+	m_aiConfig.positioningSystem = positioningSystem;
 	m_aiConfig.enableAI = false;
 	m_aiConfig.destination = flowField->getDestination();
 }
 
-AIController::AIController(const Vector3& destination, Terrain* terrain)
+AIController::AIController(const Vector3& destination, Terrain* terrain, PositioningSystem* positioningSystem)
 	: Component(GetOwner())
 {
 	m_ID = ComponentID;
@@ -41,6 +42,7 @@ AIController::AIController(const Vector3& destination, Terrain* terrain)
 	m_aiConfig.avoidanceDirection = NULL;
 	m_aiConfig.flowField = nullptr;
 	m_aiConfig.terrain = terrain;
+	m_aiConfig.positioningSystem = positioningSystem;
 	m_aiConfig.enableAI = false;
 	m_aiConfig.destination = destination;
 }
@@ -71,7 +73,10 @@ void AIController::Init()
 		m_aiConfig.maxCohesion = 0.5f;
 		m_aiConfig.minSeperation = radius * 4.0f + m_aiConfig.maxCohesion;
 
-		//PositioningSystem::GetInstance()->UpdatePositionOwner(gameObj->GetPosition(), gameObj->GetPosition(), gameObj->GetGameObjectID());
+		if (m_aiConfig.positioningSystem)
+		{
+			m_aiConfig.positioningSystem->UpdatePositionOwner(gameObj->GetPosition(), gameObj->GetPosition(), gameObj->GetGameObjectID());
+		}
 	}
 
 	m_aiConfig.enableAI = true;
@@ -204,15 +209,12 @@ std::unordered_map<GameObject*, bool> AIController::GetPossibleCollisionGameObje
 
 	std::unordered_map<GameObject*, bool> possibleList;
 
-	Matrix4 transform = *GetOwner()->GetTransform();
 	Matrix4 trans;
-	Vector3 forward = Vector3::UnitZ;
-	forward = forward * m_aiConfig.velocity.Length();
-	trans.CreateTranslation(forward);
-	//transform = transform * GetRotationMatrix(m_aiConfig.velocity.Normal()) * trans;
+	Vector3 offset = m_aiConfig.velocity;
+	trans.CreateTranslation(offset);
 
 	AABB boundingBox = *GetOwner()->GetComponent<AABB>();
-	boundingBox.Transform(transform);
+	boundingBox.Transform(*GetOwner()->GetTransform() * trans);
 	const Vector3 minXYZ = boundingBox.getMin();
 	const Vector3 maxXYZ = boundingBox.getMax();
 
@@ -225,7 +227,7 @@ std::unordered_map<GameObject*, bool> AIController::GetPossibleCollisionGameObje
 	{
 		for (int z = minZ; z < maxZ; z++)
 		{
-			for (int ownerId : PositioningSystem::GetInstance()->GetPositionOwnerId(Vector3(x, 0.0f, z)))
+			for (int ownerId : m_aiConfig.positioningSystem->GetPositionOwnerId(Vector3(x, 0.0f, z)))
 			{
 				if (ownerId != gameObjId)
 				{
@@ -305,49 +307,52 @@ Vector3 AIController::SteeringBehaviourAvoid()
 	float minFraction = (std::numeric_limits<float>::max)();
 	GameObject* closestFixture = nullptr;
 
-	for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
+	if (!m_aiConfig.positioningSystem)
 	{
-		if (itr != gameObj && itr->GetComponent<Body>())
+		for (auto itr : *GameWorld::GetInstance()->GetGameObjectList())
 		{
-			if (IsBoundingBoxCollide(gameObj, itr))
+			if (itr != gameObj && itr->GetComponent<Body>())
 			{
-				((TextBox*)HUD::getInstance()->getHUDElementById("debug2"))->setText("%d & %d Collided", itr->GetGameObjectID(), gameObj->GetGameObjectID());
-
-				Vector3 difference = (gameObj->GetPosition() - itr->GetPosition());
-				difference.SetY(0.0f);
-				const float fraction = difference.Length();
-
-				if (fraction < minFraction)
+				if (IsBoundingBoxCollide(gameObj, itr))
 				{
-					minFraction = fraction;
-					closestFixture = itr;
+					((TextBox*)HUD::getInstance()->getHUDElementById("debug2"))->setText("%d & %d Collided", itr->GetGameObjectID(), gameObj->GetGameObjectID());
+
+					Vector3 difference = (gameObj->GetPosition() - itr->GetPosition());
+					difference.SetY(0.0f);
+					const float fraction = difference.Length();
+
+					if (fraction < minFraction)
+					{
+						minFraction = fraction;
+						closestFixture = itr;
+					}
 				}
 			}
 		}
 	}
-
-	/*
-	for (auto itr : GetPossibleCollisionGameObject())
+	else
 	{
-		if (itr.first != gameObj && itr.first->GetComponent<Body>())
+		for (auto itr : GetPossibleCollisionGameObject())
 		{
-			if (IsBoundingBoxCollide(gameObj, itr.first))
+			if (itr.first != gameObj && itr.first->GetComponent<Body>())
 			{
-				((TextBox*)HUD::getInstance()->getHUDElementById("debug2"))->setText("%d & %d Collided", itr.first->GetGameObjectID(), gameObj->GetGameObjectID());
-
-				Vector3 difference = (gameObj->GetPosition() - itr.first->GetPosition());
-				difference.SetY(0.0f);
-				const float fraction = difference.Length();
-
-				if (fraction < minFraction)
+				if (IsBoundingBoxCollide(gameObj, itr.first))
 				{
-					minFraction = fraction;
-					closestFixture = itr.first;
+					((TextBox*)HUD::getInstance()->getHUDElementById("debug2"))->setText("%d & %d Collided", itr.first->GetGameObjectID(), gameObj->GetGameObjectID());
+
+					Vector3 difference = (gameObj->GetPosition() - itr.first->GetPosition());
+					difference.SetY(0.0f);
+					const float fraction = difference.Length();
+
+					if (fraction < minFraction)
+					{
+						minFraction = fraction;
+						closestFixture = itr.first;
+					}
 				}
 			}
 		}
 	}
-	*/
 
 	//If we aren't going to collide, we don't need to avoid
 	if (closestFixture == nullptr) {
@@ -637,7 +642,10 @@ void AIController::Move(const float deltaTime)
 	newPos.SetY(LookUpHeight(newPos));
 	GetOwner()->SetPosition(newPos);
 
-	//PositioningSystem::GetInstance()->UpdatePositionOwner(currPos, newPos, GetOwner()->GetGameObjectID());
+	if (m_aiConfig.positioningSystem)
+	{
+		m_aiConfig.positioningSystem->UpdatePositionOwner(currPos, newPos, GetOwner()->GetGameObjectID());
+	}
 
 	UpdateCamera();
 

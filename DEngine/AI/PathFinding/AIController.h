@@ -2,6 +2,7 @@
 #include "Object/Component.h"
 #include "Graphics/VertexFormat.h"
 #include "Graphics/Terrain/Terrain.h"
+#include "PositioningSystem.h"
 #include "FlowField.h"
 #include <unordered_map>
 
@@ -34,6 +35,8 @@ public:
 		FlowField* flowField;
 		//terrain for lookup height
 		Terrain* terrain;
+		//positioning system
+		PositioningSystem* positioningSystem;
 		//destination;
 		Vector3 destination;
 		//enable flag;
@@ -41,8 +44,8 @@ public:
 	};
 
 	AIController(AIConfig m_aiConfig);
-	AIController(const Vector3& destination, Terrain* terrain);
-	AIController(FlowField* flowField, Terrain* terrain);
+	AIController(const Vector3& destination, Terrain* terrain, PositioningSystem* positioningSystem = nullptr);
+	AIController(FlowField* flowField, Terrain* terrain, PositioningSystem* positioningSystem = nullptr);
 	~AIController();
 
 	void Init();
