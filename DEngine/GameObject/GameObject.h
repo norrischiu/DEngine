@@ -37,7 +37,10 @@ public:
 
 	void				AddComponent(Component* pComponent);
 
-	std::vector<Component*>* getAllComponents();
+	std::vector<Component*>* GetAllComponents()
+	{
+		return &m_vComponents;
+	}
 
 	// Return specific component pointer
 	template<class T>

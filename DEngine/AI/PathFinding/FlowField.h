@@ -34,9 +34,6 @@ public:
 	FlowField(const InitInfo initInfo, std::vector<Cell> flowField, std::vector<Vector3> m_obstacles, const Vector3& m_offset, const Vector3& destination);
 	~FlowField();
 
-
-
-
 	void setPositionDirection(const Vector3& position, const Vector3& direction);
 
 	void setPositionMovable(const Vector3& position, const bool movable);

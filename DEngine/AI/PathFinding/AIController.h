@@ -3,6 +3,7 @@
 #include "Graphics/VertexFormat.h"
 #include "Graphics/Terrain/Terrain.h"
 #include "FlowField.h"
+#include <unordered_map>
 
 namespace DE
 {
@@ -23,6 +24,8 @@ public:
 		float maxForce;
 		//grid squares / second
 		float maxSpeed;
+		//force to apply;
+		Vector3 forceToApply;
 		//velocity
 		Vector3 velocity;
 		//avoidance direction
@@ -49,6 +52,9 @@ public:
 	void UpdateCamera();
 
 	bool IsBoundingBoxCollide(GameObject* gameObj1, GameObject* gameObj2);
+	bool IsCollideWithAnyGameObject(GameObject* gameObj);
+	
+	std::unordered_map<GameObject*, bool> GetPossibleCollisionGameObject();
 
 	//Avoid collision
 	Vector3 SteeringBehaviourAvoid();

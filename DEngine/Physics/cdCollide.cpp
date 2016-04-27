@@ -63,9 +63,6 @@ void Collide::boxBoxCollide(const Body * box1, const Body * box2)
 	AABB aabb1(*(AABB*)box1);
 	AABB aabb2(*(AABB*)box2);
 
-	aabb1.Transform(*((AABB*)box1)->GetOwner()->GetTransform());
-	aabb2.Transform(*((AABB*)box2)->GetOwner()->GetTransform());
-
 	bool collide = false;
 	// max > min min< max
 	if (aabb1.getMax().GetX() >= aabb2.getMin().GetX() &&

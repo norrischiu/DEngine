@@ -55,7 +55,7 @@ int GameObjectSpawner::Spawn(GameObject*& gameObj)
 		gameObj->AddComponent(itr);
 	}
 
-	for (auto itr : *(m_spawnConfig->spawnTarget)->getAllComponents())
+	for (auto itr : *(m_spawnConfig->spawnTarget)->GetAllComponents())
 	{
 		if (!FindOverrideComponent(itr->GetID()))
 		{

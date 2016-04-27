@@ -296,7 +296,6 @@ const Vector3 FlowField::getDirection(const Vector3& currDir, const Vector3& pos
 	*/
 
 	//bilinear-interpolation
-
 	Vector3 pos = position;
 
 	const int intMax = (std::numeric_limits<int>::max)();
