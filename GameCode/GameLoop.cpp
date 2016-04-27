@@ -82,8 +82,8 @@ void GameLoop::Construct()
 	//player->AddComponent((DE::Component*) hAIController_left.Raw());
 
 	DE::Handle hAIController_right(sizeof(DE::AIController));
-	new (hAIController_right) DE::AIController(DE::Vector3(-18.0f, 0.0f, -18.0f), terrain);
-	//new (hAIController_right) DE::AIController(DE::Vector3(-18.0f, 0.0f, -18.0f), terrain, positioningSystem);
+	//new (hAIController_right) DE::AIController(DE::Vector3(-18.0f, 0.0f, -18.0f), terrain);
+	new (hAIController_right) DE::AIController(DE::Vector3(-18.0f, 0.0f, -18.0f), terrain, positioningSystem);
 	//new (hAIController_right) DE::AIController(flowField_right, terrain);
 
 	PlayerGOS* playerGOS_left = new PlayerGOS(
