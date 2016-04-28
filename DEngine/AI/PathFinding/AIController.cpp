@@ -102,12 +102,17 @@ Matrix4 AIController::GetRotationMatrix(const Vector3& direction)
 	);
 
 	const float dot = cross.Dot(Vector3(0.0f, 1.0f, 0.0f));
+	float crossLength = cross.Length();
+	crossLength = crossLength > 1.0f ? 1.0f : crossLength;
+	crossLength = crossLength < -1.0f ? -1.0f : crossLength;
 	float theta = asinf(cross.Length());
 	
 	if (dot < 0.0f)
 	{
 		theta = 2 * PI - theta;
 	}
+
+	((TextBox*) HUD::getInstance()->getHUDElementById("debug3"))->setText("Theta: %.3f", theta);
 
 	rotationMatrix = Quaternion(Vector3(0.0f, 1.0f, 0.0f), theta).GetRotationMatrix();
 
@@ -621,16 +626,20 @@ void AIController::Move(const float deltaTime)
 	}
 
 	m_aiConfig.velocity = m_aiConfig.velocity * deltaTime;
+	m_aiConfig.velocity.SetW(1.0f);
 
 	const Vector3 currPos = GetOwner()->GetPosition();
 
 	//rotation
-	GetOwner()->TransformBy(GetRotationMatrix(m_aiConfig.velocity.Normal()));
+	const Matrix4 rotationMatrix = GetRotationMatrix(m_aiConfig.velocity.Normal());
+	GetOwner()->TransformBy(rotationMatrix);
+	LookUpHeight(GetOwner()->GetPosition());
 
 	//translation
 	Matrix4 trans;
 	Vector3 forward = Vector3::UnitZ;
 	forward = forward * m_aiConfig.velocity.Length();
+	forward.SetW(1.0f);
 	trans.CreateTranslation(forward);
 	GetOwner()->TransformBy(trans);
 

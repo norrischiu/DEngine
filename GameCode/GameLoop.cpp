@@ -55,6 +55,7 @@ void GameLoop::Construct()
 	//DE::HUD::getInstance()->addText("timer1", "Timer: ", DE::HUDElement::Position(10, 10), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	DE::HUD::getInstance()->addText("debug1", "", DE::HUDElement::Position(10, 450), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	DE::HUD::getInstance()->addText("debug2", "", DE::HUDElement::Position(10, 400), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
+	DE::HUD::getInstance()->addText("debug3", "", DE::HUDElement::Position(10, 350), DE::HUDElement::FontSize::PT60, DE::HUDElement::Color::RED);
 	//DE::HUD::getInstance()->addProgress("progress1", 67.0f, DE::HUDElement::Position(300, 10), DE::HUDElement::Size(500, 100), true);
 
 	Player* player = new Player();
