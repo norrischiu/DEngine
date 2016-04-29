@@ -58,15 +58,24 @@ PostProcessEffect::PostProcessEffect()
 	BlurVPass->SetBlendState(State::ALPHA_BS);
 	BlurVPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
 
+	RenderPass* AmbientPass = new RenderPass;
+	AmbientPass->SetVertexShader("../DEngine/Shaders/VS_gbuffer.hlsl");
+	AmbientPass->SetPixelShader("../DEngine/Shaders/PS_PPE_Ambient.hlsl");
+	AmbientPass->SetRasterizerState(State::CULL_BACK_RS);
+	AmbientPass->SetBlendState(State::ADDITIVE_BS);
+	AmbientPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_backbuffer);
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[1]);
 	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
 	BlurHPass->AddTexture(m_texture);
 	BlurVPass->AddTexture(m_texture2);
+	AmbientPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[0]); // diffuse
 
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(ReflectionPass);
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(BlurHPass);
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(BlurVPass);
+	fullscreenQuadMesh->m_Material.AddPassToTechnique(AmbientPass);
 }
 
 void PostProcessEffect::Render()
