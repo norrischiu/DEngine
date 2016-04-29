@@ -4,6 +4,9 @@ Texture2D shaderTexture[4];
 #define POINT_LIGHT 1
 #define SPOT_LIGHT 2
 
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
 // cbuffer
 struct Material
 {
@@ -79,8 +82,8 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 {
 	float4 rgb, normalVS;
 	float2 texCoord;
-	texCoord.x = IN.vPos.x / 1024.0f;
-	texCoord.y = IN.vPos.y / 768.0f;
+	texCoord.x = IN.vPos.x / WINDOW_WIDTH;
+	texCoord.y = IN.vPos.y / WINDOW_HEIGHT;
 	rgb = shaderTexture[0].Load(int3(IN.vPos.xy, 0));
 	normalVS = shaderTexture[1].Load(int3(IN.vPos.xy, 0));
 	float depth = shaderTexture[2].Load(int3(IN.vPos.xy, 0)).r;
@@ -113,7 +116,7 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 		{
 			shadowPixel.x = posSMCS.x * 0.5f + 0.5f;
 			shadowPixel.y = posSMCS.y * -0.5f + 0.5f;
-			float2 hitPixel = shadowPixel.xy * float2(1024.0f, 768.0f);
+			float2 hitPixel = shadowPixel.xy * float2(WINDOW_WIDTH, WINDOW_HEIGHT);
 			float shadowMapDepth = shaderTexture[3].Load(int3(hitPixel.xy, 0)).r;
 			float4 posSMPS = float4(posSMCS.xy, shadowMapDepth, 1.0f);
 			float4 posSMVS = mul(posSMPS, light.mLightClipToView);

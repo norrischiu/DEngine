@@ -151,16 +151,16 @@ public:
 		hpMeter->Render();
 
 		Matrix4 trans2;
-		trans2.CreateTranslation(Vector3(430.0f, 0.0f, 0.0f));
+		trans2.CreateTranslation(Vector3(830.0f, 0.0f, 0.0f));
 		scale.CreateScaleX(PlayerStaminaWidth / 100.0f);
-		trans.CreateTranslation(Vector3(-430.0f + (PlayerStaminaWidth - 100.0f) / 2.0, 0.0f, 0.0f));
+		trans.CreateTranslation(Vector3(-830.0f + (PlayerStaminaWidth - 100.0f) / 2.0, 0.0f, 0.0f));
 		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
 		m_VSCBuffer.Update();
 		staminaMeter->Render();
 
-		trans2.CreateTranslation(Vector3(405.0f, 0.0f, 0.0f));
+		trans2.CreateTranslation(Vector3(805.0f, 0.0f, 0.0f));
 		scale.CreateScaleX(PlayerHpWidth / 150.0f);
-		trans.CreateTranslation(Vector3(-405.0f + (PlayerHpWidth - 150.0f) / 2.0, 0.0f, 0.0f));
+		trans.CreateTranslation(Vector3(-805.0f + (PlayerHpWidth - 150.0f) / 2.0, 0.0f, 0.0f));
 		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
 		m_VSCBuffer.Update();
 		playerHpMeter->Render();

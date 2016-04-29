@@ -1,4 +1,5 @@
 #include "DEBUG_RENDERER.h"
+#include "../GlobalInclude.h"
 
 namespace DE
 {
@@ -7,7 +8,7 @@ DEBUG_RENDERER* DEBUG_RENDERER::m_pInstance = 0;
 
 DEBUG_RENDERER::DEBUG_RENDERER()
 {
-	m_m2DProjection = Matrix4::OrthographicProjection(1024, 768, 0.0f, 1.0f);
+	m_m2DProjection = Matrix4::OrthographicProjection(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 1.0f);
 
 	m_3DRenderPass.SetBlendState(State::NULL_STATE);
 	m_3DRenderPass.SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -20,16 +21,16 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 		0, 1, 2,
 		3, 2, 1,
 	};
-	pVertices[0].m_pos = Vector3(-382.0, -313.0, 0.0);
+	pVertices[0].m_pos = Vector3(-382.0, -503.0, 0.0);
 	pVertices[0].m_UV[0] = 0.0f;
 	pVertices[0].m_UV[1] = 0.0f;
-	pVertices[1].m_pos = Vector3(385.0, -313.0, 0.0);
+	pVertices[1].m_pos = Vector3(385.0, -503.0, 0.0);
 	pVertices[1].m_UV[0] = 1.0f;
 	pVertices[1].m_UV[1] = 0.0f;
-	pVertices[2].m_pos = Vector3(-382.0, -323.0, 0.0);
+	pVertices[2].m_pos = Vector3(-382.0, -513.0, 0.0);
 	pVertices[2].m_UV[0] = 0.0f;
 	pVertices[2].m_UV[1] = 1.0f;
-	pVertices[3].m_pos = Vector3(385.0, -323.0, 0.0);
+	pVertices[3].m_pos = Vector3(385.0, -513.0, 0.0);
 	pVertices[3].m_UV[0] = 1.0f;
 	pVertices[3].m_UV[1] = 1.0f;
 	hpMeter = new MeshData(pVertices, 4, pIndices, 6, sizeof(Vertex1P1UV));
@@ -46,10 +47,10 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	pass->AddTexture(hTexture);
 	hpMeter->m_Material.GetRenderTechnique()->AddPass(pass);
 
-	pVertices[0].m_pos = Vector3(-480.0, -296.0, 0.0);
-	pVertices[1].m_pos = Vector3(480.0, -296.0, 0.0);
-	pVertices[2].m_pos = Vector3(-480.0, -334.0, 0.0);
-	pVertices[3].m_pos = Vector3(480.0, -334.0, 0.0);
+	pVertices[0].m_pos = Vector3(-480.0, -486.0, 0.0);
+	pVertices[1].m_pos = Vector3(480.0, -486.0, 0.0);
+	pVertices[2].m_pos = Vector3(-480.0, -524.0, 0.0);
+	pVertices[3].m_pos = Vector3(480.0, -524.0, 0.0);
 	hpMeterBorder = new MeshData(pVertices, 4, pIndices, 6, sizeof(Vertex1P1UV));
 	RenderPass* boarderPass = new RenderPass;
 	boarderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
@@ -64,10 +65,10 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	boarderPass->AddTexture(hTexture2);
 	hpMeterBorder->m_Material.GetRenderTechnique()->AddPass(boarderPass);
 
-	pVertices[0].m_pos = Vector3(-380.0, 340.0, 0.0);
-	pVertices[1].m_pos = Vector3(-480.0, 340.0, 0.0);
-	pVertices[2].m_pos = Vector3(-380.0, 330.0, 0.0);
-	pVertices[3].m_pos = Vector3(-480.0, 330.0, 0.0);
+	pVertices[0].m_pos = Vector3(-780.0, 470.0, 0.0);
+	pVertices[1].m_pos = Vector3(-880.0, 470.0, 0.0);
+	pVertices[2].m_pos = Vector3(-780.0, 460.0, 0.0);
+	pVertices[3].m_pos = Vector3(-880.0, 460.0, 0.0);
 	staminaMeter = new MeshData(pVertices, 4, pIndices, 6, sizeof(Vertex1P1UV));
 	RenderPass* staminaPass = new RenderPass;
 	staminaPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
@@ -82,10 +83,10 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	staminaPass->AddTexture(hStaminaTexture);
 	staminaMeter->m_Material.GetRenderTechnique()->AddPass(staminaPass);
 
-	pVertices[0].m_pos = Vector3(-330.0, 360.0, 0.0);
-	pVertices[1].m_pos = Vector3(-480.0, 360.0, 0.0);
-	pVertices[2].m_pos = Vector3(-330.0, 350.0, 0.0);
-	pVertices[3].m_pos = Vector3(-480.0, 350.0, 0.0);
+	pVertices[0].m_pos = Vector3(-730.0, 490.0, 0.0);
+	pVertices[1].m_pos = Vector3(-880.0, 490.0, 0.0);
+	pVertices[2].m_pos = Vector3(-730.0, 480.0, 0.0);
+	pVertices[3].m_pos = Vector3(-880.0, 480.0, 0.0);
 	playerHpMeter = new MeshData(pVertices, 4, pIndices, 6, sizeof(Vertex1P1UV));
 	RenderPass* playerHpPass = new RenderPass;
 	playerHpPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");

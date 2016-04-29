@@ -7,6 +7,7 @@
 #include "DEngine\System\WinMsgHandler.h"
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
+#include "DEngine\GlobalInclude.h"
 #include "GameLoop.h"
 #include <windows.h>
 
@@ -57,7 +58,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 	// Create the application's window
 	HWND hWnd = CreateWindow("Game class", "DEngine",
-		WS_OVERLAPPEDWINDOW, 0, 0, 1024, 768,
+		WS_OVERLAPPEDWINDOW, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
 		NULL, NULL, wc.hInstance, NULL);
 
 	// Memory

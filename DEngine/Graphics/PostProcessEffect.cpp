@@ -5,6 +5,7 @@
 #include "D3D11Renderer.h"
 #include "Render\PSPerLightCBuffer.h"
 #include "MeshData.h"
+#include "../GlobalInclude.h"
 
 namespace DE
 {
@@ -16,10 +17,10 @@ PostProcessEffect::PostProcessEffect()
 
 											// Set vertex buffer
 	Vector3* pVertexData = new Vector3[6];
-	float left = -1024 / 2;
-	float right = left + 1024;
-	float top = 768 / 2;
-	float bottom = top - 768;
+	float left = -WINDOW_WIDTH / 2;
+	float right = left + WINDOW_WIDTH;
+	float top = WINDOW_HEIGHT / 2;
+	float bottom = top - WINDOW_HEIGHT;
 	pVertexData[0] = Vector3(left, top, 0);
 	pVertexData[1] = Vector3(right, top, 0);
 	pVertexData[2] = Vector3(left, bottom, 0);
@@ -75,7 +76,7 @@ void PostProcessEffect::Render()
 
 	// Update VS cbuffer
 	VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_pVSCBuffer->m_Memory._data;
-	ptr->WVPTransform = Matrix4::OrthographicProjection(1024.0f, 768.0f, 0.0f, 1.0f);
+	ptr->WVPTransform = Matrix4::OrthographicProjection(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 1.0f);
 	m_pVSCBuffer->Update();
 
 	// Update PS cbuffer

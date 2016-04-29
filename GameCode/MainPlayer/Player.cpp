@@ -18,6 +18,7 @@
 #include "DEngine\Light\PointLightComponent.h"
 #include "DEngine\Math\simdmath.h"
 #include "DEngine\Physics\cdRay.h"
+#include "DEngine\GlobalInclude.h"
 
 
 Player::Player()
@@ -86,7 +87,7 @@ Player::Player()
 	AddComponent((DE::Component*) hPointLight.Raw());
 
 	// Follow camera
-	m_FollowCamera = new ThirdPersonCamera(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -0.5f, 3.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	m_FollowCamera = new ThirdPersonCamera(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -0.5f, 3.0f), DE::Vector3(0.0f, 1.0f, 0.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
 	m_FollowCamera->GetLocalTransform()->SetPosition(DE::Vector3(0.0f, 3.0f, -3.0f));
 	m_FollowCamera->SetAsRendererCamera();
 	m_FollowCamera->GetComponent<DE::Transform>()->AttachTo(m_pTransform);

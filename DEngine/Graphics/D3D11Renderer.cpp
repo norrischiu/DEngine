@@ -8,6 +8,7 @@
 #include "Graphics\ParticleSystem\Emitter.h"
 #include "Graphics\ParticleSystem\ParticleSystem.h"
 #include "DebugRenderer\DEBUG_RENDERER.h"
+#include "../GlobalInclude.h"
 
 #include <vector>
 #include <DXGI.h>
@@ -46,8 +47,8 @@ namespace DE
 		ZeroMemory(&scData, sizeof(scData)); // initialize the whole struct to zero
 
 		scData.BufferCount = 1;
-		scData.BufferDesc.Width = 1024;
-		scData.BufferDesc.Height = 768;
+		scData.BufferDesc.Width = WINDOW_WIDTH;
+		scData.BufferDesc.Height = WINDOW_HEIGHT;
 		scData.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		scData.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		scData.BufferDesc.RefreshRate.Numerator = 30;
@@ -59,7 +60,7 @@ namespace DE
 		scData.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		scData.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-		HRESULT hr = D3D11CreateDevice(vAdapters[0], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
+		HRESULT hr = D3D11CreateDevice(vAdapters[1], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
 			D3D11_SDK_VERSION, &m_pD3D11Device, NULL, &m_pD3D11Context);
 		assert(hr == S_OK);
 		hr = pFactory->CreateSwapChain(m_pD3D11Device, &scData, &m_pSwapChain);
@@ -103,8 +104,8 @@ namespace DE
 		ZeroMemory(&vp, sizeof(vp));
 		vp.TopLeftX = 0.0f;
 		vp.TopLeftY = 0.0f;
-		vp.Height = 768.0f;
-		vp.Width = 1024.0f;
+		vp.Height = WINDOW_HEIGHT;
+		vp.Width = WINDOW_WIDTH;
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		m_pD3D11Context->RSSetViewports(1, &vp);

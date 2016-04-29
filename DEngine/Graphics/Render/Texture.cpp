@@ -2,6 +2,7 @@
 #include "Graphics\D3D11Renderer.h"
 #include "State.h"
 #include "Graphics\TextureManager.h"
+#include "..\..\GlobalInclude.h"
 #include <DirectXMath.h>
 #include <algorithm>
 
@@ -21,8 +22,8 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	HRESULT hr;
 	// Setup the texture description
 	D3D11_TEXTURE2D_DESC textureDesc;
-	textureDesc.Width = 1024;
-	textureDesc.Height = 768;
+	textureDesc.Width = WINDOW_WIDTH;
+	textureDesc.Height = WINDOW_HEIGHT;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.SampleDesc.Count = sampleCount;

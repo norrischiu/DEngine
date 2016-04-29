@@ -1,5 +1,8 @@
 Texture2D shaderTexture[3];
 
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
 // cbuffer
 
 static matrix mClipToTex =
@@ -75,9 +78,9 @@ bool RayMarch(float3 originVS, float3 rayVS, inout float2 hitPixel, float jitter
 	mClipToTex = mul(mViewToClip, mClipToTex);
 
 	float4 H0 = mul(float4(originVS, 1.0f), mClipToTex);
-	H0.xy *= float2(1024.0f, 768.0f);
+	H0.xy *= float2(WINDOW_WIDTH, WINDOW_HEIGHT);
 	float4 H1 = mul(float4(endptVS, 1.0f), mClipToTex);
-	H1.xy *= float2(1024.0f, 768.0f);
+	H1.xy *= float2(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	float k0 = 1.0f / H0.w;
 	float k1 = 1.0f / H1.w;
@@ -150,8 +153,8 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 {
 	float3 normalVS;
 	float2 texCoord;
-	texCoord.x = IN.vPos.x / 1024.0f;
-	texCoord.y = IN.vPos.y / 768.0f;
+	texCoord.x = IN.vPos.x / WINDOW_WIDTH;
+	texCoord.y = IN.vPos.y / WINDOW_HEIGHT;
 	normalVS = shaderTexture[1].Load(int3(IN.vPos.xy, 0)).xyz;
 	float depth = shaderTexture[2].Load(int3(IN.vPos.xy, 0)).r;
 

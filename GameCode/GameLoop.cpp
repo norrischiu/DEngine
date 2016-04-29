@@ -15,6 +15,7 @@
 #include "DEngine\AI\PathFinding\AIController.h"
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
 #include "DEngine\Graphics\Terrain\TerrainBuilder.h"
+#include "DEngine\GlobalInclude.h"
 
 // Game include
 #include "MainPlayer\Player.h"
@@ -40,7 +41,7 @@ void GameLoop::Construct()
 	boss->SetPosition(DE::Vector3(0.0f, 0.0f, 5.0f));
 	player->SetBoss(boss);
 	
-	for (int i = 0; i < 381; ++i)
+	for (int i = 0; i < 0; ++i)
 	{
 		std::string meshName = "church/church" + std::to_string(i);
 		DE::GameObject* levelMesh = new DE::GameObject;
@@ -57,7 +58,7 @@ void GameLoop::Construct()
 
 	DE::PointLight* light = new DE::PointLight(DE::Vector3(0.0f, 8.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 10.0f, 3.5f);
 	DE::Handle hCamera(sizeof(DE::CameraComponent));
-	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 4.0f, 1024.0f / 768.0f, 1.0f, 100.0f);
+	new (hCamera) DE::CameraComponent(DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, -1.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 4.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
 	light->AddComponent((DE::Component*)hCamera.Raw());
 
 	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.0f);
