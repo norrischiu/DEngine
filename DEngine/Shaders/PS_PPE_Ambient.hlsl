@@ -9,5 +9,5 @@ struct VS_OUTPUT
 // function
 float4 PS(VS_OUTPUT IN) : SV_TARGET
 {
-	return shaderTexture.Load(int3(IN.vPos.xy, 0)) * 0.2f;
+	return shaderTexture.Load(int3(IN.vPos.xy, 0)) * 0.3f;
 }
