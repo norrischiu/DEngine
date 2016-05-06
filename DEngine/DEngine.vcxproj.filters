@@ -76,6 +76,9 @@
     <Filter Include="Graphics\Terrain">
       <UniqueIdentifier>{b7469f27-1663-4808-a7a2-c27810066f1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Skydome">
+      <UniqueIdentifier>{bfadadb6-38c0-4248-a5bd-be9197362dd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Event\EventQueue.cpp">
@@ -269,6 +272,12 @@
     </ClCompile>
     <ClCompile Include="System\Keyboard.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp">
+      <Filter>Graphics\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DDSLoader.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,6 +554,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
       <Filter>Graphics\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DDSLoader.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

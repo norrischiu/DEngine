@@ -1,5 +1,5 @@
 #include "TextureManager.h"
-#include <DDSTextureLoader.h>
+#include "DDSLoader.h"
 #include "D3D11Renderer.h"
 
 namespace DE
@@ -28,7 +28,7 @@ void TextureManager::LoadTexture(const char* filename)
 
 	ID3D11Resource* pTexture;
 	ID3D11ShaderResourceView* pTexResourceView;
-	hr = DirectX::CreateDDSTextureFromFile(D3D11Renderer::GetInstance()->m_pD3D11Device, pName, &pTexture, &pTexResourceView);
+	hr = CreateDDSTextureFromFile(D3D11Renderer::GetInstance()->m_pD3D11Device, pName, &pTexture, &pTexResourceView);
 	assert(hr == S_OK);
 
 	m_mapTexture[filename] = (void*)pTexResourceView;

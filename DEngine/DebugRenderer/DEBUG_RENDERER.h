@@ -69,17 +69,7 @@ public:
 	{
 		TextHelper txtHelper;
 		MeshData* meshData = txtHelper.CreateTextMeshData(text);
-		//m_vDbgMeshs.push_back(meshData);
-		RenderPass* pass = meshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0];
-		pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
-		pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-		pass->SetRasterizerState(State::CULL_NONE_RS);
-		//		MeshComponent* meshComp = new MeshComponent(meshData);
-		Matrix4 scaleX, scaleY;
-		scaleX.CreateScaleX(-1024.0f / 2.0f);
-		scaleY.CreateScaleY(768.0f / 2.0f);
-		//		*meshComp->m_pTransform = m_m2DProjection * scaleX * scaleY;
-		//		SceneGraph::GetInstance()->ADD_DEBUG_DRAWING(meshComp);
+		m_vDbgMeshs.push_back(meshData);
 	}
 
 	void DRAW_2D_MESH(MeshData* meshdata)
@@ -143,6 +133,7 @@ public:
 		m_VSCBuffer.Update();
 		hpMeterBorder->Render();
 
+		// Demo purpose
 		Matrix4 trans, scale;
 		scale.CreateScaleX(boosHPWidth / 800.0f);
 		trans.CreateTranslation(Vector3((boosHPWidth - 800.0f) / 2.0, 0.0f, 0.0f));
@@ -201,6 +192,7 @@ private:
 	// Constant buffer
 	VSPerObjectCBuffer							m_VSCBuffer;
 
+	// Demo purpose
 	MeshData* hpMeter;
 	MeshData* hpMeterBorder;
 	MeshData* staminaMeter;

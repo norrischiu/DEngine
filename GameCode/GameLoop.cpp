@@ -31,11 +31,6 @@ GameLoop::GameLoop()
 
 void GameLoop::Construct()
 {
-//	Terrain* terrain = TerrainBuilder::getInstance()->generateTerrain("terrain.raw", "", 256, 256, 15.0f, 1.0f);
-//	GameObject* terrain_gobj = terrain->CreateGameObject("terrain.dds", "terrain_normal.dds", "terrain_height.dds");
-
-//	HUD::getInstance()->addText("timer1", "FYP Progress:", HUDElement::Position(10, 10), HUDElement::FontSize::PT60, HUDElement::Color::RED);
-
 	Player* player = new Player();
 	Boss* boss = new Boss(player);
 	boss->SetPosition(DE::Vector3(0.0f, 0.0f, 5.0f));
@@ -84,7 +79,6 @@ void GameLoop::Construct()
 		new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, -2.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
 		new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, -2.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
 	}
-
 
 	// two rows
 	new DE::PointLight(DE::Vector3(17.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
