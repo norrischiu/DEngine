@@ -53,13 +53,13 @@ public:
 	void setActiveAnimationSet(const char* set_name, const bool active);
 
 	// Extract the current pose of a joint from a state defined in state machine 
-	SQT GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex, float deltaTime);
+	SQT GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex);
 
 	// Extract the current pose of a joint from a clip
-	SQT GetPoseFromSingleSet(AnimationSet* set, int jointIndex, float deltaTime);
+	SQT GetPoseFromSingleSet(AnimationSet* set, int jointIndex);
 
 	// Extract the current pose of a joint from a blend tree
-	SQT GetPoseFromBlendTree(BlendTree* btree, int jointIndex, float deltaTime);
+	SQT GetPoseFromBlendTree(BlendTree* btree, int jointIndex);
 
 	// Check if any of the animation set in a state is active
 	bool IsStateAnimationSetActive(AnimationStateMachine::State* pState);

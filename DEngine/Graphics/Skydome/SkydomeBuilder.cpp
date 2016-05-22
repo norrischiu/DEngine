@@ -110,7 +110,7 @@ GameObject* SkydomeBuilder::CreateGameObject(const char* filename, const Vector3
 		{
 			vertices[i].m_pos = m_vertices[i].m_pos;
 			vertices[i].m_norm = m_vertices[i].m_norm;
-			vertices[i].m_diffuse = Lerp(centerColor, apexColor, max(0.0f, vertices[i].m_pos.GetY()));
+			vertices[i].m_diffuse = Vector3::Lerp(centerColor, apexColor, max(0.0f, vertices[i].m_pos.GetY()));
 			indices[i] = i;
 		}
 
