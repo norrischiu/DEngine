@@ -67,13 +67,14 @@ void SceneGraph::Render()
 		AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
 		if (anim != nullptr)
 		{
-			Skeleton* skel = anim->m_skeleton;
+			Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
 			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
-			for (auto itr : anim->m_animationSets)
+			const int jointCount = anim->GetAnimationSetCount();
+			for (auto itr : anim->GetAnimationSets())
 			{
 				if (itr.second->isActive())
 				{
-					for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
+					for (int index = 0; index < skel->GetJointsCount(); ++index)
 					{
 						palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}
@@ -126,9 +127,9 @@ void SceneGraph::ShadowMapGeneration()
 
 					m_ShadowPass->SetDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV());
 
-					Skeleton* skel = anim->m_skeleton;
+					Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
 					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
-					for (auto itr : anim->m_animationSets)
+					for (auto itr : anim->GetAnimationSets())
 					{
 						if (itr.second->isActive())
 						{

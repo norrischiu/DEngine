@@ -13,7 +13,6 @@ AnimationStateMachine::AnimationStateMachine(AnimationController* animController
 	, m_bInTrasition(false)
 {
 	m_ID = ComponentID;
-	animController->m_bPlaying = true;
 }
 
 void AnimationStateMachine::Update(float deltaTime)

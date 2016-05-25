@@ -63,21 +63,6 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 	fclose(pFile);
 }
 
-void AnimationController::removeAnimationSet(const char* set_name)
-{
-	m_animationSets.erase(set_name);
-}
-
-std::unordered_map<std::string, AnimationSet*>* AnimationController::getAnimationSets()
-{
-	return &m_animationSets;
-}
-
-void AnimationController::setAnimationSet(const std::unordered_map<std::string, AnimationSet*>& animationSets)
-{
-	m_animationSets = animationSets;
-}
-
 AnimationSet* AnimationController::getAnimationSet(const char* set_name)
 {
 	auto t = m_animationSets.find(set_name);
@@ -92,21 +77,6 @@ AnimationSet* AnimationController::getAnimationSet(const char* set_name)
 	return nullptr;
 }
 
-Skeleton* AnimationController::getSkeleton()
-{
-	return m_skeleton;
-}
-
-void AnimationController::setSkeleton(Skeleton* skeleton)
-{
-	m_skeleton = skeleton;
-}
-
-bool AnimationController::isAnimationSetActive(const char* set_name)
-{
-	return getAnimationSet(set_name)->isActive();
-}
-
 void AnimationController::setActiveAnimationSet(const char* set_name, const bool active)
 {
 	AnimationSet* animationSet = getAnimationSet(set_name);
@@ -115,18 +85,6 @@ void AnimationController::setActiveAnimationSet(const char* set_name, const bool
 		animationSet->setActive(active);
 		animationSet->reset();
 	}
-}
-
-int AnimationController::getNumAnimationSets() const
-{
-	return m_animationSets.size();
-}
-
-int AnimationController::getNumAnimations(const char* set_name)
-{
-	AnimationSet* animationSet = getAnimationSet(set_name);
-
-	return animationSet->getNumAnimations();
 }
 
 void AnimationController::Update(float deltaTime)
@@ -174,7 +132,7 @@ void AnimationController::Update(float deltaTime)
 	}
 }
 
-SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, int jointIndex)
+SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, const int jointIndex)
 {
 	if (pState->m_bUseBlendTree)
 	{
@@ -186,12 +144,12 @@ SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, 
 	}
 }
 
-SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, int jointIndex)
+SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, const int jointIndex)
 {
 	return set->m_vAnimations[jointIndex]->GetCurrentPose();
 }
 
-SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, int jointIndex)
+SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, const int jointIndex)
 {
 	int numClips = btree->m_vClipnames.size();
 	float factor = btree->m_fBlendFactor;

@@ -11,7 +11,7 @@ Animation::Animation(const float animationFPS, const float frame) :
 
 Animation::~Animation()
 {
-
+	m_Poses.clear();
 }
 
 void Animation::AddPose(SQT sqt)
@@ -19,31 +19,11 @@ void Animation::AddPose(SQT sqt)
 	m_Poses.push_back(sqt);
 }
 
-int Animation::getCurrentKeyframe() const
-{
-	return m_currKeyframe;
-}
-
-int Animation::getNumKeyframes() const
-{
-	return m_Poses.size();
-}
-
 void Animation::setCurrentKeyframe(const float frame)
 {
 	if (frame >= 1.0f && frame <= (float)(m_Poses.size() + 1)) {
 		m_currKeyframe = frame;
 	}
-}
-
-float Animation::getAnimationFPS()
-{
-	return m_animationFPS;
-}
-
-void Animation::setAnimationFPS(const float animationFPS)
-{
-	m_animationFPS = animationFPS;
 }
 
 SQT Animation::GetCurrentPose()

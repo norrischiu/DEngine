@@ -31,11 +31,6 @@ void AnimationSet::AddAnimation(Animation* animation)
 	m_vAnimations.push_back(animation);
 }
 
-int AnimationSet::getNumAnimations() const
-{
-	return m_vAnimations.size();
-}
-
 void AnimationSet::reset()
 {
 	for (auto itr : m_vAnimations)
@@ -63,32 +58,6 @@ void AnimationSet::update(const float delta_time)
 			itr->update(delta_time);
 		}
 	}
-}
-
-float AnimationSet::getCurrTime() const
-{
-	return m_fCurrTime;
-}
-
-void AnimationSet::setCurrTime(const float currTime)
-{
-	const int delta_time = currTime - m_fCurrTime;
-	m_fCurrTime = currTime;
-
-	for (auto itr : m_vAnimations)
-	{
-		itr->update(delta_time);
-	}
-}
-
-float AnimationSet::getDuration() const
-{
-	return m_fDuration;
-}
-
-void AnimationSet::setDuration(const float duration)
-{
-	m_fDuration = duration;
 }
 
 bool AnimationSet::isActive() const
