@@ -20,6 +20,8 @@ namespace DE
 SceneGraph* SceneGraph::m_pInstance;
 
 SceneGraph::SceneGraph()
+	: m_tree(0)
+	, DEBUG_DRAWING_TREE(0)
 {
 	m_ShadowPass = new RenderPass;
 	m_ShadowPass->SetPixelShader(nullptr);
@@ -29,19 +31,20 @@ SceneGraph::SceneGraph()
 
 void SceneGraph::FrustumCulling(Frustum frustum)
 {
-	for (auto itr : m_tree)
+	const unsigned int size = m_tree.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		AABB meshBound = itr->m_pMeshData->GetBoundingBox();
+		AABB meshBound = m_tree[i]->m_pMeshData->GetBoundingBox();
 		AABB cache = meshBound;
-		Matrix4 cameraSpace = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->GetOwner()->GetTransform();
+		Matrix4 cameraSpace = D3D11Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
 		meshBound.Transform(cameraSpace);
 		if (frustum.Cull(meshBound))
 		{
-			itr->m_bVisible = true;
+			m_tree[i]->m_bVisible = true;
 		}
 		else
 		{
-			itr->m_bVisible = false;
+			m_tree[i]->m_bVisible = false;
 		}
 	}
 }
@@ -55,8 +58,10 @@ void SceneGraph::Render()
 	m_PSCBuffer.BindToRenderer();
 
 	int count = 0; //
-	for (auto itr : m_tree)
+	const unsigned int size = m_tree.Size();
+	for (int i = 0; i < size; ++i)
 	{
+		MeshComponent* itr = m_tree[i];
 		if (itr->m_bVisible) count++; //
 
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
@@ -115,8 +120,10 @@ void SceneGraph::ShadowMapGeneration()
 		if (currLight->IsCastShadow())
 		{
 			D3D11Renderer::GetInstance()->m_pD3D11Context->ClearDepthStencilView(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex())->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-			for (auto itr : m_tree)
+			const unsigned int size = m_tree.Size();
+			for (int i = 0; i < size; ++i)
 			{
+				MeshComponent* itr = m_tree[i];
 				// only cast shadow for skeletal mesh for now
 				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
 				if (anim != nullptr)
@@ -133,7 +140,8 @@ void SceneGraph::ShadowMapGeneration()
 					{
 						if (itr.second->isActive())
 						{
-							for (int index = 0; index < itr.second->m_vAnimations.size(); ++index)
+							const unsigned int size = itr.second->m_vAnimations.Size();
+							for (int index = 0; index < size; ++index)
 							{
 								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 							}
@@ -153,12 +161,12 @@ void SceneGraph::ShadowMapGeneration()
 
 void SceneGraph::AddComponent(MeshComponent * meshComponent)
 {
-	m_tree.push_back(meshComponent);
+	m_tree.Add(meshComponent);
 }
 
 void SceneGraph::ADD_DEBUG_DRAWING(MeshComponent * meshComponent)
 {
-	DEBUG_DRAWING_TREE.push_back(meshComponent);
+	DEBUG_DRAWING_TREE.Add(meshComponent);
 }
 
 };

@@ -40,6 +40,19 @@ public:
 	}
 
 	/********************************************************************************
+	*	--- Destructor:
+	*	~MyArray()
+	*	This destructor will free the memory used by this array's items
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
+	~MyArray()
+	{
+		m_hElements.Free();
+	}
+
+	/********************************************************************************
 	*	--- Function:
 	*	Size()
 	*	This function will return the current size of this array
@@ -50,7 +63,7 @@ public:
 	*	--- Return:
 	*	@ size_t: the current size (number of items) of this array
 	********************************************************************************/
-	size_t Size()
+	inline size_t Size()
 	{
 		return m_iSize;
 	}
@@ -102,6 +115,22 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
+	*	Pop()
+	*	This function will virtually remove the last item by decrementing the size
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
+	void Pop()
+	{
+		m_iSize--;
+	}
+
+	/********************************************************************************
+	*	--- Function:
 	*	Clear(size_t)
 	*	This function will release the memory used by this array
 	*
@@ -132,6 +161,11 @@ public:
 	T operator[](const int index)
 	{
 		return ((T*)m_hElements.Raw())[index];
+	}
+
+	T* Raw()
+	{
+		return ((T*)m_hElements.Raw());
 	}
 
 private:

@@ -67,9 +67,10 @@ MeshData::~MeshData()
 void MeshData::Render()
 {
 	RenderTechnique* technique = m_Material.GetRenderTechnique();
-	for (auto pass : technique->m_vRenderPasses)
+	const unsigned int size = technique->m_vRenderPasses.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		pass->BindToRenderer();
+		technique->m_vRenderPasses[i]->BindToRenderer();
 
 		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
 		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -82,7 +83,7 @@ void MeshData::Render()
 			D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);
 		}
 
-		D3D11Renderer::GetInstance()->UnbindPSShaderResources(pass->GetTextureCount());
+		D3D11Renderer::GetInstance()->UnbindPSShaderResources(technique->m_vRenderPasses[i]->GetTextureCount());
 		D3D11Renderer::GetInstance()->UnbindRenderTargets();
 	}
 }

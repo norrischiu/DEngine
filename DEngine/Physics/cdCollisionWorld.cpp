@@ -39,8 +39,3 @@ CollisionWorld * CollisionWorld::GetInstance()
 	}
 	return m_pInstance;
 }
-
-std::vector<CollidableObject*>& CollisionWorld::getObjectList()
-{
-	return m_ObjectList;
-}

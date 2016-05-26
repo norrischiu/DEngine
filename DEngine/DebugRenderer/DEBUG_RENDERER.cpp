@@ -7,6 +7,8 @@ namespace DE
 DEBUG_RENDERER* DEBUG_RENDERER::m_pInstance = 0;
 
 DEBUG_RENDERER::DEBUG_RENDERER()
+	: m_vDbgMeshs(0)
+	, m_vRenderFlags(0)
 {
 	m_m2DProjection = Matrix4::OrthographicProjection(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 1.0f);
 

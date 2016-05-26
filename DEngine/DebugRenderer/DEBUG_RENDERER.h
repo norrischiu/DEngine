@@ -6,6 +6,7 @@
 #include "Physics\cdAabb.h"
 #include "Helpers\TextHelper.h"
 #include "Graphics\Scene\SceneGraph.h"
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -39,37 +40,37 @@ public:
 		corners[5] = Vector3(m_Min.GetX(), m_Max.GetY(), m_Max.GetZ());
 		corners[6] = m_Max;
 		corners[7] = Vector3(m_Max.GetX(), m_Min.GetY(), m_Max.GetZ());
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[1]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[2]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[3]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[0]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[4], corners[5]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[5], corners[6]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[6], corners[7]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[7], corners[4]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[0], corners[4]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[1], corners[5]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[2], corners[6]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
-		m_vDbgMeshs.push_back(drawer.draw_line(corners[3], corners[7]));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[0], corners[1]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[1], corners[2]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[2], corners[3]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[3], corners[0]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[4], corners[5]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[5], corners[6]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[6], corners[7]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[7], corners[4]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[0], corners[4]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[1], corners[5]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[2], corners[6]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(corners[3], corners[7]));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
 	}
 
 	void DRAW_2D_TEXT(const char* text, unsigned int screenX, unsigned int screenY)
 	{
 		TextHelper txtHelper;
 		MeshData* meshData = txtHelper.CreateTextMeshData(text);
-		m_vDbgMeshs.push_back(meshData);
+		m_vDbgMeshs.Add(meshData);
 	}
 
 	void DRAW_2D_MESH(MeshData* meshdata)
@@ -83,8 +84,8 @@ public:
 	void DRAW_RAY_SEGMENT(Vector3 start, Vector3 end)
 	{
 		Debug drawer;
-		m_vDbgMeshs.push_back(drawer.draw_line(start, end));
-		m_vRenderFlags.push_back(MESH3D_WIREFRAME);
+		m_vDbgMeshs.Add(drawer.draw_line(start, end));
+		m_vRenderFlags.Add(MESH3D_WIREFRAME);
 	}
 
 	static DEBUG_RENDERER* GetInstance()
@@ -107,7 +108,8 @@ public:
 		m_VSCBuffer.BindToRenderer();
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
 
-		for (int i = 0; i < m_vDbgMeshs.size(); ++i)
+		const unsigned int size = m_vDbgMeshs.Size();
+		for (int i = 0; i < size; ++i)
 		{
 			/*if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
 			{
@@ -161,14 +163,14 @@ public:
 
 	void PostRender()
 	{
-		for (MeshData* meshData : m_vDbgMeshs)
+		const unsigned int size = m_vDbgMeshs.Size();
+		for (int i = 0; i < size; ++i)
 		{
-			meshData->m_Material.Destruct();
-			delete meshData;
-			meshData = nullptr;
+			m_vDbgMeshs[i]->m_Material.Destruct();
+			delete m_vDbgMeshs[i];
 		}
-		m_vDbgMeshs.clear();
-		m_vRenderFlags.clear();
+		m_vDbgMeshs.Clear();
+		m_vRenderFlags.Clear();
 	}
 
 private:
@@ -179,9 +181,9 @@ private:
 	static DEBUG_RENDERER*						m_pInstance;
 
 	// Array of debug mesh
-	std::vector<MeshData*>						m_vDbgMeshs;
+	MyArray<MeshData*>							m_vDbgMeshs;
 
-	std::vector<int>							m_vRenderFlags;
+	MyArray<int>								m_vRenderFlags;
 
 	// Default orthgraphic projection
 	Matrix4										m_m2DProjection;

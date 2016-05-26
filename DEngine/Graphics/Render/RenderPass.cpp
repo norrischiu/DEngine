@@ -31,17 +31,14 @@ void RenderPass::BindToRenderer()
 		D3D11Renderer::GetInstance()->UnbindRenderTargets();
 		D3D11Renderer::GetInstance()->m_pD3D11Context->OMSetRenderTargets(0, nullptr, m_pDSV);
 	}
-	for (int i = 0; i < m_vTextureSRVs.size(); i++)
+	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, m_vTextureSRVs.Size(), m_vTextureSRVs.Raw());
+	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, m_vSamplerState.Size(), m_vSamplerState.Raw());
+	//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
+	//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetSamplers(0, 1, &m_vSamplerState[i]);
+	if (m_pDS)
 	{
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetSamplers(0, 1, &m_vSamplerState[0]);
-		//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
-		//D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetSamplers(0, 1, &m_vSamplerState[i]);
-		if (m_pDS)
-		{
-			D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
-			D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetSamplers(0, 1, &m_vSamplerState[i]);
-		}
+		D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetShaderResources(0, m_vTextureSRVs.Size(), m_vTextureSRVs.Raw());
+		D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetSamplers(0, m_vSamplerState.Size(), m_vSamplerState.Raw());
 	}
 }
 

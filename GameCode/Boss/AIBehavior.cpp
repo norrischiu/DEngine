@@ -101,10 +101,6 @@ void AIBehavior::BossBehavior()
 		new (h) Boss_Punch_START_Event;
 		DE::EventQueue::GetInstance()->Add(h, DE::GAME_EVENT);
 	}
-
-	static wchar_t t[64];
-	swprintf(t, 64, L"distance: %f\n", distance);
-	OutputDebugStringW(t);
 	
 	preDist = distance;
 }

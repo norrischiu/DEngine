@@ -41,11 +41,11 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 	fscanf(pFile, "%s", &clipName);
 	fscanf(pFile, "%i", &iNumJoints);
 	fscanf(pFile, "%i", &iNumFrames);
-	AnimationSet* animSet = new AnimationSet(0.0f, iNumFrames * 1.0f / 30.0f);
+	AnimationSet* animSet = new AnimationSet(iNumFrames * 1.0f / 30.0f, iNumJoints);
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
-		Animation* anim = new Animation;
+		Animation* anim = new Animation(iNumFrames);
 		for (int j = 0; j < iNumFrames; ++j)
 		{
 			fscanf(pFile, "%f %f %f %f", &quat[0], &quat[1], &quat[2], &quat[3]);
@@ -99,7 +99,8 @@ void AnimationController::Update(float deltaTime)
 	{
 		*m_skeleton->m_vGlobalPose[0] = SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, 0), GetPoseFromState(m_pASM->m_pCurrState, 0), m_pASM->m_fBlendValue).Matrix();
 		*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
-		for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+		const unsigned int size = m_skeleton->GetJointsCount();
+		for (int i = 1; i < size; ++i)
 		{
 			const Joint& currJoint = m_skeleton->m_vJoints[i];
 			*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * SQT::LerpSQT(GetPoseFromState(m_pASM->m_pPrevState, i), GetPoseFromState(m_pASM->m_pCurrState, i), m_pASM->m_fBlendValue).Matrix();
@@ -114,7 +115,8 @@ void AnimationController::Update(float deltaTime)
 		{
 			*m_skeleton->m_vGlobalPose[0] = GetPoseFromState(m_pASM->m_pCurrState, 0).Matrix();
 			*m_skeleton->m_vWorldGlobalPose[0] = *m_pOwner->GetTransform() * *m_skeleton->m_vGlobalPose[0];
-			for (int i = 1; i < m_skeleton->m_vJoints.size(); ++i)
+			const unsigned int size = m_skeleton->GetJointsCount();
+			for (int i = 1; i < size; ++i)
 			{
 				const Joint& currJoint = m_skeleton->m_vJoints[i];
 				*m_skeleton->m_vGlobalPose[i] = *m_skeleton->m_vGlobalPose[currJoint.m_iParent] * GetPoseFromState(m_pASM->m_pCurrState, i).Matrix();
@@ -151,7 +153,7 @@ SQT AnimationController::GetPoseFromSingleSet(AnimationSet * set, const int join
 
 SQT AnimationController::GetPoseFromBlendTree(BlendTree * btree, const int jointIndex)
 {
-	int numClips = btree->m_vClipnames.size();
+	int numClips = btree->m_vClipnames.Size();
 	float factor = btree->m_fBlendFactor;
 	AnimationSet* fromSet = nullptr;
 	AnimationSet* toSet = nullptr;
@@ -187,7 +189,7 @@ bool AnimationController::IsStateAnimationSetActive(AnimationStateMachine::State
 {
 	if (pState->m_bUseBlendTree)
 	{
-		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.size(); ++i)
+		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.Size(); ++i)
 		{
 			if (!getAnimationSet(pState->m_BlendTree->m_vClipnames[i])->isActive())
 			{

@@ -10,6 +10,9 @@ namespace DE
 {
 
 Skeleton::Skeleton(const char* name)
+	: m_vJoints(0)
+	, m_vGlobalPose(0)
+	, m_vWorldGlobalPose(0)
 {
 	m_ID = ComponentID;
 
@@ -21,7 +24,9 @@ Skeleton::Skeleton(const char* name)
 	float transform[16];
 	fscanf(pFile, "%s", &c);
 	fscanf(pFile, "%i", &iNumJoints);
-	//m_vLocalPose.resize(iNumJoints, new Matrix4);
+	m_vJoints.Resize(iNumJoints);
+	m_vGlobalPose.Resize(iNumJoints);
+	m_vWorldGlobalPose.Resize(iNumJoints);
 	for (int i = 0; i < iNumJoints; ++i)
 	{
 		fscanf(pFile, "%s", &c);
@@ -30,17 +35,17 @@ Skeleton::Skeleton(const char* name)
 			fscanf(pFile, "%f", &transform[j]);
 		}
 		fscanf(pFile, "%i", &parentIndex);
-		m_vJoints.push_back(Joint(transform, parentIndex));
-		m_vGlobalPose.push_back(new Matrix4);
-		m_vWorldGlobalPose.push_back(new Matrix4);
+		m_vJoints.Add(Joint(transform, parentIndex));
+		m_vGlobalPose.Add(new Matrix4);
+		m_vWorldGlobalPose.Add(new Matrix4);
 	}
 	fclose(pFile);
 }
 
 Skeleton::~Skeleton()
 {
-	m_vJoints.clear();
-	m_vGlobalPose.clear();
+	m_vJoints.Clear();
+	m_vGlobalPose.Clear();
 }
 
 void Skeleton::Update(float deltaTime)

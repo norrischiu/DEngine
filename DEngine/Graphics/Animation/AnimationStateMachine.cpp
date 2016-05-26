@@ -53,7 +53,7 @@ void AnimationStateMachine::SetStateAnimationSetActive(State* pState, bool isAct
 {
 	if (pState->m_bUseBlendTree)
 	{
-		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.size(); ++i)
+		for (int i = 0; i < pState->m_BlendTree->m_vClipnames.Size(); ++i)
 		{
 			m_pController->setActiveAnimationSet(pState->m_BlendTree->m_vClipnames[i], isActive);
 		}
