@@ -68,7 +68,11 @@ public:
 	********************************************************************************/
 	void Add(T item)
 	{
-		if (m_iSize > m_iCapacity)
+		if (m_iCapacity == 0)
+		{
+			Resize(1);
+		}
+		if (m_iSize >= m_iCapacity)
 		{
 			Resize(m_iCapacity * 2);
 		}
@@ -89,6 +93,7 @@ public:
 	********************************************************************************/
 	void Resize(size_t capacity)
 	{
+		m_iCapacity = capacity;
 		Handle hNewElements(sizeof(T) * capacity);
 		memcpy(hNewElements.Raw(), m_hElements.Raw(), sizeof(T) * m_iSize);
 		m_hElements.Free();
@@ -109,6 +114,7 @@ public:
 	void Clear()
 	{
 		m_hElements.Free();
+		m_iSize = 0;
 	}
 
 	/********************************************************************************

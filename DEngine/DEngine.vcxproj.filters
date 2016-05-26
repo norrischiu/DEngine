@@ -558,6 +558,9 @@
     <ClInclude Include="Graphics\DDSLoader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\MyArray.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
