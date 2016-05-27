@@ -36,7 +36,10 @@ public:
 	{
 		m_iSize = 0;
 		m_iCapacity = capacity;
-		m_hElements.Set(sizeof(T) * capacity);
+		if (m_iCapacity > 0)
+		{
+			m_hElements.Set(sizeof(T) * capacity);
+		}
 	}
 
 	/********************************************************************************
@@ -106,10 +109,14 @@ public:
 	********************************************************************************/
 	void Resize(size_t capacity)
 	{
+		unsigned int oldCapacity = m_iCapacity;
 		m_iCapacity = capacity;
 		Handle hNewElements(sizeof(T) * capacity);
-		memcpy(hNewElements.Raw(), m_hElements.Raw(), sizeof(T) * m_iSize);
-		m_hElements.Free();
+		if (oldCapacity > 0)
+		{
+			memcpy(hNewElements.Raw(), m_hElements.Raw(), sizeof(T) * m_iSize);
+			m_hElements.Free();
+		}
 		m_hElements = hNewElements;
 	}
 
@@ -142,7 +149,10 @@ public:
 	********************************************************************************/
 	void Clear()
 	{
-		m_hElements.Free();
+		if (m_iCapacity > 0)
+		{
+			m_hElements.Free();
+		}
 		m_iSize = 0;
 	}
 
