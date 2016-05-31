@@ -1,18 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="MainPlayer">
-      <UniqueIdentifier>{56432a67-40e2-4233-aee0-30c6b29fa261}</UniqueIdentifier>
+    <Filter Include="Boss">
+      <UniqueIdentifier>{FC27837C-E85E-840D-914B-6A107D61000F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Event">
-      <UniqueIdentifier>{a35c1f70-406e-4497-b3c5-73b9eb7adc3f}</UniqueIdentifier>
+      <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Boss">
-      <UniqueIdentifier>{a7e829ff-f99a-46e7-9397-706ee0687d8c}</UniqueIdentifier>
+    <Filter Include="MainPlayer">
+      <UniqueIdentifier>{770CFF4C-63C4-409A-CCCB-19F6B8A2DB8A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClInclude Include="Boss\AIBehavior.h">
+      <Filter>Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss\Boss.h">
+      <Filter>Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss\BossASM.h">
+      <Filter>Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\GameEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="MainPlayer\Player.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\PlayerASM.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\PlayerMC.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPlayer\ThirdPersonCamera.h">
+      <Filter>MainPlayer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Boss\AIBehavior.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss\Boss.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss\BossASM.cpp">
+      <Filter>Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="MainPlayer\Player.cpp">
       <Filter>MainPlayer</Filter>
     </ClCompile>
@@ -22,42 +58,6 @@
     <ClCompile Include="MainPlayer\PlayerMC.cpp">
       <Filter>MainPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="GameLoop.cpp" />
-    <ClCompile Include="Boss\Boss.cpp">
-      <Filter>Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss\AIBehavior.cpp">
-      <Filter>Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss\BossASM.cpp">
-      <Filter>Boss</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GameLoop.h" />
-    <ClInclude Include="MainPlayer\Player.h">
-      <Filter>MainPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="MainPlayer\PlayerASM.h">
-      <Filter>MainPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="Event\GameEvent.h">
-      <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="MainPlayer\PlayerMC.h">
-      <Filter>MainPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="MainPlayer\ThirdPersonCamera.h">
-      <Filter>MainPlayer</Filter>
-	</ClInclude>
-    <ClInclude Include="Boss\Boss.h">
-      <Filter>Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss\AIBehavior.h">
-      <Filter>Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss\BossASM.h">
-      <Filter>Boss</Filter>
-    </ClInclude>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
 </Project>

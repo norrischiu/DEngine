@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="AI">
+      <UniqueIdentifier>{EF725900-DBFE-870B-44AD-880B3058880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\PathFinding">
+      <UniqueIdentifier>{4A39F1B7-3607-E5BD-1F9B-55E40B08C122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugRenderer">
+      <UniqueIdentifier>{836553AA-EF25-CFE0-B860-185E24E013BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{D652F52D-C20A-377B-2B12-10D717E9D16B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Animation">
+      <UniqueIdentifier>{855FDEBF-7143-9F15-DAA3-9968C6A68997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD">
+      <UniqueIdentifier>{66F1684A-5254-F8EE-FBD9-30A5E71BC471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement">
+      <UniqueIdentifier>{605FD465-CC96-1CFD-D5A0-8020415743F6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\ProgressBar">
+      <UniqueIdentifier>{D9CB340E-4585-9FB8-CEE4-B9923A9D5528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\HUD\HUDElement\TextBox">
+      <UniqueIdentifier>{7D0BF56C-E9EE-03AD-F2F1-31E95E54CAFD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\ParticleSystem">
+      <UniqueIdentifier>{3E7ADAEA-AAB1-2282-B3BB-86A51F72497B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render">
+      <UniqueIdentifier>{C51C55AE-31A8-C272-3AB9-4567A6C31E73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Scene">
+      <UniqueIdentifier>{B3383A89-9F06-2E8F-889A-9EB574070AF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Skydome">
+      <UniqueIdentifier>{C11DB9D4-AD16-D826-D648-BDABC2A0B732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Terrain">
+      <UniqueIdentifier>{7A2C3D13-6625-5C65-8F57-41EA7BAF3B71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{D8389B9D-4418-1A39-4D30-A50FB98E809A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{3D9E990D-A9B2-C1BE-7234-651EDE07BEEF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{BE94DDC2-AA36-0899-93F1-1BED7F328FE9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{DCCA4FC7-C86C-7A9D-B127-8EF19D6801EE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{888B590D-F46A-D8A8-FD82-637F69E13E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{EFAC8DF2-5B8C-0C8E-64A4-9764D00273EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{6AD049D2-5672-74A8-3F2D-88FC2B6EFBF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{667B2A0E-D28F-52BF-9B11-F61E07E54EF0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{010A8043-6D74-34BA-B6B2-E55F225C120F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\DS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\GS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\HS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_PPE_Ambient.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_PPE_BlurH.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_PPE_BlurV.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_SSReflection_ppe.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_diffuse.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_phong_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_red.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_texture.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_texture_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_vertex1P1N1T1UV_DiffuseBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecular_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PS_vertex1P1N1T1UV_Diffuse_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P1D.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P1N1D.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P1N1T1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P1N1T1UV4J.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_vertex1P1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\vertex1P1N.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AI\PathFinding\AIController.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowField.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
+      <Filter>AI\PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h">
+      <Filter>DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer\debug.h">
+      <Filter>DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EngineEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventQueue.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\InputEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameWorld.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalInclude.h" />
+    <ClInclude Include="Graphics\Animation\Animation.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationController.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationSet.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\AnimationStateMachine.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\BlendTree.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\Joint.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Animation\Skeleton.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\D3D11Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DDSLoader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUD.h">
+      <Filter>Graphics\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h">
+      <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IndexBufferEngine.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Material.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshData.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Emitter.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Particle.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\ParticleSystem.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystem\Random.h">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\PostProcessEffect.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\CBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\HSDSPerFrameCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\PSPerLightCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\PSPerMaterialCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\RenderPass.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\RenderTechnique.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\State.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\Texture.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\VSGSPSPerFrameCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\VSMatrixPaletteCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Scene\SceneGraph.h">
+      <Filter>Graphics\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ShaderManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
+      <Filter>Graphics\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Terrain\Terrain.h">
+      <Filter>Graphics\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Terrain\TerrainBuilder.h">
+      <Filter>Graphics\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexBufferEngine.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexFormat.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers\GeometryHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers\TextHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\DirectionalLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\LightComponent.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\LightManager.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\PointLightComponent.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\SpotLightComponent.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Frustum.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathHelper.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Plane.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\SQT.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\simdmath.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Handle.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryManager.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryPool.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Camera.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\CameraComponent.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Component.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\MovementController.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Transform.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdAabb.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdBody.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdCollide.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdCollisionWorld.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdPoint.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdRay.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdSphere.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\cdobject.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Assertion.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\FileSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Keyboard.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Mouse.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\WinMsgHandler.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Geometry.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\MyArray.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\MyHashMap.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AI\PathFinding\AIController.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowField.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp">
+      <Filter>AI\PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp">
+      <Filter>DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer\Debug.cpp">
+      <Filter>DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\EventQueue.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameWorld.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Animation.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationController.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationSet.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\AnimationStateMachine.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Joint.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Animation\Skeleton.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\D3D11Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DDSLoader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GBuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUD.cpp">
+      <Filter>Graphics\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp">
+      <Filter>Graphics\HUD\HUDElement</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
+      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IndexBufferEngine.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Material.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\MeshComponent.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\MeshData.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\MeshManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\Emitter.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystem\ParticleSystem.cpp">
+      <Filter>Graphics\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\PostProcessEffect.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\CBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\HSDSPerFrameCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\PSPerLightCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\PSPerMaterialCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\RenderPass.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\RenderTechnique.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\State.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\VSGSPSPerFrameCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\VSMatrixPaletteCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Scene\SceneGraph.cpp">
+      <Filter>Graphics\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ShaderManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp">
+      <Filter>Graphics\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Terrain\Terrain.cpp">
+      <Filter>Graphics\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp">
+      <Filter>Graphics\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextureManager.cpp">
+      <Filter>Graphics</Filter>
+<<<<<<< Updated upstream
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_texture.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_red.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_diffuse.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_phong_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_texture_gbuffer.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1UV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_SSReflection_ppe.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_BlurV.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_BlurH.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1N1T1UV4J.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GS_stream_out.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_fire.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_terrain.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_Diffuse_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_vertex1P1N1T1UV_DiffuseSpecular_deferred.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\VS_vertex1P1D.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PS_PPE_Ambient.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\cbuffer.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+=======
+    </ClCompile>
+    <ClCompile Include="Graphics\VertexBufferEngine.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Helpers\TextHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\LightComponent.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\LightManager.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\simdmath.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\MemoryManager.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\CameraComponent.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\MovementController.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdAabb.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdBody.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdCollide.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdCollisionWorld.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdObject.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdPoint.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdRay.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\cdSphere.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Keyboard.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Mouse.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+>>>>>>> Stashed changes
+  </ItemGroup>
+</Project>
