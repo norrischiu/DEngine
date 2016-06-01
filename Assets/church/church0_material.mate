@@ -1,0 +1,12 @@
+MATERIAL
+0.000000 0.000000 0.000000
+1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000
+12.000000
+3
+DiffuseColor
+sponza_thorn_diff.dds
+Bump
+sponza_thorn_bump.dds
+Specular
+sponza_thorn_spec.dds

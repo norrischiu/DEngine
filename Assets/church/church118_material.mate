@@ -1,0 +1,12 @@
+MATERIAL
+0.000000 0.000000 0.000000
+1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000
+12.000000
+3
+DiffuseColor
+sponza_column_a_diff.dds
+Bump
+sponza_column_a_bump.dds
+Specular
+sponza_column_a_spec.dds

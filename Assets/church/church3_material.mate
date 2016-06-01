@@ -1,0 +1,12 @@
+MATERIAL
+0.000000 0.000000 0.000000
+1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000
+12.000000
+3
+DiffuseColor
+spnza_bricks_a_diff.dds
+Bump
+spnza_bricks_a_bump.dds
+Specular
+spnza_bricks_a_spec.dds
