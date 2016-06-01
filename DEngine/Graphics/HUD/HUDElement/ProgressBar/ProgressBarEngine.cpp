@@ -31,7 +31,7 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 		if (mesh) {
 			mesh->Destruct();
 			m_cache[id].Free();
-			m_cache.erase(id);
+			m_cache.Remove(id);
 			if (progressBar->isShowText())
 			{
 				TextEngine::getInstance()->removeCacheByID(id);
@@ -135,18 +135,16 @@ void ProgressBarEngine::removeCacheByID(const char* id)
 	{
 		m_cache[id].Free();
 		((MeshComponent*)m_cache[id].Raw())->Destruct();
-		m_cache.erase(id);
+		m_cache.Remove(id);
 	}
 }
 
 void ProgressBarEngine::destructAndCleanUp()
 {
-	for (auto itr : m_cache)
+	m_cache.ForEachItem([](Handle item)
 	{
-		itr.second.Free();
-	}
-
-	m_cache.clear();
+		item.Free();
+	});
 
 	if (m_instance) {
 		delete m_instance;

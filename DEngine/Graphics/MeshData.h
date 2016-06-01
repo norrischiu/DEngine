@@ -4,7 +4,6 @@
 #define MESHDATA_H
 
 #include <d3d11.h>
-#include <vector>
 #include "Math\simdmath.h"
 #include "Material.h"
 #include "Physics\cdAABB.h"

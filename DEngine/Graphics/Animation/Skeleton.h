@@ -3,9 +3,7 @@
 // Engine include
 #include "Joint.h"
 #include "Object\Component.h"
-
-// C++ include
-#include <vector>
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -43,7 +41,7 @@ struct Skeleton : public Component
 	********************************************************************************/
 	inline const int GetJointsCount()
 	{
-		return m_vJoints.size();
+		return m_vJoints.Size();
 	}
 
 	/********************************************************************************
@@ -61,9 +59,9 @@ struct Skeleton : public Component
 	virtual void Update(float deltaTime) override;
 
 	static const int							ComponentID = ComponentID::SKELETON;	// Component ID
-	std::vector<Joint>							m_vJoints;			// array of joints
-	std::vector<Matrix4*>						m_vGlobalPose;		// Pose in model space
-	std::vector<Matrix4*>						m_vWorldGlobalPose;	// Pose in world space
+	MyArray<Joint>								m_vJoints;			// array of joints
+	MyArray<Matrix4*>							m_vGlobalPose;		// Pose in model space
+	MyArray<Matrix4*>							m_vWorldGlobalPose;	// Pose in world space
 };
 
 };

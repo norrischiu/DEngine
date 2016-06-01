@@ -199,7 +199,7 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 	if (textBox->hasUpdate()) {
 		if (m_cache[id].Raw()) {
 			m_cache[id].Free();
-			m_cache.erase(id);
+			m_cache.Remove(id);
 		}
 		textBox->setHasUpdate(false);
 	}
@@ -231,18 +231,16 @@ void TextEngine::removeCacheByID(const char* id)
 	if (m_cache[id])
 	{
 		m_cache[id].Free();
-		m_cache.erase(id);
+		m_cache.Remove(id);
 	}
 }
 
 void TextEngine::destructAndCleanUp()
 {
-	for (auto itr : m_cache)
+	m_cache.ForEachItem([](Handle item)
 	{
-		itr.second.Free();
-	}
-
-	m_cache.clear();
+		item.Free();
+	});
 
 	if (m_instance) {
 		delete m_instance;

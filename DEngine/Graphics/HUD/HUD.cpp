@@ -16,7 +16,7 @@ HUD::HUD()
 
 TextBox* HUD::addText(char* id, char* string, const HUDElement::Position pos, const HUDElement::FontSize fontSizePt, const HUDElement::Color color, const float duration)
 {
-	if (m_elements.find(id) != m_elements.end()) {
+	if (m_elements.Contain(id)) {
 		cleanUpCache(id);
 	}
 
@@ -43,14 +43,15 @@ HUDElement* HUD::getHUDElementById(const char* id)
 
 void HUD::removeHUDElementById(const char* id)
 {
-	if (m_elements.find(id) != m_elements.end())
+	if (m_elements.Contain(id))
 	{
-		m_elements.erase(id);
+		delete m_elements[id];
+		m_elements.Remove(id);
 	}
 
-	if (m_timer.find(id) != m_timer.end())
+	if (m_timer.Contain(id))
 	{
-		m_timer.erase(id);
+		m_timer.Remove(id);
 	}
 
 	cleanUpCache(id);
@@ -71,24 +72,18 @@ void HUD::cleanUpCache(const char* id)
 
 void HUD::update(const float delta_time)
 {
-	for (std::unordered_map<const char*, float>::iterator itr = m_timer.begin(); itr != m_timer.end();)
+	m_timer.ForEachPair([&](MyHashMap<float>::HashMapPair pair)
 	{
-		if ((int)m_elements[itr->first]->getDuration() != -1) {
-			itr->second += delta_time;
+		if ((int)m_elements[pair.m_Key]->getDuration() != -1) {
+			pair.m_Item += delta_time;
 
-			if (itr->second > m_elements[itr->first]->getDuration()) {
-				cleanUpCache(itr->first);
-				m_elements.erase(itr->first);
-				itr = m_timer.erase(itr);
-			}
-			else {
-				itr++;
+			if (pair.m_Item > m_elements[pair.m_Key]->getDuration()) {
+				cleanUpCache(pair.m_Key);
+				m_elements.Remove(pair.m_Key);
+				m_timer.Remove(pair.m_Key);
 			}
 		}
-		else {
-			itr++;
-		}
-	}
+	});
 }
 
 void HUD::Render()
@@ -98,15 +93,15 @@ void HUD::Render()
 
 	MeshComponent* meshComponent = nullptr;
 
-	for (auto l : m_elements)
+	m_elements.ForEachItem([&](HUDElement* item)
 	{
-		if (l.second->isVisible())
+		if (item->isVisible())
 		{
-			switch (l.second->getTypeID()) {
+			switch (item->getTypeID()) {
 			case HUDElement::TypeID::PROGRESSBAR:
 			{
-				meshComponent = ProgressBarEngine::getInstance()->makeProgress((ProgressBar*)l.second);
-				int numMeshComponent = ((ProgressBar*)l.second)->isShowText() ? 2 : 1;
+				meshComponent = ProgressBarEngine::getInstance()->makeProgress((ProgressBar*)item);
+				int numMeshComponent = ((ProgressBar*)item)->isShowText() ? 2 : 1;
 				for (int i = 0; i <= numMeshComponent; i++) {
 					ptr->WVPTransform = *meshComponent[i].m_pTransform;
 					m_pVSCBuffer->Update();
@@ -115,9 +110,9 @@ void HUD::Render()
 			}
 			break;
 			case HUDElement::TypeID::TEXTBOX:
-				if (strcmp(((TextBox*)l.second)->getText(), "") != 0)
+				if (strcmp(((TextBox*)item)->getText(), "") != 0)
 				{
-					meshComponent = TextEngine::getInstance()->makeText((TextBox*)l.second);
+					meshComponent = TextEngine::getInstance()->makeText((TextBox*)item);
 					ptr->WVPTransform = *meshComponent->m_pTransform;
 					m_pVSCBuffer->Update();
 
@@ -126,7 +121,7 @@ void HUD::Render()
 				break;
 			}
 		}
-	}
+	});
 }
 
 void HUD::destructAndCleanUp()

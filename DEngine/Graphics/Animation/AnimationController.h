@@ -7,10 +7,7 @@
 #include "AnimationStateMachine.h"
 #include "Object\Component.h"
 #include "Math\SQT.h"
-
-// C++ include
-#include <string>
-#include <unordered_map>
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -103,22 +100,21 @@ public:
 	********************************************************************************/
 	inline const int GetAnimationSetCount()
 	{
-		return m_animationSets.size();
+		return m_animationSets.Size();
 	}
 
 	/********************************************************************************
 	*	--- Function:
 	*	GetAnimationSets()
-	*	This function will return the unordered map containing all animation sets
+	*	This function will return the hash map containing all animation sets
 	*
 	*	--- Parameters:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ std::unordered_map<std::string, AnimationSet*>*: a pointer to the
-	*	unordered map
+	*	@ MyHashMap<AnimationSet*>: the hash map containing all animation sets
 	********************************************************************************/
-	inline std::unordered_map<std::string, AnimationSet*> GetAnimationSets()
+	inline MyHashMap<AnimationSet*> GetAnimationSets()
 	{
 		return m_animationSets;
 	}
@@ -258,7 +254,7 @@ public:
 
 private:
 
-	std::unordered_map<std::string, AnimationSet*>		m_animationSets;	// hash map of animation sets
+	MyHashMap<AnimationSet*>							m_animationSets;	// hash map of animation sets
 	Skeleton*											m_skeleton;		// pointer to skeleton component
 	AnimationStateMachine*								m_pASM;		// pointer to animation state machine component
 	bool												m_bPlaying;		// flag for whether any animation is playing, to fire ANIMATION_END event

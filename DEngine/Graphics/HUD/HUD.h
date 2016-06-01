@@ -1,10 +1,10 @@
 #pragma once
 
-#include <unordered_map>
 #include "Math/simdmath.h"
 #include "HUDElement\TextBox\TextBox.h"
 #include "HUDElement\ProgressBar\ProgressBar.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -28,8 +28,8 @@ public:
 	void destructAndCleanUp();
 
 private:
-	std::unordered_map<const char*, HUDElement*> m_elements;
-	std::unordered_map<const char*, float> m_timer;
+	MyHashMap<HUDElement*> m_elements;
+	MyHashMap<float> m_timer;
 	static HUD* m_instance;
 
 	VSPerObjectCBuffer*	m_pVSCBuffer;

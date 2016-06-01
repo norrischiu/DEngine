@@ -3,10 +3,10 @@
 
 #define MAX_LIGHT 100
 
-#include <vector>
 #include "LightComponent.h"
 #include "Math\simdmath.h"
 #include "Graphics\Render\Texture.h"
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -57,7 +57,7 @@ public:
 
 	Texture* GetShadowMap(int index)
 	{
-		return m_ShadowMaps[index];
+		return (Texture*) m_ShadowMaps[index].Raw();
 	}
 
 private:
@@ -66,10 +66,10 @@ private:
 	static LightManager*							m_pInstance;
 
 	// Storage of all lights
-	std::vector<LightComponent*>					m_vLights;
+	MyArray<LightComponent*>						m_vLights;
 
 	// Storage of all shadow maps
-	std::vector<Texture*>							m_ShadowMaps;
+	MyArray<Handle>									m_ShadowMaps;
 
 	// Number of lights
 	unsigned int									m_iNumLight;

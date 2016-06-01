@@ -8,6 +8,7 @@ namespace DE
 int GameObject::GameObjectID = 0;
 
 GameObject::GameObject()
+	:m_vComponents(1)
 {
 	DE::Handle hTransform(sizeof(Transform));
 	new (hTransform) Transform();
@@ -21,9 +22,10 @@ GameObject::GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-	for (auto itr : m_vComponents)
+	const unsigned int size = m_vComponents.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		itr->Update(deltaTime);
+		m_vComponents[i]->Update(deltaTime);
 	}
 }
 
@@ -60,7 +62,7 @@ void GameObject::TransformBy(const Matrix4& transform)
 void GameObject::AddComponent(Component * pComponent)
 {
 	pComponent->SetOwner(this);
-	m_vComponents.push_back(pComponent);
+	m_vComponents.Add(pComponent);
 }
 
 }; // namespace DE

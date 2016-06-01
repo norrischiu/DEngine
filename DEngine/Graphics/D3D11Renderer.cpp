@@ -10,7 +10,6 @@
 #include "DebugRenderer\DEBUG_RENDERER.h"
 #include "../GlobalInclude.h"
 
-#include <vector>
 #include <DXGI.h>
 
 namespace DE
@@ -21,7 +20,7 @@ namespace DE
 	void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	{
 		IDXGIAdapter * pAdapter;
-		std::vector <IDXGIAdapter*> vAdapters;
+		MyArray<IDXGIAdapter*> vAdapters(0);
 		IDXGIFactory* pFactory = NULL;
 		CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
 
@@ -29,17 +28,18 @@ namespace DE
 		pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND;
 			++i)
 		{
-			vAdapters.push_back(pAdapter);
+			vAdapters.Add(pAdapter);
 		}
 
 		DXGI_ADAPTER_DESC adapterDesc;
-		for (IDXGIAdapter* itr : vAdapters)
+		const unsigned int size = vAdapters.Size();
+		for (int i = 0; i < size; ++i)
 		{
-			itr->GetDesc(&adapterDesc);
+			vAdapters[i]->GetDesc(&adapterDesc);
 		}
 
 		static wchar_t s[64];
-		swprintf(s, 64, L"Adpaters: %i\n", vAdapters.size());
+		swprintf(s, 64, L"Adpaters: %i\n", vAdapters.Size());
 		OutputDebugStringW(s);
 
 		// Create device and swap chain
@@ -61,7 +61,7 @@ namespace DE
 		scData.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
 		// use default adapter
-		HRESULT hr = D3D11CreateDevice(vAdapters[0], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
+		HRESULT hr = D3D11CreateDevice(vAdapters[1], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
 			D3D11_SDK_VERSION, &m_pD3D11Device, NULL, &m_pD3D11Context);
 		assert(hr == S_OK);
 		hr = pFactory->CreateSwapChain(m_pD3D11Device, &scData, &m_pSwapChain);

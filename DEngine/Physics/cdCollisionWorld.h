@@ -1,6 +1,6 @@
 #ifndef CDCOLLISIONWORLD_H
 #define CDCOLLISIONWORLD_H
-#include <vector>
+
 #include "cdObject.h"
 #include "cdCollide.h"
 class CollidableObject;
@@ -16,12 +16,9 @@ public:
 
 	CollisionWorld* GetInstance();
 
-	std::vector<CollidableObject*>& getObjectList();
-	
-
 private:
 	CollisionWorld*						m_pInstance;
-	std::vector<CollidableObject*>		m_ObjectList;
+	//std::vector<CollidableObject*>		m_ObjectList;
 	
 };
 

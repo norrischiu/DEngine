@@ -4,10 +4,7 @@
 #include "Math\simdmath.h"
 #include "Math\SQT.h"
 #include "Skeleton.h"
-
-// C++ include
-#include <unordered_map>
-#include <string>
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -29,11 +26,12 @@ public:
 	*	This constructor will construct an animation class
 	*
 	*	--- Parameters:
+	*	@ size: the initial size of all frames
 	*	@ animationFPS: the animation frames per second in the animation definition
 	*	file
 	*	@ frame: the initial frame index
 	********************************************************************************/
-	Animation(const float animationFPS = 30.0f, const float frame = 1.0f);
+	Animation(size_t size = 0, const float animationFPS = 30.0f, const float frame = 1.0f);
 
 	/********************************************************************************
 	*	--- Destructor:
@@ -99,7 +97,7 @@ private:
 
 	float							m_currKeyframe;		// the current key frame index
 	float							m_animationFPS;		// the animation frames per second defined in animation definition file
-	std::vector<SQT>				m_Poses;		// array of poses
+	MyArray<SQT>					m_Poses;
 };
 
 };

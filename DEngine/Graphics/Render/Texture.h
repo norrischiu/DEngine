@@ -9,7 +9,6 @@
 
 // C++ include
 #include <assert.h>
-#include <vector>
 
 namespace DE
 {

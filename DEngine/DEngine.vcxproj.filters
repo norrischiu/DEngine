@@ -606,6 +606,9 @@
       <Filter>Graphics</Filter>
 <<<<<<< Updated upstream
     </ClInclude>
+    <ClInclude Include="Utilities\MyArray.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VS_vertex1P1UV.hlsl">

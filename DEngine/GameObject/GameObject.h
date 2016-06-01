@@ -5,7 +5,7 @@
 #include "Math\simdmath.h"
 #include "Object\Transform.h"
 #include "Physics\cdCollide.h"
-#include <vector>
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -41,11 +41,12 @@ public:
 	template<class T>
 	T*			GetComponent()
 	{
-		for (auto itr : m_vComponents)
+		const unsigned int size = m_vComponents.Size();
+		for (int i = 0; i < size; ++i)
 		{
-			if (itr->GetID() == T::ComponentID)
+			if (m_vComponents[i]->GetID() == T::ComponentID)
 			{
-				return (T*)itr;
+				return (T*)m_vComponents[i];
 			}
 		}
 		return nullptr;
@@ -81,7 +82,7 @@ protected:
 	int								m_iGameObjectID;
 
 	// Vector of all added components
-	std::vector<Component*>			m_vComponents;
+	MyArray<Component*>				m_vComponents;
 
 	// Default transform component
 	Transform*						m_pTransform;

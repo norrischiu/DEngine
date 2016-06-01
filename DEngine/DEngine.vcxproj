@@ -181,11 +181,8 @@
     <ClInclude Include="System\WinMsgHandler.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Utilities\Geometry.h" />
-<<<<<<< Updated upstream
-=======
     <ClInclude Include="Utilities\MyArray.h" />
     <ClInclude Include="Utilities\MyHashMap.h" />
->>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\PathFinding\AIController.cpp" />

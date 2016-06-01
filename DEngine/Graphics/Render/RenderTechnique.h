@@ -1,7 +1,7 @@
 #ifndef RENDER_TECHNIQUE_H_
 #define RENDER_TECHNIQUE_H_
 
-#include <vector>
+#include "Utilities\MyArray.h"
 #include "RenderPass.h"
 #include "Memory\Handle.h"
 
@@ -17,6 +17,7 @@ public:
 
 	// Empty constructor
 	RenderTechnique()
+		: m_vRenderPasses(0)
 	{
 	}
 
@@ -24,10 +25,10 @@ public:
 
 	void AddPass(RenderPass* pass)
 	{
-		m_vRenderPasses.push_back(pass);
+		m_vRenderPasses.Add(pass);
 	}
 
-	std::vector<RenderPass*>				m_vRenderPasses;
+	MyArray<RenderPass*>					m_vRenderPasses;
 
 	~RenderTechnique()
 	{

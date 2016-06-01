@@ -3,7 +3,7 @@
 
 #include <d3d11.h>
 #include <assert.h>
-#include <vector>
+#include "Utilities\MyArray.h"
 #include "Graphics\ShaderManager.h"
 #include "State.h"
 #include "Texture.h"
@@ -17,6 +17,8 @@ class RenderPass
 public:
 
 	RenderPass()
+		: m_vTextureSRVs(0)
+		, m_vSamplerState(0)
 	{
 		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		m_iRTVNum = 0;
@@ -126,25 +128,25 @@ public:
 
 	void AddTexture(Handle hTex)
 	{
-		m_vTextureSRVs.push_back(((Texture*)hTex.Raw())->GetSRV());
-		m_vSamplerState.push_back(((Texture*)hTex.Raw())->GetSamplerState());
+		m_vTextureSRVs.Add(((Texture*)hTex.Raw())->GetSRV());
+		m_vSamplerState.Add(((Texture*)hTex.Raw())->GetSamplerState());
 	}
 
 	void AddTexture(Texture* tex)
 	{
-		m_vTextureSRVs.push_back(tex->GetSRV());
-		m_vSamplerState.push_back(tex->GetSamplerState());
+		m_vTextureSRVs.Add(tex->GetSRV());
+		m_vSamplerState.Add(tex->GetSamplerState());
 	}
 
 	void PopTexture()
 	{
-		m_vTextureSRVs.pop_back();
-		m_vSamplerState.pop_back();
+		m_vTextureSRVs.Pop();
+		m_vSamplerState.Pop();
 	}
 
 	int GetTextureCount()
 	{
-		return m_vTextureSRVs.size();
+		return m_vTextureSRVs.Size();
 	}
 
 	void BindToRenderer();
@@ -194,9 +196,9 @@ private:
 	int										m_iRTVNum;
 
 	// Pointer to texture array
-	std::vector<ID3D11ShaderResourceView*>	m_vTextureSRVs;
+	MyArray<ID3D11ShaderResourceView*>		m_vTextureSRVs;
 
-	std::vector<ID3D11SamplerState*>		m_vSamplerState;
+	MyArray<ID3D11SamplerState*>			m_vSamplerState;
 };
 
 };

@@ -3,39 +3,32 @@
 namespace DE
 {
 
-AnimationSet::AnimationSet(const float currTime, const float duration, const bool active, const bool looping) :
-	m_fCurrTime(currTime), m_fDuration(duration), m_bActive(active), m_bLooping(looping)
+AnimationSet::AnimationSet(const float duration, const unsigned int size, const float currTime, const bool active, const bool looping)
+	: m_fCurrTime(currTime)
+	, m_fDuration(duration)
+	, m_bActive(active)
+	, m_bLooping(looping)
+	, m_vAnimations(size)
 {
 
 }
 
 AnimationSet::~AnimationSet()
 {
-	for (auto itr = m_vAnimations.begin(); itr != m_vAnimations.end();)
-	{
-		if (*itr) {
-			delete *itr;
-			itr = m_vAnimations.erase(itr);
-		}
-		else
-		{
-			itr++;
-		}
-	}
-
-	m_vAnimations.clear();
+	m_vAnimations.Clear();
 }
 
 void AnimationSet::AddAnimation(Animation* animation)
 {
-	m_vAnimations.push_back(animation);
+	m_vAnimations.Add(animation);
 }
 
 void AnimationSet::reset()
 {
-	for (auto itr : m_vAnimations)
+	const unsigned int size = m_vAnimations.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		itr->setCurrentKeyframe(1);
+		m_vAnimations[i]->setCurrentKeyframe(1);
 		m_fCurrTime = 0.0f;
 	}
 }
@@ -53,9 +46,10 @@ void AnimationSet::update(const float delta_time)
 			return;
 		}
 
-		for (auto itr : m_vAnimations)
+		const unsigned int size = m_vAnimations.Size();
+		for (int i = 0; i < size; ++i)
 		{
-			itr->update(delta_time);
+			m_vAnimations[i]->update(delta_time);
 		}
 	}
 }
