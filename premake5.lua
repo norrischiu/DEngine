@@ -40,6 +40,7 @@ project "GameCode"
 	links { "DEngine", "DXGI", "dxguid" }
 	includedirs "$(ProjectDir);$(SolutionDir);$(SolutionDir)DEngine"
 	flags { "WinMain" }
+	defines {"_CRT_SECURE_NO_WARNINGS"}
 	
 	files 
 	{ 
