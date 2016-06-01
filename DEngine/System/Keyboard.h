@@ -3,7 +3,6 @@
 
 #include "Event/EventQueue.h"
 #include "Event/InputEvent.h"
-#include <unordered_map>
 
 #define VK_LEFT 0x25
 #define VK_UP 0x26
@@ -28,111 +27,106 @@ namespace DE
 
 class Keyboard
 {
+	const static unsigned int KEY_NUM = 163;
+
 	struct State
 	{
-		std::unordered_map<int, bool> Keys = std::unordered_map<int, bool>
-			({
-				{ VK_W, false },
-				{ VK_S, false },
-				{ VK_A, false },
-				{ VK_D, false },
-				{ VK_SHIFT, false }
-		});
+		bool			Keys[KEY_NUM] = { false };
 	};
 
 public:
 
 	static void Update(float deltaTime)
 	{
-		for (auto itr : m_currState.Keys)
+		for (int key = 0; key < KEY_NUM; ++key)
 		{
-			if (itr.second & m_lastState.Keys[itr.first])
+			if (m_currState.Keys[key] & m_lastState.Keys[key])
 			{
-				if (itr.first == VK_W)
+				if (key == VK_W)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Hold_Event));
 					new (hEvt) Key_W_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_S)
+				if (key == VK_S)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Hold_Event));
 					new (hEvt) Key_S_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_A)
+				if (key == VK_A)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_A_Hold_Event));
 					new (hEvt) Key_A_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_D)
+				if (key == VK_D)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_D_Hold_Event));
 					new (hEvt) Key_D_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_SHIFT)
+				if (key == VK_SHIFT)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_LSHIFT_Hold_Event));
 					new (hEvt) Key_LSHIFT_Hold_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
 			}
-			if (itr.second & !m_lastState.Keys[itr.first])
+			if (m_currState.Keys[key] & !m_lastState.Keys[key])
 			{
-				if (itr.first == VK_W)
+				if (key == VK_W)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Press_Event));
 					new (hEvt) Key_W_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_S)
+				if (key == VK_S)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Press_Event));
 					new (hEvt) Key_S_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_A)
+				if (key == VK_A)
 				{
 					Handle hEvt(sizeof(Key_A_Press_Event));
 					new (hEvt) Key_A_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_D)
+				if (key == VK_D)
 				{
 					Handle hEvt(sizeof(Key_D_Press_Event));
 					new (hEvt) Key_D_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_SHIFT)
+				if (key == VK_SHIFT)
 				{
 					Handle hEvt(sizeof(Key_LSHIFT_Press_Event));
 					new (hEvt) Key_LSHIFT_Press_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
 			}
-			if (!itr.second & m_lastState.Keys[itr.first])
+			if (!m_currState.Keys[key] & m_lastState.Keys[key])
 			{
-				if (itr.first == VK_W)
+				if (key == VK_W)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_W_Release_Event));
 					new (hEvt) Key_W_Release_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_S)
+				if (key == VK_S)
 				{
 					Handle hEvt = MemoryManager::GetInstance()->Allocate(sizeof(Key_S_Release_Event));
 					new (hEvt) Key_S_Release_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_A)
+				if (key == VK_A)
 				{
 					Handle hEvt(sizeof(Key_A_Release_Event));
 					new (hEvt) Key_A_Release_Event;
 					EventQueue::GetInstance()->Add(hEvt, INPUT_EVENT);
 				}
-				if (itr.first == VK_D)
+				if (key == VK_D)
 				{
 					Handle hEvt(sizeof(Key_D_Release_Event));
 					new (hEvt) Key_D_Release_Event;

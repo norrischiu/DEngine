@@ -1,6 +1,5 @@
 #include "ShaderManager.h"
 #include <d3dcompiler.h>
-#include <vector>
 #include "Graphics\D3D11Renderer.h"
 
 namespace DE
@@ -11,13 +10,11 @@ namespace DE
 	void* ShaderManager::GetShader(const char* filename, D3D11_SHADER_VERSION_TYPE type)
 	{
 		std::string name(filename);
-		std::unordered_map<std::string, void*>::iterator result = m_mapShaders.find(name);
-		if (result == m_mapShaders.end())
+		if (!m_mapShaders.Contain(name.c_str()))
 		{
 			LoadShader(filename, type);
-			return m_mapShaders[filename];
 		}
-		else return (*result).second;
+		return m_mapShaders[filename];
 	}
 
 	void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE type)
@@ -44,7 +41,7 @@ namespace DE
 
 			inputLayout = nullptr;
 			CreateInputLayout(pRawData, inputLayout);
-			m_mapInputLayouts[filename] = inputLayout;
+			m_mapInputLayouts.Add(filename, inputLayout);
 
 			break;
 		case D3D11_SHVER_PIXEL_SHADER:
@@ -90,7 +87,7 @@ namespace DE
 			break;
 		}
 
-		m_mapShaders[filename] = pShader;
+		m_mapShaders.Add(filename, pShader);
 	}
 
 	D3D11_SO_DECLARATION_ENTRY* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum)
@@ -156,7 +153,7 @@ namespace DE
 	void ShaderManager::CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout)
 	{
 		HRESULT hr;
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescArray;
+		MyArray<D3D11_INPUT_ELEMENT_DESC> inputElementDescArray(0);
 
 		ID3D11ShaderReflection* pReflection;
 		hr = D3DReflect(VS->GetBufferPointer(), VS->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflection);
@@ -204,11 +201,11 @@ namespace DE
 			inputElementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			inputElementDesc.InstanceDataStepRate = 0;
 
-			inputElementDescArray.push_back(inputElementDesc);
+			inputElementDescArray.Add(inputElementDesc);
 		}
 
 		// Initialize input layout
-		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateInputLayout(&inputElementDescArray[0], i, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
+		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateInputLayout(inputElementDescArray.Raw(), i, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
 		assert(hr == S_OK);
 
 		pReflection->Release();

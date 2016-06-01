@@ -1,12 +1,12 @@
 #ifndef SCENEGRAPH_H_
 #define SCENEGRAPH_H_
 
-#include <vector>
 #include "Object\CameraComponent.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -40,14 +40,6 @@ public:
 	// Destructor
 	~SceneGraph()
 	{
-		for (auto itr : m_tree)
-		{
-			//delete itr;
-		}
-		for (auto itr : DEBUG_DRAWING_TREE)
-		{
-			//delete itr;
-		}
 	}
 
 private:
@@ -56,10 +48,10 @@ private:
 	static SceneGraph*								m_pInstance;
 
 	// Spatial data structure to store all render component
-	std::vector<MeshComponent*>						m_tree; // temp
+	MyArray<MeshComponent*>							m_tree;
 
 	// Temp storage for debug drawing
-	std::vector<MeshComponent*>						DEBUG_DRAWING_TREE; // temp
+	MyArray<MeshComponent*>							DEBUG_DRAWING_TREE;
 
 	VSPerObjectCBuffer								m_VSCBuffer;
 

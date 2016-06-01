@@ -301,6 +301,7 @@
     <ClInclude Include="System\WinMsgHandler.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Utilities\Geometry.h" />
+    <ClInclude Include="Utilities\MyArray.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\DS_terrain.hlsl">

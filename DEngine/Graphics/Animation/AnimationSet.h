@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
 #include "Animation.h"
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -24,14 +23,15 @@ public:
 	*	animations
 	*
 	*	--- Parameters:
-	*	@ currTime: the initial starting point of the animation from the first frame
 	*	@ duration: the duration of the animation clip
+	*	@ size: the initial size of all joints/animation struct
+	*	@ currTime: the initial starting point of the animation from the first frame
 	*	@ active: True if the animation set is initialized as active; False if
 	*	the animation set is initialized as NOT active
 	*	@ looping: True if the animation set represents a looping animation; False
 	*	if this animation will not loop
 	********************************************************************************/
-	AnimationSet(const float currTime, const float duration, const bool active = false, const bool looping = false);
+	AnimationSet(const float duration, const unsigned int size, const float currTime = 0.0f, const bool active = false, const bool looping = false);
 
 	/********************************************************************************
 	*	--- Destructor:
@@ -137,7 +137,7 @@ public:
 	********************************************************************************/
 	void update(const float delta_time);
 
-	std::vector<Animation*> m_vAnimations;		// the array of animation struct
+	MyArray<Animation*>		m_vAnimations;		// the array of animation struct
 
 private:
 

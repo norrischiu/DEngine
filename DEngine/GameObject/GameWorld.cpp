@@ -16,15 +16,16 @@ GameWorld * GameWorld::GetInstance()
 
 void GameWorld::Update(float deltaTime)
 {
-	for (auto itr : m_GameObjectList)
+	const unsigned int size = m_GameObjectList.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		itr->Update(deltaTime);
+		m_GameObjectList[i]->Update(deltaTime);
 	}
 }
 
 void GameWorld::AddGameObject(GameObject* gameObj)
 {
-	m_GameObjectList.push_back(gameObj);
+	m_GameObjectList.Add(gameObj);
 }
 
 GameObject* GameWorld::GetGameObjectAt(unsigned int index)
@@ -37,11 +38,12 @@ bool GameWorld::RayCast(Vector3 start, Vector3 end)
 	Ray ray((end - start).Normalize(), start);
 	float dist = (end - start).Length();
 	Collide query;
-	for (GameObject* itr : m_GameObjectList)
+	const unsigned int size = m_GameObjectList.Size();
+	for (int i = 0; i < size; ++i)
 	{
-		if (itr->GetComponent<Body>())
+		if (m_GameObjectList[i]->GetComponent<Body>())
 		{
-			query.collision(&ray, itr->GetComponent<Body>());
+			query.collision(&ray, m_GameObjectList[i]->GetComponent<Body>());
 			if (query.getCollide() && abs(query.getDistance()) <= dist)
 			{
 				return true;

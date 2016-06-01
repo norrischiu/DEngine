@@ -1,6 +1,5 @@
 #pragma once
 
-#include <unordered_map>
 #include <string>
 #include "../HUDElement.h"
 #include "Math/simdmath.h"

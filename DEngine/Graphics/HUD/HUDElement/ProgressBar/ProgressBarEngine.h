@@ -1,8 +1,8 @@
 #pragma once
-#include <unordered_map>
 #include "Graphics\MeshComponent.h"
 #include "Memory\Handle.h"
 #include "ProgressBar.h"
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -22,7 +22,7 @@ public:
 private:
 	static ProgressBarEngine* m_instance;
 
-	std::unordered_map<const char*, Handle> m_cache;
+	MyHashMap<Handle> m_cache;
 };
 
 }

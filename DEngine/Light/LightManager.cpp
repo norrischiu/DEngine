@@ -8,6 +8,8 @@ LightManager* LightManager::m_pInstance;
 
 LightManager::LightManager()
 	: m_iNumLight(0)
+	, m_vLights(0)
+	, m_ShadowMaps(0)
 {
 	//Debug geometry;
 	Vector3* pPointLightVertices = new Vector3[8];
@@ -64,7 +66,7 @@ LightManager::LightManager()
 
 void LightManager::AddLight(LightComponent* light)
 {
-	m_vLights.push_back(light);
+	m_vLights.Add(light);
 	m_iNumLight++;
 }
 
@@ -72,8 +74,8 @@ int LightManager::CreateShadowMap()
 {
 	Handle hTexture(sizeof(Texture));
 	new (hTexture) Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
-	m_ShadowMaps.push_back((Texture*)hTexture.Raw());
-	return m_ShadowMaps.size() - 1;
+	m_ShadowMaps.Add(hTexture);
+	return m_ShadowMaps.Size() - 1;
 }
 
 LightComponent* LightManager::GetLightAt(int index)

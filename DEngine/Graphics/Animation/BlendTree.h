@@ -3,9 +3,7 @@
 
 // Engine include
 #include "Memory\Handle.h"
-
-// C++ include
-#include <vector>
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -29,8 +27,23 @@ struct BlendTree
 
 	CUSTOM_MEMORY_DEFINE();
 
-	std::vector<char*>			m_vClipnames;		// array of names of animation clip
-	std::vector<float>			m_vWeightings;		// array of weighting according to the order in names array
+	/********************************************************************************
+	*	--- Constructor:
+	*	BlendTree()
+	*	This constructor will construct a blendtree and setting the two arrays to
+	*	have zero capacity, which means allocating no memory
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
+	BlendTree()
+		: m_vClipnames(0)
+		, m_vWeightings(0)
+	{
+	}
+
+	MyArray<char*>				m_vClipnames;		// array of names of animation clip
+	MyArray<float>				m_vWeightings;		// array of weighting according to the order in names array
 	float						m_fBlendFactor;		// the current blend factor between clips
 	eBlendType					m_eBlendType;		// the blend type
 };

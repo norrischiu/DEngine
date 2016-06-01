@@ -2,8 +2,8 @@
 #ifndef GAMEWORLD_H
 #define GAMEWORLD_H
 
-#include <vector>
-#include "GameObject.h";
+#include "GameObject.h"
+#include "Utilities\MyArray.h"
 
 namespace DE
 {
@@ -11,7 +11,9 @@ namespace DE
 class GameWorld
 {
 public:
-	GameWorld() {}
+	GameWorld() 
+		: m_GameObjectList(0)
+	{}
 
 	static GameWorld*					GetInstance();
 
@@ -23,7 +25,7 @@ public:
 
 	inline int GetGameObjectNum()
 	{
-		return m_GameObjectList.size();
+		return m_GameObjectList.Size();
 	}
 
 	bool RayCast(Vector3 start, Vector3 end);
@@ -33,16 +35,13 @@ public:
 	// Destructor
 	~GameWorld()
 	{
-		for (auto itr : m_GameObjectList)
-		{
-			delete itr;
-		}
+		m_GameObjectList.Clear();
 	}
 
 private:
 	static GameWorld*					m_pGameWorld;
 
-	std::vector<GameObject*>			m_GameObjectList;
+	MyArray<GameObject*>				m_GameObjectList;
 };
 
 };

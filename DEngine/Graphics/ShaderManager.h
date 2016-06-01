@@ -5,9 +5,8 @@
 
 #include <D3D11.h>
 #include <stdio.h>
-#include <unordered_map>
-#include <string>
 #include <d3d11shader.h>
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -54,14 +53,16 @@ public:
 
 	~ShaderManager()
 	{
-		std::unordered_map<std::string, void*>::iterator itr;
-		for (itr = m_mapShaders.begin(); itr != m_mapShaders.end(); ++itr)
+		m_mapShaders.ForEachItem([](void* item)
 		{
-			ID3D11DeviceChild* pS = (ID3D11DeviceChild*)itr->second;
+			ID3D11DeviceChild* pS = (ID3D11DeviceChild*)item;
 			pS->Release();
-		}
-		m_mapShaders.clear();
-		m_mapInputLayouts.clear();
+		});
+		m_mapInputLayouts.ForEachItem([](void* item)
+		{
+			ID3D11InputLayout* pS = (ID3D11InputLayout*)item;
+			pS->Release();
+		});
 	}
 
 private:
@@ -69,9 +70,9 @@ private:
 	// Singleton instance
 	static ShaderManager*									m_pInstance;
 
-	std::unordered_map<std::string, void*>					m_mapShaders;
+	MyHashMap<void*>										m_mapShaders;
 
-	std::unordered_map<std::string, ID3D11InputLayout*>		m_mapInputLayouts;
+	MyHashMap<ID3D11InputLayout*>							m_mapInputLayouts;
 };
 
 };

@@ -16,29 +16,28 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::AddComponent(char* id, Emitter * emitter)
 {
-	m_Particles[id] = emitter;
+	m_Particles.Add(id, emitter);
 }
 
 void ParticleSystem::SetVelocity(char* id, Vector3 & velocity)
 {
-
 	m_Velocity = velocity;
 }
 
 void ParticleSystem::Update(float delta_time)
 {
-	for (auto ptr : m_Particles)
+	m_Particles.ForEachItem([delta_time](Emitter* item)
 	{
-		ptr.second->Update(delta_time);
-	}
+		item->Update(delta_time);
+	});
 }
 
 void ParticleSystem::Render()
 {
-	for (auto ptr : m_Particles)
+	m_Particles.ForEachItem([](Emitter* item)
 	{
-		ptr.second->Draw();
-	}
+		item->Draw();
+	});
 }
 
 };

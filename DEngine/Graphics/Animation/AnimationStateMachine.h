@@ -5,9 +5,7 @@
 #include "Memory\Handle.h"
 #include "Object\Component.h"
 #include "BlendTree.h"
-
-// C++ include
-#include <unordered_map>
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -147,7 +145,7 @@ public:
 	{
 		Handle hState(sizeof(State));
 		new (hState) State(stateName, clipname, m_iNumState++);
-		m_mapStates.insert(std::make_pair(stateName, hState));
+		m_mapStates.Add(stateName, hState);
 	}
 
 	/********************************************************************************
@@ -167,7 +165,7 @@ public:
 	{
 		Handle hState(sizeof(State));
 		new (hState) State(stateName, blendTree, m_iNumState++);
-		m_mapStates.insert(std::make_pair(stateName, hState));
+		m_mapStates.Add(stateName, hState);
 	}
 
 	/********************************************************************************
@@ -332,7 +330,7 @@ protected:
 	
 	AnimationController*						m_pController;		// pointer to the animation controller associated with this state machine
 	Handle										m_mTransitions[TRANSITION_MAX][TRANSITION_MAX];		// transition matrix [from][to]
-	std::unordered_map<const char*, Handle>		m_mapStates;	// hash map of state name to state handle
+	MyHashMap<Handle>							m_mapStates;	// hash map of state name to state handle
 	unsigned int								m_iNumState;	// number of state	
 	State*										m_pCurrState;	// pointer to current state
 	State*										m_pPrevState;	// pointer to previous state

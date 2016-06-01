@@ -3,7 +3,7 @@
 #define PARTICLESYSTEM_H_
 
 #include "Emitter.h"
-#include <unordered_map>
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -41,7 +41,7 @@ public:
 private:
 	Vector3						m_Velocity;
 	static ParticleSystem*		m_pInstance;
-	std::unordered_map<const char*, Emitter*> m_Particles;
+	MyHashMap<Emitter*>			m_Particles;
 };
 
 };
