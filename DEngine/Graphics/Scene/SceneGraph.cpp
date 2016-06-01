@@ -75,16 +75,16 @@ void SceneGraph::Render()
 			Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
 			VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
 			const int jointCount = anim->GetAnimationSetCount();
-			for (auto itr : anim->GetAnimationSets())
+			anim->GetAnimationSets().ForEachItem([skel, palette](AnimationSet* item)
 			{
-				if (itr.second->isActive())
+				if (item->isActive())
 				{
 					for (int index = 0; index < skel->GetJointsCount(); ++index)
 					{
 						palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 					}
 				}
-			}
+			}); 
 			m_MatrixPalette.Update();
 		}
 
@@ -136,17 +136,16 @@ void SceneGraph::ShadowMapGeneration()
 
 					Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
 					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
-					for (auto itr : anim->GetAnimationSets())
+					anim->GetAnimationSets().ForEachItem([skel, palette](AnimationSet* item)
 					{
-						if (itr.second->isActive())
+						if (item->isActive())
 						{
-							const unsigned int size = itr.second->m_vAnimations.Size();
-							for (int index = 0; index < size; ++index)
+							for (int index = 0; index < skel->GetJointsCount(); ++index)
 							{
 								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
 							}
 						}
-					}
+					});
 					m_MatrixPalette.Update();
 				
 					// TODO: separete skeletal and static mesh

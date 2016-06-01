@@ -10,13 +10,11 @@ namespace DE
 	void* ShaderManager::GetShader(const char* filename, D3D11_SHADER_VERSION_TYPE type)
 	{
 		std::string name(filename);
-		std::unordered_map<std::string, void*>::iterator result = m_mapShaders.find(name);
-		if (result == m_mapShaders.end())
+		if (!m_mapShaders.Contain(name.c_str()))
 		{
 			LoadShader(filename, type);
-			return m_mapShaders[filename];
 		}
-		else return (*result).second;
+		return m_mapShaders[filename];
 	}
 
 	void ShaderManager::LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE type)
@@ -43,7 +41,7 @@ namespace DE
 
 			inputLayout = nullptr;
 			CreateInputLayout(pRawData, inputLayout);
-			m_mapInputLayouts[filename] = inputLayout;
+			m_mapInputLayouts.Add(filename, inputLayout);
 
 			break;
 		case D3D11_SHVER_PIXEL_SHADER:
@@ -89,7 +87,7 @@ namespace DE
 			break;
 		}
 
-		m_mapShaders[filename] = pShader;
+		m_mapShaders.Add(filename, pShader);
 	}
 
 	D3D11_SO_DECLARATION_ENTRY* ShaderManager::CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum)

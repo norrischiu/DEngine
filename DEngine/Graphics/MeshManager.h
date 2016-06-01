@@ -1,7 +1,7 @@
 // MeshManager.h: the class of a manager managing all mesh data
 
-#include <unordered_map>
 #include "MeshData.h"
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -12,8 +12,9 @@ class MeshManager
 public:
 	// Default empty constructor
 	MeshManager() {}
-	~MeshManager() {
-		m_MeshDataMap.clear();
+
+	~MeshManager() 
+	{
 	}
 
 	// Return singleton instance
@@ -36,7 +37,7 @@ private:
 	static MeshManager*								m_pInstance;
 
 	// Hash map of all mesh data
-	std::unordered_map<unsigned int, MeshData*>		m_MeshDataMap;
+	MyHashMap<MeshData*>							m_MeshDataMap;
 };
 
 };

@@ -4,9 +4,8 @@
 #define TEXTUREMANAGER_H_
 
 #include <stdio.h>
-#include <unordered_map>
-#include <string>
 #include <d3d11.h>
+#include "Utilities\MyHashMap.h"
 
 namespace DE
 {
@@ -44,13 +43,11 @@ public:
 
 	~TextureManager()
 	{
-		std::unordered_map<std::string, void*>::iterator itr;
-		for (itr = m_mapTexture.begin(); itr != m_mapTexture.end(); ++itr)
+		m_mapTexture.ForEachItem([](void* item)
 		{
-			ID3D11ShaderResourceView* pSRView = (ID3D11ShaderResourceView*)itr->second;
+			ID3D11ShaderResourceView* pSRView = (ID3D11ShaderResourceView*)item;
 			pSRView->Release();
-		}
-		m_mapTexture.clear();
+		});
 	}
 
 private:
@@ -58,7 +55,7 @@ private:
 	// Singleton instance
 	static TextureManager*									m_pInstance;
 
-	std::unordered_map<std::string, void*>					m_mapTexture;
+	MyHashMap<void*>										m_mapTexture;
 
 };
 

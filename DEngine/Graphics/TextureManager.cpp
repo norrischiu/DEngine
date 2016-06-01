@@ -11,13 +11,11 @@ void* TextureManager::GetTexture(const char* filename)
 {
 	std::string name(filename);
 	name = "../Assets/" + name;
-	std::unordered_map<std::string, void*>::iterator result = m_mapTexture.find(name);
-	if (result == m_mapTexture.end())
+	if (!m_mapTexture.Contain(name.c_str()))
 	{
 		LoadTexture(name.c_str());
-		return m_mapTexture[name.c_str()];
 	}
-	else return (*result).second;
+	return m_mapTexture[name.c_str()];
 }
 
 void TextureManager::LoadTexture(const char* filename)
@@ -31,7 +29,7 @@ void TextureManager::LoadTexture(const char* filename)
 	hr = CreateDDSTextureFromFile(D3D11Renderer::GetInstance()->m_pD3D11Device, pName, &pTexture, &pTexResourceView);
 	assert(hr == S_OK);
 
-	m_mapTexture[filename] = (void*)pTexResourceView;
+	m_mapTexture.Add(filename, (void*)pTexResourceView);
 }
 
 };

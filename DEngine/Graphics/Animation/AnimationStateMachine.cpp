@@ -7,6 +7,7 @@ namespace DE
 
 AnimationStateMachine::AnimationStateMachine(AnimationController* animController)
 	: m_pController(animController)
+	, m_mapStates()
 	, m_iNumState(0)
 	, m_fTransitionTime(0.0f)
 	, m_fBlendValue(0.0f)
@@ -72,11 +73,6 @@ AnimationStateMachine::~AnimationStateMachine()
 		{
 			m_mTransitions[i][j].Free();
 		}
-	}
-
-	for (auto itr : m_mapStates)
-	{
-		itr.second.Free();
 	}
 }
 

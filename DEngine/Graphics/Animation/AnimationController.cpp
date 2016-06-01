@@ -25,7 +25,7 @@ AnimationController::AnimationController(Skeleton* skeleton) : m_skeleton(skelet
 
 void AnimationController::addAnimationSet(const char* set_name, AnimationSet* animationSet)
 {
-	m_animationSets[set_name] = animationSet;
+	m_animationSets.Add(set_name, animationSet);
 }
 
 void AnimationController::CreateAnimationSets(const char* fileName)
@@ -65,16 +65,14 @@ void AnimationController::CreateAnimationSets(const char* fileName)
 
 AnimationSet* AnimationController::getAnimationSet(const char* set_name)
 {
-	auto t = m_animationSets.find(set_name);
-
-	if (t == m_animationSets.end()) {
+	if (!m_animationSets.Contain(set_name)) 
+	{
 		return nullptr;
 	}
-	else {
-		return t->second;
+	else 
+	{
+		return m_animationSets[set_name];
 	}
-
-	return nullptr;
 }
 
 void AnimationController::setActiveAnimationSet(const char* set_name, const bool active)
@@ -90,10 +88,10 @@ void AnimationController::setActiveAnimationSet(const char* set_name, const bool
 void AnimationController::Update(float deltaTime)
 {
 	m_bPlaying = false;
-	for (auto itr : m_animationSets)
+	m_animationSets.ForEachItem([deltaTime](AnimationSet* item)
 	{
-		itr.second->update(deltaTime);
-	}
+		item->update(deltaTime);
+	});
 
 	if (m_pASM->IsInTransition())
 	{
@@ -142,7 +140,7 @@ SQT AnimationController::GetPoseFromState(AnimationStateMachine::State* pState, 
 	}
 	else
 	{
-		return GetPoseFromSingleSet(m_animationSets.at(pState->m_sClipName), jointIndex);
+		return GetPoseFromSingleSet(m_animationSets[(pState->m_sClipName)], jointIndex);
 	}
 }
 
@@ -206,19 +204,6 @@ bool AnimationController::IsStateAnimationSetActive(AnimationStateMachine::State
 
 AnimationController::~AnimationController()
 {
-	for (auto itr = m_animationSets.begin(); itr != m_animationSets.end();)
-	{
-		if (itr->second)
-		{
-			delete itr->second;
-			itr = m_animationSets.erase(itr);
-		}
-		else {
-			itr++;
-		}
-	}
-
-	m_animationSets.clear();
 }
 
 };
