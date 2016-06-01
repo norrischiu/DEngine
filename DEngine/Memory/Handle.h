@@ -58,7 +58,11 @@ struct Handle
 
 	inline void Free()
 	{
-		MemoryManager::GetInstance()->Free(*this);
+		if (m_counter == 1)
+		{
+			MemoryManager::GetInstance()->Free(*this);
+		}
+		m_counter--;
 	}
 };
 
