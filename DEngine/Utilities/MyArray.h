@@ -9,12 +9,12 @@ namespace DE
 
 /*
 *	TEMPLATE CLASS: MyArray
-*	T is the class of the item class to be stored
-*	This is the default array to be used in DEngine, it behaves in similar
-*	way as std::vector, it doubles its capacity when the size exceeded the 
-*	capacity. It is strongly recommended to use this class instead of 
-*	std::vector or other STL data structure to keep clean record of memory
-*	usage and avoid dynamic memory allocation during gameplay
+*	T is the class of the item to be stored
+*	This is the default contiguous array to be used in DEngine, it behaves 
+*	in similar way as std::vector, it doubles its capacity when the size 
+*	exceeded the capacity. It is strongly recommended to use this class 
+*	instead of std::vector or other STL data structure to keep clean 
+*	record of memory usage and avoid dynamic memory allocation during gameplay
 */
 template <class T> 
 class MyArray
@@ -39,7 +39,26 @@ public:
 		if (m_iCapacity > 0)
 		{
 			m_hElements.Set(sizeof(T) * capacity);
+			memset(m_hElements.Raw(), NULL, sizeof(T) * capacity);
 		}
+	}
+
+	/********************************************************************************
+	*	--- Copy Constructor:
+	*	MyArray(MyArray&)
+	*	This constructor will construct an handle array by copying an existing array,
+	*	the underlying mechanics is to simply copy all member variables and imcrement
+	*	the counter at handle
+	*
+	*	--- Parameters:
+	*	@ other: the other MyArray object
+	********************************************************************************/
+	MyArray(MyArray& other)
+	{
+		m_hElements = other.m_hElements;
+		m_hElements.m_counter++;
+		m_iSize = other.m_iSize;
+		m_iCapacity = other.m_iCapacity;
 	}
 
 	/********************************************************************************
@@ -139,7 +158,8 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	Clear(size_t)
-	*	This function will release the memory used by this array
+	*	This function will clear the items in this array, leaving the capacity and
+	*	allocated memory unchanged
 	*
 	*	--- Parameters:
 	*	@ void
@@ -151,7 +171,7 @@ public:
 	{
 		if (m_iCapacity > 0)
 		{
-			m_hElements.Free();
+			memset(m_hElements.Raw(), NULL, sizeof(T) * m_iSize);
 		}
 		m_iSize = 0;
 	}
@@ -166,13 +186,24 @@ public:
 	*	@ index: the element index
 	*
 	*	--- Return:
-	*	@ T: the item located at the index
+	*	@ T&: the item located at the index
 	********************************************************************************/
-	T operator[](const int index)
+	T& operator[](const int index)
 	{
 		return ((T*)m_hElements.Raw())[index];
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	Raw()
+	*	This function will return the pointer to the beginning of this array
+	*
+	*	--- Parameters:
+	*	@ void:
+	*
+	*	--- Return:
+	*	@ T*: the pointer of the first element
+	********************************************************************************/
 	T* Raw()
 	{
 		return ((T*)m_hElements.Raw());
