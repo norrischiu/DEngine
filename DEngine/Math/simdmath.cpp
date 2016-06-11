@@ -163,7 +163,7 @@ void SIMDMatrix4::Invert()
 	tmp1 = _mm_shuffle_ps(tmp1, tmp1, 0x4E);
 	minor1 = _mm_add_ps(_mm_mul_ps(row2, tmp1), minor1);
 	minor2 = _mm_sub_ps(minor2, _mm_mul_ps(row1, tmp1));
-	// -----------------------------------------------
+	
 	tmp1 = _mm_mul_ps(row0, row2);
 	tmp1 = _mm_shuffle_ps(tmp1, tmp1, 0xB1);
 	minor1 = _mm_add_ps(_mm_mul_ps(row3, tmp1), minor1);
@@ -194,13 +194,9 @@ SIMDMatrix4 SIMDMatrix4::Inverse()
 
 SIMDMatrix4 SIMDMatrix4::Transpose()
 {
-	DirectX::XMMATRIX result = DirectX::XMMATRIX(_rows[0], _rows[1], _rows[2], _rows[3]);
-	result = DirectX::XMMatrixTranspose(result);
-	_rows[0] = result.r[0];
-	_rows[1] = result.r[1];
-	_rows[2] = result.r[2];
-	_rows[3] = result.r[3];
-	return *this;
+	SIMDMatrix4 result = *this;
+	_MM_TRANSPOSE4_PS(result._rows[0], result._rows[1], result._rows[2], result._rows[3]);
+	return result;
 }
 
 };
