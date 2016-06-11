@@ -20,6 +20,7 @@ __declspec(align(16)) class SIMDMatrix4
 {
 private:
 	__m128 _rows[4];
+	// column major matrix, requires post-multiply
 
 public:
 	friend class SIMDVector3;
@@ -371,7 +372,6 @@ public:
 		_rows[1] = result.r[1];
 		_rows[2] = result.r[2];
 		_rows[3] = result.r[3];
-		//_MM_TRANSPOSE4_PS(_rows[0], _rows[1], _rows[2], _rows[3]);
 	}
 	static SIMDMatrix4 OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
 
