@@ -30,7 +30,7 @@ struct Vertex1P
 struct Vertex1P1D
 {
 	Vector3								m_pos;
-	DirectX::XMFLOAT4					m_diffuse; // 16-byte offset
+	Vector4								m_diffuse; // 16-byte offset
 };
 
 // Vertex: Position, texture coordinate
