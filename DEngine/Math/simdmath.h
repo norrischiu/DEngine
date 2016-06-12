@@ -5,7 +5,6 @@
 #include <xmmintrin.h> // intrinics
 #include <smmintrin.h> // intrinics
 #include <math.h> // sin cos
-#include <DirectXMath.h> // DirectX helper methods (temp)
 #include "Memory\MemoryManager.h"
 
 namespace DE
@@ -781,11 +780,6 @@ public:
 		_data = result;
 	}
 
-	inline void MultiplyDX(const SIMDQuaternion& other)
-	{
-		_data = DirectX::XMQuaternionMultiply(_data, other._data);
-	}
-
 	/*SIMDQuaternion operator+(const SIMDQuaternion& other)
 	{
 		SIMDQuaternion result;
@@ -847,12 +841,6 @@ public:
 		return result;
 	}
 
-	static SIMDQuaternion SLerp(SIMDQuaternion a, SIMDQuaternion b, float t)
-	{
-		SIMDQuaternion result;
-		result._data = DirectX::XMQuaternionSlerp(a._data, b._data, t);
-		return result;
-	}
 };
 
 typedef SIMDVector3 Vector3;
