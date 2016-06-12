@@ -365,14 +365,8 @@ public:
 	static SIMDMatrix4 PerspectiveProjection(float fFOVy, float fAspectRatio, float fNear, float fFar);
 
 	//Set a orthographic projection matrix // temp
-	void CreateOrthographicProj(unsigned int width, unsigned int height, float zNear, float zFar)
-	{
-		DirectX::XMMATRIX result = DirectX::XMMatrixOrthographicLH(width, height, zNear, zFar);
-		_rows[0] = result.r[0];
-		_rows[1] = result.r[1];
-		_rows[2] = result.r[2];
-		_rows[3] = result.r[3];
-	}
+	void CreateOrthographicProj(unsigned int width, unsigned int height, float zNear, float zFar);
+
 	static SIMDMatrix4 OrthographicProjection(unsigned int width, unsigned int height, float zNear, float zFar);
 
 	// Inverts the matrix, store the result back to this
@@ -658,6 +652,7 @@ public:
 	inline void Transform(const SIMDMatrix4& mat)
 	{
 		// set w to 1.0f
+
 		__m128 one = _mm_set_ss(1.0f);
 		_data = _mm_insert_ps(_data, one, 0x30);
 
