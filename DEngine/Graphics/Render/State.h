@@ -4,9 +4,20 @@
 #include <assert.h>
 #include <d3d11.h>
 
+/*
+*	NAMESPACE: State
+*	Information enclosed in this namespace defined the default
+*	D3D11 states used in this engine. For example, depth stencil
+*	state, rasterizer state and blend state. This can be extended
+*	to allow more default state
+*/
 namespace State
 {
 
+	/*
+	*	ENUM
+	*	The name of the state
+	*/
 	enum
 	{
 		NULL_STATE,
@@ -23,8 +34,19 @@ namespace State
 		LINEAR_MIPMAP_MAX_LOD_SS
 	};
 
-	extern void*					m_States[20];
+	extern void*					m_States[20];		// array of all default states
 
+	/********************************************************************************
+	*	--- Static Function:
+	*	ConstructDefaultStates(ID3D11Device*)
+	*	This function will create all default D3D11 states used in this engine
+	*
+	*	--- Parameters:
+	*	@ pDevice: the pointer to the D3D11 device
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	static void ConstructDefaultStates(ID3D11Device* pDevice)
 	{
 		HRESULT hr;
@@ -141,6 +163,17 @@ namespace State
 		assert(hr == S_OK);
 	}
 
+	/********************************************************************************
+	*	--- Static Function:
+	*	GetState(int)
+	*	This function will return the state located at the given ID
+	*
+	*	--- Parameters:
+	*	@ stateID: the state ID as in the enum
+	*
+	*	--- Return:
+	*	@ void*: pointer to the specific state
+	********************************************************************************/
 	static void* GetState(int stateID)
 	{
 		return m_States[stateID];
