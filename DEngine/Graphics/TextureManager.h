@@ -1,5 +1,3 @@
-// TextureManager.h:
-
 #ifndef TEXTUREMANAGER_H_
 #define TEXTUREMANAGER_H_
 
@@ -10,37 +8,34 @@
 namespace DE
 {
 
+/*
+*	CLASS: TextureManager
+*	TextureManager is the resources manager for texture stored
+*	as D3D11 shader resources view
+*/
 class TextureManager
 {
 public:
 
+	/********************************************************************************
+	*	--- Constructor:
+	*	TextureManager()
+	*	This constructor will allocate default size of memory for hash map
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
 	TextureManager()
 		: m_mapTexture()
 	{
 	};
 
-	// Return the texture according to the name
-	void* GetTexture(const char* filename);
-
-	// Insert texture data into map
-	void LoadTexture(const char* filename);
-
-	// Return singleton instance
-	static TextureManager* GetInstance()
-	{
-		if (!m_pInstance)
-			m_pInstance = new TextureManager();
-		return m_pInstance;
-	}
-
-	static void DestructandCleanUp()
-	{
-		if (m_pInstance) {
-			delete m_pInstance;
-			m_pInstance = NULL;
-		}
-	}
-
+	/********************************************************************************
+	*	--- Destructor:
+	*	~TextureManager()
+	*	This constructor will free memory from hash map and release each D3D11 COM
+	*	object
+	********************************************************************************/
 	~TextureManager()
 	{
 		m_mapTexture.ForEachItem([](void* item)
@@ -50,12 +45,74 @@ public:
 		});
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	GetTexture(const char*)
+	*	This function will return the shader resources view according to the name
+	*
+	*	--- Parameters:
+	*	@ filename: the file name of the texture located in Assets folder
+	*
+	*	--- Return:
+	*	@ void*: the pointer to D3D11 shader resources view
+	********************************************************************************/
+	void* GetTexture(const char* filename);
+
+	/********************************************************************************
+	*	--- Function:
+	*	LoadTexture(const char*)
+	*	This function will compile texture's shader resources view and insert it 
+	*	into hash map
+	*
+	*	--- Parameters:
+	*	@ filename: the file name of the texture located in Assets folder
+	*
+	*	--- Return:
+	*	@ void*: the pointer to D3D11 shader resources view
+	********************************************************************************/
+	void LoadTexture(const char* filename);
+
+	/********************************************************************************
+	*	--- Static Function:
+	*	GetInstance()
+	*	This function will return the singleton instance of TextureManager
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ TextureManager*: the singleton instance
+	********************************************************************************/
+	static TextureManager* GetInstance()
+	{
+		if (!m_pInstance)
+			m_pInstance = new TextureManager();
+		return m_pInstance;
+	}
+
+	/********************************************************************************
+	*	--- Static Function:
+	*	DestructandCleanUp()
+	*	This function will delete the singleton instance
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
+	static void DestructandCleanUp()
+	{
+		if (m_pInstance) {
+			delete m_pInstance;
+			m_pInstance = NULL;
+		}
+	}
+
 private:
 
-	// Singleton instance
-	static TextureManager*									m_pInstance;
-
-	MyHashMap<void*>										m_mapTexture;
+	static TextureManager*								m_pInstance;	// Singleton instance
+	MyHashMap<void*>									m_mapTexture;	// hash map of shader resources view
 
 };
 

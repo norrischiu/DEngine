@@ -21,11 +21,6 @@ void IndexBufferEngine::DestructandCleanUp()
 	}
 }
 
-unsigned int IndexBufferEngine::GetCurrentIndex() 
-{
-	return g_iCurrIndex;
-}
-
 ID3D11Buffer* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData, const int m_iNumIndics) 
 {
 	ID3D11Buffer* pIndexBuffer;
