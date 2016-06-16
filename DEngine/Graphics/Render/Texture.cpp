@@ -3,7 +3,6 @@
 #include "State.h"
 #include "Graphics\TextureManager.h"
 #include "..\..\GlobalInclude.h"
-#include <DirectXMath.h>
 #include <algorithm>
 
 namespace DE

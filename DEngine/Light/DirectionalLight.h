@@ -1,6 +1,5 @@
 // DirectionalLight.h:
 
-#include <DirectXMath.h>
 #include "Math/simdmath.h"
 
 class DirectionalLight

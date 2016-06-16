@@ -24,23 +24,28 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	IDXGIFactory* pFactory = NULL;
 	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
 
-	for (UINT i = 0;
-	pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND;
-		++i)
+	DXGI_ADAPTER_DESC adapterDesc;
+	size_t maxVideoMemory = 0;
+	unsigned int targetAdapterId;
+	// pick the adapter with largest dedicated video memory
+	for (UINT i = 0; pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
 	{
 		vAdapters.Add(pAdapter);
+		vAdapters[i]->GetDesc(&adapterDesc);
+		if (adapterDesc.DedicatedVideoMemory >= maxVideoMemory)
+		{
+			maxVideoMemory = adapterDesc.DedicatedVideoMemory;
+			targetAdapterId = i;
+		}
 	}
-
-	DXGI_ADAPTER_DESC adapterDesc;
 	const unsigned int size = vAdapters.Size();
 	for (int i = 0; i < size; ++i)
 	{
-		vAdapters[i]->GetDesc(&adapterDesc);
+		if (i != targetAdapterId)
+		{
+			vAdapters[i]->Release();
+		}
 	}
-
-	static wchar_t s[64];
-	swprintf(s, 64, L"Adpaters: %i\n", vAdapters.Size());
-	OutputDebugStringW(s);
 
 	// Create device and swap chain
 	DXGI_SWAP_CHAIN_DESC scData;
@@ -61,7 +66,7 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 	scData.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
 	// use default adapter
-	HRESULT hr = D3D11CreateDevice(vAdapters[1], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
+	HRESULT hr = D3D11CreateDevice(vAdapters[targetAdapterId], D3D_DRIVER_TYPE_UNKNOWN, 0, D3D11_CREATE_DEVICE_DEBUG, NULL, 0,
 		D3D11_SDK_VERSION, &m_pD3D11Device, NULL, &m_pD3D11Context);
 	assert(hr == S_OK);
 	hr = pFactory->CreateSwapChain(m_pD3D11Device, &scData, &m_pSwapChain);
