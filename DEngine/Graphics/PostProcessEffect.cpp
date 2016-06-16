@@ -12,10 +12,10 @@ namespace DE
 
 PostProcessEffect::PostProcessEffect()
 {
-	m_pPSCBuffer = new PSPerLightCBuffer; // use static
-	m_pVSCBuffer = new VSPerObjectCBuffer; // use static
+	m_pPSCBuffer = new PSPerLightCBuffer; // TODO: use static
+	m_pVSCBuffer = new VSPerObjectCBuffer; // TODO: use static
 
-											// Set vertex buffer
+	// Set vertex buffer
 	Vector3* pVertexData = new Vector3[6];
 	float left = -WINDOW_WIDTH / 2;
 	float right = left + WINDOW_WIDTH;

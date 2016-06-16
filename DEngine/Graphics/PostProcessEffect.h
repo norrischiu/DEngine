@@ -1,6 +1,7 @@
 #ifndef POST_PROCESS_EFFECT_H_
 #define POST_PROCESS_EFFECT_H_
 
+// D3D11 include
 class ID3D11Buffer;
 
 namespace DE
@@ -13,35 +14,49 @@ class VSPerObjectCBuffer;
 class MeshData;
 class Material;
 
+/*
+*	CLASS: PostProcessEffect
+*	PostProcessEffect is the interface to implement post-processing,
+*	user can write their own HLSL shader code and define render pass 
+*	here directly
+*/
 class PostProcessEffect
 {
 
 public:
 
-	// Default constructor
+	/********************************************************************************
+	*	--- Constructor:
+	*	ShaderManager()
+	*	This constructor will create the index and vertex buffer for a screen size
+	*	quad for rendering post-processing effect in 2D, define custom render pass
+	*	here
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
 	PostProcessEffect();
 
+	/********************************************************************************
+	*	--- Function:
+	*	Render()
+	*	This function will call D3D11 draw call with the given render pass in order
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	void Render();
 
 private:
 
-
-	// Pointer to vertex buffer
-	ID3D11Buffer*								m_pQuadVB;
-
-	// Pointer to index buffer
-	ID3D11Buffer*								m_pQuadIB;
-
-	// Constant buffer update facilities
-	PSPerLightCBuffer*							m_pPSCBuffer;
-	VSPerObjectCBuffer*							m_pVSCBuffer;
-
-	// Full screen quad mesh
-	MeshData*									fullscreenQuadMesh;
-
-	// Ping pong textures
-	Texture*									m_texture;
-	Texture*									m_texture2;
+	PSPerLightCBuffer*							m_pPSCBuffer;	// Constant buffer update facilities for each light
+	VSPerObjectCBuffer*							m_pVSCBuffer;	// Constant buffer update facilities for each object	
+	MeshData*									fullscreenQuadMesh;		// Full screen quad mesh
+	Texture*									m_texture;	// Ping pong textures 1, for blurring
+	Texture*									m_texture2;	// Ping pong textures 2, for blurring
 };
 
 };

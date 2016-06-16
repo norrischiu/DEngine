@@ -108,7 +108,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);
-			D3D11Renderer::GetInstance()->Update(elaspedTime, m_Timer.getCurrTime());
+			D3D11Renderer::GetInstance()->Update(elaspedTime);
 
 			// Render this frame
 			D3D11Renderer::GetInstance()->Render();

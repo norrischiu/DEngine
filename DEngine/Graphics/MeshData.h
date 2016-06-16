@@ -1,9 +1,11 @@
 // MeshData.h: a class contains all pointers to buffer of a mesh
-
 #ifndef MESHDATA_H
 #define MESHDATA_H
 
+// D3D11 include
 #include <d3d11.h>
+
+// Engine include
 #include "Math\simdmath.h"
 #include "Material.h"
 #include "Physics\cdAABB.h"
@@ -11,52 +13,178 @@
 namespace DE
 {
 
+/*
+*	ENUM: eMeshType
+*	The type of mesh
+*/
 enum eMeshType
 {
 	OUTLINE,
 	STANDARD_MESH,
 	SKELETAL_MESH,
-	V1P,
-	V1P1UV
 };
 
+/*
+*	CLASS: MeshData
+*	MeshData contains the vertex buffer and index buffer
+*	of a mesh, and the material to render this mesh
+*/
 class MeshData
 {
 public:
 
-	// Overload default constructor
+	/********************************************************************************
+	*	--- Constructor:
+	*	MeshData(void*, const int, unsigned int*, const int, unsigned int, bool)
+	*	This constructor will construct a mesh data with given raw vertices and indices
+	*	data in array form
+	*
+	*	--- Parameters:
+	*	@ pVertexData: the vertices array in any format, refer to vertexformat.h for
+	*	example
+	*	@ iNumVerts: the number of vertex in the above array
+	*	@ pIndexData: the indices array
+	*	@ iNumIndics: the number of index in the above array
+	*	@ stride: the size of a vertex in the given array
+	*	@ streamOut: True if this mesh will be used for stream out; False if this mesh
+	*	will NOT be used for stream out
+	********************************************************************************/
 	MeshData(void* pVertexData, const int iNumVerts, unsigned int* pIndexData, const int iNumIndics, unsigned int stride = 16, bool streamOut = false);
 
+	/********************************************************************************
+	*	--- Constructor:
+	*	MeshData(const char*, int)
+	*	This constructor will construct a mesh data from a file name, which then
+	*	read from all the definition files (for example texture coordinate, skin
+	*	weight) of the same name depending on the mesh type
+	*
+	*	--- Parameters:
+	*	@ filename: the prefix file name of all the mesh definition files
+	*	@ meshType: type of mesh as in eMeshType
+	********************************************************************************/
 	MeshData(const char* filename, int meshType);
 
+	/********************************************************************************
+	*	--- Constructor:
+	*	MeshData()
+	*	This constructor will do nothing
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
 	MeshData() {};
 
+	/********************************************************************************
+	*	--- Destructor:
+	*	~MeshData()
+	*	This destructor will release the D3D11 buffer COM object
+	********************************************************************************/
 	~MeshData();
-
+	
+	/********************************************************************************
+	*	--- Function:
+	*	Render()
+	*	This function will draw the mesh by binding the vertex and index buffer to
+	*	the GPU and calling the appropriate draw call
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	void Render();
 
+	/********************************************************************************
+	*	--- Function:
+	*	RenderUsingPass(RenderPass*)
+	*	This function will draw the mesh with a given render pass
+	*
+	*	--- Parameters:
+	*	@ pass: pointer to a render pass
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	void RenderUsingPass(RenderPass* pass);
 
+	/********************************************************************************
+	*	--- Function:
+	*	GetVertexNum()
+	*	This function will return the number of vertex of this mesh
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ int: number of vertex
+	********************************************************************************/
 	inline int GetVertexNum()
 	{
 		return m_iNumVerts;
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	GetVertexNum()
+	*	This function will return the default bounding box created from the max and
+	*	min given vertices
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ AABB: the bounding box of this mesh
+	********************************************************************************/
 	inline AABB GetBoundingBox()
 	{
 		return m_BoundingBox;
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	SetBoundingBox(AABB)
+	*	This function will set the bounding box of this mesh, can be used to override
+	*	the default created bounding box
+	*
+	*	--- Parameters:
+	*	@ aabb: a bounding box
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	inline void SetBoundingBox(AABB aabb)
 	{
 		m_BoundingBox = aabb;
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	GetVertexBuffer()
+	*	This function will return the pointer to the vertex buffer at GPU
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ ID3D11Buffer*: pointer to the D3D11 vertex buffer
+	********************************************************************************/
 	inline ID3D11Buffer* GetVertexBuffer()
 	{
 		return m_pVertexBuffer;
 	}
 
+	/********************************************************************************
+	*	--- Function:
+	*	Destruct()
+	*	This function will destruct the material and relase the D3D11 buffer COM object
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
 	void Destruct()
 	{
 		m_Material.Destruct();
@@ -64,40 +192,20 @@ public:
 		m_pIndexBuffer->Release();
 	}
 
-	// Mesh material
-	Material								m_Material;
+	Material								m_Material;		// Mesh material
 
 private:
 
-	// Pointer to vertex buffer
-	ID3D11Buffer*							m_pVertexBuffer;
-
-	// Data size of a vertex
-	unsigned int							m_iStride;
-
-	// Offset in vertex buffer between first element and first to be used element
-	unsigned int							m_iVertexOffset;
-
-	// Pointer to index buffer
-	ID3D11Buffer*							m_pIndexBuffer;
-
-	// Render Type
-	eMeshType								m_renderType;
-
-	// Number of vertices
-	unsigned int							m_iNumVerts;
-
-	// Number of indics
-	unsigned int							m_iNumIndics;
-
-	//Start Index Location
-	unsigned int							m_iStartIndexLocation;
-
-	// Flag whether it is stream out result
-	bool									m_bStreamOut;
-
-	// Simple bounding box for camera frustum culling
-	AABB									m_BoundingBox;
+	ID3D11Buffer*							m_pVertexBuffer;	// Pointer to vertex buffer
+	unsigned int							m_iStride;		// Data size of a vertex
+	unsigned int							m_iVertexOffset;	// Offset in vertex buffer between first element and first to be used element
+	ID3D11Buffer*							m_pIndexBuffer;		// Pointer to index buffer
+	eMeshType								m_renderType;		// Render Type
+	unsigned int							m_iNumVerts;		// Number of vertices
+	unsigned int							m_iNumIndics;		// Number of indics
+	unsigned int							m_iStartIndexLocation;	// Start Index Location
+	bool									m_bStreamOut;		// Flag whether it is stream out result
+	AABB									m_BoundingBox;		// Simple bounding box for camera frustum culling
 };
 
 };
