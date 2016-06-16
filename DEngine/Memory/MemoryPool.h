@@ -1,21 +1,33 @@
-// MemoryPool.h: 
-
+// C++ include
 #include <assert.h>
 #include <stdint.h>
 #include <memory>
 
-const unsigned int MEMORY_ALIGNMENT = 16;
+const unsigned int MEMORY_ALIGNMENT = 16;	// memory alignment requirement
 
+/*
+*	class: MemoryPool
+*	MemoryPool keep track of the memory pool and block
+*	status, and is responsible to return appropriate
+*	block of memory when Handle or other system requests
+*/
 class MemoryPool
 {
 public:
 
-	unsigned int							m_iBlockSize;
-	unsigned int							m_iFreeBlockNum;
-	unsigned int							m_iFreeBlockIndex;
-	unsigned int							m_pFreeList[63356]; // indices
-
-	// Construct a memory pool with alignment at the beginning
+	/********************************************************************************
+	*	--- Static Function:
+	*	Construct(size_t, unsigned int, void*&)
+	*	This function will construct a memory pool with alignment at the beginning
+	*
+	*	--- Parameters:
+	*	@ size: size of the each memory block
+	*	@ num: number of memory block
+	*	@ heapStart: the address of the start of the heap after the last memory pool
+	*
+	*	--- Return:
+	*	@ MemoryPool*: pointer to the aligned address of start of memory pool
+	********************************************************************************/
 	static MemoryPool* Construct(size_t size, unsigned int num, void* &heapStart)
 	{
 		assert(size % MEMORY_ALIGNMENT == 0); // Make sure the block size does not need alignment
@@ -36,8 +48,20 @@ public:
 		return ptr;
 	}
 
+	unsigned int							m_iBlockSize;		// block size of this memory pool
+	unsigned int							m_iFreeBlockNum;		// number of free memory block
+	unsigned int							m_iFreeBlockIndex;		// the index of next free memory block in the free list
+	unsigned int							m_pFreeList[63356];		// free memory block indices 
+
 private:
 
-	// Constructor
+	/********************************************************************************
+	*	--- Constructor:
+	*	MemoryPool()
+	*	This constructor will do nothing
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
 	MemoryPool(){}
 };
