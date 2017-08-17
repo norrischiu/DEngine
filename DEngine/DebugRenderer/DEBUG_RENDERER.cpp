@@ -1,5 +1,7 @@
 #include "DEBUG_RENDERER.h"
 #include "../GlobalInclude.h"
+#include "Graphics\D3D11Renderer.h"
+#include "Graphics\D3D12Renderer.h"
 
 namespace DE
 {
@@ -15,7 +17,9 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	m_3DRenderPass.SetBlendState(State::NULL_STATE);
 	m_3DRenderPass.SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	m_3DRenderPass.SetDepthStencilState(State::NULL_STATE);
-	m_3DRenderPass.SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+#ifdef D3D11
+	m_3DRenderPass.SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
+#endif
 
 	Vertex1P1UV* pVertices = new Vertex1P1UV[4];
 	unsigned int pIndices[6] =
@@ -43,7 +47,9 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	pass->SetBlendState(State::NULL_STATE);
 	pass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pass->SetDepthStencilState(State::NULL_STATE);
-	pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+#ifdef D3D11
+	pass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
+#endif
 	Handle hTexture(sizeof(Texture));
 	new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "hpmeter.dds");
 	pass->AddTexture(hTexture);
@@ -61,7 +67,9 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	boarderPass->SetBlendState(State::ALPHA_BS);
 	boarderPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	boarderPass->SetDepthStencilState(State::NULL_STATE);
-	boarderPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+#ifdef D3D11
+	boarderPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
+#endif
 	Handle hTexture2(sizeof(Texture));
 	new (hTexture2) Texture(Texture::SHADER_RESOURCES, 1, "hpmeter_border.dds");
 	boarderPass->AddTexture(hTexture2);
@@ -79,7 +87,9 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	staminaPass->SetBlendState(State::NULL_STATE);
 	staminaPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	staminaPass->SetDepthStencilState(State::NULL_STATE);
-	staminaPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+#ifdef D3D11
+	staminaPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
+#endif
 	Handle hStaminaTexture(sizeof(Texture));
 	new (hStaminaTexture) Texture(Texture::SHADER_RESOURCES, 1, "stamina_meter.dds");
 	staminaPass->AddTexture(hStaminaTexture);
@@ -97,7 +107,9 @@ DEBUG_RENDERER::DEBUG_RENDERER()
 	playerHpPass->SetBlendState(State::NULL_STATE);
 	playerHpPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	playerHpPass->SetDepthStencilState(State::NULL_STATE);
-	playerHpPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+#ifdef D3D11
+	playerHpPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
+#endif
 	Handle hPlayerHpTexture(sizeof(Texture));
 	new (hPlayerHpTexture) Texture(Texture::SHADER_RESOURCES, 1, "player_hpmeter.dds");
 	playerHpPass->AddTexture(hPlayerHpTexture);

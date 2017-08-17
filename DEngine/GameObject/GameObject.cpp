@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "GameWorld.h"
 #include "Object\Transform.h"
+#include "Physics\cdCollide.h"
 
 namespace DE
 {

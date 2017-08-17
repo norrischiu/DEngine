@@ -32,10 +32,11 @@ public:
 	*	--- Parameters:
 	*	@ capacity: the initial capacity of this array
 	********************************************************************************/
-	MyArray(size_t capacity)
+	MyArray(size_t capacity, bool persistent = false)
 	{
 		m_iSize = 0;
 		m_iCapacity = capacity;
+		m_bPersistent = persistent;
 		if (m_iCapacity > 0)
 		{
 			m_hElements.Set(sizeof(T) * capacity);
@@ -71,7 +72,10 @@ public:
 	********************************************************************************/
 	~MyArray()
 	{
-		m_hElements.Free();
+		if (!m_bPersistent)
+		{
+			m_hElements.Free();
+		}
 	}
 
 	/********************************************************************************
@@ -214,6 +218,7 @@ private:
 	Handle						m_hElements;		// the handle array containing the exact data
 	unsigned int				m_iSize;		// the current size of array and also the index to the next element
 	unsigned int				m_iCapacity;	// the current capacity
+	bool						m_bPersistent;	// if TRUE will not free the memory when destruct, if FALSE otherwise
 };
 
 } // namespace DE

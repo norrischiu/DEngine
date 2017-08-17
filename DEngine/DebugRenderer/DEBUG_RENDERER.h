@@ -117,7 +117,7 @@ public:
 				m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 				m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
 
-				ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
+				ptr->WVPTransform = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix();
 				m_VSCBuffer.Update();
 			}
 			else if (m_vRenderFlags[i] == MESH2D_TEXTURE)

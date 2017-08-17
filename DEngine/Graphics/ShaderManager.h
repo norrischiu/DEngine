@@ -2,8 +2,10 @@
 #define SHADERMANAGER_H_
 
 #include <D3D11.h>
+#include <D3D12.h>
 #include <stdio.h>
 #include <d3d11shader.h>
+#include "GlobalInclude.h"
 #include "Utilities\MyHashMap.h"
 
 namespace DE
@@ -31,6 +33,7 @@ public:
 	ShaderManager()
 		: m_mapShaders()
 		, m_mapInputLayouts()
+		, m_mapInputLayoutsCount()
 	{};
 
 	/********************************************************************************
@@ -41,6 +44,8 @@ public:
 	********************************************************************************/
 	~ShaderManager()
 	{
+#ifdef D3D12
+#elif defined D3D11
 		m_mapShaders.ForEachItem([](void* item)
 		{
 			ID3D11DeviceChild* pS = (ID3D11DeviceChild*)item;
@@ -48,9 +53,11 @@ public:
 		});
 		m_mapInputLayouts.ForEachItem([](void* item)
 		{
+
 			ID3D11InputLayout* pS = (ID3D11InputLayout*)item;
 			pS->Release();
 		});
+#endif
 	}
 
 	/********************************************************************************
@@ -83,7 +90,7 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	CreateInputLayout(ID3DBlob*, ID3D11InputLayout*&)
+	*	CreateInputLayout(ID3DBlob*, void*&)
 	*	This function will create input layout of vertex shader
 	*
 	*	--- Parameters:
@@ -94,7 +101,11 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout);
+#ifdef D3D12
+	void CreateInputLayout(ID3DBlob* VS, D3D12_INPUT_ELEMENT_DESC* &inputElementDesc, int &numElements);
+#elif defined D3D11
+	void CreateInputLayout(ID3DBlob* VS, void* &inputLayout);
+#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -108,7 +119,16 @@ public:
 	*	--- Return:
 	*	@ void*: the pointer to a D3D11 input layout
 	********************************************************************************/
+#ifdef D3D12
+	D3D12_INPUT_ELEMENT_DESC* GetInputLayout(const char* filename);
+#elif defined D3D11
 	void* GetInputLayout(const char* filename);
+#endif
+
+	int GetInputLayoutCount(const char* filename)
+	{
+		return m_mapInputLayoutsCount[filename];
+	}
 
 	/********************************************************************************
 	*	--- Function:
@@ -166,7 +186,12 @@ private:
 
 	static ShaderManager*									m_pInstance;	// Singleton instance
 	MyHashMap<void*>										m_mapShaders;	// hash map of D3D11 shader
+#ifdef D3D12
+	MyHashMap<D3D12_INPUT_ELEMENT_DESC*>					m_mapInputLayouts;	// hash map of input layout
+	MyHashMap<int>											m_mapInputLayoutsCount;	// hash map of input layout element num
+#elif defined D3D11
 	MyHashMap<ID3D11InputLayout*>							m_mapInputLayouts;	// hash map of input layout
+#endif
 };
 
 };

@@ -125,7 +125,7 @@ GameObject* SkydomeBuilder::CreateGameObject(const char* filename, const Vector3
 		renderPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1D.hlsl");
 		renderPass->SetPixelShader("../DEngine/Shaders/PS_diffuse.hlsl");
 		renderPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+		renderPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 		renderPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		renderPass->SetRasterizerState(State::CULL_NONE_RS);
 		meshComponent->m_pMeshData->m_Material.AddPassToTechnique(renderPass);

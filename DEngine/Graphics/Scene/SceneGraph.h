@@ -136,10 +136,11 @@ private:
 	MyArray<MeshComponent*>							m_tree;		// Spatial data structure to store all render component, currently a linear array only
 	MyArray<MeshComponent*>							DEBUG_DRAWING_TREE;		// Temp storage for debug drawing
 	VSPerObjectCBuffer								m_VSCBuffer;		// a default constant buffer interface for each object to be rendered
-	PSPerMaterialCBuffer							m_PSCBuffer;		// a default constant buffer interface for each material
-	HSDSPerFrameCBuffer								m_HSDSCBuffer;		// a default constant buffer interface for terrain rendering
 	VSMatrixPaletteCBuffer							m_MatrixPalette;	// a matrix palette constant buffer interface 
+	HSDSPerFrameCBuffer								m_HSDSCBuffer;		// a default constant buffer interface for terrain rendering
+	PSPerMaterialCBuffer							m_PSCBuffer;		// a default constant buffer interface for each material
 	RenderPass*										m_ShadowPass;	// a shadow render pass
+	ID3D12RootSignature*							m_pRootSignature; // root signature for D3D12 render
 };
 
 };

@@ -4,6 +4,7 @@
 #include "Render\Texture.h"
 #include "D3D11Renderer.h"
 #include "Render\PSPerLightCBuffer.h"
+#include "Render\VSPerObjectCBuffer.h"
 #include "MeshData.h"
 #include "../GlobalInclude.h"
 
@@ -12,6 +13,7 @@ namespace DE
 
 PostProcessEffect::PostProcessEffect()
 {
+#ifdef D3D11
 	m_pPSCBuffer = new PSPerLightCBuffer; // TODO: use static
 	m_pVSCBuffer = new VSPerObjectCBuffer; // TODO: use static
 
@@ -56,30 +58,32 @@ PostProcessEffect::PostProcessEffect()
 	BlurVPass->SetPixelShader("../DEngine/Shaders/PS_PPE_BlurV.hlsl");
 	BlurVPass->SetRasterizerState(State::CULL_BACK_RS);
 	BlurVPass->SetBlendState(State::ALPHA_BS);
-	BlurVPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+	BlurVPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 
 	RenderPass* AmbientPass = new RenderPass;
 	AmbientPass->SetVertexShader("../DEngine/Shaders/VS_gbuffer.hlsl");
 	AmbientPass->SetPixelShader("../DEngine/Shaders/PS_PPE_Ambient.hlsl");
 	AmbientPass->SetRasterizerState(State::CULL_BACK_RS);
 	AmbientPass->SetBlendState(State::ADDITIVE_BS);
-	AmbientPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+	AmbientPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_backbuffer);
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[1]);
-	ReflectionPass->AddTexture(D3D11Renderer::GetInstance()->m_depth);
+	ReflectionPass->AddTexture(((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer);
+	ReflectionPass->AddTexture(((D3D11Renderer*)D3DRenderer::GetInstance())->m_hTextures[1]);
+	ReflectionPass->AddTexture(((D3D11Renderer*)D3DRenderer::GetInstance())->m_depth);
 	BlurHPass->AddTexture(m_texture);
 	BlurVPass->AddTexture(m_texture2);
-	AmbientPass->AddTexture(D3D11Renderer::GetInstance()->m_hTextures[0]); // diffuse
+	AmbientPass->AddTexture(((D3D11Renderer*)D3DRenderer::GetInstance())->m_hTextures[0]); // diffuse
 
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(ReflectionPass);
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(BlurHPass);
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(BlurVPass);
 	fullscreenQuadMesh->m_Material.AddPassToTechnique(AmbientPass);
+#endif
 }
 
 void PostProcessEffect::Render()
 {
+#ifdef D3D11
 	m_pPSCBuffer->BindToRenderer();
 	m_pVSCBuffer->BindToRenderer();
 
@@ -90,16 +94,17 @@ void PostProcessEffect::Render()
 
 	// Update PS cbuffer
 	PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER* ptr2 = (PSPerLightCBuffer::PS_PER_LIGHT_CBUFFER*) m_pPSCBuffer->m_Memory._data;
-	ptr2->mClipToView = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix().Inverse();
-	ptr2->mViewToClip = D3D11Renderer::GetInstance()->GetCamera()->GetPerspectiveMatrix();
+	ptr2->mClipToView = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPerspectiveMatrix().Inverse();
+	ptr2->mViewToClip = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPerspectiveMatrix();
 	m_pPSCBuffer->Update();
 
 	// Render all passes inputted
 	fullscreenQuadMesh->Render();
 
 	// Unbind the resources
-	D3D11Renderer::GetInstance()->UnbindPSShaderResources(4);
-	D3D11Renderer::GetInstance()->UnbindRenderTargets();
+	((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindPSShaderResources(4);
+	((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindRenderTargets();
+#endif
 }
 
 };

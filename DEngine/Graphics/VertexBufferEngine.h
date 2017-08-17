@@ -1,5 +1,6 @@
 // Engine include
 #include "D3D11Renderer.h"
+#include "D3D12Renderer.h"
 #include "VertexFormat.h"
 #include "Memory\Handle.h"
 
@@ -45,9 +46,9 @@ public:
 	*	False of this vertex buffer will NOT be used as stream out target
 	*
 	*	--- Return:
-	*	@ ID3D11Buffer*: the vertex buffer created using the given data
+	*	@ void*: result as ID3D11Buffer or GPUVirtualAddress
 	********************************************************************************/
-	ID3D11Buffer* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut = false);
+	void* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut = false);
 	
 	/********************************************************************************
 	*	--- Function:
@@ -60,11 +61,12 @@ public:
 	*	(without "_vertex.bufa")
 	*	@ vertexFormat: the vertex format as defined in eVertexFormat
 	*	@ stride: the size of a vertex read from the file, return as output
+	*	@ bufferSize: the size of the vertex buffer in byte
 	*
 	*	--- Return:
-	*	@ void
+	*	@ void*: result as ID3D11Buffer or GPUVirtualAddress
 	********************************************************************************/
-	void* CreateBuffer(const char* filename, int vertexFormat, unsigned int& stride);
+	void* CreateBuffer(const char* filename, int vertexFormat, unsigned int& stride, unsigned int& bufferSize);
 
 	/********************************************************************************
 	*	--- Function:

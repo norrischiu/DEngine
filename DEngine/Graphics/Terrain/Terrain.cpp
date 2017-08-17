@@ -271,8 +271,8 @@ GameObject* Terrain::CreateGameObject(const char* diffuseTxt_filename, const cha
 	renderPass->AddTexture(hTexture3);
 	renderPass->SetTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 	renderPass->SetBlendState(State::NULL_STATE);
-	renderPass->SetRenderTargets(D3D11Renderer::GetInstance()->m_pRTVArray, 2);
-	renderPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depth->GetDSV());
+	renderPass->SetRenderTargets(((D3D11Renderer*)D3DRenderer::GetInstance())->m_pRTVArray, 2);
+	renderPass->SetDepthStencilView(((D3D11Renderer*)D3DRenderer::GetInstance())->m_depth->GetDSV());
 	renderPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 	renderPass->SetRasterizerState(State::CULL_BACK_RS);
 	((MeshComponent*) hMeshComp.Raw())->m_pMeshData->m_Material.AddPassToTechnique(renderPass);

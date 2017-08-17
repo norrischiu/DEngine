@@ -1,6 +1,8 @@
 #include "ShaderManager.h"
 #include <d3dcompiler.h>
 #include "Graphics\D3D11Renderer.h"
+#include "Graphics\D3D12Renderer.h"
+#include "GlobalInclude.h"
 
 namespace DE
 {
@@ -26,33 +28,57 @@ namespace DE
 		wchar_t* pName = new wchar_t[strlen(filename) + 1]; //TODO
 		mbstowcs(pName, filename, strlen(filename) + 1);
 		void* pShader = nullptr;
+#ifdef D3D12
+		D3D12_INPUT_ELEMENT_DESC* inputElmentDesc = nullptr;
+		int numElements = 0;
+		D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+#elif defined D3D11
 		ID3D11InputLayout* inputLayout = nullptr;
+#endif
 		D3D11_SO_DECLARATION_ENTRY* pDecl = nullptr;
 
 		switch (type)
 		{
 		case D3D11_SHVER_VERTEX_SHADER:
+#ifdef D3D12
+			hr = D3DCompileFromFile(pName, NULL, NULL, "VS", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
+			if (error) compileErrors = (char*)(error->GetBufferPointer());
+			pShader = pRawData;
+			CreateInputLayout(pRawData, inputElmentDesc, numElements);
+			//inputLayoutDesc.pInputElementDescs = inputElmentDesc;
+			//inputLayoutDesc.NumElements = numElements;
+			m_mapInputLayouts.Add(filename, inputElmentDesc); 
+			m_mapInputLayoutsCount.Add(filename, numElements);
+#elif defined D3D11
 			ID3D11VertexShader* pVShader;
 			pVShader = (ID3D11VertexShader*)pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "VS", "vs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateVertexShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pVShader);
+			hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateVertexShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pVShader);
 			pShader = pVShader;
-
 			inputLayout = nullptr;
-			CreateInputLayout(pRawData, inputLayout);
+			CreateInputLayout(pRawData, (void*&)inputLayout);
 			m_mapInputLayouts.Add(filename, inputLayout);
-
+#endif
 			break;
 		case D3D11_SHVER_PIXEL_SHADER:
+#ifdef D3D12
+			hr = D3DCompileFromFile(pName, NULL, NULL, "PS", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
+			if (error) compileErrors = (char*)(error->GetBufferPointer());
+			pShader = pRawData;
+#elif defined D3D11
 			ID3D11PixelShader* pPShader;
 			pPShader = (ID3D11PixelShader*)pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "PS", "ps_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreatePixelShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pPShader);
+			hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreatePixelShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pPShader);
 			pShader = pPShader;
+#endif
 			break;
 		case D3D11_SHVER_GEOMETRY_SHADER:
+#ifdef D3D12
+			// TODO: D3D12 geometry shader
+#elif defined D3D11
 			ID3D11GeometryShader* pGShader;
 			pGShader = (ID3D11GeometryShader*)pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "GS", "gs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
@@ -61,29 +87,38 @@ namespace DE
 			pDecl = CreateStreamOutEntry(pRawData, entryNum);
 			if (pDecl != nullptr)
 			{
-				hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, entryNum, NULL, 0, 0, NULL, &pGShader);
+				hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateGeometryShaderWithStreamOutput(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), pDecl, entryNum, NULL, 0, 0, NULL, &pGShader);
 			}
 			else
 			{
-				hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateGeometryShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pGShader);
+				hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateGeometryShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pGShader);
 			}
 			pShader = pGShader;
+#endif
 			break;
 		case D3D11_SHVER_HULL_SHADER:
+#ifdef D3D12
+			// TODO: D3D12 hull shader
+#elif defined D3D11
 			ID3D11HullShader* pHShader;
 			pHShader = (ID3D11HullShader*)pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "HS", "hs_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateHullShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pHShader);
+			hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateHullShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pHShader);
 			pShader = pHShader;
+#endif
 			break;
 		case D3D11_SHVER_DOMAIN_SHADER:
+#ifdef D3D12
+			// TODO: D3D12 domain shader
+#elif defined D3D11
 			ID3D11DomainShader* pDShader;
 			pDShader = (ID3D11DomainShader*)pShader;
 			hr = D3DCompileFromFile(pName, NULL, NULL, "DS", "ds_5_0", D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &pRawData, &error);
 			if (error) compileErrors = (char*)(error->GetBufferPointer());
-			hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateDomainShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pDShader);
+			hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateDomainShader(pRawData->GetBufferPointer(), pRawData->GetBufferSize(), NULL, &pDShader);
 			pShader = pDShader;
+#endif
 			break;
 		}
 
@@ -150,10 +185,16 @@ namespace DE
 		return data;
 	}
 
-	void ShaderManager::CreateInputLayout(ID3DBlob* VS, ID3D11InputLayout* &inputLayout)
+#ifdef D3D12
+	void ShaderManager::CreateInputLayout(ID3DBlob* VS, D3D12_INPUT_ELEMENT_DESC* &inputElementDesc, int &numElements)
 	{
-		HRESULT hr;
+		MyArray<D3D12_INPUT_ELEMENT_DESC> inputElementDescArray(0, true);
+#elif defined D3D11
+	void ShaderManager::CreateInputLayout(ID3DBlob* VS, void* &inputLayout)
+	{
 		MyArray<D3D11_INPUT_ELEMENT_DESC> inputElementDescArray(0);
+#endif
+		HRESULT hr;
 
 		ID3D11ShaderReflection* pReflection;
 		hr = D3DReflect(VS->GetBufferPointer(), VS->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflection);
@@ -166,10 +207,21 @@ namespace DE
 		{
 			D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
 			pReflection->GetInputParameterDesc(i, &paramDesc);
+#ifdef D3D12
+			D3D12_INPUT_ELEMENT_DESC inputElementDesc;
+			MyArray<char> semanticName(strlen(paramDesc.SemanticName), true);
+			for (int i = 0; i < strlen(paramDesc.SemanticName); ++i)
+			{
+				semanticName.Add(paramDesc.SemanticName[i]);
+			}
+			semanticName.Add('\0');
+			inputElementDesc.SemanticName = semanticName.Raw();
+			inputElementDesc.SemanticIndex = paramDesc.SemanticIndex;
+#elif defined D3D11
 			D3D11_INPUT_ELEMENT_DESC inputElementDesc;
-
 			inputElementDesc.SemanticName = paramDesc.SemanticName;
 			inputElementDesc.SemanticIndex = paramDesc.SemanticIndex;
+#endif
 
 			if (paramDesc.Mask == 1)
 			{
@@ -197,23 +249,38 @@ namespace DE
 			}
 
 			inputElementDesc.InputSlot = 0;
+#ifdef D3D12
+			inputElementDesc.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+#elif defined D3D11
 			inputElementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 			inputElementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+#endif
 			inputElementDesc.InstanceDataStepRate = 0;
 
 			inputElementDescArray.Add(inputElementDesc);
 		}
 
 		// Initialize input layout
-		hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateInputLayout(inputElementDescArray.Raw(), i, VS->GetBufferPointer(), VS->GetBufferSize(), &inputLayout);
+#ifdef D3D12
+		inputElementDesc = inputElementDescArray.Raw();
+		numElements = i;
+#elif defined D3D11
+		hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateInputLayout(inputElementDescArray.Raw(), i, VS->GetBufferPointer(), VS->GetBufferSize(), (ID3D11InputLayout**) &inputLayout);
 		assert(hr == S_OK);
+#endif
 
 		pReflection->Release();
 	}
 
+#ifdef D3D12
+	D3D12_INPUT_ELEMENT_DESC* ShaderManager::GetInputLayout(const char* filename)
+#elif defined D3D11
 	void* ShaderManager::GetInputLayout(const char * filename)
+#endif
 	{
 		return m_mapInputLayouts[filename];
 	}
+
 
 };

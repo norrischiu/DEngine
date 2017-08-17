@@ -1,4 +1,5 @@
-Texture2D shaderTexture[4];
+// Texture2D shaderTexture[4];
+Texture2D shaderTexture[3]; // temporarily disable shadow map
 
 #define DIRECTIONAL_LIGHT 0
 #define POINT_LIGHT 1
@@ -29,7 +30,7 @@ struct Light
 	bool		bIsCastShadow;
 };
 
-cbuffer PS_CONSTANT_BUFFER : register(b2)
+cbuffer PS_CONSTANT_BUFFER : register(b1)
 {
 	Light		light;
 	Matrix		mClipToView;
@@ -114,17 +115,17 @@ float4 PS(VS_OUTPUT IN) : SV_TARGET
 		}
 		else
 		{
-			shadowPixel.x = posSMCS.x * 0.5f + 0.5f;
-			shadowPixel.y = posSMCS.y * -0.5f + 0.5f;
-			float2 hitPixel = shadowPixel.xy * float2(WINDOW_WIDTH, WINDOW_HEIGHT);
-			float shadowMapDepth = shaderTexture[3].Load(int3(hitPixel.xy, 0)).r;
-			float4 posSMPS = float4(posSMCS.xy, shadowMapDepth, 1.0f);
-			float4 posSMVS = mul(posSMPS, light.mLightClipToView);
-			posSMVS.xyz /= posSMVS.w;
-			float4 shadowMapL = light.vPosVS - posSMVS;
+			//shadowPixel.x = posSMCS.x * 0.5f + 0.5f;
+			//shadowPixel.y = posSMCS.y * -0.5f + 0.5f;
+			//float2 hitPixel = shadowPixel.xy * float2(WINDOW_WIDTH, WINDOW_HEIGHT);
+			//float shadowMapDepth = shaderTexture[3].Load(int3(hitPixel.xy, 0)).r;
+			//float4 posSMPS = float4(posSMCS.xy, shadowMapDepth, 1.0f);
+			//float4 posSMVS = mul(posSMPS, light.mLightClipToView);
+			//posSMVS.xyz /= posSMVS.w;
+			//float4 shadowMapL = light.vPosVS - posSMVS;
 
-			// shadowing
-			isShadow = (length(L.xyz) - 0.05f > length(shadowMapL.xyz) ? 0.0f : 1.0f);
+			//// shadowing
+			//isShadow = (length(L.xyz) - 0.05f > length(shadowMapL.xyz) ? 0.0f : 1.0f);
 		}
 	}
 

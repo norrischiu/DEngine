@@ -17,9 +17,10 @@ HSDSPerFrameCBuffer::HSDSPerFrameCBuffer()
 
 void HSDSPerFrameCBuffer::BindToRenderer()
 {
-	D3D11Renderer::GetInstance()->m_pD3D11Context->HSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->DSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(3, 1, &m_Memory._buffer);
+	CBuffer::BindToRenderer();
+	//((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->HSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	//((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->DSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	//((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->PSSetConstantBuffers(3, 1, &m_Memory._buffer);
 }
 
 };

@@ -1,5 +1,5 @@
 Texture2D shaderTexture[3];
-SamplerState SampleType;
+SamplerState SampleType : register(s0);
 
 // cbuffer
 struct Material

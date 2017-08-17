@@ -4,11 +4,16 @@
 // D3D11 include
 #include <d3d11.h>
 
+// D3D12 include
+#include <d3d12.h>
+#include "Graphics\d3dx12.h"
+
 // Engine include
 #include "Utilities\MyArray.h"
 #include "Graphics\ShaderManager.h"
 #include "State.h"
 #include "Texture.h"
+#include "GlobalInclude.h"
 
 // C++ include
 #include <assert.h>
@@ -40,11 +45,17 @@ public:
 	********************************************************************************/
 	RenderPass()
 		: m_vTextureSRVs(0)
+#ifdef D3D11
 		, m_vSamplerState(0)
+#endif
 	{
-		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+#ifdef D3D12
+		m_iTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+#elif defined D3D11
+		m_iTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST; // current default topology is triangle list
+#endif
 		m_iRTVNum = 0;
-	}
+	};
 
 	/********************************************************************************
 	*	--- Destructor:
@@ -55,6 +66,10 @@ public:
 	~RenderPass()
 	{
 	}
+
+#ifdef D3D12
+	void ConstructPSO();
+#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -89,9 +104,14 @@ public:
 	void SetVertexShader(const char* filename)
 	{
 		assert(filename != nullptr);
-
-			m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_VERTEX_SHADER);
-			m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout(filename);
+#ifdef D3D12
+		m_pVS = (ID3DBlob*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_VERTEX_SHADER);
+		m_InputLayout = ShaderManager::GetInstance()->GetInputLayout(filename);
+		m_InputLayoutCount = ShaderManager::GetInstance()->GetInputLayoutCount(filename);
+#elif defined D3D11
+		m_pVS = (ID3D11VertexShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_VERTEX_SHADER);
+		m_pInputLayout = (ID3D11InputLayout*)ShaderManager::GetInstance()->GetInputLayout(filename);
+#endif
 	}
 
 	/********************************************************************************
@@ -106,10 +126,17 @@ public:
 	*	--- Return:
 	*	@ ID3D11VertexShader*: the pointer to the vertex shader at GPU side
 	********************************************************************************/
-	ID3D11VertexShader* GetVertexShader()
-	{
-		return m_pVS;
+#ifdef D3D12
+	void* GetVertexShader() 
+	{ 
+		return m_pVS; 
 	}
+#elif defined D3D11
+	ID3D11VertexShader* GetVertexShader() 
+	{ 
+		return m_pVS; 
+	}
+#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -133,7 +160,11 @@ public:
 		}
 		else
 		{
+#ifdef D3D12
+			m_pPS = ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_PIXEL_SHADER);
+#elif defined D3D11
 			m_pPS = (ID3D11PixelShader*)ShaderManager::GetInstance()->GetShader(filename, D3D11_SHVER_PIXEL_SHADER);
+#endif
 		}
 	}
 
@@ -227,10 +258,17 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
+#ifdef D3D12
+	void SetStreamOutTargets(D3D12_STREAM_OUTPUT_BUFFER_VIEW* SOBuffer)
+	{
+		m_pSOTarget = SOBuffer;
+	}
+#elif defined D3D11
 	void SetStreamOutTargets(ID3D11Buffer* SOBuffer)
 	{
 		m_pSOTarget = SOBuffer;
 	}
+#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -245,7 +283,11 @@ public:
 	********************************************************************************/
 	void SetRasterizerState(int stateID)
 	{
+#ifdef D3D12
+		m_iRS = stateID;
+#elif defined D3D11
 		m_pRS = (ID3D11RasterizerState*)State::GetState(stateID);
+#endif
 	}
 
 	/********************************************************************************
@@ -261,7 +303,11 @@ public:
 	********************************************************************************/
 	void SetDepthStencilState(int stateID)
 	{
+#ifdef D3D12
+		m_iDS = stateID;
+#elif defined D3D11
 		m_pDSS = (ID3D11DepthStencilState*)State::GetState(stateID);
+#endif
 	}
 
 
@@ -278,7 +324,11 @@ public:
 	********************************************************************************/
 	void SetBlendState(int stateID)
 	{
+#ifdef D3D12
+		m_iBS = stateID;
+#elif defined D3D11
 		m_pBS = (ID3D11BlendState*)State::GetState(stateID);
+#endif	
 	}
 
 	/********************************************************************************
@@ -311,7 +361,11 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void SetRenderTargets(ID3D11RenderTargetView** RTVs, int num)
+#ifdef D3D12
+	void SetRenderTargets(Texture** RTVs, int num)
+#elif defined D3D11
+	void SetRenderTargets(ID3D11RenderTargetView* RTVs, int num)
+#endif
 	{
 		m_pRTVs = RTVs;
 		m_iRTVNum = num;
@@ -328,10 +382,15 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
+#ifdef D3D12
+	void SetDepthStencilView(Texture* DSV)
+#elif defined D3D11
 	void SetDepthStencilView(ID3D11DepthStencilView* DSV)
+#endif
 	{
 		m_pDSV = DSV;
 	}
+
 
 	/********************************************************************************
 	*	--- Function:
@@ -348,7 +407,12 @@ public:
 	void AddTexture(Handle hTex)
 	{
 		m_vTextureSRVs.Add(((Texture*)hTex.Raw())->GetSRV());
+
+#ifdef D3D12
+		m_iSS = ((Texture*)hTex.Raw())->GetSamplerDescIndex();
+#elif defined D3D11
 		m_vSamplerState.Add(((Texture*)hTex.Raw())->GetSamplerState());
+#endif
 	}
 
 	/********************************************************************************
@@ -366,7 +430,11 @@ public:
 	void AddTexture(Texture* tex)
 	{
 		m_vTextureSRVs.Add(tex->GetSRV());
+#ifdef D3D12
+		m_iSS = State::LINEAR_MIPMAP_MAX_LOD_SS;
+#elif defined D3D11
 		m_vSamplerState.Add(tex->GetSamplerState());
+#endif
 	}
 
 	/********************************************************************************
@@ -384,7 +452,9 @@ public:
 	void PopTexture()
 	{
 		m_vTextureSRVs.Pop();
+#ifdef D3D11
 		m_vSamplerState.Pop();
+#endif
 	}
 
 	/********************************************************************************
@@ -419,23 +489,45 @@ public:
 
 private:
 
-	
+#ifdef D3D12
+	ID3D12RootSignature*					m_pRootSignature; // root signature for D3D12 render
+	ID3D12PipelineState*					m_pPSO; // Pointer to pipeline state object for D3D12 render
+	void*									m_pVS;		// Pointer to vertex shader bytecode
+	void*									m_pHS;		// Pointer to hull shader bytecode
+	void*									m_pDS;		// Pointer to domain shader bytecode
+	void*									m_pGS;		// Pointer to geometry shader bytecode	
+	void*									m_pPS;		// Pointer to pixel shader bytecode
+	D3D12_INPUT_ELEMENT_DESC*				m_InputLayout;
+	int										m_iDS;
+	int										m_iRS;
+	int										m_iBS;
+	int										m_iSS;
+	Texture*								m_pDSV;
+	D3D12_STREAM_OUTPUT_BUFFER_VIEW*		m_pSOTarget;	// Pointer to a buffer as stream out target
+	MyArray<D3D12_CPU_DESCRIPTOR_HANDLE>	m_vTextureSRVs;		// texture array
+	Texture**								m_pRTVs;
+	int										m_InputLayoutCount;
+#elif defined D3D11
 	ID3D11VertexShader*						m_pVS;		// Pointer to complied vertex shader
 	ID3D11HullShader*						m_pHS;		// Pointer to complied hull shader
 	ID3D11DomainShader*						m_pDS;		// Pointer to compiled domain shader
 	ID3D11GeometryShader*					m_pGS;		// Pointer to complied geometry shader	
 	ID3D11PixelShader*						m_pPS;		// Pointer to complied pixel shader
-	unsigned int							m_iTopology;	// Primitive Topology
+	ID3D11DepthStencilView*					m_pDSV;		// Pointer to depth stencil state
+
 	ID3D11InputLayout*						m_pInputLayout;		// Pointer to input layout supply to IA
 	ID3D11DepthStencilState*				m_pDSS;		// Pointer to depth stencil state
 	ID3D11BlendState*						m_pBS;		// Pointer to blend state
 	ID3D11RasterizerState*					m_pRS;		// Pointer to rasterizer state
-	ID3D11DepthStencilView*					m_pDSV;		// Pointer to depth stencil state
 	ID3D11RenderTargetView**				m_pRTVs;	// Array of render targets or address of single render target
 	ID3D11Buffer*							m_pSOTarget;	// Pointer to a buffer as stream out target
-	int										m_iRTVNum;		// Number of render targets
 	MyArray<ID3D11ShaderResourceView*>		m_vTextureSRVs;		// texture array
 	MyArray<ID3D11SamplerState*>			m_vSamplerState;	// sampler state array
+#endif
+
+	unsigned int							m_iTopology;	// Primitive Topology
+	int										m_iRTVNum;		// Number of render targets	
+
 };
 
 };

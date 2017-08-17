@@ -1,8 +1,11 @@
 #ifndef CBUFFER_H_
 #define CBUFFER_H_
 
-// D3D11 include
+// D3D include
 #include <d3d11.h>
+#include <d3d12.h>
+#include "GlobalInclude.h"
+#include "Graphics/D3DRenderer.h"
 
 namespace DE
 {
@@ -38,8 +41,18 @@ public:
 	struct CPU_GPU_MEMORY
 	{
 		void*							_data;		// Pointer to CPU constant buffer memory
+#ifdef D3D12
+		void*							_buffer;	// Pointer to GPU constant buffer memory
+#elif defined D3D11
 		ID3D11Buffer*					_buffer;	// Pointer to GPU constant buffer memory
+#endif
 	};
+
+	static void InitializeCBVUploadHeap(D3DRenderer* renderer);
+	static void Reset()
+	{
+		CBV_UPLOAD_HEAP_CURR_OFFSET = 0;
+	}
 
 	/********************************************************************************
 	*	--- Constructor:
@@ -55,7 +68,7 @@ public:
 	/********************************************************************************
 	*	--- Virtual Function:
 	*	void BindToRenderer()
-	*	This function will set this constant buffer to GPU, override this function 
+	*	This function will set this constant buffer to GPU, override this function
 	*	if need behavior different from default
 	*
 	*	--- Parameters:
@@ -65,6 +78,8 @@ public:
 	*	@ void
 	********************************************************************************/
 	virtual void BindToRenderer();
+
+	virtual void BindToRendererWithOffset(int parameterIndex, int offset);
 
 	/********************************************************************************
 	*	--- Function:
@@ -80,9 +95,17 @@ public:
 	********************************************************************************/
 	void Update(size_t size);
 
+	static 	ID3D12Resource*				CBV_UPLOAD_HEAP;
+	static  UINT						CBV_UPLOAD_HEAP_CURR_OFFSET;
+	static  void*						CBV_UPLOAD_HEAP_BEGIN;
+	
 	CPU_GPU_MEMORY						m_Memory;		// the CPU and GPU data pointer
 	int									m_iType;		// the shader stage of this constant buffer
 	int									m_iSlotID;		// constant buffer slot ID in GPU
+	int									m_iSize;
+	UINT8*								m_pGPUAddress;
+	D3D12_CPU_DESCRIPTOR_HANDLE			m_CPUHandle;
+	UINT								m_iUploadHeapOffset;
 };
 
 };

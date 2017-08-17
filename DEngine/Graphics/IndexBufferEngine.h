@@ -2,6 +2,7 @@
 
 //Engine include
 #include "D3D11Renderer.h"
+#include "D3D12Renderer.h"
 #include "Memory\Handle.h"
 
 namespace DE
@@ -27,9 +28,9 @@ public:
 	*	@ m_iNumIndics: the number of index in the above array
 	*
 	*	--- Return:
-	*	@ ID3D11Buffer*: the index buffer created using the given data
+	*	@ void*: the index buffer created using the given data
 	********************************************************************************/
-	ID3D11Buffer* CreateBufferFromRawData(const unsigned int* pIndexData, const int m_iNumIndics);
+	void* CreateBufferFromRawData(const unsigned int* pIndexData, const int m_iNumIndics);
 
 	/********************************************************************************
 	*	--- Function:

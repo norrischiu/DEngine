@@ -74,7 +74,9 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	drawPass->SetRasterizerState(State::CULL_NONE_RS);
 	drawPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-	drawPass->SetDepthStencilView(D3D11Renderer::GetInstance()->m_depthReadOnly->GetDSV());
+#ifdef D3D11
+	drawPass->SetDepthStencilView(((D3D11Renderer*)D3DRenderer::GetInstance())->m_depthReadOnly);
+#endif
 	drawPass->SetBlendState(State::ALPHA_BS);
 
 	Handle hTexture(sizeof(Texture));
@@ -119,6 +121,7 @@ float Emitter::GetAge()
 
 void Emitter::Draw()
 {
+#ifdef D3D11
 	Vector3 ran = Vector3(RandF(m_fRandMin, m_fRandMax), 0.0f, RandF(m_fRandMin, m_fRandMax));
 
 	float random = RandF(-0.05f, 0.05f);
@@ -128,8 +131,8 @@ void Emitter::Draw()
 
 	VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER* ptr = (VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER*) m_pVSGSPSCBuffer->m_Memory._data;
 
-	ptr->gViewProj = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
-	ptr->gEyePosW = D3D11Renderer::GetInstance()->GetCamera()->GetPosition();
+	ptr->gViewProj = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix();
+	ptr->gEyePosW = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPosition();
 	Vector3 emitPos = m_vEmitPosW;
 	emitPos.Transform(*m_pTransform);
 	ptr->gEmitPosW = emitPos;
@@ -156,10 +159,10 @@ void Emitter::Draw()
 		emitterPass->SetRasterizerState(State::CULL_NONE_RS);
 		emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		m_InitMesh->RenderUsingPass(emitterPass);
-		D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+		((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
 
 		// second pass
-		drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+		drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 		m_DrawMesh->RenderUsingPass(drawPass);
 		m_FirstRun = false;
 	}
@@ -171,9 +174,9 @@ void Emitter::Draw()
 			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
 			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 			m_DrawMesh->RenderUsingPass(emitterPass);
-			D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+			((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
 			// second pass
-			drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+			drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 			m_StreamOutMesh->RenderUsingPass(drawPass);
 			m_Flag = false;
 		}
@@ -183,13 +186,14 @@ void Emitter::Draw()
 			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
 			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 			m_StreamOutMesh->RenderUsingPass(emitterPass);
-			D3D11Renderer::GetInstance()->UnBindStreamOutTargets();
+			((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
 			// second pass
-			drawPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+			drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 			m_DrawMesh->RenderUsingPass(drawPass);
 			m_Flag = true;
 		}
 	}
+#endif
 }
 
 void Emitter::SetEyePosW(const Vector3 & eyePosW)
