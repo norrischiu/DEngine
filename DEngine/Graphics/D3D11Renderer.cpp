@@ -8,16 +8,18 @@
 #include "Graphics\ParticleSystem\Emitter.h"
 #include "Graphics\ParticleSystem\ParticleSystem.h"
 #include "DebugRenderer\DEBUG_RENDERER.h"
-#include "../GlobalInclude.h"
+#include "GlobalInclude.h"
+#include "GBuffer.h"
+#include "PostProcessEffect.h"
 
 #include <DXGI.h>
+
+#ifdef D3D11
 
 namespace DE
 {
 
-D3D11Renderer* D3D11Renderer::m_pInstance = nullptr;
-
-void D3D11Renderer::ConstructWithWindow(HWND hWnd)
+bool D3D11Renderer::ConstructWithWindow(HWND hWnd)
 {
 	IDXGIAdapter * pAdapter;
 	MyArray<IDXGIAdapter*> vAdapters(0);
@@ -120,11 +122,13 @@ void D3D11Renderer::ConstructWithWindow(HWND hWnd)
 
 	m_GBuffer = new GBuffer;
 	m_PPE = new PostProcessEffect;
+
+	return true;
 }
 
 void D3D11Renderer::Update(const float delta_time)
 {
-	HUD::getInstance()->update(delta_time);
+	//HUD::getInstance()->update(delta_time);
 }
 
 void D3D11Renderer::Render()
@@ -167,3 +171,5 @@ void D3D11Renderer::Render()
 }
 
 };
+
+#endif

@@ -2,6 +2,10 @@
 #ifndef D3D11RENDERER_H_
 #define D3D11RENDERER_H_
 
+#include "GlobalInclude.h"
+
+#ifdef D3D11
+
 // D3D11 inlcude
 #include <D3D11.h>
 
@@ -9,17 +13,13 @@
 #include <windows.h>
 
 // Engine include
-#include "GBuffer.h"
-#include "PostProcessEffect.h"
+#include "D3DRenderer.h"
 #include "Render\Texture.h"
-#include "Object\CameraComponent.h"
 
 #pragma comment (lib, "D3D11")
 
 namespace DE
 {
-
-const static unsigned int					RT_NUM = 2;		// Number of render target in G-Buffer
 
 /*
 *	CLASS: D3D11Renderer
@@ -28,7 +28,7 @@ const static unsigned int					RT_NUM = 2;		// Number of render target in G-Buffe
 *	to rendering device, and contains the actual render target 
 *	and G Buffer
 */
-class D3D11Renderer
+class D3D11Renderer : public D3DRenderer
 {
 
 public:
@@ -56,7 +56,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void ConstructWithWindow(HWND hWnd);
+	bool ConstructWithWindow(HWND hWnd);
 
 	/********************************************************************************
 	*	--- Function:
@@ -112,59 +112,6 @@ public:
 	void Render();
 
 	/********************************************************************************
-	*	--- Static Function:
-	*	GetInstance()
-	*	This function will return the singleton instance of D3D11Renderer
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ D3D11Renderer*: the singleton instance
-	********************************************************************************/
-	static D3D11Renderer* GetInstance()
-	{
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new D3D11Renderer();
-		}
-		return m_pInstance;
-	}
-
-	/********************************************************************************
-	*	--- Function:
-	*	GetCamera()
-	*	This function will return the pointer to the camera component using by the 
-	*	renderer
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ CameraComponent*: the pointer to the camera component 
-	********************************************************************************/
-	CameraComponent* GetCamera()
-	{
-		return m_RendererCamera;
-	}
-
-	/********************************************************************************
-	*	--- Function:
-	*	SetCamera(CameraComponent*)
-	*	This function will set a camera component as the camera for rendering
-	*
-	*	--- Parameters:
-	*	@ camera: the pointer to a camera component
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void SetCamera(CameraComponent* camera)
-	{
-		m_RendererCamera = camera;
-	}
-
-	/********************************************************************************
 	*	--- Function:
 	*	UnbindRenderTargets()
 	*	This function will unbind all render targets from GPU
@@ -213,7 +160,7 @@ public:
 	void UnbindPSShaderResources(int num)
 	{
 		ID3D11ShaderResourceView* null[5] = { nullptr };
-		D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetShaderResources(0, num, null);
+		m_pD3D11Context->PSSetShaderResources(0, num, null);
 	}
 
 
@@ -227,14 +174,9 @@ public:
 	Texture*									m_depth; // pointer to depth texutre for depth stencil view and shader resources view
 	Texture*									m_depthReadOnly; // pointer to read-only depth stencil view
 	//Texture*									m_LightingAccumBuffer;
-
-private:
-	
-	static D3D11Renderer*						m_pInstance;	// Singleton instance
-	CameraComponent*							m_RendererCamera;		// the pointer to current rendering camera
-	GBuffer*									m_GBuffer;		// the pointer to GBuffer class
-	PostProcessEffect*							m_PPE;		// the pointer to post-processing effect interface class
 };
 
 };
+#endif
+
 #endif
