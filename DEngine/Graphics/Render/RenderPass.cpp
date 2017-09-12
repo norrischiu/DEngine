@@ -109,7 +109,8 @@ void RenderPass::BindToRenderer()
 	if (m_pPS != nullptr)
 	{
 		D3D12_GPU_DESCRIPTOR_HANDLE SRVStart = renderer->m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
-		SRVStart.ptr += m_vTextureSRVs[0].ptr - renderer->m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart().ptr;
+		UINT64 diff = m_vTextureSRVs[0].ptr - renderer->m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart().ptr;
+		SRVStart.ptr += diff;
 		renderer->m_pCommandList->SetGraphicsRootDescriptorTable(3, SRVStart);
 	}
 	renderer->m_pCommandList->SetPipelineState(m_pPSO);

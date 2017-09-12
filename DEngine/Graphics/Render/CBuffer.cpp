@@ -15,7 +15,7 @@ void CBuffer::InitializeCBVUploadHeap(D3DRenderer* renderer)
 	((D3D12Renderer*)renderer)->m_pDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE, // no flags
-		&CD3DX12_RESOURCE_DESC::Buffer(64 * 1024),
+		&CD3DX12_RESOURCE_DESC::Buffer(32 * 1024 * 1024),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&CBV_UPLOAD_HEAP));
@@ -34,19 +34,6 @@ CBuffer::CBuffer(int type, size_t size)
 	HRESULT hr;
 
 #ifdef D3D12
-	//D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
-
-	//D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	//cbvDesc.BufferLocation = CBV_UPLOAD_HEAP->GetGPUVirtualAddress() + CBV_UPLOAD_HEAP_CURR_OFFSET;
-	//cbvDesc.SizeInBytes = (size + 255) & ~255;    // CB size is required to be 256-byte aligned.
-	//renderer->m_pDevice->CreateConstantBufferView(&cbvDesc, renderer->m_CbvSrvUavHeapHandle);
-	//
-	//// offset upload heap pointer and descriptor pointer
-	//m_CPUHandle = renderer->m_CbvSrvUavHeapHandle;
-	//renderer->m_CbvSrvUavHeapHandle.Offset(1, renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-	//m_iUploadHeapOffset = CBV_UPLOAD_HEAP_CURR_OFFSET;
-	//CBV_UPLOAD_HEAP_CURR_OFFSET += cbvDesc.SizeInBytes;
-
 	m_Memory._data = malloc(size); 
 
 #elif defined D3D11
@@ -108,21 +95,16 @@ void CBuffer::Update(size_t size)
 {
 #ifdef D3D12
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
-	/*
-	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	if (m_CPUHandle.ptr == 0)
-	{
-		// first time
-		m_CPUHandle = renderer->m_CbvSrvUavHeapHandle;
-		renderer->m_CbvSrvUavHeapHandle.Offset(1, renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-	}
-	cbvDesc.BufferLocation = CBV_UPLOAD_HEAP->GetGPUVirtualAddress() + CBV_UPLOAD_HEAP_CURR_OFFSET;
-	cbvDesc.SizeInBytes = (size + 255) & ~255;    // CB size is required to be 256-byte aligned.
-	renderer->m_pDevice->CreateConstantBufferView(&cbvDesc, m_CPUHandle);
-	*/
 	// offset upload heap pointer and descriptor pointer
 	m_iUploadHeapOffset = CBV_UPLOAD_HEAP_CURR_OFFSET;
-	CBV_UPLOAD_HEAP_CURR_OFFSET += (size + 255) & ~255;
+	if (CBV_UPLOAD_HEAP_CURR_OFFSET + ((size + 255) & ~255) >= 32 * 1024 * 1024)
+	{
+		CBV_UPLOAD_HEAP_CURR_OFFSET = 0;
+	}
+	else
+	{
+		CBV_UPLOAD_HEAP_CURR_OFFSET += (size + 255) & ~255;
+	}
 
 	memcpy((void*)((uintptr_t)CBV_UPLOAD_HEAP_BEGIN + m_iUploadHeapOffset), m_Memory._data, size);
 

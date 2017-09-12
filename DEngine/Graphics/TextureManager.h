@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <d3d11.h>
+#include <d3d12.h>
 #include "Utilities\MyHashMap.h"
+#include "GlobalInclude.h"
 
 namespace DE
 {
@@ -114,6 +116,11 @@ private:
 	static TextureManager*								m_pInstance;	// Singleton instance
 	MyHashMap<void*>									m_mapTexture;	// hash map of shader resources view
 
+#ifdef D3D12
+	D3D12_PLACED_SUBRESOURCE_FOOTPRINT					m_SubresourceFootprintHolder[64]; // helper to store subresurce footprint to avoid allocate everytime
+	UINT												m_RowCountHolder[64];
+	UINT64												m_RowSizeHolder[64];
+#endif
 };
 
 };

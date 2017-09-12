@@ -64,11 +64,14 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{010A8043-6D74-34BA-B6B2-E55F225C120F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\Memory">
-      <UniqueIdentifier>{BE94DDC2-AA36-0899-93F1-1BED7F328FE9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Render\Scene">
       <UniqueIdentifier>{B3383A89-9F06-2E8F-889A-9EB574070AF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{BE94DDC2-AA36-0899-93F1-1BED7F328FE9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GPU">
+      <UniqueIdentifier>{544a41de-58c8-4a33-a328-e6352caab546}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -340,13 +343,13 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Memory\Handle.h">
-      <Filter>Object\Memory</Filter>
+      <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="Memory\MemoryManager.h">
-      <Filter>Object\Memory</Filter>
+      <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="Memory\MemoryPool.h">
-      <Filter>Object\Memory</Filter>
+      <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="Object\Camera.h">
       <Filter>Object</Filter>
@@ -552,7 +555,7 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Memory\MemoryManager.cpp">
-      <Filter>Object\Memory</Filter>
+      <Filter>Memory</Filter>
     </ClCompile>
     <ClCompile Include="Object\CameraComponent.cpp">
       <Filter>Object</Filter>

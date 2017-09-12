@@ -2,8 +2,6 @@
 #include "Graphics\D3DRenderer.h"
 #include "Graphics\D3D11Renderer.h"
 #include "Graphics\D3D12Renderer.h"
-#include "Graphics\DDSTextureLoader12.h"
-#include <vector>
 #include "State.h"
 #include "Graphics\TextureManager.h"
 #include "GlobalInclude.h"
@@ -23,42 +21,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	{
 		
 #ifdef D3D12
-		ID3D12Resource* texBuffer;
-		std::unique_ptr<uint8_t[]> pTexResourceView;
-		std::vector<D3D12_SUBRESOURCE_DATA> subresources; // mips count
-		std::string name(filename);
-		name = "../Assets/" + name; // TODO: remove string operation
-		wchar_t* pName = new wchar_t[strlen(name.c_str()) + 1]; //TODO
-		mbstowcs(pName, name.c_str(), strlen(name.c_str()) + 1);
-		hr = DirectX::LoadDDSTextureFromFile(((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice, pName, &texBuffer, pTexResourceView, subresources);
-		assert(hr == S_OK && "texture file error");
-		//texBuffer = (ID3D12Resource*) TextureManager::GetInstance()->GetTexture(filename);
-
-		// Upload heap
-		UINT64 textureUploadBufferSize;
-		ID3D12Resource* textureBufferUploadHeap;
-		D3D12_RESOURCE_DESC textureDesc = texBuffer->GetDesc();
-		renderer->m_pDevice->GetCopyableFootprints(&textureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &textureUploadBufferSize);
-		hr = renderer->m_pDevice->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // upload heap
-			D3D12_HEAP_FLAG_NONE, // no flags
-			&CD3DX12_RESOURCE_DESC::Buffer(textureUploadBufferSize), // resource description for a buffer (storing the image data in this heap just to copy to the default heap)
-			D3D12_RESOURCE_STATE_GENERIC_READ, // We will copy the contents from this heap to the default heap
-			nullptr,
-			IID_PPV_ARGS(&textureBufferUploadHeap));
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Format = textureDesc.Format;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		renderer->m_pDevice->CreateShaderResourceView(texBuffer, &srvDesc, renderer->m_CbvSrvUavHeapHandle);
-		m_pSRV = renderer->m_CbvSrvUavHeapHandle;
-		renderer->m_CbvSrvUavHeapHandle.Offset(1, renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-
-		UpdateSubresources(renderer->m_pCommandList, texBuffer, textureBufferUploadHeap, 0, 0, 1, &subresources[0]);
-		renderer->m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-
+		m_pSRV.ptr = (uintptr_t) TextureManager::GetInstance()->GetTexture(filename);
 		m_iSampler = State::LINEAR_MIPMAP_MAX_LOD_SS;
 #elif defined D3D11
 		m_pSRV = (ID3D11ShaderResourceView*)TextureManager::GetInstance()->GetTexture(filename);
