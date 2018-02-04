@@ -126,7 +126,6 @@
     <ClInclude Include="Graphics\Render\PSPerLightCBuffer.h" />
     <ClInclude Include="Graphics\Render\PSPerMaterialCBuffer.h" />
     <ClInclude Include="Graphics\Render\RenderPass.h" />
-    <ClInclude Include="Graphics\Render\RenderTechnique.h" />
     <ClInclude Include="Graphics\Render\State.h" />
     <ClInclude Include="Graphics\Render\Texture.h" />
     <ClInclude Include="Graphics\Render\VSGSPSPerFrameCBuffer.h" />
@@ -207,7 +206,6 @@
     <ClCompile Include="Graphics\Render\PSPerLightCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\PSPerMaterialCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\RenderPass.cpp" />
-    <ClCompile Include="Graphics\Render\RenderTechnique.cpp" />
     <ClCompile Include="Graphics\Render\State.cpp" />
     <ClCompile Include="Graphics\Render\Texture.cpp" />
     <ClCompile Include="Graphics\Render\VSGSPSPerFrameCBuffer.cpp" />

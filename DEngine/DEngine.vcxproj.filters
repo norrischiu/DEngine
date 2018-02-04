@@ -267,9 +267,6 @@
     <ClInclude Include="Graphics\Render\RenderPass.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Render\RenderTechnique.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Render\State.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
@@ -510,9 +507,6 @@
       <Filter>Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Render\RenderPass.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Render\RenderTechnique.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Render\State.cpp">

@@ -95,7 +95,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 #endif
 	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 	pass->ConstructPSO();
-	((RenderTechnique*)m_hRenderTechnique.Raw())->AddPass(pass);
+	m_pRenderPass = pass;
 }
 
 void Material::UseDefault()

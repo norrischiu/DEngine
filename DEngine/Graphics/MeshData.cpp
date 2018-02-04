@@ -102,11 +102,7 @@ MeshData::~MeshData()
 
 void MeshData::Render()
 {
-	RenderTechnique* technique = m_Material.GetRenderTechnique();
-	const unsigned int size = technique->m_vRenderPasses.Size();
-	for (int i = 0; i < size; ++i)
-	{
-		technique->m_vRenderPasses[i]->BindToRenderer();
+		m_Material.GetRenderPass()->BindToRenderer();
 #ifdef D3D12
 		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
@@ -132,7 +128,6 @@ void MeshData::Render()
 
 		//((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindPSShaderResources(technique->m_vRenderPasses[i]->GetTextureCount());
 		//((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindRenderTargets();
-	}
 }
 
 void MeshData::RenderUsingPass(RenderPass * pass)

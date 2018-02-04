@@ -4,7 +4,7 @@
 
 // Engine include
 #include "Math\simdmath.h"
-#include "Render\RenderTechnique.h"
+#include "Render\RenderPass.h"
 
 namespace DE
 {
@@ -28,9 +28,8 @@ public:
 	*	@ void
 	********************************************************************************/
 	Material()
-		: m_hRenderTechnique(sizeof(RenderTechnique))
 	{
-		new (m_hRenderTechnique) RenderTechnique();
+		m_pRenderPass = new RenderPass();
 	};
 
 	/********************************************************************************
@@ -51,9 +50,8 @@ public:
 		, m_vSpecular(spec)
 		, m_fShininess(shin)
 		, m_TexFlag(NULL)
-		, m_hRenderTechnique(sizeof(RenderTechnique))
 	{
-		new (m_hRenderTechnique) RenderTechnique();
+		m_pRenderPass = new RenderPass();
 	}
 
 	/********************************************************************************
@@ -109,9 +107,9 @@ public:
 	*	--- Return:
 	*	@ RenderTechnique*: the pointer to the render technique of this material
 	********************************************************************************/
-	RenderTechnique* GetRenderTechnique()
+	RenderPass* GetRenderPass()
 	{
-		return (RenderTechnique*) m_hRenderTechnique.Raw();
+		return m_pRenderPass;
 	}
 
 	/********************************************************************************
@@ -127,23 +125,7 @@ public:
 	********************************************************************************/
 	void Destruct()
 	{
-		m_hRenderTechnique.Free();
-	}
-
-	/********************************************************************************
-	*	--- Function:
-	*	AddPassToTechnique(RenderPass*)
-	*	This function will add a render pass to the render technique
-	*
-	*	--- Parameters:
-	*	@ pass: pointer to a render pass to be added
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void AddPassToTechnique(RenderPass* pass)
-	{
-		((RenderTechnique*)m_hRenderTechnique.Raw())->AddPass(pass);
+		delete m_pRenderPass;
 	}
 
 	/********************************************************************************
@@ -198,7 +180,7 @@ private:
 	Vector4						m_vSpecular;	// specular factor
 	float						m_fShininess;	// shininess factor
 	char						m_TexFlag;		// factors contained in a material definition file
-	Handle						m_hRenderTechnique;		// handle referring to a rendering technique
+	RenderPass*					m_pRenderPass;		// render pass
 };
 
 };
