@@ -38,7 +38,7 @@ There are two ways to build the D-ENGINE and the provided demo.
 1. Use the existing Microsoft Visual Studio Solution (.sln) directly.
 2. Generate Microsoft Visual Studio Solution (.sln) from Premake script. For user with Microsoft Visual Studio 2015, bring up the command prompt and run premake5.exe with the command "premake5 vs2015" at the base directory of DEngine. For further information on using and extending Premake, visit their official repository https://github.com/premake/premake-core.
 
-*GameCode should be set as the start-up project, D-ENGINE currently support Windows, Microsoft Visual Studio with Intel CPU only
+*GameCode should be set as the start-up project, D-ENGINE currently support Windows, Microsoft Visual Studio 2015 (v140 platform toolset is required) with Intel CPU only
 
 # Roadmap
 We planned to extend D-ENGINE in the following areas in the future:
