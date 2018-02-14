@@ -23,12 +23,12 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	{
 		return false;
 	}
-	IDXGIAdapter1* adapter;
+	IDXGIAdapter3* adapter;
 	int adapterIndex = 0;
 
 	// Device
 	bool hasAdapter = false;
-	while (dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND)
+	while (dxgiFactory->EnumAdapters(adapterIndex, reinterpret_cast<IDXGIAdapter**>(&adapter)) != DXGI_ERROR_NOT_FOUND)
 	{
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
@@ -49,6 +49,14 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	{
 		return false;
 	}
+
+	// Query memory
+	{
+		DXGI_QUERY_VIDEO_MEMORY_INFO videoMemoryInfo;
+		adapter->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_LOCAL, &videoMemoryInfo);
+		size_t vram = videoMemoryInfo.Budget;
+	}
+
 	// Create the device
 	hr = D3D12CreateDevice(
 		adapter,
@@ -92,7 +100,19 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	m_pSwapChain = static_cast<IDXGISwapChain3*>(swapChain);
 	m_iCurrFrameIndex = m_pSwapChain->GetCurrentBackBufferIndex();
 	
-	CBuffer::InitializeCBVUploadHeap(this);
+	// create upload heap for constant buffer
+	{
+		m_pDevice->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE, // no flags
+			&CD3DX12_RESOURCE_DESC::Buffer(32 * 1024 * 1024),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&m_pConstantBufferHeap));
+		m_pConstantBufferHeap->SetName(L"Constant Buffer Upload Resource Heap");
+
+		m_pConstantBufferAllocator = new GPUCircularAllocator(m_pConstantBufferHeap, 32 * 1024 * 1024);
+	}
 
 	// RTV descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC RTVheapDesc = {};
@@ -289,7 +309,7 @@ void D3D12Renderer::Render()
 	hr = m_pSwapChain->Present(0, 0);
 
 	ResetCommandAllocatorAndList();
-	CBuffer::Reset();
+	m_pConstantBufferAllocator->Reset();
 }
 
 void D3D12Renderer::ResetCommandAllocatorAndList()

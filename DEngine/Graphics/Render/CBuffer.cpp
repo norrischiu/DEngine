@@ -6,27 +6,6 @@
 namespace DE
 {
 
-ID3D12Resource*	CBuffer::CBV_UPLOAD_HEAP = nullptr;
-UINT CBuffer::CBV_UPLOAD_HEAP_CURR_OFFSET = 0;
-void* CBuffer::CBV_UPLOAD_HEAP_BEGIN = nullptr;
-
-void CBuffer::InitializeCBVUploadHeap(D3DRenderer* renderer)
-{
-	((D3D12Renderer*)renderer)->m_pDevice->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE, // no flags
-		&CD3DX12_RESOURCE_DESC::Buffer(32 * 1024 * 1024),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&CBV_UPLOAD_HEAP));
-	CBV_UPLOAD_HEAP->SetName(L"Constant Buffer Upload Resource Heap");
-
-	CBV_UPLOAD_HEAP_CURR_OFFSET = 0;
-
-	CD3DX12_RANGE readRange(0, 0);
-	CBV_UPLOAD_HEAP->Map(0, &readRange, reinterpret_cast<void**>(&CBV_UPLOAD_HEAP_BEGIN));
-}
-
 CBuffer::CBuffer(int type, size_t size)
 : m_iType(type)
 , m_iSize(size)
@@ -34,7 +13,7 @@ CBuffer::CBuffer(int type, size_t size)
 	HRESULT hr;
 
 #ifdef D3D12
-	m_Memory._data = malloc(size); 
+	m_Memory._data = malloc(size);
 
 #elif defined D3D11
 	// Set constant buffer description
@@ -60,7 +39,6 @@ CBuffer::CBuffer(int type, size_t size)
 void CBuffer::BindToRenderer()
 {
 #ifdef D3D12
-//	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->SetGraphicsRootDescriptorTable(0, ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart());
 #elif defined D3D11
 	if (m_iType == VertexShader)
 	{
@@ -88,25 +66,16 @@ void CBuffer::BindToRenderer()
 void CBuffer::BindToRendererWithOffset(int parameterIndex, int offset)
 {
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
-	renderer->m_pCommandList->SetGraphicsRootConstantBufferView(parameterIndex, CBV_UPLOAD_HEAP->GetGPUVirtualAddress() + m_iUploadHeapOffset);
+	renderer->m_pCommandList->SetGraphicsRootConstantBufferView(parameterIndex, reinterpret_cast<D3D12_GPU_VIRTUAL_ADDRESS>(m_Memory._gpuHandle._gpuAddress));
 }
 
 void CBuffer::Update(size_t size)
 {
 #ifdef D3D12
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
-	// offset upload heap pointer and descriptor pointer
-	m_iUploadHeapOffset = CBV_UPLOAD_HEAP_CURR_OFFSET;
-	if (CBV_UPLOAD_HEAP_CURR_OFFSET + ((size + 255) & ~255) >= 32 * 1024 * 1024)
-	{
-		CBV_UPLOAD_HEAP_CURR_OFFSET = 0;
-	}
-	else
-	{
-		CBV_UPLOAD_HEAP_CURR_OFFSET += (size + 255) & ~255;
-	}
 
-	memcpy((void*)((uintptr_t)CBV_UPLOAD_HEAP_BEGIN + m_iUploadHeapOffset), m_Memory._data, size);
+	m_Memory._gpuHandle = renderer->m_pConstantBufferAllocator->Allocate(size);
+	memcpy(m_Memory._gpuHandle._cpuAddress, m_Memory._data, size);
 
 #elif defined D3D11
 	D3D11_MAPPED_SUBRESOURCE mappedResources;

@@ -16,6 +16,7 @@
 #include "PostProcessEffect.h"
 #include "Render\Texture.h"
 #include "Object\CameraComponent.h"
+#include "Graphics\GPU\GPUCircularAllocator.h"
 
 #ifdef D3D12
 
@@ -151,6 +152,9 @@ public:
 	UINT										m_iRTVDescriptorSize;
 	UINT										m_iCurrFrameIndex;
 	Handle										m_hTextures[RT_NUM];
+
+	ID3D12Resource*								m_pConstantBufferHeap;
+	GPUCircularAllocator*						m_pConstantBufferAllocator;
 };
 
 };

@@ -426,6 +426,12 @@
     <ClInclude Include="Graphics\DDSTextureLoader12.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\GPU\GPUCircularAllocator.h">
+      <Filter>Graphics\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPU\GPUDataType.h">
+      <Filter>Graphics\GPU</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp">

@@ -111,6 +111,8 @@
     <ClInclude Include="Graphics\DDSLoader.h" />
     <ClInclude Include="Graphics\DDSTextureLoader12.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
+    <ClInclude Include="Graphics\GPU\GPUCircularAllocator.h" />
+    <ClInclude Include="Graphics\GPU\GPUDataType.h" />
     <ClInclude Include="Graphics\IndexBufferEngine.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
