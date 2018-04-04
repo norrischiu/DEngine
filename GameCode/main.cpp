@@ -8,7 +8,6 @@
 #include "DEngine\System\Mouse.h"
 #include "DEngine\GlobalInclude.h"
 #include "DEngine\Graphics\D3DRenderer.h"
-#include "DEngine\Graphics\D3D11Renderer.h"
 #include "DEngine\Graphics\D3D12Renderer.h"
 #include "GameLoop.h"
 #include <windows.h>
@@ -16,11 +15,7 @@
 // C++ include
 #include <sstream>
 
-#ifdef D3D12
-	DE::D3DRenderer* DE::D3DRenderer::m_pInstance = new DE::D3D12Renderer();
-#elif defined D3D11
-	DE::D3DRenderer* DE::D3DRenderer::m_pInstance = new DE::D3D11Renderer();
-#endif
+DE::D3DRenderer* DE::D3DRenderer::m_pInstance = new DE::D3D12Renderer();
 
 //-----------------------------------------------------------------------------
 // Name: MsgProc()

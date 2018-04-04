@@ -4,9 +4,8 @@
 // Engine include
 #include "GlobalInclude.h"
 
-// D3D incluedf
+// D3D inclued
 #include <assert.h>
-#include <d3d11.h>
 #include <d3d12.h>
 
 /*
@@ -51,11 +50,7 @@ namespace State
 		};
 	};
 
-#ifdef D3D12
-	extern D3D12_STATE_DESC			m_States[20];
-#elif defined D3D11
-	extern void*					m_States[20];		// array of all default states
-#endif
+	extern D3D12_STATE_DESC			m_States[20];		// array of all default states
 
 	/********************************************************************************
 	*	--- Static Function:
@@ -68,14 +63,9 @@ namespace State
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-#ifdef D3D12
 	static void ConstructDefaultStates()
-#elif defined D3D11
-	static void ConstructDefaultStates(ID3D11Device* pDevice)
-#endif
 	{
 		HRESULT hr;
-#ifdef D3D12
 		D3D12_STATE_DESC stateDesc;
 
 		D3D12_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -117,8 +107,8 @@ namespace State
 		depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 		depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 		depthStencilDesc.StencilEnable = true;
-		depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-		depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		depthStencilDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+		depthStencilDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
 		depthStencilDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
 		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_DECR;
 		depthStencilDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
@@ -212,119 +202,6 @@ namespace State
 		samplerDesc.RegisterSpace = 0;
 		stateDesc.SS = samplerDesc;
 		m_States[LINEAR_MIPMAP_MAX_LOD_SS] = stateDesc;
-
-#elif defined D3D11
-		// Depth stencil state
-		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-		depthStencilDesc.DepthEnable = true; // true
-		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		depthStencilDesc.StencilEnable = false;
-		depthStencilDesc.StencilReadMask = 0;
-		depthStencilDesc.StencilWriteMask = 0;
-		hr = pDevice->CreateDepthStencilState(&depthStencilDesc, (ID3D11DepthStencilState**)&m_States[DEFAULT_DEPTH_STENCIL_DSS]);
-		assert(hr == S_OK);
-
-		depthStencilDesc.DepthEnable = false;
-		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-		depthStencilDesc.StencilEnable = true;
-		depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-		depthStencilDesc.StencilWriteMask = 0x00;
-		depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;
-		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
-		depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-		depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
-		depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;
-		depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
-		depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
-		hr = pDevice->CreateDepthStencilState(&depthStencilDesc, (ID3D11DepthStencilState**)&m_States[DISABLE_DEPTH_STENCIL_DSS]);
-		assert(hr == S_OK);
-		depthStencilDesc.StencilEnable = false;
-		hr = pDevice->CreateDepthStencilState(&depthStencilDesc, (ID3D11DepthStencilState**)&m_States[DISABLE_DEPTH_DISABLE_STENCIL_DSS]);
-		assert(hr == S_OK);
-
-		depthStencilDesc.DepthEnable = true;
-		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-		depthStencilDesc.StencilEnable = true;
-		depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-		depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
-		depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		hr = pDevice->CreateDepthStencilState(&depthStencilDesc, (ID3D11DepthStencilState**)&m_States[GBUFFER_STENCIL_CHECK_DSS]);
-		assert(hr == S_OK);
-
-		// Rasterizer state
-		D3D11_RASTERIZER_DESC rasterizerDesc;
-		ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
-		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		rasterizerDesc.CullMode = D3D11_CULL_BACK;
-		hr = pDevice->CreateRasterizerState(&rasterizerDesc, (ID3D11RasterizerState**)&m_States[CULL_BACK_RS]);
-		assert(hr == S_OK);
-		rasterizerDesc.CullMode = D3D11_CULL_FRONT;
-		hr = pDevice->CreateRasterizerState(&rasterizerDesc, (ID3D11RasterizerState**)&m_States[CULL_FRONT_RS]);
-		rasterizerDesc.CullMode = D3D11_CULL_NONE;
-		assert(hr == S_OK);
-		hr = pDevice->CreateRasterizerState(&rasterizerDesc, (ID3D11RasterizerState**)&m_States[CULL_NONE_RS]);
-		assert(hr == S_OK);
-		rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
-		hr = pDevice->CreateRasterizerState(&rasterizerDesc, (ID3D11RasterizerState**)&m_States[WIREFRAME_RS]);
-		assert(hr == S_OK);
-
-		// Blend state
-		D3D11_BLEND_DESC blendStateDesc;
-		blendStateDesc.AlphaToCoverageEnable = FALSE;
-		blendStateDesc.IndependentBlendEnable = FALSE;
-		blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
-		blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = pDevice->CreateBlendState(&blendStateDesc, (ID3D11BlendState**)&m_States[ADDITIVE_BS]);
-		assert(hr == S_OK);
-
-		ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
-		blendStateDesc.AlphaToCoverageEnable = FALSE;
-		blendStateDesc.IndependentBlendEnable = FALSE;
-		blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
-		blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = pDevice->CreateBlendState(&blendStateDesc, (ID3D11BlendState**)&m_States[ALPHA_BS]);
-		assert(hr == S_OK);
-
-		// Set sampler state
-		D3D11_SAMPLER_DESC samplerDesc;
-		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MaxAnisotropy = 1;
-		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-		samplerDesc.BorderColor[0] = 0;
-		samplerDesc.BorderColor[1] = 0;
-		samplerDesc.BorderColor[2] = 0;
-		samplerDesc.BorderColor[3] = 0;
-		samplerDesc.MinLOD = 0;
-		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-		hr = pDevice->CreateSamplerState(&samplerDesc, (ID3D11SamplerState**)&m_States[LINEAR_MIPMAP_MAX_LOD_SS]);
-		assert(hr == S_OK);
-#endif
 	}
 
 	/********************************************************************************
@@ -338,17 +215,10 @@ namespace State
 	*	--- Return:
 	*	@ void*: pointer to the specific state
 	********************************************************************************/
-#ifdef D3D12
 	static D3D12_STATE_DESC GetState(int stateID)
 	{
 		return m_States[stateID];
 	}
-#elif defined D3D11
-	static void* GetState(int stateID)
-	{
-		return m_States[stateID];
-	}
-#endif
 
 };
 

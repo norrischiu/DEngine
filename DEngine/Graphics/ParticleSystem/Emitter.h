@@ -3,7 +3,6 @@
 #define EMITTER_H_
 
 #include "Particle.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\D3D12Renderer.h"
 #include "Graphics\Render\VSGSPSPerFrameCBuffer.h"
 #include "Graphics\Render\Texture.h"

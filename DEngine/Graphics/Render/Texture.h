@@ -2,7 +2,6 @@
 #define TEXTURE_H_
 
 // D3D include
-#include <d3d11.h>
 #include <d3d12.h>
 
 // Engine include
@@ -65,11 +64,7 @@ public:
 	*	@ type: the type of this texture as defined in the enum
 	*	@ texSrc: the texture pointer already defined in GPU
 	********************************************************************************/
-#ifdef D3D12
 	Texture(int type, ID3D12Resource* texSrc);
-#elif defined D3D11
-	Texture(int type, ID3D11Texture2D* texSrc);
-#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -81,13 +76,9 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11ShaderResourceView*: pointer to a D3D11 shader resource view
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D shader resource view descriptor
 	********************************************************************************/
-#ifdef D3D12
 	D3D12_CPU_DESCRIPTOR_HANDLE	GetSRV()
-#elif defined D3D11
-	ID3D11ShaderResourceView*& GetSRV()
-#endif
 	{
 		return m_pSRV;
 	}
@@ -102,14 +93,9 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11ShaderResourceView*&: reference of pointer to a D3D11 render
-	*	target view
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D render target view descriptor
 	********************************************************************************/
-#ifdef D3D12
 	D3D12_CPU_DESCRIPTOR_HANDLE	GetRTV()
-#elif defined D3D11
-	ID3D11RenderTargetView*& GetRTV()
-#endif
 	{
 		return m_pRTV;
 	}
@@ -124,13 +110,9 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11DepthStencilView*: pointer to a D3D11 depth stencil view
+	*	@ ID3D12DescriptorHeap*: pointer to a D3D depth stencil view descriptor heap
 	********************************************************************************/
-#ifdef D3D12
-	ID3D12DescriptorHeap*	GetDSV()
-#elif defined D3D11
-	ID3D11DepthStencilView*	GetDSV()
-#endif
+	ID3D12DescriptorHeap* GetDSV() // TODO: fix this
 	{
 		assert(m_pDSV != nullptr);
 		return m_pDSV;
@@ -145,13 +127,9 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11Texture2D*: pointer to a D3D11 texture 2D
+	*	@ ID3D12Resource*: pointer to a D3D texture 2D
 	********************************************************************************/
-#ifdef D3D12
 	ID3D12Resource* GetTexture2D()
-#elif defined D3D11
-	ID3D11Texture2D* GetTexture2D()
-#endif
 	{
 		return m_pTexture;
 	}
@@ -165,19 +143,12 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11SamplerState*: pointer to a D3D11 sampler state
+	*	@ int: index of the sampler state in default state array
 	********************************************************************************/
-#ifdef D3D12
 	int GetSamplerDescIndex()
 	{
 		return m_iSampler;
 	}
-#elif defined D3D11
-	ID3D11SamplerState* GetSamplerState()
-	{
-		return m_pSampler;
-	}
-#endif
 
 	DXGI_FORMAT GetFormat()
 	{
@@ -189,7 +160,6 @@ private:
 	int											m_type;		// type of GPU texture resources stored
 	DXGI_FORMAT									m_Format;
 
-#ifdef D3D12
 	union
 	{
 		D3D12_CPU_DESCRIPTOR_HANDLE				m_pRTV;		// pointer to D3D11 render targer view, union with m_pDSV
@@ -202,20 +172,6 @@ private:
 	};
 	int											m_iSampler;
 	ID3D12Resource*								m_pTexture;		// pointer to D3D12 texture 2D
-#elif defined D3D11
-	union
-	{
-		ID3D11RenderTargetView*					m_pRTV;		// pointer to D3D11 render targer view, union with m_pDSV
-		ID3D11DepthStencilView*					m_pDSV;		// pointer to D3D11 depth stencil view, union with m_pRTV
-	};
-	union
-	{
-		ID3D11UnorderedAccessView*				m_pUAV;		// pointer to D3D11 unordered access view, union with m_pSRV
-		ID3D11ShaderResourceView*				m_pSRV;		// pointer to D3D11 shader resources view, union with m_pUAV
-	};
-	ID3D11SamplerState*							m_pSampler;		// pointer to D3D11 sampler state
-	ID3D11Texture2D*							m_pTexture;		// pointer to D3D11 texture 2D
-#endif
 };
 
 };

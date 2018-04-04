@@ -1,7 +1,5 @@
 #pragma once
-#include <d3d11.h>
 #include "Graphics\VertexFormat.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\MeshComponent.h"
 
 namespace DE

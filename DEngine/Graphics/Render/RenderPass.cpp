@@ -1,13 +1,11 @@
 #include "RenderPass.h"
 #include "Graphics\D3DRenderer.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\D3D12Renderer.h"
 #include "GlobalInclude.h"
 
 namespace DE
 {
 
-#ifdef D3D12
 void RenderPass::ConstructPSO()
 {
 	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
@@ -100,11 +98,9 @@ void RenderPass::ConstructPSO()
 	hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pPSO));
 	assert(hr == S_OK);
 }
-#endif
 
 void RenderPass::BindToRenderer()
 {
-#ifdef D3D12
 	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
 	if (m_pPS != nullptr)
 	{
@@ -114,28 +110,9 @@ void RenderPass::BindToRenderer()
 		renderer->m_pCommandList->SetGraphicsRootDescriptorTable(3, SRVStart);
 	}
 	renderer->m_pCommandList->SetPipelineState(m_pPSO);
-#elif defined D3D11
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->IASetInputLayout(m_pInputLayout);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->VSSetShader(m_pVS, 0, 0);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->HSSetShader(m_pHS, 0, 0);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->DSSetShader(m_pDS, 0, 0);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->GSSetShader(m_pGS, 0, 0);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->PSSetShader(m_pPS, 0, 0);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->RSSetState(m_pRS);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->OMSetDepthStencilState(m_pDSS, 1);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->OMSetBlendState(m_pBS, NULL, 0xFFFFFF);
-
-	if (m_pSOTarget)
-	{
-		const unsigned int offset = 0;
-		((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->SOSetTargets(1, &m_pSOTarget, &offset);
-	}
-#endif
 
 	if (m_iRTVNum > 0)
 	{
-#ifdef D3D12
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[8] = {};
 		for (int i = 0; i < m_iRTVNum; ++i)
 		{
@@ -150,14 +127,9 @@ void RenderPass::BindToRenderer()
 		{
 			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, nullptr);
 		}
-#elif defined D3D11
-		((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindRenderTargets();
-		((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->OMSetRenderTargets(m_iRTVNum, m_pRTVs, m_pDSV);
-#endif
 	}
 	else
 	{
-#ifdef D3D12
 		// already in write depth state when create
 		if (m_pDSV != nullptr)
 		{
@@ -167,23 +139,7 @@ void RenderPass::BindToRenderer()
 		{
 			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, nullptr);
 		}
-#elif defined D3D11
-		((D3D11Renderer*)D3DRenderer::GetInstance())->UnbindRenderTargets();
-		((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->OMSetRenderTargets(0, nullptr, m_pDSV);
-#endif
 	}
-
-#ifdef D3D11
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->PSSetShaderResources(0, m_vTextureSRVs.Size(), m_vTextureSRVs.Raw());
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->PSSetSamplers(0, m_vSamplerState.Size(), m_vSamplerState.Raw());
-	//((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->VSSetShaderResources(i, 1, &m_vTextureSRVs[i]);
-	//((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->VSSetSamplers(0, 1, &m_vSamplerState[i]);
-	if (m_pDS)
-	{
-		((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->DSSetShaderResources(0, m_vTextureSRVs.Size(), m_vTextureSRVs.Raw());
-		((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->DSSetSamplers(0, m_vSamplerState.Size(), m_vSamplerState.Raw());
-	}
-#endif
 }
 
 };

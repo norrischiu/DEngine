@@ -2,7 +2,6 @@
 #define CBUFFER_H_
 
 // D3D include
-#include <d3d11.h>
 #include <d3d12.h>
 #include "GlobalInclude.h"
 #include "Graphics/GPU/GPUDataType.h"
@@ -42,11 +41,7 @@ public:
 	struct CPU_GPU_MEMORY
 	{
 		void*							_data;		// Pointer to CPU constant buffer memory
-#ifdef D3D12
 		GPUHandle						_gpuHandle;	// Pointer to GPU constant buffer memory
-#elif defined D3D11
-		ID3D11Buffer*					_buffer;	// Pointer to GPU constant buffer memory
-#endif
 	};
 
 	/********************************************************************************
