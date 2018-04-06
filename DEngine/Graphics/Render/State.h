@@ -11,7 +11,7 @@
 /*
 *	NAMESPACE: State
 *	Information enclosed in this namespace defined the default
-*	D3D11 states used in this engine. For example, depth stencil
+*	D3D states used in this engine. For example, depth stencil
 *	state, rasterizer state and blend state. This can be extended
 *	to allow more default state
 */
@@ -54,11 +54,11 @@ namespace State
 
 	/********************************************************************************
 	*	--- Static Function:
-	*	ConstructDefaultStates(ID3D11Device*)
-	*	This function will create all default D3D11 states used in this engine
+	*	ConstructDefaultStates()
+	*	This function will create all default D3D states used in this engine
 	*
 	*	--- Parameters:
-	*	@ pDevice: the pointer to the D3D11 device
+	*	@ void
 	*
 	*	--- Return:
 	*	@ void

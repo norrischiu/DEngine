@@ -1,7 +1,6 @@
 #pragma once
 
 #define D3D12
-// #define D3D11
 
 static int WINDOW_HEIGHT = 1080;
 static int WINDOW_WIDTH = 1920;

@@ -18,8 +18,7 @@ class PostProcessEffect;
 
 /*
 *	CLASS: D3DRenderer
-*	D3DRenderer is bass class renderer for Direct3D, currently
-*	support D3D11 and D3D12
+*	D3DRenderer is bass class renderer for Direct3D
 */
 class D3DRenderer
 {
@@ -56,13 +55,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	DestructandCleanUp()
-	*	This function will release all D3D11 COM object
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ void
+	*	This function will release all D3D resources
 	********************************************************************************/
 	virtual void DestructandCleanUp() = 0;
 

@@ -26,7 +26,6 @@ void* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData,
 	HRESULT hr;
 
 	// Create the index buffer
-#ifdef D3D12
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * m_iNumIndics;
@@ -67,33 +66,11 @@ void* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData,
 	((D3D12Renderer*)D3DRenderer::GetInstance())->ResetCommandAllocatorAndList();
 
 	return (void*)indexBuffer->GetGPUVirtualAddress();
-#elif defined D3D11
-	ID3D11Buffer* pIndexBuffer;
-
-	// Set index buffer description
-	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(UINT) * m_iNumIndics;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-
-	// Set index subresources data
-	D3D11_SUBRESOURCE_DATA indexResourcesData;
-	indexResourcesData.pSysMem = pIndexData;
-	indexResourcesData.SysMemPitch = 0;
-	indexResourcesData.SysMemSlicePitch = 0;
-
-	hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateBuffer(&indexBufferDesc, &indexResourcesData, &pIndexBuffer);
-	assert(hr == S_OK);
-	return pIndexBuffer;
-#endif
 }
 
 void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indicsNum)
 {
 	unsigned int iNumTri;
-	ID3D11Buffer* pIndexBuffer;
 	HRESULT hr;
 
 	// Read vertices
@@ -107,7 +84,6 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 	Handle hIndexData(sizeof(UINT) * indicsNum);
 	FillIndexData(indicsNum, hIndexData);
 
-#ifdef D3D12
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * indicsNum;
@@ -150,29 +126,6 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 
 	hIndexData.Free();
 	return (void*)indexBuffer->GetGPUVirtualAddress();
-#elif defined D3D11
-	// Set index buffer description
-	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(UINT) * indicsNum;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-
-	// Set index subresources data
-	D3D11_SUBRESOURCE_DATA indexResourcesData;
-	indexResourcesData.pSysMem = hIndexData.Raw();
-	indexResourcesData.SysMemPitch = 0;
-	indexResourcesData.SysMemSlicePitch = 0;
-
-	// Create the index buffer
-	hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateBuffer(&indexBufferDesc, &indexResourcesData, &pIndexBuffer);
-	assert(hr == S_OK);
-	((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Context->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	hIndexData.Free();
-	return pIndexBuffer;
-#endif
 }
 
 void IndexBufferEngine::FillIndexData(unsigned int indicsNum, Handle hIndexData)

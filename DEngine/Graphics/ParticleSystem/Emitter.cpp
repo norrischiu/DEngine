@@ -65,18 +65,16 @@ Emitter::Emitter(char* id, int type, float size, Vector3& emitPos, Vector3& emit
 	emitterPass = new RenderPass;
 	emitterPass->SetVertexShader("../DEngine/Shaders/VS_stream_out.hlsl");
 	emitterPass->SetGeometryShader("../DEngine/Shaders/GS_stream_out.hlsl");
-	emitterPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	emitterPass->SetTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	drawPass = new RenderPass;
 	drawPass->SetVertexShader("../DEngine/Shaders/VS_fire.hlsl");
 	drawPass->SetGeometryShader("../DEngine/Shaders/GS_fire.hlsl");
 	drawPass->SetPixelShader("../DEngine/Shaders/PS_fire.hlsl");
-	drawPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	drawPass->SetTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	drawPass->SetRasterizerState(State::CULL_NONE_RS);
 	drawPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-#ifdef D3D11
-	drawPass->SetDepthStencilView(((D3D11Renderer*)D3DRenderer::GetInstance())->m_depthReadOnly);
-#endif
+
 	drawPass->SetBlendState(State::ALPHA_BS);
 
 	Handle hTexture(sizeof(Texture));
@@ -121,79 +119,6 @@ float Emitter::GetAge()
 
 void Emitter::Draw()
 {
-#ifdef D3D11
-	Vector3 ran = Vector3(RandF(m_fRandMin, m_fRandMax), 0.0f, RandF(m_fRandMin, m_fRandMax));
-
-	float random = RandF(-0.05f, 0.05f);
-
-	// Pass the game time/step to geometry shader
-	m_pVSGSPSCBuffer->BindToRenderer();
-
-	VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER* ptr = (VSGSPSPerFrameCBuffer::VSGSPS_PER_FRAME_CBUFFER*) m_pVSGSPSCBuffer->m_Memory._data;
-
-	ptr->gViewProj = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix();
-	ptr->gEyePosW = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPosition();
-	Vector3 emitPos = m_vEmitPosW;
-	emitPos.Transform(*m_pTransform);
-	ptr->gEmitPosW = emitPos;
-	ptr->gEmitDirW = m_vEmitDirW + ran;
-	
-	if (m_EffectType == BLUE_LIGHT)
-	{
-		ptr->gEmitDirW = m_vEmitDirW;
-	}
-	ptr->gFlareAge = m_fFlareAge;
-	ptr->gTimeStep = m_fTimeStep;
-	ptr->gDisableTime = m_fDisableTime;
-	ptr->gMaxParts = m_iMaxParticles;
-	ptr->gEffectType = m_EffectType;
-	ptr->gParticleSize = m_fSize;
-	m_pVSGSPSCBuffer->Update();
-
-
-	// first pass
-	// updated particle list is streamed out to vertex buffer
-	if (m_FirstRun)
-	{
-		emitterPass->SetStreamOutTargets(m_DrawMesh->GetVertexBuffer());
-		emitterPass->SetRasterizerState(State::CULL_NONE_RS);
-		emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-		m_InitMesh->RenderUsingPass(emitterPass);
-		((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
-
-		// second pass
-		drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
-		m_DrawMesh->RenderUsingPass(drawPass);
-		m_FirstRun = false;
-	}
-	else
-	{
-		if (m_Flag)
-		{
-			emitterPass->SetStreamOutTargets(m_StreamOutMesh->GetVertexBuffer());
-			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
-			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-			m_DrawMesh->RenderUsingPass(emitterPass);
-			((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
-			// second pass
-			drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
-			m_StreamOutMesh->RenderUsingPass(drawPass);
-			m_Flag = false;
-		}
-		else if (!m_Flag)
-		{
-			emitterPass->SetStreamOutTargets(m_DrawMesh->GetVertexBuffer());
-			emitterPass->SetRasterizerState(State::CULL_NONE_RS);
-			emitterPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
-			m_StreamOutMesh->RenderUsingPass(emitterPass);
-			((D3D11Renderer*)D3DRenderer::GetInstance())->UnBindStreamOutTargets();
-			// second pass
-			drawPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
-			m_DrawMesh->RenderUsingPass(drawPass);
-			m_Flag = true;
-		}
-	}
-#endif
 }
 
 void Emitter::SetEyePosW(const Vector3 & eyePosW)

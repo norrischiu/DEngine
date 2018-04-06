@@ -1,9 +1,6 @@
 #ifndef POST_PROCESS_EFFECT_H_
 #define POST_PROCESS_EFFECT_H_
 
-// D3D11 include
-class ID3D11Buffer;
-
 namespace DE
 {
 
@@ -40,7 +37,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	Render()
-	*	This function will call D3D11 draw call with the given render pass in order
+	*	This function will call D3D draw call with the given render pass in order
 	*
 	*	--- Parameters:
 	*	@ void

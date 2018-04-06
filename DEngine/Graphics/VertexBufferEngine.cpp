@@ -23,7 +23,6 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 	std::string sFileNmae(filename);
 	int iNumVerts;
 	HRESULT hr;
-	ID3D11Buffer* pVertexBuffer;
 	Handle hVertexData;
 
 	// Read vertices
@@ -61,7 +60,6 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 		break;
 	}
 
-#ifdef D3D12
 	bufferSize = stride * iNumVerts;
 	ID3D12Resource* vertexBuffer;
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
@@ -103,28 +101,6 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 
 	hVertexData.Free();
 	return (void*) vertexBuffer->GetGPUVirtualAddress();
-#elif defined D3D11
-	// Set vertex subresources data
-	D3D11_SUBRESOURCE_DATA vertexResourcesData;
-	vertexResourcesData.pSysMem = hVertexData.Raw();
-	vertexResourcesData.SysMemPitch = 0;
-	vertexResourcesData.SysMemSlicePitch = 0;
-
-	// Set vertex buffer description
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = stride * iNumVerts;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-
-	// Create the vertex buffer
-	hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
-	assert(hr == S_OK);
-
-	hVertexData.Free();
-	return pVertexBuffer;
-#endif
 }
 
 void VertexBufferEngine::DestructandCleanUp() 
@@ -139,7 +115,6 @@ void* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int i
 {
 	HRESULT hr;
 
-#ifdef D3D12
 	int bufferSize = iDataSize * iNumVerts;
 	ID3D12Resource* vertexBuffer;
 	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
@@ -179,32 +154,6 @@ void* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int i
 	((D3D12Renderer*)D3DRenderer::GetInstance())->ResetCommandAllocatorAndList();
 
 	return (void*)vertexBuffer->GetGPUVirtualAddress();
-#elif defined D3D11
-	ID3D11Buffer* pVertexBuffer;
-	// Set vertex subresources data
-	D3D11_SUBRESOURCE_DATA vertexResourcesData;
-	vertexResourcesData.pSysMem = pVertexData;
-	vertexResourcesData.SysMemPitch = 0;
-	vertexResourcesData.SysMemSlicePitch = 0;
-
-	// Set vertex buffer description
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	if (streamOut)
-	{
-		vertexBufferDesc.BindFlags |= D3D11_BIND_STREAM_OUTPUT;
-	}
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = iDataSize * iNumVerts;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-
-	// Create the vertex buffer
-	hr = ((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
-	assert(hr == S_OK);
-
-	return pVertexBuffer;
-#endif
 }
 
 void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned int vertsNum, Handle hVertexData)

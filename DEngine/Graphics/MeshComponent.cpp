@@ -1,6 +1,5 @@
 // MeshComponent.cpp
 #include "MeshComponent.h"
-#include "D3D11Renderer.h"
 #include "MeshData.h"
 #include "Scene\SceneGraph.h"
 #include "GameObject\GameObject.h"

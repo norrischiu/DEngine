@@ -2,9 +2,6 @@
 #ifndef MESHDATA_H
 #define MESHDATA_H
 
-// D3D11 include
-#include <d3d11.h>
-
 // D3D12 include
 #include <d3d12.h>
 
@@ -81,7 +78,7 @@ public:
 	/********************************************************************************
 	*	--- Destructor:
 	*	~MeshData()
-	*	This destructor will release the D3D11 buffer COM object
+	*	Empty destructor
 	********************************************************************************/
 	~MeshData();
 	
@@ -164,25 +161,8 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	GetVertexBuffer()
-	*	This function will return the pointer to the vertex buffer at GPU
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ ID3D11Buffer*: pointer to the D3D11 vertex buffer
-	********************************************************************************/
-#ifdef D3D11
-	inline ID3D11Buffer* GetVertexBuffer()
-	{
-		return m_pVertexBuffer;
-	}
-#endif
-	/********************************************************************************
-	*	--- Function:
 	*	Destruct()
-	*	This function will destruct the material and relase the D3D11 buffer COM object
+	*	This function will destruct the material
 	*
 	*	--- Parameters:
 	*	@ void
@@ -193,23 +173,14 @@ public:
 	void Destruct()
 	{
 		m_Material.Destruct();
-#ifdef D3D11
-		m_pVertexBuffer->Release();
-		m_pIndexBuffer->Release();
-#endif
 	}
 
 	Material								m_Material;		// Mesh material
 
 private:
 
-#ifdef D3D12
 	D3D12_VERTEX_BUFFER_VIEW				m_VBV;
 	D3D12_INDEX_BUFFER_VIEW					m_IBV;
-#elif defined D3D11
-	ID3D11Buffer*							m_pVertexBuffer;	// Pointer to vertex buffer
-	ID3D11Buffer*							m_pIndexBuffer;		// Pointer to index buffer
-#endif
 
 	unsigned int							m_iStride;		// Data size of a vertex
 	unsigned int							m_iVertexOffset;	// Offset in vertex buffer between first element and first to be used element

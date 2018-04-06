@@ -1,7 +1,5 @@
 #include "TextureManager.h"
-#include "DDSLoader.h"
 #include "DDSTextureLoader12.h"
-#include "D3D11Renderer.h"
 #include "D3D12Renderer.h"
 
 #include <vector>
@@ -27,7 +25,7 @@ void TextureManager::LoadTexture(const char* filename)
 	HRESULT hr;
 	wchar_t* pName = new wchar_t[strlen(filename) + 1]; //TODO
 	mbstowcs(pName, filename, strlen(filename) + 1);
-#ifdef D3D12
+
 	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
 	ID3D12Resource* texBuffer;
 	std::unique_ptr<uint8_t[]> pTexResourceView;
@@ -105,13 +103,6 @@ void TextureManager::LoadTexture(const char* filename)
 	renderer->ResetCommandAllocatorAndList();
 	
 	m_mapTexture.Add(filename, (void*) SRVCPUAddress);
-#elif defined D3D11
-	ID3D11Resource* pTexture;
-	ID3D11ShaderResourceView* pTexResourceView;
-	hr = CreateDDSTextureFromFile(((D3D11Renderer*)D3DRenderer::GetInstance())->m_pD3D11Device, pName, &pTexture, &pTexResourceView);
-	assert(hr == S_OK);
-	m_mapTexture.Add(filename, (void*)pTexResourceView);
-#endif
 }
 
 };

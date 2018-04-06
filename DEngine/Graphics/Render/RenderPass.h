@@ -84,14 +84,14 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	GetVertexShader()
-	*	This function will return pointer to the D3D11 vertex shader in this
+	*	This function will return pointer to the D3D vertex shader in this
 	*	render pass
 	*
 	*	--- Parameters:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11VertexShader*: the pointer to the vertex shader at GPU side
+	*	@ void*: the pointer to the vertex shader at GPU side
 	********************************************************************************/
 	void* GetVertexShader() 
 	{ 
@@ -204,12 +204,12 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	SetStreamOutTargets(ID3D11Buffer*)
-	*	This function will set a D3D11 buffer as the stream out target of this 
+	*	SetStreamOutTargets(D3D12_STREAM_OUTPUT_BUFFER_VIEW*)
+	*	This function will set a D3D buffer as the stream out target of this 
 	*	render pass
 	*
 	*	--- Parameters:
-	*	@ SOBuffer: the pointer to D3D11 buffer to be used as stream out target
+	*	@ SOBuffer: the pointer to D3D buffer to be used as stream out target
 	*
 	*	--- Return:
 	*	@ void
@@ -274,7 +274,7 @@ public:
 	*	This function will set the topology for Input-Assembly stage of this render pass
 	*
 	*	--- Parameters:
-	*	@ topology: the toplogy as defined in D3D11 topology enum
+	*	@ topology: the toplogy as defined in D3D topology enum
 	*
 	*	--- Return:
 	*	@ void
@@ -286,7 +286,7 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	SetRenderTargets(ID3D11RenderTargetView**, int)
+	*	SetRenderTargets(Texture**, int)
 	*	This function will set the render targets for this render pass
 	*
 	*	--- Parameters:

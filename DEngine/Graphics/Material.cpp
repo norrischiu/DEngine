@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "Material.h"
 #include "Graphics\Render\Texture.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\D3D12Renderer.h"
 #include "Graphics\MeshData.h"
 
@@ -89,10 +88,6 @@ void Material::ReadFromFile(const char * filename, int meshType)
 	pass->SetBlendState(State::DEFAULT_BS);
 	pass->SetRenderTargets(((D3D12Renderer*)D3DRenderer::GetInstance())->m_pRTV, 2);
 	pass->SetDepthStencilView(((D3D12Renderer*)D3DRenderer::GetInstance())->m_depth);
-#ifdef D3D11
-	pass->SetRenderTargets(((D3D11Renderer*)D3DRenderer::GetInstance())->m_pRTVArray, 2);
-	pass->SetDepthStencilView(((D3D11Renderer*)D3DRenderer::GetInstance())->m_depth);
-#endif
 	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 	pass->ConstructPSO();
 	m_pRenderPass = pass;

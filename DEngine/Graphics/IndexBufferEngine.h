@@ -1,7 +1,6 @@
-// IndexBufferEngine.h: helper class to create d3d11 index buffer from uint array and file
+// IndexBufferEngine.h: helper class to create d3d index buffer from uint array and file
 
 //Engine include
-#include "D3D11Renderer.h"
 #include "D3D12Renderer.h"
 #include "Memory\Handle.h"
 
@@ -9,7 +8,7 @@ namespace DE
 {
 /*
 *	CLASS: IndexBufferEngine
-*	IndexBufferEngine is the helper to create D3D11 index buffer
+*	IndexBufferEngine is the helper to create D3D index buffer
 *	from a file or a raw index array
 */
 class IndexBufferEngine
@@ -20,7 +19,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	CreateBufferFromRawData(const unsigned int*, const int)
-	*	This function will create a D3D11 index buffer using the render device
+	*	This function will create a D3D index buffer using the render device
 	*	by the given data
 	*
 	*	--- Parameters:
@@ -35,7 +34,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	CreateBuffer(const char*, unsigned int&)
-	*	This function will create a D3D11 index buffer using the render device
+	*	This function will create a D3D index buffer using the render device
 	*	by the given file
 	*
 	*	--- Parameters:

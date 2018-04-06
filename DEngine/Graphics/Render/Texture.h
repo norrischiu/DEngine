@@ -17,7 +17,7 @@ namespace DE
 /*
 *	CLASS: Texture
 *	This class serves as an interface and collection for GPU texture
-*	resources, it can contains different kind of D3D11 view resources.
+*	resources, it can contains different kind of D3D view resources.
 *	Currently it also contains pointer to the sampler state
 */
 class Texture
@@ -56,7 +56,7 @@ public:
 
 	/********************************************************************************
 	*	--- Constructor:
-	*	Texture(int, ID3D11Texture2D*);
+	*	Texture(int, ID3D12Resource*);
 	*	This constructor will construct an texture interface with a given pointer to
 	*	a GPU 2D texture
 	*
@@ -162,8 +162,8 @@ private:
 
 	union
 	{
-		D3D12_CPU_DESCRIPTOR_HANDLE				m_pRTV;		// pointer to D3D11 render targer view, union with m_pDSV
-		ID3D12DescriptorHeap*					m_pDSV;		// pointer to D3D11 depth stencil view, union with m_pRTV
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pRTV;		// pointer to D3D render targer view, union with m_pDSV
+		ID3D12DescriptorHeap*					m_pDSV;		// pointer to D3D depth stencil view, union with m_pRTV
 	};
 	union
 	{

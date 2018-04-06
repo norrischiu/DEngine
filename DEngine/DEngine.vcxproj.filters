@@ -213,12 +213,6 @@
     <ClInclude Include="Graphics\Animation\Skeleton.h">
       <Filter>Graphics\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\D3D11Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DDSLoader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GBuffer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -466,12 +460,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\Animation\Skeleton.cpp">
       <Filter>Graphics\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\D3D11Renderer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\DDSLoader.cpp">
-      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GBuffer.cpp">
       <Filter>Graphics</Filter>

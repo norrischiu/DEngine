@@ -65,16 +65,11 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	DestructandCleanUp()
-	*	This function will release all D3D11 COM object
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ void
+	*	Empty destructor
 	********************************************************************************/
 	void DestructandCleanUp()
 	{
+		// TODO: free resources
 	}
 
 	/********************************************************************************

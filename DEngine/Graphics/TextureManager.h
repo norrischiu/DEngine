@@ -2,7 +2,6 @@
 #define TEXTUREMANAGER_H_
 
 #include <stdio.h>
-#include <d3d11.h>
 #include <d3d12.h>
 #include "Utilities\MyHashMap.h"
 #include "GlobalInclude.h"
@@ -13,7 +12,7 @@ namespace DE
 /*
 *	CLASS: TextureManager
 *	TextureManager is the resources manager for texture stored
-*	as D3D11 shader resources view
+*	as D3D shader resources view
 */
 class TextureManager
 {
@@ -35,16 +34,11 @@ public:
 	/********************************************************************************
 	*	--- Destructor:
 	*	~TextureManager()
-	*	This constructor will free memory from hash map and release each D3D11 COM
-	*	object
+	*	This constructor will release texture descriptor
 	********************************************************************************/
 	~TextureManager()
 	{
-		m_mapTexture.ForEachItem([](void* item)
-		{
-			ID3D11ShaderResourceView* pSRView = (ID3D11ShaderResourceView*)item;
-			pSRView->Release();
-		});
+		// TODO: release texture handle
 	}
 
 	/********************************************************************************
@@ -56,7 +50,7 @@ public:
 	*	@ filename: the file name of the texture located in Assets folder
 	*
 	*	--- Return:
-	*	@ void*: the pointer to D3D11 shader resources view
+	*	@ void*: the pointer to descriptor
 	********************************************************************************/
 	void* GetTexture(const char* filename);
 
@@ -70,7 +64,7 @@ public:
 	*	@ filename: the file name of the texture located in Assets folder
 	*
 	*	--- Return:
-	*	@ void*: the pointer to D3D11 shader resources view
+	*	@ void
 	********************************************************************************/
 	void LoadTexture(const char* filename);
 
@@ -116,11 +110,9 @@ private:
 	static TextureManager*								m_pInstance;	// Singleton instance
 	MyHashMap<void*>									m_mapTexture;	// hash map of shader resources view
 
-#ifdef D3D12
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT					m_SubresourceFootprintHolder[64]; // helper to store subresurce footprint to avoid allocate everytime
 	UINT												m_RowCountHolder[64];
 	UINT64												m_RowSizeHolder[64];
-#endif
 };
 
 };

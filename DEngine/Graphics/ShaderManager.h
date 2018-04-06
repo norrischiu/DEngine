@@ -1,10 +1,9 @@
 #ifndef SHADERMANAGER_H_
 #define SHADERMANAGER_H_
 
-#include <D3D11.h>
 #include <D3D12.h>
+#include <d3d12shader.h>
 #include <stdio.h>
-#include <d3d11shader.h>
 #include "GlobalInclude.h"
 #include "Utilities\MyHashMap.h"
 
@@ -14,7 +13,7 @@ namespace DE
 /*
 *	CLASS: ShaderManager
 *	ShaderManager is the resources manager for compiled shader
-*	as D3D11 shader  and also D3D11 input layout for vertex
+*	as D3D shader  and also D3D input layout for vertex
 *	shader
 */
 class ShaderManager
@@ -39,54 +38,41 @@ public:
 	/********************************************************************************
 	*	--- Destructor:
 	*	~ShaderManager()
-	*	This constructor will free memory from hash map and release each D3D11 COM
-	*	object
+	*	This constructor will free memory from hash map and release each D3D
+	*	resources
 	********************************************************************************/
 	~ShaderManager()
 	{
-#ifdef D3D12
-#elif defined D3D11
-		m_mapShaders.ForEachItem([](void* item)
-		{
-			ID3D11DeviceChild* pS = (ID3D11DeviceChild*)item;
-			pS->Release();
-		});
-		m_mapInputLayouts.ForEachItem([](void* item)
-		{
-
-			ID3D11InputLayout* pS = (ID3D11InputLayout*)item;
-			pS->Release();
-		});
-#endif
+		// TODO: free resources
 	}
 
 	/********************************************************************************
 	*	--- Function:
-	*	GetShader(const char*, D3D11_SHADER_VERSION_TYPE)
+	*	GetShader(const char*, D3D12_SHADER_VERSION_TYPE)
 	*	This function will return compiled shader according to the given name
 	*
 	*	--- Parameters:
 	*	@ filename: the file name of the shader located in Shaders folder
-	*	@ type: the type of shader as defined in enum D3D11_SHADER_VERSION_TYPE
+	*	@ type: the type of shader as defined in enum D3D12_SHADER_VERSION_TYPE
 	*
 	*	--- Return:
-	*	@ void*: the pointer to a D3D11 shader
+	*	@ void*: the pointer to a D3D shader
 	********************************************************************************/
-	void* GetShader(const char* filename, D3D11_SHADER_VERSION_TYPE type);
+	void* GetShader(const char* filename, D3D12_SHADER_VERSION_TYPE type);
 
 	/********************************************************************************
 	*	--- Function:
-	*	LoadShader(const char*, D3D11_SHADER_VERSION_TYPE)
+	*	LoadShader(const char*, D3D12_SHADER_VERSION_TYPE)
 	*	This function will compile a shader and insert it into hash map
 	*
 	*	--- Parameters:
 	*	@ filename: the file name of the shader located in Shaders folder
-	*	@ type: the type of shader as defined in enum D3D11_SHADER_VERSION_TYPE
+	*	@ type: the type of shader as defined in enum D3D12_SHADER_VERSION_TYPE
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void LoadShader(const char* filename, D3D11_SHADER_VERSION_TYPE type);
+	void LoadShader(const char* filename, D3D12_SHADER_VERSION_TYPE type);
 
 	/********************************************************************************
 	*	--- Function:
@@ -101,11 +87,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-#ifdef D3D12
 	void CreateInputLayout(ID3DBlob* VS, D3D12_INPUT_ELEMENT_DESC* &inputElementDesc, int &numElements);
-#elif defined D3D11
-	void CreateInputLayout(ID3DBlob* VS, void* &inputLayout);
-#endif
 
 	/********************************************************************************
 	*	--- Function:
@@ -117,13 +99,9 @@ public:
 	*	@ filename: the file name of the vertex shader located in Shaders folder
 	*
 	*	--- Return:
-	*	@ void*: the pointer to a D3D11 input layout
+	*	@ void*: the pointer to a D3D12 input layout
 	********************************************************************************/
-#ifdef D3D12
 	D3D12_INPUT_ELEMENT_DESC* GetInputLayout(const char* filename);
-#elif defined D3D11
-	void* GetInputLayout(const char* filename);
-#endif
 
 	int GetInputLayoutCount(const char* filename)
 	{
@@ -141,9 +119,9 @@ public:
 	*	as output
 	*
 	*	--- Return:
-	*	@ D3D11_SO_DECLARATION_ENTRY*
+	*	@ D3D12_SO_DECLARATION_ENTRY*
 	********************************************************************************/
-	D3D11_SO_DECLARATION_ENTRY* CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum);
+	D3D12_SO_DECLARATION_ENTRY* CreateStreamOutEntry(ID3DBlob* GS, unsigned int& entryNum);
 
 	/********************************************************************************
 	*	--- Static Function:
@@ -185,13 +163,9 @@ public:
 private:
 
 	static ShaderManager*									m_pInstance;	// Singleton instance
-	MyHashMap<void*>										m_mapShaders;	// hash map of D3D11 shader
-#ifdef D3D12
+	MyHashMap<void*>										m_mapShaders;	// hash map of hlsl shader
 	MyHashMap<D3D12_INPUT_ELEMENT_DESC*>					m_mapInputLayouts;	// hash map of input layout
 	MyHashMap<int>											m_mapInputLayoutsCount;	// hash map of input layout element num
-#elif defined D3D11
-	MyHashMap<ID3D11InputLayout*>							m_mapInputLayouts;	// hash map of input layout
-#endif
 };
 
 };

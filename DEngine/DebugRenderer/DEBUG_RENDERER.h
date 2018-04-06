@@ -7,6 +7,7 @@
 #include "Helpers\TextHelper.h"
 #include "Graphics\Scene\SceneGraph.h"
 #include "Utilities\MyArray.h"
+#include "Graphics\D3D12Renderer.h"
 
 namespace DE
 {
@@ -111,13 +112,13 @@ public:
 		const unsigned int size = m_vDbgMeshs.Size();
 		for (int i = 0; i < size; ++i)
 		{
-			/*if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
+			if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
 			{
 				m_3DRenderPass.SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
 				m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 				m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
 
-				ptr->WVPTransform = ((D3D11Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix();
+				ptr->WVPTransform = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix();
 				m_VSCBuffer.Update();
 			}
 			else if (m_vRenderFlags[i] == MESH2D_TEXTURE)
@@ -129,7 +130,7 @@ public:
 				ptr->WVPTransform = m_m2DProjection;
 				m_VSCBuffer.Update();
 			}
-			m_vDbgMeshs[i]->RenderUsingPass(&m_3DRenderPass);*/
+			m_vDbgMeshs[i]->RenderUsingPass(&m_3DRenderPass);
 		}
 		ptr->WVPTransform = m_m2DProjection;
 		m_VSCBuffer.Update();
