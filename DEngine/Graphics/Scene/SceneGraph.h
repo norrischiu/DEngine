@@ -2,11 +2,12 @@
 #define SCENEGRAPH_H_
 
 // Engine include
-#include "Object\CameraComponent.h"
+#include "Graphics\D3D12Renderer.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
+#include "Graphics\Render\RenderPass.h"
 #include "Utilities\MyArray.h"
 
 #include <d3d12.h>
@@ -15,9 +16,8 @@ namespace DE
 {
 
 // Engine include
+class CameraComponent;
 class MeshComponent;
-class RenderPass;
-class Renderer;
 
 /*
 *	CLASS: SceneGraph
@@ -60,7 +60,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void FrustumCulling(Frustum frustum);
+	void FrustumCulling(CameraComponent* camera);
 
 	/********************************************************************************
 	*	--- Function:

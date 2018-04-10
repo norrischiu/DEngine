@@ -2,6 +2,7 @@
 #define GBUFFER_H_
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Render\PSPerLightCBuffer.h"
 #include "Render\VSPerObjectCBuffer.h"
 #include "Render\Texture.h"
@@ -12,7 +13,6 @@ namespace DE
 // Engine include
 class MeshData;
 class RenderPass;
-class Renderer;
 
 /*
 *	CLASS: GBuffer

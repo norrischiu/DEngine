@@ -1,6 +1,7 @@
 #include "D3D12Renderer.h"
 #include "Graphics\Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
+#include "Graphics\GBuffer.h"
 
 namespace DE 
 {
@@ -260,7 +261,7 @@ void D3D12Renderer::UpdatePipeline()
 	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	// Render to texture
-	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
+	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera);
 	SceneGraph::GetInstance()->Render(this);
 	//SceneGraph::GetInstance()->ShadowMapGeneration();
 

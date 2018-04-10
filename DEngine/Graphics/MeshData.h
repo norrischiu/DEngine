@@ -6,6 +6,7 @@
 #include <d3d12.h>
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Math\simdmath.h"
 #include "Material.h"
 #include "Physics\cdAABB.h"
@@ -13,9 +14,6 @@
 
 namespace DE
 {
-
-// Engine include
-class Renderer;
 
 /*
 *	ENUM: eMeshType

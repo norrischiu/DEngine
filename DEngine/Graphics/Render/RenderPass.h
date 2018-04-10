@@ -7,6 +7,7 @@
 #include <d3d12shader.h>
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Utilities\MyArray.h"
 #include "Graphics\ShaderManager.h"
 #include "State.h"
@@ -18,9 +19,6 @@
 
 namespace DE
 {
-
-// Engine include
-class Renderer;
 
 /*
 *	CLASS: RenderPass

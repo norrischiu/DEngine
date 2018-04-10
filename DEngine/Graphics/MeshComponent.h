@@ -3,14 +3,12 @@
 #define MeshComponent_H_
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Object\Component.h"
 #include "Graphics\MeshData.h"
 
 namespace DE
 {
-
-// Engine include
-class Renderer;
 
 /*
 *	CLASS: MeshComponent

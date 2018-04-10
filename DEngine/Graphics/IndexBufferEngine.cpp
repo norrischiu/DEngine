@@ -26,7 +26,7 @@ void* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData,
 	HRESULT hr;
 
 	// Create the index buffer
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * m_iNumIndics;
 
@@ -84,7 +84,7 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 	Handle hIndexData(sizeof(UINT) * indicsNum);
 	FillIndexData(indicsNum, hIndexData);
 
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * indicsNum;
 

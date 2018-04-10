@@ -86,7 +86,7 @@ MeshData::~MeshData()
 
 void MeshData::Render(Renderer* renderer)
 {
-		m_Material.GetRenderPass()->BindToRenderer();
+		m_Material.GetRenderPass()->BindToRenderer(renderer);
 		renderer->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		renderer->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
 		renderer->m_pCommandList->IASetIndexBuffer(&m_IBV);
@@ -102,7 +102,7 @@ void MeshData::Render(Renderer* renderer)
 
 void MeshData::RenderUsingPass(Renderer* renderer, RenderPass * pass)
 {
-	pass->BindToRenderer();
+	pass->BindToRenderer(renderer);
 
 	Renderer::GetInstance()->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Renderer::GetInstance()->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);

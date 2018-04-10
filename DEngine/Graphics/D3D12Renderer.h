@@ -13,10 +13,6 @@
 // Engine include
 #include "GlobalInclude.h"
 #include "RendererBase.h"
-#include "GBuffer.h"
-#include "PostProcessEffect.h"
-#include "Render\Texture.h"
-#include "Object\CameraComponent.h"
 #include "Graphics\GPU\GPUCircularAllocator.h"
 
 #ifdef D3D12
@@ -25,6 +21,9 @@
 
 namespace DE
 {
+
+// Engine include
+class Texture;
 
 /*
 *	CLASS: D3D12Renderer

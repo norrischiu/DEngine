@@ -14,7 +14,7 @@ namespace DE
 
 void GBuffer::InitializeMeshAndRenderPass()
 {
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	pointLightMesh = new MeshData(LightManager::GetInstance()->GetPointLightVertices(), 8, (unsigned int*)LightManager::GetInstance()->GetPointLightIndices(), 36);
 	spotLightMesh = new MeshData(LightManager::GetInstance()->GetSpotLightVertices(), 5, (unsigned int*)LightManager::GetInstance()->GetSpotLightIndices(), 18);
 

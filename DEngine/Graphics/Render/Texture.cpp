@@ -11,7 +11,7 @@ namespace DE
 Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	: m_type(type)
 {
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	HRESULT hr;
 
 	// Early return: creating a srv from file

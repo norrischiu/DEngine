@@ -29,7 +29,7 @@ public:
 
 	/********************************************************************************
 	*	--- Constructor:
-	*	D3D12Renderer()
+	*	RendererBase()
 	*	This constructor will do nothing, construction is deferred to construct
 	*	function
 	*

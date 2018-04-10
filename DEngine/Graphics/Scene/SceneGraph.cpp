@@ -10,9 +10,7 @@
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
-#include "Graphics\terrain\terrain.h"
 #include "Math\Plane.h"
-#include "Graphics\D3D12Renderer.h"
 
 namespace DE
 {
@@ -23,7 +21,7 @@ SceneGraph::SceneGraph()
 	: m_tree(0)
 	, DEBUG_DRAWING_TREE(0)
 {
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	ID3DBlob* signature;
 	D3D12_ROOT_PARAMETER rootParameters[4] = {};
@@ -77,16 +75,16 @@ SceneGraph::SceneGraph()
 	m_ShadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 }
 
-void SceneGraph::FrustumCulling(Frustum frustum)
+void SceneGraph::FrustumCulling(CameraComponent* camera)
 {
 	const unsigned int size = m_tree.Size();
 	for (int i = 0; i < size; ++i)
 	{
 		AABB meshBound = m_tree[i]->m_pMeshData->GetBoundingBox();
 		AABB cache = meshBound;
-		Matrix4 cameraSpace = Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
+		Matrix4 cameraSpace = camera->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
 		meshBound.Transform(cameraSpace);
-		if (frustum.Cull(meshBound))
+		if (camera->GetFrustum().Cull(meshBound))
 		{
 			m_tree[i]->m_bVisible = true;
 		}

@@ -7,7 +7,7 @@ namespace DE
 
 void RenderPass::ConstructPSO()
 {
-	D3D12Renderer* renderer = Renderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	ID3DBlob* signature;
 	D3D12_ROOT_PARAMETER rootParameters[4] = {};
