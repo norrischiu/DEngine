@@ -84,36 +84,36 @@ MeshData::~MeshData()
 {
 }
 
-void MeshData::Render()
+void MeshData::Render(Renderer* renderer)
 {
 		m_Material.GetRenderPass()->BindToRenderer();
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetIndexBuffer(&m_IBV);
+		renderer->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		renderer->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
+		renderer->m_pCommandList->IASetIndexBuffer(&m_IBV);
 		if (m_bStreamOut)
 		{
 			// TODO:
 		}
 		else
 		{
-			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
+			renderer->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
 		}
 }
 
-void MeshData::RenderUsingPass(RenderPass * pass)
+void MeshData::RenderUsingPass(Renderer* renderer, RenderPass * pass)
 {
 	pass->BindToRenderer();
 
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->IASetIndexBuffer(&m_IBV);
+	Renderer::GetInstance()->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Renderer::GetInstance()->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
+	Renderer::GetInstance()->m_pCommandList->IASetIndexBuffer(&m_IBV);
 
 	if (m_bStreamOut)
 	{
 	}
 	else
 	{
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
+		Renderer::GetInstance()->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
 	}
 }
 

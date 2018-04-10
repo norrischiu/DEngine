@@ -26,7 +26,7 @@ void* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData,
 	HRESULT hr;
 
 	// Create the index buffer
-	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * m_iNumIndics;
 
@@ -63,7 +63,7 @@ void* IndexBufferEngine::CreateBufferFromRawData(const unsigned int* pIndexData,
 	renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]++;
 	hr = renderer->m_pCommandQueue->Signal(renderer->m_pFence[renderer->m_iCurrFrameIndex], renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]);
 	
-	((D3D12Renderer*)D3DRenderer::GetInstance())->ResetCommandAllocatorAndList();
+	Renderer::GetInstance()->ResetCommandAllocatorAndList();
 
 	return (void*)indexBuffer->GetGPUVirtualAddress();
 }
@@ -84,7 +84,7 @@ void* IndexBufferEngine::CreateBuffer(const char * filename, unsigned int& indic
 	Handle hIndexData(sizeof(UINT) * indicsNum);
 	FillIndexData(indicsNum, hIndexData);
 
-	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	ID3D12Resource* indexBuffer;
 	int iBufferSize = sizeof(UINT) * indicsNum;
 

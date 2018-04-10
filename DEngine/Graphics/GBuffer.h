@@ -12,6 +12,7 @@ namespace DE
 // Engine include
 class MeshData;
 class RenderPass;
+class Renderer;
 
 /*
 *	CLASS: GBuffer
@@ -57,12 +58,12 @@ public:
 	*	This function will render the gbuffer using light volume
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 private:
 

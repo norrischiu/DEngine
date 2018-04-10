@@ -1,5 +1,4 @@
 #include "RenderPass.h"
-#include "Graphics\D3DRenderer.h"
 #include "Graphics\D3D12Renderer.h"
 #include "GlobalInclude.h"
 
@@ -8,7 +7,7 @@ namespace DE
 
 void RenderPass::ConstructPSO()
 {
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	ID3DBlob* signature;
 	D3D12_ROOT_PARAMETER rootParameters[4] = {};
@@ -50,7 +49,7 @@ void RenderPass::ConstructPSO()
 	rootSignatureDesc.NumParameters = 4;
 	rootSignatureDesc.pParameters = rootParameters;
 	hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
+	Renderer::GetInstance()->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.pRootSignature = m_pRootSignature;
@@ -95,13 +94,12 @@ void RenderPass::ConstructPSO()
 	psoDesc.SampleMask = 0xffffff;
 	psoDesc.SampleDesc = sampleDesc;
 
-	hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pPSO));
+	hr = Renderer::GetInstance()->m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pPSO));
 	assert(hr == S_OK);
 }
 
-void RenderPass::BindToRenderer()
+void RenderPass::BindToRenderer(Renderer* renderer)
 {
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
 	if (m_pPS != nullptr)
 	{
 		D3D12_GPU_DESCRIPTOR_HANDLE SRVStart = renderer->m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
@@ -121,11 +119,11 @@ void RenderPass::BindToRenderer()
 
 		if (m_pDSV != nullptr)
 		{
-			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
+			renderer->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
 		}
 		else
 		{
-			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, nullptr);
+			renderer->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, nullptr);
 		}
 	}
 	else
@@ -133,11 +131,11 @@ void RenderPass::BindToRenderer()
 		// already in write depth state when create
 		if (m_pDSV != nullptr)
 		{
-			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
+			renderer->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
 		}
 		else
 		{
-			((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, nullptr);
+			renderer->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, nullptr);
 		}
 	}
 }

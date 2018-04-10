@@ -14,7 +14,7 @@ namespace DE
 
 void GBuffer::InitializeMeshAndRenderPass()
 {
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	pointLightMesh = new MeshData(LightManager::GetInstance()->GetPointLightVertices(), 8, (unsigned int*)LightManager::GetInstance()->GetPointLightIndices(), 36);
 	spotLightMesh = new MeshData(LightManager::GetInstance()->GetSpotLightVertices(), 5, (unsigned int*)LightManager::GetInstance()->GetSpotLightIndices(), 18);
 
@@ -24,7 +24,7 @@ void GBuffer::InitializeMeshAndRenderPass()
 	StencilingPass->SetRasterizerState(State::CULL_NONE_RS);
 	StencilingPass->SetBlendState(State::DEFAULT_BS);
 	StencilingPass->SetDepthStencilState(State::GBUFFER_STENCIL_CHECK_DSS);
-	StencilingPass->SetDepthStencilView(((D3D12Renderer*)D3DRenderer::GetInstance())->m_depth);
+	StencilingPass->SetDepthStencilView(Renderer::GetInstance()->m_depth);
 
 	StencilingPass->ConstructPSO();
 
@@ -34,8 +34,8 @@ void GBuffer::InitializeMeshAndRenderPass()
 	LightingPass->SetRasterizerState(State::CULL_FRONT_RS);
 	LightingPass->SetDepthStencilState(State::DISABLE_DEPTH_STENCIL_DSS);
 	LightingPass->SetBlendState(State::ADDITIVE_BS);
-	LightingPass->SetRenderTargets(((D3D12Renderer*)D3DRenderer::GetInstance())->GetCurrentBackBufferTextureAddress(), 1);
-	LightingPass->SetDepthStencilView(((D3D12Renderer*)D3DRenderer::GetInstance())->m_depthReadOnly);
+	LightingPass->SetRenderTargets(Renderer::GetInstance()->GetCurrentBackBufferTextureAddress(), 1);
+	LightingPass->SetDepthStencilView(Renderer::GetInstance()->m_depthReadOnly);
 	LightingPass->AddTexture(renderer->m_hTextures[0]);
 	LightingPass->AddTexture(renderer->m_hTextures[1]);
 	LightingPass->AddTexture(renderer->m_depth);
@@ -43,7 +43,7 @@ void GBuffer::InitializeMeshAndRenderPass()
 	LightingPass->ConstructPSO();
 }
 
-void GBuffer::Render()
+void GBuffer::Render(Renderer* renderer)
 {
 	m_pPSCBuffer.BindToRenderer();
 	m_pVSCBuffer.BindToRenderer();
@@ -73,7 +73,7 @@ void GBuffer::Render()
 			Quaternion quat(axis, asinf(axis.Length()));
 			rot = quat.GetRotationMatrix();
 		}
-		ptr->WVPTransform = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPVMatrix() * trans * rot * scale;
+		ptr->WVPTransform = renderer->GetCamera()->GetPVMatrix() * trans * rot * scale;
 		m_pVSCBuffer.Update();
 		m_pVSCBuffer.BindToRendererWithOffset(0, i); // 0 is VS per object
 
@@ -84,16 +84,16 @@ void GBuffer::Render()
 		ptr2->light.fRadius = currLight->GetRadius();
 		ptr2->light.iType = currLight->GetType();
 		Vector3 pos = currLight->GetPosition();
-		ptr2->mClipToView = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPerspectiveMatrix().Inverse();
-		ptr2->mViewToClip = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetPerspectiveMatrix();
-		pos.Transform(((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetViewMatrix());
+		ptr2->mClipToView = renderer->GetCamera()->GetPerspectiveMatrix().Inverse();
+		ptr2->mViewToClip = renderer->GetCamera()->GetPerspectiveMatrix();
+		pos.Transform(renderer->GetCamera()->GetViewMatrix());
 		ptr2->light.vPos = pos;
 		ptr2->light.bIsCastShadow = currLight->IsCastShadow();
 
 		if (currLight->GetType() == LightComponent::SPOT)
 		{
 			Vector3 dir = currLight->GetDirection();
-			dir.Transform(((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetViewMatrix());
+			dir.Transform(renderer->GetCamera()->GetViewMatrix());
 			ptr2->light.vDir = dir.Normalize();
 			ptr2->light.fInnerAngle = ((SpotLightComponent*)currLight)->GetInnerAngle();
 			ptr2->light.fOuterAngle = ((SpotLightComponent*)currLight)->GetOuterAngle();
@@ -102,8 +102,8 @@ void GBuffer::Render()
 		{
 			CameraComponent* lightCamera = currLight->GetOwner()->GetComponent<CameraComponent>();
 			ptr2->light.mWorldToLightClip = lightCamera->GetPVMatrix();
-			ptr2->light.mLightClipToView = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetViewMatrix() * lightCamera->GetPVMatrix().Inverse();
-			ptr2->mViewToWorld = ((D3D12Renderer*)D3DRenderer::GetInstance())->GetCamera()->GetViewMatrix().Inverse();
+			ptr2->light.mLightClipToView = renderer->GetCamera()->GetViewMatrix() * lightCamera->GetPVMatrix().Inverse();
+			ptr2->mViewToWorld = renderer->GetCamera()->GetViewMatrix().Inverse();
 			LightingPass->AddTexture(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex()));
 		}
 		m_pPSCBuffer.Update();
@@ -112,14 +112,14 @@ void GBuffer::Render()
 		switch (currLight->GetType())
 		{
 		case LightComponent::POINT:
-			pointLightMesh->RenderUsingPass(StencilingPass);
-			LightingPass->SetRenderTargets(((D3D12Renderer*)D3DRenderer::GetInstance())->GetCurrentBackBufferTextureAddress(), 1);
-			pointLightMesh->RenderUsingPass(LightingPass);
+			pointLightMesh->RenderUsingPass(renderer, StencilingPass);
+			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
+			pointLightMesh->RenderUsingPass(renderer, LightingPass);
 			break;
 		case LightComponent::SPOT:
-			spotLightMesh->RenderUsingPass(StencilingPass);
-			LightingPass->SetRenderTargets(((D3D12Renderer*)D3DRenderer::GetInstance())->GetCurrentBackBufferTextureAddress(), 1);
-			spotLightMesh->RenderUsingPass(LightingPass);
+			spotLightMesh->RenderUsingPass(renderer, StencilingPass);
+			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
+			spotLightMesh->RenderUsingPass(renderer, LightingPass);
 			break;
 		}
 		if (currLight->IsCastShadow())

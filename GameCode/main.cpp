@@ -7,15 +7,12 @@
 #include "DEngine\System\Keyboard.h"
 #include "DEngine\System\Mouse.h"
 #include "DEngine\GlobalInclude.h"
-#include "DEngine\Graphics\D3DRenderer.h"
 #include "DEngine\Graphics\D3D12Renderer.h"
 #include "GameLoop.h"
 #include <windows.h>
 
 // C++ include
 #include <sstream>
-
-DE::D3DRenderer* DE::D3DRenderer::m_pInstance = new DE::D3D12Renderer();
 
 //-----------------------------------------------------------------------------
 // Name: MsgProc()
@@ -68,7 +65,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	MemoryManager::GetInstance()->ConstructDefaultPool();
 
 	// Setup GraphicsDevice singletons
-	((D3D12Renderer*)D3DRenderer::GetInstance())->ConstructWithWindow(hWnd);
+	Renderer::GetInstance()->ConstructWithWindow(hWnd);
 
 	// Show the window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
@@ -111,10 +108,10 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			// Update the game world based on delta time
 			GameLoop::GetInstance()->Update(elaspedTime);
-			((D3D12Renderer*)D3DRenderer::GetInstance())->Update(elaspedTime);
+			Renderer::GetInstance()->Update(elaspedTime);
 
 			// Render this frame
-			((D3D12Renderer*)D3DRenderer::GetInstance())->Render();
+			Renderer::GetInstance()->Render();
 
 			// Debug text
 			std::stringstream str;
@@ -128,7 +125,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	}
 
 	// Cleanup the GameWorld and GraphicsDevice singletons
-	((D3D12Renderer*)D3DRenderer::GetInstance())->DestructandCleanUp();
+	Renderer::GetInstance()->DestructandCleanUp();
 	MemoryManager::GetInstance()->Destruct();
 
 	UnregisterClass("Game class", wc.hInstance);

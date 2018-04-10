@@ -19,6 +19,9 @@
 namespace DE
 {
 
+// Engine include
+class Renderer;
+
 /*
 *	CLASS: RenderPass
 *	RenderPass contains all the data required to render a mesh,
@@ -397,12 +400,12 @@ public:
 	*	in this pass to the renderer through D3D calls
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void BindToRenderer();
+	void BindToRenderer(Renderer* renderer);
 
 private:
 

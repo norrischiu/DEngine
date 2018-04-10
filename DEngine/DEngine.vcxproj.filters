@@ -414,9 +414,6 @@
     <ClInclude Include="Graphics\d3dx12.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\D3DRenderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\DDSTextureLoader12.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -425,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\GPU\GPUDataType.h">
       <Filter>Graphics\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RendererBase.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

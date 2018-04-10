@@ -43,11 +43,11 @@ void MeshComponent::SetOwner(GameObject * ptr)
 }
 
 
-void MeshComponent::Draw()
+void MeshComponent::Draw(Renderer* renderer)
 {
 	if (m_bVisible)
 	{
-		m_pMeshData->Render();
+		m_pMeshData->Render(renderer);
 	}
 }
 

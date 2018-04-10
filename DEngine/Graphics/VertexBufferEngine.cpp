@@ -62,7 +62,7 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 
 	bufferSize = stride * iNumVerts;
 	ID3D12Resource* vertexBuffer;
-	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
+	D3D12Renderer* renderer = Renderer::GetInstance();
 
 	renderer->m_pDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -117,7 +117,7 @@ void* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int i
 
 	int bufferSize = iDataSize * iNumVerts;
 	ID3D12Resource* vertexBuffer;
-	D3D12Renderer* renderer = ((D3D12Renderer*)D3DRenderer::GetInstance());
+	D3D12Renderer* renderer = Renderer::GetInstance();
 
 	renderer->m_pDevice->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -151,7 +151,7 @@ void* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int i
 	renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]++;
 	hr = renderer->m_pCommandQueue->Signal(renderer->m_pFence[renderer->m_iCurrFrameIndex], renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]);
 
-	((D3D12Renderer*)D3DRenderer::GetInstance())->ResetCommandAllocatorAndList();
+	Renderer::GetInstance()->ResetCommandAllocatorAndList();
 
 	return (void*)vertexBuffer->GetGPUVirtualAddress();
 }

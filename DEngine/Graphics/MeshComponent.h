@@ -9,6 +9,9 @@
 namespace DE
 {
 
+// Engine include
+class Renderer;
+
 /*
 *	CLASS: MeshComponent
 *	MeshComponent is one kind of components that can be added
@@ -113,7 +116,7 @@ public:
 	********************************************************************************/
 	MeshData* GetMeshData();
 
-	void Draw();
+	void Draw(Renderer* renderer);
 
 	MeshData*								m_pMeshData;	// pointer to mesh data
 	Matrix4*								m_pTransform;	// cached pointer to game object's transform	

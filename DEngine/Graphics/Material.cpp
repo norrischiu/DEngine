@@ -86,8 +86,8 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		pass->SetPixelShader(nullptr);
 	}
 	pass->SetBlendState(State::DEFAULT_BS);
-	pass->SetRenderTargets(((D3D12Renderer*)D3DRenderer::GetInstance())->m_pRTV, 2);
-	pass->SetDepthStencilView(((D3D12Renderer*)D3DRenderer::GetInstance())->m_depth);
+	pass->SetRenderTargets(Renderer::GetInstance()->m_pRTV, 2);
+	pass->SetDepthStencilView(Renderer::GetInstance()->m_depth);
 	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
 	pass->ConstructPSO();
 	m_pRenderPass = pass;

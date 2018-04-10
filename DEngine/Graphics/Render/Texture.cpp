@@ -1,5 +1,4 @@
 #include "Texture.h"
-#include "Graphics\D3DRenderer.h"
 #include "Graphics\D3D12Renderer.h"
 #include "State.h"
 #include "Graphics\TextureManager.h"
@@ -12,7 +11,7 @@ namespace DE
 Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	: m_type(type)
 {
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	HRESULT hr;
 
 	// Early return: creating a srv from file
@@ -51,7 +50,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 		clearValue.Color[3] = 0.0f;
 
 		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateCommittedResource(
+		renderer->m_pDevice->CreateCommittedResource(
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&textureDesc,
@@ -70,7 +69,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 		heapDesc.NumDescriptors = 1;
 		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pDSV));
+		hr = Renderer::GetInstance()->m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pDSV));
 		assert(hr == S_OK);
 
 		D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -96,7 +95,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 		clearValue.DepthStencil.Depth = 1.0f;
 		clearValue.DepthStencil.Stencil = 0;
 		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-		hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateCommittedResource(
+		hr = renderer->m_pDevice->CreateCommittedResource(
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&textureDesc,
@@ -104,7 +103,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 			&clearValue,
 			IID_PPV_ARGS(&m_pTexture));
 		assert(hr == S_OK);
-		((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, m_pDSV->GetCPUDescriptorHandleForHeapStart());
+		renderer->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, m_pDSV->GetCPUDescriptorHandleForHeapStart());
 		m_Format = textureDesc.Format;
 	}
 	if (type & SHADER_RESOURCES)
@@ -153,7 +152,7 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 
 Texture::Texture(int type, ID3D12Resource* texSrc)
 {
-	D3D12Renderer* renderer = (D3D12Renderer*) D3DRenderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	HRESULT hr;
 	if (type & RENDER_TARGET)
 	{

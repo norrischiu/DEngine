@@ -1,11 +1,8 @@
 #ifndef CBUFFER_H_
 #define CBUFFER_H_
 
-// D3D include
-#include <d3d12.h>
 #include "GlobalInclude.h"
 #include "Graphics/GPU/GPUDataType.h"
-#include "Graphics/D3DRenderer.h"
 
 namespace DE
 {

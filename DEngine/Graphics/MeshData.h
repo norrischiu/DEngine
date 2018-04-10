@@ -14,6 +14,9 @@
 namespace DE
 {
 
+// Engine include
+class Renderer;
+
 /*
 *	ENUM: eMeshType
 *	The type of mesh
@@ -89,12 +92,12 @@ public:
 	*	the GPU and calling the appropriate draw call
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:
@@ -102,12 +105,13 @@ public:
 	*	This function will draw the mesh with a given render pass
 	*
 	*	--- Parameters:
+	*	@ Renderer*: pointer to renderer
 	*	@ pass: pointer to a render pass
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void RenderUsingPass(RenderPass* pass);
+	void RenderUsingPass(Renderer* renderer, RenderPass* pass);
 
 	/********************************************************************************
 	*	--- Function:

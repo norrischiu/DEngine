@@ -11,7 +11,8 @@
 #include <windows.h>
 
 // Engine include
-#include "D3DRenderer.h"
+#include "GlobalInclude.h"
+#include "RendererBase.h"
 #include "GBuffer.h"
 #include "PostProcessEffect.h"
 #include "Render\Texture.h"
@@ -20,7 +21,7 @@
 
 #ifdef D3D12
 
-#pragma comment (lib, "D3d12")
+#pragma comment (lib, "D3d12") // TODO: move to premake
 
 namespace DE
 {
@@ -32,10 +33,12 @@ namespace DE
 *	to rendering device, and contains the actual render target
 *	and G Buffer
 */
-class D3D12Renderer : public D3DRenderer
+class D3D12Renderer : public RendererBase
 {
 
 public:
+
+	CUSTOM_MEMORY_DEFINE();
 
 	/********************************************************************************
 	*	--- Constructor:
@@ -73,6 +76,19 @@ public:
 	}
 
 	/********************************************************************************
+	*	--- Static Function:
+	*	GetInstance()
+	*	This function will return the singleton instance of D3D12Renderer
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ Renderer*: the singleton instance
+	********************************************************************************/
+	static D3D12Renderer* GetInstance();
+
+	/********************************************************************************
 	*	--- Function:
 	*	Update(const float)
 	*	This function will update any graphics related class, for example HUD
@@ -83,7 +99,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Update(const float delta_time);
+	void Update(const float deltaTime);
 
 	/********************************************************************************
 	*	--- Function:
@@ -150,7 +166,13 @@ public:
 
 	ID3D12Resource*								m_pConstantBufferHeap;
 	GPUCircularAllocator*						m_pConstantBufferAllocator;
+
+private:
+	static Handle								m_hInstance;		// Singleton instance
+
 };
+
+using Renderer = D3D12Renderer;
 
 };
 #endif

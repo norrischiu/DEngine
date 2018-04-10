@@ -26,13 +26,13 @@ void TextureManager::LoadTexture(const char* filename)
 	wchar_t* pName = new wchar_t[strlen(filename) + 1]; //TODO
 	mbstowcs(pName, filename, strlen(filename) + 1);
 
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	ID3D12Resource* texBuffer;
 	std::unique_ptr<uint8_t[]> pTexResourceView;
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources; // mips map
 	UINT64 SRVCPUAddress;
 
-	hr = DirectX::LoadDDSTextureFromFile(((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice, pName, &texBuffer, pTexResourceView, subresources);
+	hr = DirectX::LoadDDSTextureFromFile(Renderer::GetInstance()->m_pDevice, pName, &texBuffer, pTexResourceView, subresources);
 	assert(hr == S_OK && "texture file error");
 
 	UINT64 textureUploadBufferSize;

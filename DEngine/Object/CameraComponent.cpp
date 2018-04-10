@@ -22,7 +22,7 @@ CameraComponent::CameraComponent(const Vector3& vPos, const Vector3& vLookAt, co
 
 void CameraComponent::SetAsRendererCamera()
 {
-	((D3D12Renderer*)D3DRenderer::GetInstance())->SetCamera(this);
+	Renderer::GetInstance()->SetCamera(this);
 }
 
 Matrix4 CameraComponent::GetViewMatrix()

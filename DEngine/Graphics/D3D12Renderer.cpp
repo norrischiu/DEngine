@@ -1,12 +1,21 @@
 #include "D3D12Renderer.h"
 #include "Graphics\Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
-#include "../GlobalInclude.h"
-
-#ifdef D3D12
 
 namespace DE 
 {
+
+Handle D3D12Renderer::m_hInstance;
+
+D3D12Renderer* D3D12Renderer::GetInstance()
+{
+	if (m_hInstance.Raw() == nullptr)
+	{
+		m_hInstance.Set(sizeof(D3D12Renderer));
+		new (m_hInstance) D3D12Renderer();
+	}
+	return reinterpret_cast<D3D12Renderer*>(m_hInstance.Raw());
+}
 
 bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 {
@@ -119,7 +128,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	RTVheapDesc.NumDescriptors = 16;
 	RTVheapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	RTVheapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateDescriptorHeap(&RTVheapDesc, IID_PPV_ARGS(&m_pRTVHeap));
+	hr = m_pDevice->CreateDescriptorHeap(&RTVheapDesc, IID_PPV_ARGS(&m_pRTVHeap));
 	assert(hr == S_OK);
 	m_RTVHeapHandle = m_pRTVHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -128,7 +137,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	heapDesc.NumDescriptors = 1024;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeap));
+	hr = m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeap));
 	assert(hr == S_OK);
 	m_CbvSrvUavHeapHandle = m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -137,7 +146,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	samplerHeapDesc.NumDescriptors = 64;
 	samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
 	samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	hr = ((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_pSamplerHeap));
+	hr = m_pDevice->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_pSamplerHeap));
 	assert(hr == S_OK);
 	m_SamplerHeapHandle = m_pSamplerHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -215,7 +224,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	return true;
 }
 
-void D3D12Renderer::Update(const float delta_time)
+void D3D12Renderer::Update(const float deltaTime)
 {
 }
 
@@ -250,15 +259,12 @@ void D3D12Renderer::UpdatePipeline()
 	ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvSrvUavHeap, m_pSamplerHeap };
 	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-	// set the root descriptor table 0 to the constant buffer descriptor heap
-	//m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart());
-
 	// Render to texture
 	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera->GetFrustum());
-	SceneGraph::GetInstance()->Render();
+	SceneGraph::GetInstance()->Render(this);
 	//SceneGraph::GetInstance()->ShadowMapGeneration();
 
-	m_GBuffer->Render();
+	m_GBuffer->Render(this);
 	//m_PPE->Render();
 	//ParticleSystem::GetInstance()->Render();
 	//DEBUG_RENDERER::GetInstance()->Render();
@@ -325,5 +331,3 @@ void D3D12Renderer::ResetCommandAllocatorAndList()
 }
 
 }
-
-#endif

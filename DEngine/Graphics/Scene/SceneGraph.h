@@ -9,12 +9,15 @@
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
 #include "Utilities\MyArray.h"
 
+#include <d3d12.h>
+
 namespace DE
 {
 
 // Engine include
 class MeshComponent;
 class RenderPass;
+class Renderer;
 
 /*
 *	CLASS: SceneGraph
@@ -66,12 +69,12 @@ public:
 	*	and pass skinning matices for animated mesh
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:

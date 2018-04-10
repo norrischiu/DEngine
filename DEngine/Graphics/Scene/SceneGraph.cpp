@@ -6,7 +6,6 @@
 #include "Light\LightManager.h"
 #include "Graphics\Render\State.h"
 #include "Graphics\Render\RenderPass.h"
-#include "Graphics\D3DRenderer.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
@@ -24,7 +23,7 @@ SceneGraph::SceneGraph()
 	: m_tree(0)
 	, DEBUG_DRAWING_TREE(0)
 {
-	D3D12Renderer* renderer = (D3D12Renderer*)D3DRenderer::GetInstance();
+	D3D12Renderer* renderer = Renderer::GetInstance();
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	ID3DBlob* signature;
 	D3D12_ROOT_PARAMETER rootParameters[4] = {};
@@ -66,7 +65,7 @@ SceneGraph::SceneGraph()
 	rootSignatureDesc.NumParameters = 4;
 	rootSignatureDesc.pParameters = rootParameters;
 	hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
+	Renderer::GetInstance()->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.pRootSignature = m_pRootSignature;
@@ -85,7 +84,7 @@ void SceneGraph::FrustumCulling(Frustum frustum)
 	{
 		AABB meshBound = m_tree[i]->m_pMeshData->GetBoundingBox();
 		AABB cache = meshBound;
-		Matrix4 cameraSpace = D3DRenderer::GetInstance()->GetCamera()->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
+		Matrix4 cameraSpace = Renderer::GetInstance()->GetCamera()->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
 		meshBound.Transform(cameraSpace);
 		if (frustum.Cull(meshBound))
 		{
@@ -98,9 +97,9 @@ void SceneGraph::FrustumCulling(Frustum frustum)
 	}
 }
 
-void SceneGraph::Render()
+void SceneGraph::Render(Renderer* renderer)
 {
-	((D3D12Renderer*)D3DRenderer::GetInstance())->m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+	renderer->m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
 	// TODO: use better gpu recources management
 	m_VSCBuffer.BindToRenderer();
@@ -115,8 +114,8 @@ void SceneGraph::Render()
 		if (itr->m_bVisible) count++; //
 
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
-		ptr->WorldTransform = D3DRenderer::GetInstance()->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
-		ptr->WVPTransform = D3DRenderer::GetInstance()->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
+		ptr->WorldTransform = renderer->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
+		ptr->WVPTransform = renderer->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
 		m_VSCBuffer.Update();
 		m_VSCBuffer.BindToRendererWithOffset(0, i); // 0 is VS per object
 
@@ -146,7 +145,7 @@ void SceneGraph::Render()
 		m_PSCBuffer.Update();
 		m_PSCBuffer.BindToRendererWithOffset(2, i); // 2 is PS material
 
-		itr->Draw();
+		itr->Draw(renderer);
 	}
 }
 

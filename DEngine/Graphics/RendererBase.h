@@ -1,6 +1,6 @@
-// D3D12Renderer.h: the class for Direct3D 12 renderer
-#ifndef D3DRENDERER_H_
-#define D3DRENDERER_H_
+// RendererBase.h: the class for Direct3D 12 renderer
+#ifndef RENDERER_BASE_H_
+#define RENDERER_BASE_H_
 
 // Windows include
 #include <windows.h>
@@ -17,10 +17,10 @@ class GBuffer;
 class PostProcessEffect;
 
 /*
-*	CLASS: D3DRenderer
-*	D3DRenderer is bass class renderer for Direct3D
+*	CLASS: RendererBase
+*	RendererBase is bass class renderer
 */
-class D3DRenderer
+class RendererBase
 {
 
 public:
@@ -36,7 +36,7 @@ public:
 	*	--- Parameters:
 	*	@ void
 	********************************************************************************/
-	D3DRenderer() {};
+	RendererBase() {};
 
 	/********************************************************************************
 	*	--- Constructor:
@@ -55,7 +55,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	DestructandCleanUp()
-	*	This function will release all D3D resources
+	*	This function will release all renderer resources
 	********************************************************************************/
 	virtual void DestructandCleanUp() = 0;
 
@@ -65,12 +65,12 @@ public:
 	*	This function will update any graphics related class, for example HUD
 	*
 	*	--- Parameters:
-	*	@ delta_time: the delta time of this frame
+	*	@ deltaTime: the delta time of this frame
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	virtual void Update(const float delta_time) = 0;
+	virtual void Update(const float deltaTime) = 0;
 
 	/********************************************************************************
 	*	--- Function:
@@ -84,22 +84,6 @@ public:
 	*	@ void
 	********************************************************************************/
 	virtual void Render() = 0;
-
-	/********************************************************************************
-	*	--- Static Function:
-	*	GetInstance()
-	*	This function will return the singleton instance of D3DRenderer
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ D3DRenderer*: the singleton instance
-	********************************************************************************/
-	static D3DRenderer* GetInstance()
-	{
-		return m_pInstance;
-	}
 
 	/********************************************************************************
 	*	--- Function:
@@ -136,10 +120,9 @@ public:
 
 protected:
 
-	static D3DRenderer*							m_pInstance;	// Singleton instance
-	CameraComponent*							m_RendererCamera;		// the pointer to current rendering camera
-	GBuffer*									m_GBuffer;		// the pointer to GBuffer class
-	PostProcessEffect*							m_PPE;		// the pointer to post-processing effect interface class
+	CameraComponent*							m_RendererCamera;	// the pointer to current rendering camera
+	GBuffer*									m_GBuffer;			// the pointer to GBuffer class
+	PostProcessEffect*							m_PPE;				// the pointer to post-processing effect interface class
 };
 
 };
