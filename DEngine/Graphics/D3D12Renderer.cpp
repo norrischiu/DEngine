@@ -133,6 +133,15 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	assert(hr == S_OK);
 	m_RTVHeapHandle = m_pRTVHeap->GetCPUDescriptorHandleForHeapStart();
 
+	// DSV descriptor heap
+	D3D12_DESCRIPTOR_HEAP_DESC DSVHeapDesc = {};
+	DSVHeapDesc.NumDescriptors = 16;
+	DSVHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	DSVHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	hr = m_pDevice->CreateDescriptorHeap(&DSVHeapDesc, IID_PPV_ARGS(&m_pDSVHeap));
+	assert(hr == S_OK);
+	m_DSVHeapHandle = m_pDSVHeap->GetCPUDescriptorHandleForHeapStart();
+
 	// CBV and SRV descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = 1024;
@@ -251,7 +260,7 @@ void D3D12Renderer::UpdatePipeline()
 		//rtvHandle.Offset(1, m_iRTVDescriptorSize);
 	}
 	m_pCommandList->ClearRenderTargetView(m_backbuffer[m_iCurrFrameIndex]->GetRTV(), ClearColor, 0, nullptr);
-	m_pCommandList->ClearDepthStencilView(m_depth->GetDSV()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	m_pCommandList->ClearDepthStencilView(m_depth->GetDSV(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	m_pCommandList->RSSetViewports(1, &m_pViewport);
 	m_pCommandList->RSSetScissorRects(1, &m_pScissorRect);

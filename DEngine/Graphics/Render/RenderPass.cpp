@@ -119,7 +119,7 @@ void RenderPass::BindToRenderer(Renderer* renderer)
 
 		if (m_pDSV != nullptr)
 		{
-			renderer->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
+			renderer->m_pCommandList->OMSetRenderTargets(m_iRTVNum, rtvHandles, FALSE, &m_pDSV->GetDSV());
 		}
 		else
 		{
@@ -131,7 +131,7 @@ void RenderPass::BindToRenderer(Renderer* renderer)
 		// already in write depth state when create
 		if (m_pDSV != nullptr)
 		{
-			renderer->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, &m_pDSV->GetDSV()->GetCPUDescriptorHandleForHeapStart());
+			renderer->m_pCommandList->OMSetRenderTargets(0, nullptr, FALSE, &m_pDSV->GetDSV());
 		}
 		else
 		{

@@ -65,13 +65,6 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 	}
 	if (type & DEPTH_STENCIL)
 	{
-		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = 1;
-		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		hr = Renderer::GetInstance()->m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pDSV));
-		assert(hr == S_OK);
-
 		D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -90,10 +83,12 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 		textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 		textureDesc.Alignment = 0;
+
 		D3D12_CLEAR_VALUE clearValue = {};
 		clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		clearValue.DepthStencil.Depth = 1.0f;
 		clearValue.DepthStencil.Stencil = 0;
+
 		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
 		hr = renderer->m_pDevice->CreateCommittedResource(
 			&defaultHeapProperties,
@@ -103,7 +98,10 @@ Texture::Texture(int type, int sampleCount, const char * filename, int mipLevel)
 			&clearValue,
 			IID_PPV_ARGS(&m_pTexture));
 		assert(hr == S_OK);
-		renderer->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, m_pDSV->GetCPUDescriptorHandleForHeapStart());
+
+		renderer->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, renderer->m_DSVHeapHandle);
+		m_pDSV = renderer->m_DSVHeapHandle;
+		renderer->m_DSVHeapHandle.Offset(renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV));
 		m_Format = textureDesc.Format;
 	}
 	if (type & SHADER_RESOURCES)
@@ -165,12 +163,6 @@ Texture::Texture(int type, ID3D12Resource* texSrc)
 	}
 	if (type & DEPTH_STENCIL_READ_ONLY)
 	{
-		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = 1;
-		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		hr = renderer->m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pDSV));
-
 		D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -190,21 +182,19 @@ Texture::Texture(int type, ID3D12Resource* texSrc)
 		textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 		textureDesc.Alignment = 0;
 
-		D3D12_CLEAR_VALUE clearValue = {};
-		clearValue.Format = textureDesc.Format;
-		clearValue.DepthStencil.Depth = 1.0f;
-		clearValue.DepthStencil.Stencil = 0;
-
 		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
 		hr = renderer->m_pDevice->CreateCommittedResource(
 			&defaultHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
 			&textureDesc,
 			D3D12_RESOURCE_STATE_DEPTH_READ,
-			&clearValue,
+			nullptr,
 			IID_PPV_ARGS(&m_pTexture));
 		assert(hr == S_OK);
-		renderer->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, m_pDSV->GetCPUDescriptorHandleForHeapStart());
+
+		renderer->m_pDevice->CreateDepthStencilView(m_pTexture, &depthStencilViewDesc, renderer->m_DSVHeapHandle);
+		m_pDSV = renderer->m_DSVHeapHandle;
+		renderer->m_DSVHeapHandle.Offset(renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV));
 		m_Format = textureDesc.Format;
 	}
 	if (type & SHADER_RESOURCES)

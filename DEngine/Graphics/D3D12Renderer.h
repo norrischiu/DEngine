@@ -146,6 +146,8 @@ public:
 	Texture*									m_pRTV[RT_NUM];
 	ID3D12DescriptorHeap*						m_pRTVHeap;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_RTVHeapHandle;
+	ID3D12DescriptorHeap*						m_pDSVHeap;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_DSVHeapHandle;
 	ID3D12DescriptorHeap*						m_pCbvSrvUavHeap;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_CbvSrvUavHeapHandle;
 	UINT										m_SrvHeapOffset;

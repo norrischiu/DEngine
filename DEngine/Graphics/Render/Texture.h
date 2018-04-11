@@ -110,11 +110,10 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D12DescriptorHeap*: pointer to a D3D depth stencil view descriptor heap
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D depth stencil view descriptor
 	********************************************************************************/
-	ID3D12DescriptorHeap* GetDSV() // TODO: fix this
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() // TODO: fix this
 	{
-		assert(m_pDSV != nullptr);
 		return m_pDSV;
 	}
 
@@ -163,7 +162,7 @@ private:
 	union
 	{
 		D3D12_CPU_DESCRIPTOR_HANDLE				m_pRTV;		// pointer to D3D render targer view, union with m_pDSV
-		ID3D12DescriptorHeap*					m_pDSV;		// pointer to D3D depth stencil view, union with m_pRTV
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pDSV;		// pointer to D3D depth stencil view, union with m_pRTV
 	};
 	union
 	{
