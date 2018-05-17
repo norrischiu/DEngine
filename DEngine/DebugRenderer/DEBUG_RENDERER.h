@@ -130,7 +130,8 @@ public:
 				ptr->WVPTransform = m_m2DProjection;
 				m_VSCBuffer.Update();
 			}
-			m_vDbgMeshs[i]->RenderUsingPass(renderer, &m_3DRenderPass);
+			m_3DRenderPass.BindToRenderer(renderer);
+			m_vDbgMeshs[i]->Render(renderer);
 		}
 		ptr->WVPTransform = m_m2DProjection;
 		m_VSCBuffer.Update();
@@ -167,7 +168,7 @@ public:
 		const unsigned int size = m_vDbgMeshs.Size();
 		for (int i = 0; i < size; ++i)
 		{
-			m_vDbgMeshs[i]->m_Material.Destruct();
+			//m_vDbgMeshs[i]->m_Material.Destruct();
 			delete m_vDbgMeshs[i];
 		}
 		m_vDbgMeshs.Clear();

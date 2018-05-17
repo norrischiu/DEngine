@@ -40,7 +40,6 @@ MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int * pIndex
 	m_IBV.SizeInBytes = sizeof(UINT) * iNumIndics;
 
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
-	m_Material.UseDefault();
 }
 
 MeshData::MeshData(const char* filename, int meshType)
@@ -77,7 +76,6 @@ MeshData::MeshData(const char* filename, int meshType)
 	m_IBV.SizeInBytes = m_iNumIndics * sizeof(UINT);
 
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
-	m_Material.ReadFromFile(C_STR(sFileName, "_material.mate"), meshType);
 }
 
 MeshData::~MeshData()
@@ -86,34 +84,16 @@ MeshData::~MeshData()
 
 void MeshData::Render(Renderer* renderer)
 {
-		m_Material.GetRenderPass()->BindToRenderer(renderer);
-		renderer->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderer->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
-		renderer->m_pCommandList->IASetIndexBuffer(&m_IBV);
-		if (m_bStreamOut)
-		{
-			// TODO:
-		}
-		else
-		{
-			renderer->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
-		}
-}
-
-void MeshData::RenderUsingPass(Renderer* renderer, RenderPass * pass)
-{
-	pass->BindToRenderer(renderer);
-
-	Renderer::GetInstance()->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Renderer::GetInstance()->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
-	Renderer::GetInstance()->m_pCommandList->IASetIndexBuffer(&m_IBV);
-
+	renderer->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderer->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
+	renderer->m_pCommandList->IASetIndexBuffer(&m_IBV);
 	if (m_bStreamOut)
 	{
+		// TODO:
 	}
 	else
 	{
-		Renderer::GetInstance()->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
+		renderer->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
 	}
 }
 

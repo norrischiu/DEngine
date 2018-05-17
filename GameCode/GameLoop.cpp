@@ -38,7 +38,7 @@ void GameLoop::Construct()
 	boss->SetPosition(DE::Vector3(0.0f, 0.0f, 5.0f));
 	player->SetBoss(boss);
 	
-	for (int i = 0; i < 0/*381*/; ++i)
+	for (int i = 0; i < 381; ++i)
 	{
 		std::string meshName = "church/church" + std::to_string(i);
 		DE::GameObject* levelMesh = new DE::GameObject;
@@ -48,7 +48,7 @@ void GameLoop::Construct()
 		levelMesh->AddComponent((DE::Component*) hMeshComponent.Raw());
 
 		DE::Handle hAABB(sizeof(DE::AABB));
-		new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
+		new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->GetMeshData()->GetBoundingBox());
 		((DE::AABB*) hAABB.Raw())->setType(DE::typeAABB);
 		levelMesh->AddComponent((DE::Component*) hAABB.Raw());
 	}

@@ -135,7 +135,7 @@ public:
 	const static unsigned int					BACKBUFFER_COUNT = 2;		// Number of frame, single/double/triple buffering
 
 	Texture*									m_backbuffer[BACKBUFFER_COUNT]; // pointer to back buffer texture
-	Texture*									m_depth; // pointer to depth texutre for depth stencil view and shader resources view
+	Handle										m_depth; // pointer to depth texutre for depth stencil view and shader resources view
 	Texture*									m_depthReadOnly; // pointer to read-only depth stencil view
 
 	ID3D12Debug*								m_pDebugController;
@@ -150,7 +150,8 @@ public:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_DSVHeapHandle;
 	ID3D12DescriptorHeap*						m_pCbvSrvUavHeap;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_CbvSrvUavHeapHandle;
-	UINT										m_SrvHeapOffset;
+	ID3D12DescriptorHeap*						m_pCbvSrvUavHeapForShader;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_CbvSrvUavHeapForShaderHandle;
 	ID3D12DescriptorHeap*						m_pSamplerHeap;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE				m_SamplerHeapHandle;
 	ID3D12Resource*								m_pDSV;

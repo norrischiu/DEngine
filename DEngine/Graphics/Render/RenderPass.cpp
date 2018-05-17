@@ -30,23 +30,26 @@ void RenderPass::ConstructPSO()
 	rootParameters[2].Descriptor.RegisterSpace = 0;
 	rootParameters[2].Descriptor.ShaderRegister = 1;
 
-	D3D12_DESCRIPTOR_RANGE  PSDescriptorTableRanges[1] = {};
-	PSDescriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	PSDescriptorTableRanges[0].NumDescriptors = 3;
-	PSDescriptorTableRanges[0].BaseShaderRegister = 0;
-	PSDescriptorTableRanges[0].RegisterSpace = 0;
-	PSDescriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	if (m_iSRVCount != 0)
+	{
+		D3D12_DESCRIPTOR_RANGE  PSDescriptorTableRanges[1] = {};
+		PSDescriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		PSDescriptorTableRanges[0].NumDescriptors = m_iSRVCount;
+		PSDescriptorTableRanges[0].BaseShaderRegister = 0;
+		PSDescriptorTableRanges[0].RegisterSpace = 0;
+		PSDescriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = 1;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = &PSDescriptorTableRanges[0];
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[3].DescriptorTable.NumDescriptorRanges = 1;
+		rootParameters[3].DescriptorTable.pDescriptorRanges = &PSDescriptorTableRanges[0];
+		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
+
+	}
 
 	rootSignatureDesc.NumStaticSamplers = 1;
 	rootSignatureDesc.pStaticSamplers = &State::GetState(State::LINEAR_MIPMAP_MAX_LOD_SS).SS;
-
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.NumParameters = 4;
+	rootSignatureDesc.NumParameters = m_iSRVCount != 0 ? 4 : 3;
 	rootSignatureDesc.pParameters = rootParameters;
 	hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
 	Renderer::GetInstance()->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
@@ -98,15 +101,13 @@ void RenderPass::ConstructPSO()
 	assert(hr == S_OK);
 }
 
+void RenderPass::BindSignatureToRenderer(Renderer* renderer)
+{
+	renderer->m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+}
+
 void RenderPass::BindToRenderer(Renderer* renderer)
 {
-	if (m_pPS != nullptr)
-	{
-		D3D12_GPU_DESCRIPTOR_HANDLE SRVStart = renderer->m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart();
-		UINT64 diff = m_vTextureSRVs[0].ptr - renderer->m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart().ptr;
-		SRVStart.ptr += diff;
-		renderer->m_pCommandList->SetGraphicsRootDescriptorTable(3, SRVStart);
-	}
 	renderer->m_pCommandList->SetPipelineState(m_pPSO);
 
 	if (m_iRTVNum > 0)

@@ -43,10 +43,10 @@ public:
 	*	@ void
 	********************************************************************************/
 	RenderPass()
-		: m_vTextureSRVs(0)
 	{
 		m_iTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		m_iRTVNum = 0;
+		m_iSRVCount = 0;
 	};
 
 	/********************************************************************************
@@ -321,75 +321,34 @@ public:
 		m_pDSV = DSV;
 	}
 
-
 	/********************************************************************************
 	*	--- Function:
-	*	AddTexture(Handle)
-	*	This function will add a texture to the render pass, and the sampler state 
-	*	linked to the texture
+	*	SetTextureCount(unsigned int)
+	*	This function will set the underlying texture array size
 	*
 	*	--- Parameters:
-	*	@ hTex: a handle referring to a Texture class
+	*	@ size: size
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void AddTexture(Handle hTex)
+	void SetTextureCount(unsigned int size)
 	{
-		m_vTextureSRVs.Add(((Texture*)hTex.Raw())->GetSRV());
-		m_iSS = ((Texture*)hTex.Raw())->GetSamplerDescIndex();
+		m_iSRVCount = size;
 	}
 
 	/********************************************************************************
 	*	--- Function:
-	*	AddTexture(Texture*)
-	*	This function will add a texture to the render pass, and the sampler state 
-	*	linked to the texture
+	*	BindSignatureToRenderer()
+	*	This function will bind the root signature only to the GPU
 	*
 	*	--- Parameters:
-	*	@ tex: a pointer to a Texture class
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void AddTexture(Texture* tex)
-	{
-		m_vTextureSRVs.Add(tex->GetSRV());
-		m_iSS = State::LINEAR_MIPMAP_MAX_LOD_SS;
-	}
-
-	/********************************************************************************
-	*	--- Function:
-	*	PopTexture()
-	*	This function will pop a texture from the array (remove the latest added 
-	*	texture), and pop a sampler state as well
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void PopTexture()
-	{
-		m_vTextureSRVs.Pop();
-	}
-
-	/********************************************************************************
-	*	--- Function:
-	*	GetTextureCount()
-	*	This function will return the number of texture added to this render pass
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ int: the number of textures in the texture array
-	********************************************************************************/
-	int GetTextureCount()
-	{
-		return m_vTextureSRVs.Size();
-	}
+	void BindSignatureToRenderer(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:
@@ -421,9 +380,10 @@ private:
 	int										m_iSS;
 	Texture*								m_pDSV;
 	D3D12_STREAM_OUTPUT_BUFFER_VIEW*		m_pSOTarget;	// Pointer to a buffer as stream out target
-	MyArray<D3D12_CPU_DESCRIPTOR_HANDLE>	m_vTextureSRVs;		// texture array
+
 	Texture**								m_pRTVs;
 	int										m_InputLayoutCount;
+	int										m_iSRVCount;
 
 	unsigned int							m_iTopology;	// Primitive Topology
 	int										m_iRTVNum;		// Number of render targets	

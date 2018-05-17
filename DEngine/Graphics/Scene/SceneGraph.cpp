@@ -21,58 +21,32 @@ SceneGraph::SceneGraph()
 	: m_tree(0)
 	, DEBUG_DRAWING_TREE(0)
 {
-	Renderer* renderer = Renderer::GetInstance();
-	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	ID3DBlob* signature;
-	D3D12_ROOT_PARAMETER rootParameters[4] = {};
-	HRESULT hr;
+	m_staticMeshGeometryPass = new RenderPass();
+	m_staticMeshGeometryPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
+	m_staticMeshGeometryPass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl");
+	m_staticMeshGeometryPass->SetTextureCount(3);
+	m_staticMeshGeometryPass->SetBlendState(State::DEFAULT_BS);
+	m_staticMeshGeometryPass->SetRenderTargets(Renderer::GetInstance()->m_pRTV, 2);
+	m_staticMeshGeometryPass->SetDepthStencilView(reinterpret_cast<Texture*>(Renderer::GetInstance()->m_depth.Raw()));
+	m_staticMeshGeometryPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	m_staticMeshGeometryPass->ConstructPSO();
 
-	// Vertex shader
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[0].Descriptor.RegisterSpace = 0;
-	rootParameters[0].Descriptor.ShaderRegister = 1;
-
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[1].Descriptor.RegisterSpace = 0;
-	rootParameters[1].Descriptor.ShaderRegister = 2;
-
-	// Pixel shader
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[2].Descriptor.RegisterSpace = 0;
-	rootParameters[2].Descriptor.ShaderRegister = 1;
-
-	D3D12_DESCRIPTOR_RANGE  PSDescriptorTableRanges[1] = {};
-	PSDescriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE::D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	PSDescriptorTableRanges[0].NumDescriptors = 3;
-	PSDescriptorTableRanges[0].BaseShaderRegister = 0;
-	PSDescriptorTableRanges[0].RegisterSpace = 0;
-	PSDescriptorTableRanges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE::D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[3].DescriptorTable.NumDescriptorRanges = 1;
-	rootParameters[3].DescriptorTable.pDescriptorRanges = &PSDescriptorTableRanges[0];
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
-
-	rootSignatureDesc.NumStaticSamplers = 1;
-	rootSignatureDesc.pStaticSamplers = &State::GetState(State::LINEAR_MIPMAP_MAX_LOD_SS).SS;
-
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.NumParameters = 4;
-	rootSignatureDesc.pParameters = rootParameters;
-	hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
-	Renderer::GetInstance()->m_pDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_pRootSignature));
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.pRootSignature = m_pRootSignature;
-
+	m_skeletalMeshGeometryPass = new RenderPass();
+	m_skeletalMeshGeometryPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
+	m_skeletalMeshGeometryPass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl");
+	m_skeletalMeshGeometryPass->SetTextureCount(3);
+	m_skeletalMeshGeometryPass->SetBlendState(State::DEFAULT_BS);
+	m_skeletalMeshGeometryPass->SetRenderTargets(Renderer::GetInstance()->m_pRTV, 2);
+	m_skeletalMeshGeometryPass->SetDepthStencilView(reinterpret_cast<Texture*>(Renderer::GetInstance()->m_depth.Raw()));
+	m_skeletalMeshGeometryPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	m_skeletalMeshGeometryPass->ConstructPSO();
 
 	m_ShadowPass = new RenderPass;
+	m_ShadowPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
 	m_ShadowPass->SetPixelShader(nullptr);
 	m_ShadowPass->SetBlendState(State::NULL_STATE);
 	m_ShadowPass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
+	m_ShadowPass->ConstructPSO();
 }
 
 void SceneGraph::FrustumCulling(CameraComponent* camera)
@@ -80,40 +54,28 @@ void SceneGraph::FrustumCulling(CameraComponent* camera)
 	const unsigned int size = m_tree.Size();
 	for (int i = 0; i < size; ++i)
 	{
-		AABB meshBound = m_tree[i]->m_pMeshData->GetBoundingBox();
+		AABB meshBound = m_tree[i]->GetMeshData()->GetBoundingBox();
 		AABB cache = meshBound;
 		Matrix4 cameraSpace = camera->GetViewMatrix() * *m_tree[i]->GetOwner()->GetTransform();
 		meshBound.Transform(cameraSpace);
-		if (camera->GetFrustum().Cull(meshBound))
-		{
-			m_tree[i]->m_bVisible = true;
-		}
-		else
-		{
-			m_tree[i]->m_bVisible = false;
-		}
+		m_tree[i]->SetVisibility(camera->GetFrustum().Cull(meshBound));
 	}
 }
 
 void SceneGraph::Render(Renderer* renderer)
 {
-	renderer->m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
-
-	// TODO: use better gpu recources management
-	m_VSCBuffer.BindToRenderer();
-	m_MatrixPalette.BindToRenderer();
-	m_PSCBuffer.BindToRenderer();
+	m_skeletalMeshGeometryPass->BindSignatureToRenderer(renderer); // TODO: separate/sort static and skeletal mesh rendering
 
 	int count = 0; //
 	const unsigned int size = m_tree.Size();
 	for (int i = 0; i < size; ++i)
 	{
 		MeshComponent* itr = m_tree[i];
-		if (itr->m_bVisible) count++; //
+		if (itr->IsVisible()) count++; //
 
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
-		ptr->WorldTransform = renderer->GetCamera()->GetViewMatrix() * *itr->m_pTransform;
-		ptr->WVPTransform = renderer->GetCamera()->GetPVMatrix() * *itr->m_pTransform;
+		ptr->WorldTransform = renderer->GetCamera()->GetViewMatrix() * *itr->GetTransform();
+		ptr->WVPTransform = renderer->GetCamera()->GetPVMatrix() * *itr->GetTransform();
 		m_VSCBuffer.Update();
 		m_VSCBuffer.BindToRendererWithOffset(0, i); // 0 is VS per object
 
@@ -135,11 +97,17 @@ void SceneGraph::Render(Renderer* renderer)
 			}); 
 			m_MatrixPalette.Update();
 			m_MatrixPalette.BindToRendererWithOffset(1, i); // 1 is VS matrix palatte
+
+			m_skeletalMeshGeometryPass->BindToRenderer(renderer);
+		}
+		else
+		{
+			m_staticMeshGeometryPass->BindToRenderer(renderer);
 		}
 
 		PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER* ptr2 = (PSPerMaterialCBuffer::PS_PER_MATERIAL_CBUFFER*) m_PSCBuffer.m_Memory._data;
-		ptr2->material.vSpecular = itr->m_pMeshData->m_Material.GetSpecular();
-		ptr2->material.fShininess = itr->m_pMeshData->m_Material.GetShininess();
+		ptr2->material.vSpecular = itr->GetMaterial()->GetSpecular();
+		ptr2->material.fShininess = itr->GetMaterial()->GetShininess();
 		m_PSCBuffer.Update();
 		m_PSCBuffer.BindToRendererWithOffset(2, i); // 2 is PS material
 
@@ -147,14 +115,52 @@ void SceneGraph::Render(Renderer* renderer)
 	}
 }
 
-void SceneGraph::ShadowMapGeneration()
+void SceneGraph::ShadowMapGeneration(Renderer* renderer)
 {
+	m_ShadowPass->BindSignatureToRenderer(renderer);
+
 	for (int i = 0; i < LightManager::GetInstance()->GetNumLights(); i++)
 	{
 		LightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
 		if (currLight->IsCastShadow())
 		{
-			// TODO: implement D3D12 shadow mapping
+			Handle shadowMap = LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex());
+			Renderer::GetInstance()->m_pCommandList->ClearDepthStencilView(reinterpret_cast<Texture*>(shadowMap.Raw())->GetDSV(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+			const unsigned int size = m_tree.Size();
+			for (int i = 0; i < size; ++i)
+			{
+				MeshComponent* itr = m_tree[i];
+				// only cast shadow for skeletal mesh for now
+				AnimationController* anim = itr->GetOwner()->GetComponent<AnimationController>();
+				if (anim != nullptr)
+				{
+					VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
+					ptr->WVPTransform = currLight->GetOwner()->GetComponent<CameraComponent>()->GetPVMatrix() * *itr->GetTransform();
+					m_VSCBuffer.Update();
+					m_VSCBuffer.BindToRendererWithOffset(0, i);
+
+					m_ShadowPass->SetDepthStencilView(reinterpret_cast<Texture*>(shadowMap.Raw()));
+
+					Skeleton* skel = itr->GetOwner()->GetComponent<Skeleton>();
+					VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER* palette = (VSMatrixPaletteCBuffer::VS_MATRIX_PALETTE_CBUFFER*) m_MatrixPalette.m_Memory._data;
+					anim->GetAnimationSets().ForEachItem([skel, palette](AnimationSet* item)
+					{
+						if (item->isActive())
+						{
+							for (int index = 0; index < skel->GetJointsCount(); ++index)
+							{
+								palette->mSkinning[index] = *skel->m_vGlobalPose[index] * skel->m_vJoints[index].m_mBindPoseInv;
+							}
+						}
+					});
+					m_MatrixPalette.Update();
+					m_MatrixPalette.BindToRendererWithOffset(1, i);
+
+					// TODO: separete skeletal and static mesh
+					m_ShadowPass->BindToRenderer(renderer);
+					itr->GetMeshData()->Render(renderer);
+				}
+			}		
 		}
 	}
 }

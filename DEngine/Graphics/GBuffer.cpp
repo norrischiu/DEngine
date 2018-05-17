@@ -24,7 +24,7 @@ void GBuffer::InitializeMeshAndRenderPass()
 	StencilingPass->SetRasterizerState(State::CULL_NONE_RS);
 	StencilingPass->SetBlendState(State::DEFAULT_BS);
 	StencilingPass->SetDepthStencilState(State::GBUFFER_STENCIL_CHECK_DSS);
-	StencilingPass->SetDepthStencilView(Renderer::GetInstance()->m_depth);
+	StencilingPass->SetDepthStencilView(reinterpret_cast<Texture*>(Renderer::GetInstance()->m_depth.Raw()));
 
 	StencilingPass->ConstructPSO();
 
@@ -36,9 +36,7 @@ void GBuffer::InitializeMeshAndRenderPass()
 	LightingPass->SetBlendState(State::ADDITIVE_BS);
 	LightingPass->SetRenderTargets(Renderer::GetInstance()->GetCurrentBackBufferTextureAddress(), 1);
 	LightingPass->SetDepthStencilView(Renderer::GetInstance()->m_depthReadOnly);
-	LightingPass->AddTexture(renderer->m_hTextures[0]);
-	LightingPass->AddTexture(renderer->m_hTextures[1]);
-	LightingPass->AddTexture(renderer->m_depth);
+	LightingPass->SetTextureCount(4);
 
 	LightingPass->ConstructPSO();
 }
@@ -50,6 +48,12 @@ void GBuffer::Render(Renderer* renderer)
 
 	for (int i = 0; i < LightManager::GetInstance()->GetNumLights(); i++)
 	{
+		Material material;
+		material.SetTextureCount(4);
+		material.SetTexture(renderer->m_hTextures[0], 0);
+		material.SetTexture(renderer->m_hTextures[1], 1);
+		material.SetTexture(renderer->m_depth, 2);
+
 		LightComponent* currLight = LightManager::GetInstance()->GetLightAt(i);
 
 		// Update VS cbuffer
@@ -104,27 +108,39 @@ void GBuffer::Render(Renderer* renderer)
 			ptr2->light.mWorldToLightClip = lightCamera->GetPVMatrix();
 			ptr2->light.mLightClipToView = renderer->GetCamera()->GetViewMatrix() * lightCamera->GetPVMatrix().Inverse();
 			ptr2->mViewToWorld = renderer->GetCamera()->GetViewMatrix().Inverse();
-			LightingPass->AddTexture(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex()));
+			material.SetTexture(LightManager::GetInstance()->GetShadowMap(currLight->GetShadowMapIndex()), 3);
 		}
+		else
+		{
+			Handle nullHandle;
+			material.SetTexture(nullHandle, 3);
+		}
+
 		m_pPSCBuffer.Update();
 		m_pPSCBuffer.BindToRendererWithOffset(2, i);
 
 		switch (currLight->GetType())
 		{
 		case LightComponent::POINT:
-			pointLightMesh->RenderUsingPass(renderer, StencilingPass);
+			StencilingPass->BindSignatureToRenderer(renderer);
+			StencilingPass->BindToRenderer(renderer);
+			pointLightMesh->Render(renderer);
 			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
-			pointLightMesh->RenderUsingPass(renderer, LightingPass);
+			LightingPass->BindSignatureToRenderer(renderer);
+			LightingPass->BindToRenderer(renderer);
+			material.BindToRenderer(renderer);
+			pointLightMesh->Render(renderer);
 			break;
 		case LightComponent::SPOT:
-			spotLightMesh->RenderUsingPass(renderer, StencilingPass);
+			StencilingPass->BindSignatureToRenderer(renderer);
+			StencilingPass->BindToRenderer(renderer);
+			spotLightMesh->Render(renderer);
 			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
-			spotLightMesh->RenderUsingPass(renderer, LightingPass);
+			LightingPass->BindSignatureToRenderer(renderer);
+			LightingPass->BindToRenderer(renderer);
+			material.BindToRenderer(renderer);
+			spotLightMesh->Render(renderer);
 			break;
-		}
-		if (currLight->IsCastShadow())
-		{
-			LightingPass->PopTexture();
 		}
 	}
 }

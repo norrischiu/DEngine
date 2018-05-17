@@ -55,9 +55,9 @@ public:
 		return m_SpotLightIndices;
 	}
 
-	Texture* GetShadowMap(int index)
+	Handle GetShadowMap(int index)
 	{
-		return (Texture*) m_ShadowMaps[index].Raw();
+		return m_ShadowMaps[index];
 	}
 
 private:

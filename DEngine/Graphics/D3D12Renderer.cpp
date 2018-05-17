@@ -146,10 +146,18 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = 1024;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	hr = m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeap));
 	assert(hr == S_OK);
 	m_CbvSrvUavHeapHandle = m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart();
+
+	// CBV and SRV descriptor heap
+	heapDesc.NumDescriptors = 1024;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	hr = m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeapForShader));
+	assert(hr == S_OK);
+	m_CbvSrvUavHeapForShaderHandle = m_pCbvSrvUavHeapForShader->GetCPUDescriptorHandleForHeapStart();
 
 	// Sampler descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
@@ -159,13 +167,6 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	hr = m_pDevice->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_pSamplerHeap));
 	assert(hr == S_OK);
 	m_SamplerHeapHandle = m_pSamplerHeap->GetCPUDescriptorHandleForHeapStart();
-
-	// early creation of cbuffer for now, so CBV is at the top of the heap
-	State::ConstructDefaultStates();
-	SceneGraph::GetInstance();
-	m_GBuffer = new GBuffer;
-
-	m_SrvHeapOffset = (m_CbvSrvUavHeapHandle.ptr - m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart().ptr) / m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	for (int i = 0; i < BACKBUFFER_COUNT; ++i)
 	{
@@ -194,12 +195,17 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 
 	Handle hdepthTex(sizeof(Texture));
 	new (hdepthTex) Texture(Texture::DEPTH_STENCIL | Texture::SHADER_RESOURCES);
-	m_depth = ((Texture*)hdepthTex.Raw());
-	m_depth->GetTexture2D()->SetName(L"Depth Buffer");
+	m_depth = hdepthTex;
+	Texture* pDepthTex = reinterpret_cast<Texture*>(hdepthTex.Raw());
+	pDepthTex->GetTexture2D()->SetName(L"Depth Buffer");
 	Handle hdepthReadTex(sizeof(Texture));
-	new (hdepthReadTex) Texture(Texture::DEPTH_STENCIL_READ_ONLY, m_depth->GetTexture2D());
+	new (hdepthReadTex) Texture(Texture::DEPTH_STENCIL_READ_ONLY, pDepthTex->GetTexture2D());
 	m_depthReadOnly = ((Texture*)hdepthReadTex.Raw());
 	m_depthReadOnly->GetTexture2D()->SetName(L"Depth Buffer read only");
+
+	State::ConstructDefaultStates();
+	SceneGraph::GetInstance();
+	m_GBuffer = new GBuffer;
 
 	// TODO: create a null texture? or smart root paramater range 
 
@@ -260,22 +266,22 @@ void D3D12Renderer::UpdatePipeline()
 		//rtvHandle.Offset(1, m_iRTVDescriptorSize);
 	}
 	m_pCommandList->ClearRenderTargetView(m_backbuffer[m_iCurrFrameIndex]->GetRTV(), ClearColor, 0, nullptr);
-	m_pCommandList->ClearDepthStencilView(m_depth->GetDSV(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	m_pCommandList->ClearDepthStencilView(reinterpret_cast<Texture*>(m_depth.Raw())->GetDSV(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	m_pCommandList->RSSetViewports(1, &m_pViewport);
 	m_pCommandList->RSSetScissorRects(1, &m_pScissorRect);
 
 	// set constant buffer descriptor heap
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvSrvUavHeap, m_pSamplerHeap };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvSrvUavHeapForShader, m_pSamplerHeap };
 	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 	// Render to texture
 	SceneGraph::GetInstance()->FrustumCulling(m_RendererCamera);
 	SceneGraph::GetInstance()->Render(this);
-	//SceneGraph::GetInstance()->ShadowMapGeneration();
+	SceneGraph::GetInstance()->ShadowMapGeneration(this);
 
 	m_GBuffer->Render(this);
-	//m_PPE->Render();
+	m_PPE->Render(this);
 	//ParticleSystem::GetInstance()->Render();
 	//DEBUG_RENDERER::GetInstance()->Render();
 
@@ -326,6 +332,7 @@ void D3D12Renderer::Render()
 
 	ResetCommandAllocatorAndList();
 	m_pConstantBufferAllocator->Reset();
+	m_CbvSrvUavHeapForShaderHandle = m_pCbvSrvUavHeapForShader->GetCPUDescriptorHandleForHeapStart();
 }
 
 void D3D12Renderer::ResetCommandAllocatorAndList()

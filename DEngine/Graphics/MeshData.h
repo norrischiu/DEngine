@@ -99,20 +99,6 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	RenderUsingPass(RenderPass*)
-	*	This function will draw the mesh with a given render pass
-	*
-	*	--- Parameters:
-	*	@ Renderer*: pointer to renderer
-	*	@ pass: pointer to a render pass
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void RenderUsingPass(Renderer* renderer, RenderPass* pass);
-
-	/********************************************************************************
-	*	--- Function:
 	*	GetVertexNum()
 	*	This function will return the number of vertex of this mesh
 	*
@@ -164,7 +150,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	Destruct()
-	*	This function will destruct the material
+	*	Empty destructor
 	*
 	*	--- Parameters:
 	*	@ void
@@ -174,10 +160,7 @@ public:
 	********************************************************************************/
 	void Destruct()
 	{
-		m_Material.Destruct();
 	}
-
-	Material								m_Material;		// Mesh material
 
 private:
 

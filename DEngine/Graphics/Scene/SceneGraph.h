@@ -88,7 +88,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void ShadowMapGeneration();
+	void ShadowMapGeneration(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Static Function:
@@ -134,7 +134,6 @@ public:
 
 private:
 
-
 	static SceneGraph*								m_pInstance;	// Singleton instance
 	MyArray<MeshComponent*>							m_tree;		// Spatial data structure to store all render component, currently a linear array only
 	MyArray<MeshComponent*>							DEBUG_DRAWING_TREE;		// Temp storage for debug drawing
@@ -143,6 +142,8 @@ private:
 	HSDSPerFrameCBuffer								m_HSDSCBuffer;		// a default constant buffer interface for terrain rendering
 	PSPerMaterialCBuffer							m_PSCBuffer;		// a default constant buffer interface for each material
 	RenderPass*										m_ShadowPass;	// a shadow render pass
+	RenderPass*										m_staticMeshGeometryPass;
+	RenderPass*										m_skeletalMeshGeometryPass;
 	ID3D12RootSignature*							m_pRootSignature; // root signature for D3D12 render
 };
 

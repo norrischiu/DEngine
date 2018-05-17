@@ -28,6 +28,7 @@ MeshComponent::MeshComponent(const char* meshName, int type)
 
 	*m_pTransform = Matrix4::Identity;
 	m_pMeshData = new MeshData(meshName, type);
+	m_Material.ReadFromFile(meshName);
 	SceneGraph::GetInstance()->AddComponent(this);
 }
 
@@ -43,10 +44,31 @@ void MeshComponent::SetOwner(GameObject * ptr)
 }
 
 
+Material * MeshComponent::GetMaterial()
+{
+	return &m_Material;
+}
+
+bool MeshComponent::IsVisible()
+{
+	return m_bVisible;
+}
+
+void MeshComponent::SetVisibility(bool visible)
+{
+	m_bVisible = true;
+}
+
+Matrix4 * MeshComponent::GetTransform()
+{
+	return m_pTransform;
+}
+
 void MeshComponent::Draw(Renderer* renderer)
 {
 	if (m_bVisible)
 	{
+		m_Material.BindToRenderer(renderer);
 		m_pMeshData->Render(renderer);
 	}
 }

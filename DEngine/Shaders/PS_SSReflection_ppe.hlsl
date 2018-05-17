@@ -1,7 +1,7 @@
 Texture2D shaderTexture[3];
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
 
 // cbuffer
 

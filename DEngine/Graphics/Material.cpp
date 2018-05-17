@@ -8,10 +8,11 @@
 namespace DE
 {
 
-void Material::ReadFromFile(const char * filename, int meshType)
+void Material::ReadFromFile(const char * filename)
 {
-	FILE* pFile = fopen(filename, "r");
-	RenderPass* pass = new RenderPass;
+	std::string sFileName(filename);
+	sFileName = "../Assets/" + sFileName + "_material.mate";
+	FILE* pFile = fopen(sFileName.c_str(), "r");
 
 	char c[256];
 	float r, g, b;
@@ -28,6 +29,7 @@ void Material::ReadFromFile(const char * filename, int meshType)
 	// read textures
 	int size;
 	fscanf(pFile, "%i", &size);
+	m_vTextures.Resize(size);
 	for (int i = 0; i < size; ++i)
 	{
 		fscanf(pFile, "%s", &c);
@@ -47,50 +49,10 @@ void Material::ReadFromFile(const char * filename, int meshType)
 		fscanf(pFile, "%s", &c);
 		Handle hTexture(sizeof(Texture));
 		new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, c, 10);
-		pass->AddTexture(hTexture);
+		m_vTextures.Add(hTexture);
 	}
 
 	fclose(pFile);
-
-	// decide which technique to use
-	switch (meshType)
-	{
-	case eMeshType::OUTLINE:
-		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
-		break;
-	case eMeshType::STANDARD_MESH:
-		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV.hlsl");
-		break;
-	case eMeshType::SKELETAL_MESH:
-		pass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1N1T1UV4J.hlsl");
-		break;
-	}
-	if (m_TexFlag == (DIFFUSE | NORMAL | SPECULAR))
-	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecularBump_deferred.hlsl");
-	}
-	else if (m_TexFlag == (DIFFUSE | NORMAL))
-	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseBump_deferred.hlsl");
-	}
-	else if (m_TexFlag == (DIFFUSE | SPECULAR))
-	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_DiffuseSpecular_deferred.hlsl");
-	}
-	else if (m_TexFlag == DIFFUSE)
-	{
-		pass->SetPixelShader("../DEngine/Shaders/PS_vertex1P1N1T1UV_Diffuse_deferred.hlsl");
-	}
-	else
-	{
-		pass->SetPixelShader(nullptr);
-	}
-	pass->SetBlendState(State::DEFAULT_BS);
-	pass->SetRenderTargets(Renderer::GetInstance()->m_pRTV, 2);
-	pass->SetDepthStencilView(Renderer::GetInstance()->m_depth);
-	pass->SetDepthStencilState(State::DEFAULT_DEPTH_STENCIL_DSS);
-	pass->ConstructPSO();
-	m_pRenderPass = pass;
 }
 
 void Material::UseDefault()
@@ -99,6 +61,41 @@ void Material::UseDefault()
 	m_vDiffuse = Vector3(1.0f, 1.0f, 1.0f);
 	m_vSpecular = Vector3::Zero;
 	m_fShininess = 1.0f;
+}
+
+void Material::BindToRenderer(Renderer * renderer)
+{
+	unsigned int size = m_vTextures.Size();
+	if (size != 0)
+	{
+		UINT64 offset = renderer->m_CbvSrvUavHeapForShaderHandle.ptr - renderer->m_pCbvSrvUavHeapForShader->GetCPUDescriptorHandleForHeapStart().ptr;
+		D3D12_GPU_DESCRIPTOR_HANDLE descriptorTable;
+		descriptorTable.ptr = renderer->m_pCbvSrvUavHeapForShader->GetGPUDescriptorHandleForHeapStart().ptr + offset;
+		for (int i = 0; i < size; i++)
+		{
+			if (m_vTextures[i].Raw() == nullptr)
+			{
+				// null descriptor
+				D3D12_CPU_DESCRIPTOR_HANDLE nullDescriptor;
+				D3D12_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+				SRVDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+				SRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+				SRVDesc.Texture2D.MostDetailedMip = 0;
+				SRVDesc.Texture2D.MipLevels = 0;
+				SRVDesc.Texture2D.PlaneSlice = 0;
+				renderer->m_pDevice->CreateShaderResourceView(nullptr, &SRVDesc, renderer->m_CbvSrvUavHeapForShaderHandle);
+				renderer->m_CbvSrvUavHeapForShaderHandle.Offset(renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+			}
+			else
+			{
+				D3D12_CPU_DESCRIPTOR_HANDLE srvCpuStart = (reinterpret_cast<Texture*>(m_vTextures[i].Raw()))->GetSRV();
+				renderer->m_pDevice->CopyDescriptorsSimple(1, renderer->m_CbvSrvUavHeapForShaderHandle, srvCpuStart, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+				renderer->m_CbvSrvUavHeapForShaderHandle.Offset(renderer->m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+			}
+		}
+		renderer->m_pCommandList->SetGraphicsRootDescriptorTable(3, descriptorTable);
+	}
 }
 
 };
