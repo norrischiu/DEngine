@@ -58,41 +58,41 @@ void GameLoop::Construct()
 	new (hCamera) DE::CameraComponent(DE::Vector3(6.0f, 4.0f, 0.0f), DE::Vector3(4.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
 	light->AddComponent((DE::Component*)hCamera.Raw());
 
-	//DE::PointLight* light2 = new DE::PointLight(DE::Vector3(0.0f, 4.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4.5f, 3.0f, true);
-	//DE::Handle hCamera2(sizeof(DE::CameraComponent));
-	//new (hCamera2) DE::CameraComponent(DE::Vector3(0.0f, 4.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
-	//light2->AddComponent((DE::Component*)hCamera.Raw());
+	DE::PointLight* light2 = new DE::PointLight(DE::Vector3(0.0f, 4.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4.5f, 3.0f, true);
+	DE::Handle hCamera2(sizeof(DE::CameraComponent));
+	new (hCamera2) DE::CameraComponent(DE::Vector3(0.0f, 4.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
+	light2->AddComponent((DE::Component*)hCamera.Raw());
 
-	//DE::PointLight* light3 = new DE::PointLight(DE::Vector3(-6.0f, 4.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4.5f, 3.0f, true);
-	//DE::Handle hCamera3(sizeof(DE::CameraComponent));
-	//new (hCamera3) DE::CameraComponent(DE::Vector3(-6.0f, 4.0f, 0.0f), DE::Vector3(-4.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
-	//light3->AddComponent((DE::Component*)hCamera.Raw());
+	DE::PointLight* light3 = new DE::PointLight(DE::Vector3(-6.0f, 4.0f, 0.0f), DE::Vector4(1.0, 1.0, 1.0), 4.5f, 3.0f, true);
+	DE::Handle hCamera3(sizeof(DE::CameraComponent));
+	new (hCamera3) DE::CameraComponent(DE::Vector3(-6.0f, 4.0f, 0.0f), DE::Vector3(-4.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 1.0f), PI / 2.0f, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0f, 100.0f);
+	light3->AddComponent((DE::Component*)hCamera.Raw());
 
-	//new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(0.0f, 3.0f, 2.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(0.0f, 3.0f, -2.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 0.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(0.0f, 3.0f, 2.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(0.0f, 3.0f, -2.0f), DE::Vector4(1.0f, 0.0, 0.0), 3.5f, 3.5f);
 
-	//for (int i = 3; i < 27; i+=3)
-	//{
-	//	new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, 0.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
-	//	new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, 0.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
-	//	new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, 2.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
-	//	new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, 2.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
-	//	new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, -2.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
-	//	new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, -2.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
-	//}
+	for (int i = 3; i < 27; i+=3)
+	{
+		new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, 0.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
+		new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, 0.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
+		new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, 2.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
+		new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, 2.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
+		new DE::PointLight(DE::Vector3(i * 1.0f, 3.0f, -2.0f), DE::Vector4(0.0, 1.0f, 1.0), 3.5f, 3.5f);
+		new DE::PointLight(DE::Vector3(i * -1.0f, 3.0f, -2.0f), DE::Vector4(1.0, 0.0, 1.0f), 3.5f, 3.5f);
+	}
 
-	//// two rows
-	//new DE::PointLight(DE::Vector3(17.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(7.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-3.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-13.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-23.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(17.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(7.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-3.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-13.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
-	//new DE::PointLight(DE::Vector3(-23.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	// two rows
+	new DE::PointLight(DE::Vector3(17.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(7.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-3.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-13.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-23.0f, 9.0f, -4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(17.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(7.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-3.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-13.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
+	new DE::PointLight(DE::Vector3(-23.0f, 9.0f, 4.5f), DE::Vector4(1.0, 0.0, 0.0f), 3.5f, 3.5f);
 }
 
 void GameLoop::Update(float deltaTime)

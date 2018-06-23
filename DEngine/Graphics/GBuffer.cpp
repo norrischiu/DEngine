@@ -119,30 +119,16 @@ void GBuffer::Render(Renderer* renderer)
 		m_pPSCBuffer.Update();
 		m_pPSCBuffer.BindToRendererWithOffset(2, i);
 
-		switch (currLight->GetType())
-		{
-		case LightComponent::POINT:
-			StencilingPass->BindSignatureToRenderer(renderer);
-			StencilingPass->BindToRenderer(renderer);
-			pointLightMesh->Render(renderer);
-			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
-			LightingPass->BindSignatureToRenderer(renderer);
-			LightingPass->BindToRenderer(renderer);
-			material.BindToRenderer(renderer);
-			pointLightMesh->Render(renderer);
-			break;
-		case LightComponent::SPOT:
-			StencilingPass->BindSignatureToRenderer(renderer);
-			StencilingPass->BindToRenderer(renderer);
-			spotLightMesh->Render(renderer);
-			LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
-			LightingPass->BindSignatureToRenderer(renderer);
-			LightingPass->BindToRenderer(renderer);
-			material.BindToRenderer(renderer);
-			spotLightMesh->Render(renderer);
-			break;
-		}
+		MeshData* lightMesh = currLight->GetType() == LightComponent::POINT ? pointLightMesh : spotLightMesh;
+		StencilingPass->BindSignatureToRenderer(renderer);
+		StencilingPass->BindToRenderer(renderer);
+		lightMesh->Render(renderer);
+		LightingPass->SetRenderTargets(renderer->GetCurrentBackBufferTextureAddress(), 1);
+		LightingPass->BindSignatureToRenderer(renderer);
+		LightingPass->BindToRenderer(renderer);
+		material.BindToRenderer(renderer);
+		lightMesh->Render(renderer);
 	}
-}
 
+}
 };
