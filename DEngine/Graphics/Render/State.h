@@ -125,6 +125,8 @@ namespace State
 		ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
 		rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 		rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+		rasterizerDesc.FrontCounterClockwise = false;
+		rasterizerDesc.DepthClipEnable = true;
 		stateDesc.RS = rasterizerDesc;
 		m_States[CULL_BACK_RS] = stateDesc;
 
