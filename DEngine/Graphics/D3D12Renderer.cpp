@@ -2,6 +2,7 @@
 #include "Graphics\Scene\SceneGraph.h"
 #include "Graphics\Render\State.h"
 #include "Graphics\GBuffer.h"
+#include "Graphics\PostProcessEffect.h"
 
 namespace DE 
 {
@@ -135,7 +136,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 
 	// DSV descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC DSVHeapDesc = {};
-	DSVHeapDesc.NumDescriptors = 16;
+	DSVHeapDesc.NumDescriptors = 1024;
 	DSVHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	DSVHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	hr = m_pDevice->CreateDescriptorHeap(&DSVHeapDesc, IID_PPV_ARGS(&m_pDSVHeap));
@@ -144,15 +145,15 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 
 	// CBV and SRV descriptor heap
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 1024;
+	heapDesc.NumDescriptors = 65536;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	hr = m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeap));
 	assert(hr == S_OK);
 	m_CbvSrvUavHeapHandle = m_pCbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart();
 
-	// CBV and SRV descriptor heap
-	heapDesc.NumDescriptors = 1024;
+	// CBV and SRV descriptor heap for shader
+	heapDesc.NumDescriptors = 65536;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	hr = m_pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_pCbvSrvUavHeapForShader));
@@ -206,6 +207,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	State::ConstructDefaultStates();
 	SceneGraph::GetInstance();
 	m_GBuffer = new GBuffer;
+	m_PPE = new PostProcessEffect;
 
 	// TODO: create a null texture? or smart root paramater range 
 
@@ -222,6 +224,7 @@ bool D3D12Renderer::ConstructWithWindow(HWND hWnd)
 	m_pFenceEvent = CreateEvent(nullptr, false, false, nullptr);
 
 	m_GBuffer->InitializeMeshAndRenderPass();
+	m_PPE->Initialize(this);
 
 	// Fill out the Viewport
 	m_pViewport.TopLeftX = 0;
@@ -282,10 +285,9 @@ void D3D12Renderer::UpdatePipeline()
 
 	m_GBuffer->Render(this);
 	m_PPE->Render(this);
+
 	//ParticleSystem::GetInstance()->Render();
 	//DEBUG_RENDERER::GetInstance()->Render();
-
-//	m_pCommandList->OMSetRenderTargets(1, &m_backbuffer[m_iCurrFrameIndex]->GetRTV()->GetCPUDescriptorHandleForHeapStart(), FALSE, nullptr);
 
 	// Barrier: from RT to Present
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

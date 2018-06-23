@@ -1,6 +1,8 @@
 #ifndef POST_PROCESS_EFFECT_H_
 #define POST_PROCESS_EFFECT_H_
 
+#include "D3D12Renderer.h"
+
 namespace DE
 {
 
@@ -9,7 +11,7 @@ class Texture;
 class PSPerLightCBuffer;
 class VSPerObjectCBuffer;
 class MeshData;
-class Material;
+class RenderPass;
 
 /*
 *	CLASS: PostProcessEffect
@@ -24,15 +26,28 @@ public:
 
 	/********************************************************************************
 	*	--- Constructor:
-	*	ShaderManager()
+	*	PostProcessEffect()
+	*	Empty contructor
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
+	PostProcessEffect() {};
+
+	/********************************************************************************
+	*	--- Function:
+	*	Initialize(Renderer*)
 	*	This constructor will create the index and vertex buffer for a screen size
 	*	quad for rendering post-processing effect in 2D, define custom render pass
 	*	here
 	*
 	*	--- Parameters:
+	*	@ Renderer*: pointer to renderer
+	*
+	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	PostProcessEffect();
+	void Initialize(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:
@@ -45,13 +60,12 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 private:
 
-	PSPerLightCBuffer*							m_pPSCBuffer;	// Constant buffer update facilities for each light
-	VSPerObjectCBuffer*							m_pVSCBuffer;	// Constant buffer update facilities for each object	
 	MeshData*									fullscreenQuadMesh;		// Full screen quad mesh
+	RenderPass*									AmbientPass;
 	Texture*									m_texture;	// Ping pong textures 1, for blurring
 	Texture*									m_texture2;	// Ping pong textures 2, for blurring
 };
