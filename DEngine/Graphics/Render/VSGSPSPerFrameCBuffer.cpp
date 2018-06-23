@@ -1,5 +1,5 @@
 #include "VSGSPSPerFrameCBuffer.h"
-#include "Graphics\D3D11Renderer.h"
+#include "Graphics\D3D12Renderer.h"
 
 namespace DE
 {
@@ -14,10 +14,9 @@ VSGSPSPerFrameCBuffer::VSGSPSPerFrameCBuffer()
 
 void VSGSPSPerFrameCBuffer::BindToRenderer()
 {
-	// Set the same cbuffer for all shaders
-	D3D11Renderer::GetInstance()->m_pD3D11Context->VSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->GSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->PSSetConstantBuffers(m_iSlotID, 1, &m_Memory._buffer);
+	// TODO: implement this in D3D12
+	// set the root descriptor table 0 to the constant buffer descriptor heap
+//	Renderer::GetInstance()->m_pCommandList->SetGraphicsRootDescriptorTable(0, Renderer::GetInstance()->m_pCbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 };

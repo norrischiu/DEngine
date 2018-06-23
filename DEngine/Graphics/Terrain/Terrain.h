@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "Math\simdmath.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
 
 namespace DE

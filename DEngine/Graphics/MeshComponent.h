@@ -3,6 +3,7 @@
 #define MeshComponent_H_
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Object\Component.h"
 #include "Graphics\MeshData.h"
 
@@ -113,9 +114,75 @@ public:
 	********************************************************************************/
 	MeshData* GetMeshData();
 
-	void Draw();
+	/********************************************************************************
+	*	--- Function:
+	*	GetMaterial()
+	*	This function will return the material in this mesh component
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ Material*: a pointer to the material
+	********************************************************************************/
+	Material* GetMaterial();
+
+	/********************************************************************************
+	*	--- Function:
+	*	IsVisible()
+	*	This function will return if this mesh component is visible
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ bool: TRUE if visible, FALSE if otherwise
+	********************************************************************************/
+	bool IsVisible();
+
+	/********************************************************************************
+	*	--- Function:
+	*	SetVisibility(bool)
+	*	This function will set this mesh component's visibility
+	*
+	*	--- Parameters:
+	*	@ bool: TRUE if visible, FALSE if otherwise
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
+	void SetVisibility(bool visible);
+
+	/********************************************************************************
+	*	--- Function:
+	*	GetTransform()
+	*	This function will return if  the game object's transform
+	*
+	*	--- Parameters:
+	*	@ void
+	*
+	*	--- Return:
+	*	@ Matrix4*: cached pointer to game object's transform	
+	********************************************************************************/
+	Matrix4* GetTransform();
+
+	/********************************************************************************
+	*	--- Function:
+	*	Draw(Renderer*)
+	*	This function will draw this mesh component
+	*
+	*	--- Parameters:
+	*	@ Renderer*: pointer to renderer
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
+	void Draw(Renderer* renderer);
+
+private:
 
 	MeshData*								m_pMeshData;	// pointer to mesh data
+	Material								m_Material;		// material
 	Matrix4*								m_pTransform;	// cached pointer to game object's transform	
 	bool									m_bVisible;		// Visibility flag
 };

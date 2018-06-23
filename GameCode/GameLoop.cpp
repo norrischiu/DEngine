@@ -10,7 +10,7 @@
 #include "DEngine\Object\MovementController.h"
 #include "DEngine\Object\Camera.h"
 #include "DEngine\Math\simdmath.h"
-#include "DEngine\Graphics\HUD\HUD.h"
+//#include "DEngine\Graphics\HUD\HUD.h"
 #include "DEngine\AI\PathFinding\FlowFieldBuilder.h"
 #include "DEngine\AI\PathFinding\AIController.h"
 #include "DEngine\Graphics\ParticleSystem\ParticleSystem.h"
@@ -20,6 +20,8 @@
 // Game include
 #include "MainPlayer\Player.h"
 #include "Boss\Boss.h"
+
+#include <string>
 
 GameLoop* GameLoop::m_pInstance = nullptr;
 
@@ -46,7 +48,7 @@ void GameLoop::Construct()
 		levelMesh->AddComponent((DE::Component*) hMeshComponent.Raw());
 
 		DE::Handle hAABB(sizeof(DE::AABB));
-		new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->m_pMeshData->GetBoundingBox());
+		new (hAABB) DE::AABB(((DE::MeshComponent*) hMeshComponent.Raw())->GetMeshData()->GetBoundingBox());
 		((DE::AABB*) hAABB.Raw())->setType(DE::typeAABB);
 		levelMesh->AddComponent((DE::Component*) hAABB.Raw());
 	}

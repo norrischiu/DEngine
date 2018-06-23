@@ -208,7 +208,7 @@ MeshComponent* TextEngine::makeText(TextBox* textBox)
 	if (!m_cache[id].Raw()) {
 		MeshData* meshData = CreateTextMeshData(sentence);
 		RenderPass* pass = meshData->m_Material.GetRenderTechnique()->m_vRenderPasses[0];
-		pass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+		pass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 		pass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 		pass->SetRasterizerState(State::CULL_NONE_RS);
 		new (hMesh) MeshComponent(meshData);

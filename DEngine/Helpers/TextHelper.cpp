@@ -2,6 +2,7 @@
 
 // Engine include
 #include "Graphics\Scene\SceneGraph.h"
+#include "Graphics\Render\RenderPass.h"
 
 // C++ include
 #include <iostream>
@@ -110,14 +111,14 @@ MeshData* TextHelper::CreateTextMeshData(const char* sentence) {
 	}
 
 	MeshData* meshData = new MeshData(pVertices, iNumVerts, pIndices, iNumIndices, sizeof(Vertex1P1UV));
-	RenderPass* textPass = new RenderPass;
-	textPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
-	textPass->SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
-	textPass->SetBlendState(State::ALPHA_BS);
-	Handle hTexture(sizeof(Texture));
-	new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "font.dds");
-	textPass->AddTexture(hTexture);
-	meshData->m_Material.AddPassToTechnique(textPass);
+	//RenderPass* textPass = new RenderPass;
+	//textPass->SetVertexShader("../DEngine/Shaders/VS_vertex1P1UV.hlsl");
+	//textPass->SetPixelShader("../DEngine/Shaders/PS_texture.hlsl");
+	//textPass->SetBlendState(State::ALPHA_BS);
+	//Handle hTexture(sizeof(Texture));
+	//new (hTexture) Texture(Texture::SHADER_RESOURCES, 1, "font.dds");
+	//textPass->AddTexture(hTexture);
+	//meshData->m_Material.SetRenderPass(textPass);
 
 	return meshData;
 }

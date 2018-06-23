@@ -1,10 +1,8 @@
 #ifndef GBUFFER_H_
 #define GBUFFER_H_
 
-// D3D11 include
-#include <D3D11.h>
-
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Render\PSPerLightCBuffer.h"
 #include "Render\VSPerObjectCBuffer.h"
 #include "Render\Texture.h"
@@ -42,7 +40,17 @@ public:
 	*	--- Parameters:
 	*	@ void
 	********************************************************************************/
-	GBuffer();
+	GBuffer() {};
+
+	/********************************************************************************
+	*	--- Function:
+	*	InitializeMeshAndRenderPass()
+	*	This function will initialize the light mesh and render pass
+	*
+	*	--- Parameters:
+	*	@ void
+	********************************************************************************/
+	void InitializeMeshAndRenderPass();
 
 	/********************************************************************************
 	*	--- Function:
@@ -50,16 +58,15 @@ public:
 	*	This function will render the gbuffer using light volume
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 private:
 
-	static const unsigned int					RT_NUM = 3;		// number of render target in gbuffer
 	PSPerLightCBuffer							m_pPSCBuffer;	// Constant buffer update facilities for each light
 	VSPerObjectCBuffer							m_pVSCBuffer;	// Constant buffer update facilities for each object
 	MeshData*									pointLightMesh;		// default point light mesh, which is a box

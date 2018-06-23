@@ -135,7 +135,7 @@ void FlowField::Draw()
 	renderPass->SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 	renderPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	meshComponent->m_pMeshData->m_Material.AddPassToTechnique(renderPass);
-	renderPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+	renderPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 	renderPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 	renderPass->SetRasterizerState(State::CULL_NONE_RS);
 	Matrix4 translate;

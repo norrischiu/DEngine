@@ -1,8 +1,8 @@
 #ifndef CBUFFER_H_
 #define CBUFFER_H_
 
-// D3D11 include
-#include <d3d11.h>
+#include "GlobalInclude.h"
+#include "Graphics/GPU/GPUDataType.h"
 
 namespace DE
 {
@@ -38,7 +38,7 @@ public:
 	struct CPU_GPU_MEMORY
 	{
 		void*							_data;		// Pointer to CPU constant buffer memory
-		ID3D11Buffer*					_buffer;	// Pointer to GPU constant buffer memory
+		GPUHandle						_gpuHandle;	// Pointer to GPU constant buffer memory
 	};
 
 	/********************************************************************************
@@ -55,7 +55,7 @@ public:
 	/********************************************************************************
 	*	--- Virtual Function:
 	*	void BindToRenderer()
-	*	This function will set this constant buffer to GPU, override this function 
+	*	This function will set this constant buffer to GPU, override this function
 	*	if need behavior different from default
 	*
 	*	--- Parameters:
@@ -65,6 +65,8 @@ public:
 	*	@ void
 	********************************************************************************/
 	virtual void BindToRenderer();
+
+	virtual void BindToRendererWithOffset(int parameterIndex, int offset);
 
 	/********************************************************************************
 	*	--- Function:
@@ -83,6 +85,8 @@ public:
 	CPU_GPU_MEMORY						m_Memory;		// the CPU and GPU data pointer
 	int									m_iType;		// the shader stage of this constant buffer
 	int									m_iSlotID;		// constant buffer slot ID in GPU
+	int									m_iSize;
+	void*								_cpuAddress;
 };
 
 };

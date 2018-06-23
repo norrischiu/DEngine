@@ -1,3 +1,3 @@
 #include "State.h"
 
-void* State::m_States[20];
+State::D3D12_STATE_DESC State::m_States[20];

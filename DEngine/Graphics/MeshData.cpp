@@ -8,6 +8,8 @@
 #include "IndexBufferEngine.h"
 #include "Material.h"
 #include "VertexFormat.h"
+#include "d3dx12.h"
+#include "D3D12Renderer.h"
 #include <float.h>
 #pragma comment (lib, "D3DCompiler")
 
@@ -21,13 +23,23 @@ MeshData::MeshData(void* pVertexData, const int iNumVerts, unsigned int * pIndex
 
 	m_iStride = stride;
 	m_iNumIndics = iNumIndics;
-	// Create vertex buffer
-	m_pVertexBuffer = vertexEngine.CreateBufferFromRawData(pVertexData, iNumVerts, m_iStride, streamOut);
+	// Create vertex buffer and index buffer
+	void* vertexBuffer = nullptr;
+	void* indexBuffer = nullptr;
+
+	vertexBuffer = vertexEngine.CreateBufferFromRawData(pVertexData, iNumVerts, m_iStride, streamOut);
 	m_bStreamOut = streamOut;
-	// Create index buffer
-	m_pIndexBuffer = indexEngine.CreateBufferFromRawData(pIndexData, m_iNumIndics);
+	indexBuffer = indexEngine.CreateBufferFromRawData(pIndexData, m_iNumIndics);
+
+	m_VBV.BufferLocation = (UINT64)vertexBuffer;
+	m_VBV.StrideInBytes = m_iStride;
+	m_VBV.SizeInBytes = stride * iNumVerts;
+
+	m_IBV.BufferLocation = (UINT64)indexBuffer;
+	m_IBV.Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
+	m_IBV.SizeInBytes = sizeof(UINT) * iNumIndics;
+
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
-	m_Material.UseDefault();
 }
 
 MeshData::MeshData(const char* filename, int meshType)
@@ -37,71 +49,51 @@ MeshData::MeshData(const char* filename, int meshType)
 
 	VertexBufferEngine vertexEngine;
 	IndexBufferEngine indexEngine;
-	m_pIndexBuffer = (ID3D11Buffer*)indexEngine.CreateBuffer(C_STR(sFileName, "_index.bufa"), m_iNumIndics);
+	void* vertexBuffer = nullptr;
+	void* indexBuffer = nullptr;
+	unsigned int bufferSize;
 
+	indexBuffer = indexEngine.CreateBuffer(C_STR(sFileName, "_index.bufa"), m_iNumIndics);
 	switch (meshType)
 	{
 	case eMeshType::OUTLINE:
-		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION, m_iStride);
+		vertexBuffer = vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION, m_iStride, bufferSize);
 		break;
 	case eMeshType::STANDARD_MESH:
-		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride);
+		vertexBuffer = vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE, m_iStride, bufferSize);
 		break;
 	case eMeshType::SKELETAL_MESH:
-		m_pVertexBuffer = (ID3D11Buffer*)vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS, m_iStride);
+		vertexBuffer = vertexEngine.CreateBuffer(sFileName.c_str(), eVertexFormat::POSITION_NORMAL_TANGENT_TEXTURE_FOUR_JOINTS, m_iStride, bufferSize);
 		break;
 	}
 
+	m_VBV.BufferLocation = (UINT64)vertexBuffer;
+	m_VBV.StrideInBytes = m_iStride;
+	m_VBV.SizeInBytes = bufferSize;
+
+	m_IBV.BufferLocation = (UINT64)indexBuffer;
+	m_IBV.Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
+	m_IBV.SizeInBytes = m_iNumIndics * sizeof(UINT);
+
 	m_BoundingBox = AABB(vertexEngine.GetMinXYZ(), vertexEngine.GetMaxXYZ());
-	m_Material.ReadFromFile(C_STR(sFileName, "_material.mate"), meshType);
 }
 
 MeshData::~MeshData()
 {
-	if (m_pVertexBuffer)
-		m_pVertexBuffer->Release();
-	if (m_pIndexBuffer)
-		m_pIndexBuffer->Release();
 }
 
-void MeshData::Render()
+void MeshData::Render(Renderer* renderer)
 {
-	RenderTechnique* technique = m_Material.GetRenderTechnique();
-	const unsigned int size = technique->m_vRenderPasses.Size();
-	for (int i = 0; i < size; ++i)
-	{
-		technique->m_vRenderPasses[i]->BindToRenderer();
-
-		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
-		D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		if (m_bStreamOut)
-		{
-			D3D11Renderer::GetInstance()->m_pD3D11Context->DrawAuto();
-		}
-		else
-		{
-			D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);
-		}
-
-		D3D11Renderer::GetInstance()->UnbindPSShaderResources(technique->m_vRenderPasses[i]->GetTextureCount());
-		D3D11Renderer::GetInstance()->UnbindRenderTargets();
-	}
-}
-
-void MeshData::RenderUsingPass(RenderPass * pass)
-{
-	pass->BindToRenderer();
-
-	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_iStride, &m_iVertexOffset);
-	D3D11Renderer::GetInstance()->m_pD3D11Context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
+	renderer->m_pCommandList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderer->m_pCommandList->IASetVertexBuffers(0, 1, &m_VBV);
+	renderer->m_pCommandList->IASetIndexBuffer(&m_IBV);
 	if (m_bStreamOut)
 	{
-		D3D11Renderer::GetInstance()->m_pD3D11Context->DrawAuto();
+		// TODO:
 	}
 	else
 	{
-		D3D11Renderer::GetInstance()->m_pD3D11Context->DrawIndexed(m_iNumIndics, 0, 0);
+		renderer->m_pCommandList->DrawIndexedInstanced(m_iNumIndics, 1, 0, 0, 0);
 	}
 }
 

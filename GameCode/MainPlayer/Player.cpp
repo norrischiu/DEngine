@@ -104,25 +104,25 @@ Player::Player()
 	m_Weapon->AddComponent((DE::Component*) hWeaponMeshComponent.Raw());
 
 	DE::Handle hWeaponAABB(sizeof(DE::AABB));
-	new (hWeaponAABB) DE::AABB(m_Weapon->GetComponent<DE::MeshComponent>()->m_pMeshData->GetBoundingBox());
+	new (hWeaponAABB) DE::AABB(m_Weapon->GetComponent<DE::MeshComponent>()->GetMeshData()->GetBoundingBox());
 	m_Weapon->AddComponent((DE::Component*) hWeaponAABB.Raw());
 
 	m_Weapon->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 31);
 	m_Weapon->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 	// Fire
-	DE::Handle hEmitter(sizeof(DE::Emitter));
-	new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::YELLOW_LIGHT, 1.5f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f));
-	m_Weapon->AddComponent((DE::Component*) hEmitter.Raw()); 
+	//DE::Handle hEmitter(sizeof(DE::Emitter));
+	//new (hEmitter) DE::Emitter("yellow_light", DE::Emitter::YELLOW_LIGHT, 1.5f, DE::Vector3(0.0f, 0.0f, 0.0f), DE::Vector3(0.0f, 0.0f, 0.0f));
+	//m_Weapon->AddComponent((DE::Component*) hEmitter.Raw()); 
 
 	// bleeding
-	m_Blood = new DE::GameObject();
-	DE::Handle bleeding(sizeof(DE::Emitter));
-	new (bleeding) DE::Emitter("player", DE::Emitter::BLEEDING, 2.0f, DE::Vector3(0.0f, 0.0f, -0.3f), DE::Vector3(0.0f, 0.0f, -0.2f));
-	m_Blood->AddComponent((DE::Component*) bleeding.Raw());
-	m_Blood->GetComponent<DE::Emitter>()->SetRandomRange(-2.5f, 2.5f);
-	m_Blood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
-	m_Blood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
+	//m_Blood = new DE::GameObject();
+	//DE::Handle bleeding(sizeof(DE::Emitter));
+	//new (bleeding) DE::Emitter("player", DE::Emitter::BLEEDING, 2.0f, DE::Vector3(0.0f, 0.0f, -0.3f), DE::Vector3(0.0f, 0.0f, -0.2f));
+	//m_Blood->AddComponent((DE::Component*) bleeding.Raw());
+	//m_Blood->GetComponent<DE::Emitter>()->SetRandomRange(-2.5f, 2.5f);
+	//m_Blood->GetComponent<DE::Transform>()->AttachToJoint(GetComponent<DE::Skeleton>(), 2);
+	//m_Blood->GetComponent<DE::Transform>()->AttachTo(m_pTransform);
 
 }
 
@@ -137,7 +137,7 @@ void Player::Update(float deltaTime)
 		{
 			m_bHitBoss = true;
 			m_pBoss->m_fHP -= 10.0f;
-			GetBoss()->GetBlood()->GetComponent<DE::Emitter>()->ResetDisableTime();
+			//GetBoss()->GetBlood()->GetComponent<DE::Emitter>()->ResetDisableTime();
 		}
 	}
 
@@ -146,6 +146,6 @@ void Player::Update(float deltaTime)
 		m_fStamina += 1.0f;
 	}
 	
-	DE::DEBUG_RENDERER::GetInstance()->PlayerStaminaWidth = m_fStamina;
-	DE::DEBUG_RENDERER::GetInstance()->PlayerHpWidth = m_fHP / 100.0f * 150.0f;
+	//DE::DEBUG_RENDERER::GetInstance()->PlayerStaminaWidth = m_fStamina;
+	//DE::DEBUG_RENDERER::GetInstance()->PlayerHpWidth = m_fHP / 100.0f * 150.0f;
 }

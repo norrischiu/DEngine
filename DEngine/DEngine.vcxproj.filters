@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="AI">
       <UniqueIdentifier>{EF725900-DBFE-870B-44AD-880B3058880B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\PathFinding">
-      <UniqueIdentifier>{4A39F1B7-3607-E5BD-1F9B-55E40B08C122}</UniqueIdentifier>
     </Filter>
     <Filter Include="DebugRenderer">
       <UniqueIdentifier>{836553AA-EF25-CFE0-B860-185E24E013BD}</UniqueIdentifier>
@@ -40,15 +37,6 @@
     <Filter Include="Graphics\Render">
       <UniqueIdentifier>{C51C55AE-31A8-C272-3AB9-4567A6C31E73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Scene">
-      <UniqueIdentifier>{B3383A89-9F06-2E8F-889A-9EB574070AF4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Skydome">
-      <UniqueIdentifier>{C11DB9D4-AD16-D826-D648-BDABC2A0B732}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Terrain">
-      <UniqueIdentifier>{7A2C3D13-6625-5C65-8F57-41EA7BAF3B71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Helpers">
       <UniqueIdentifier>{D8389B9D-4418-1A39-4D30-A50FB98E809A}</UniqueIdentifier>
     </Filter>
@@ -57,9 +45,6 @@
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{BE94DDC2-AA36-0899-93F1-1BED7F328FE9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{DCCA4FC7-C86C-7A9D-B127-8EF19D6801EE}</UniqueIdentifier>
@@ -78,6 +63,15 @@
     </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{010A8043-6D74-34BA-B6B2-E55F225C120F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render\Scene">
+      <UniqueIdentifier>{B3383A89-9F06-2E8F-889A-9EB574070AF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{BE94DDC2-AA36-0899-93F1-1BED7F328FE9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GPU">
+      <UniqueIdentifier>{544a41de-58c8-4a33-a328-e6352caab546}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,15 +167,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AI\PathFinding\AIController.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\FlowField.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h">
-      <Filter>AI\PathFinding</Filter>
-    </ClInclude>
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h">
       <Filter>DebugRenderer</Filter>
     </ClInclude>
@@ -228,32 +213,8 @@
     <ClInclude Include="Graphics\Animation\Skeleton.h">
       <Filter>Graphics\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\D3D11Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DDSLoader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GBuffer.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUD.h">
-      <Filter>Graphics\HUD</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h">
-      <Filter>Graphics\HUD\HUDElement</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h">
-      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h">
-      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\IndexBufferEngine.h">
       <Filter>Graphics</Filter>
@@ -300,9 +261,6 @@
     <ClInclude Include="Graphics\Render\RenderPass.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Render\RenderTechnique.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Render\State.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
@@ -319,19 +277,10 @@
       <Filter>Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Scene\SceneGraph.h">
-      <Filter>Graphics\Scene</Filter>
+      <Filter>Graphics\Render\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\ShaderManager.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h">
-      <Filter>Graphics\Skydome</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Terrain\Terrain.h">
-      <Filter>Graphics\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Terrain\TerrainBuilder.h">
-      <Filter>Graphics\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\TextureManager.h">
       <Filter>Graphics</Filter>
@@ -459,17 +408,26 @@
     <ClInclude Include="Utilities\MyHashMap.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\D3D12Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\d3dx12.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DDSTextureLoader12.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPU\GPUCircularAllocator.h">
+      <Filter>Graphics\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPU\GPUDataType.h">
+      <Filter>Graphics\GPU</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RendererBase.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI\PathFinding\AIController.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\FlowField.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp">
-      <Filter>AI\PathFinding</Filter>
-    </ClCompile>
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp">
       <Filter>DebugRenderer</Filter>
     </ClCompile>
@@ -503,32 +461,8 @@
     <ClCompile Include="Graphics\Animation\Skeleton.cpp">
       <Filter>Graphics\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\D3D11Renderer.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\DDSLoader.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GBuffer.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUD.cpp">
-      <Filter>Graphics\HUD</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp">
-      <Filter>Graphics\HUD\HUDElement</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp">
-      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp">
-      <Filter>Graphics\HUD\HUDElement\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp">
-      <Filter>Graphics\HUD\HUDElement\TextBox</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\IndexBufferEngine.cpp">
       <Filter>Graphics</Filter>
@@ -569,9 +503,6 @@
     <ClCompile Include="Graphics\Render\RenderPass.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Render\RenderTechnique.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Render\State.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
@@ -588,19 +519,10 @@
       <Filter>Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp">
-      <Filter>Graphics\Scene</Filter>
+      <Filter>Graphics\Render\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\ShaderManager.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp">
-      <Filter>Graphics\Skydome</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Terrain\Terrain.cpp">
-      <Filter>Graphics\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp">
-      <Filter>Graphics\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\TextureManager.cpp">
       <Filter>Graphics</Filter>
@@ -658,6 +580,12 @@
     </ClCompile>
     <ClCompile Include="System\Mouse.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\D3D12Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DDSTextureLoader12.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

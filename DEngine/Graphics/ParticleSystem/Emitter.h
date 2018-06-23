@@ -3,10 +3,11 @@
 #define EMITTER_H_
 
 #include "Particle.h"
-#include <d3d11.h>
-#include "Graphics\D3D11Renderer.h"
+#include "Graphics\D3D12Renderer.h"
 #include "Graphics\Render\VSGSPSPerFrameCBuffer.h"
 #include "Graphics\Render\Texture.h"
+#include "Graphics\Render\RenderPass.h"
+#include "Graphics\MeshData.h"
 #include "Random.h"
 #include "Object\Component.h"
 

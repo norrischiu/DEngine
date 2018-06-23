@@ -2,13 +2,9 @@
 #include "CameraComponent.h"
 
 // Engine include
-#include "Graphics\D3D11Renderer.h"
+#include "Graphics\D3D12Renderer.h"
 #include "GameObject\GameObject.h"
 #include "GlobalInclude.h"
-
-// C++ include
-#include <sstream>
-#include <string>
 
 namespace DE
 {
@@ -26,7 +22,7 @@ CameraComponent::CameraComponent(const Vector3& vPos, const Vector3& vLookAt, co
 
 void CameraComponent::SetAsRendererCamera()
 {
-	D3D11Renderer::GetInstance()->SetCamera(this);
+	Renderer::GetInstance()->SetCamera(this);
 }
 
 Matrix4 CameraComponent::GetViewMatrix()

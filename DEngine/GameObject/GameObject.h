@@ -4,13 +4,13 @@
 
 #include "Math\simdmath.h"
 #include "Object\Transform.h"
-#include "Physics\cdCollide.h"
 #include "Utilities\MyArray.h"
 
 namespace DE
 {
 
 class GameWorld;
+class Collide;
 
 class GameObject
 {

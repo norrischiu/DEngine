@@ -1,9 +1,7 @@
 #ifndef GEOMETRY_HELPER_H_
 #define GEOMETRY_HELPER_H_
 
-#include <d3d11.h>
 #include "Graphics\VertexFormat.h"
-#include "Graphics\D3D11Renderer.h"
 #include "Graphics\MeshComponent.h"
 
 namespace DE

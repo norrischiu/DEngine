@@ -4,8 +4,8 @@ Texture2D shaderTexture[4];
 #define POINT_LIGHT 1
 #define SPOT_LIGHT 2
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
 
 // cbuffer
 struct Material
@@ -29,7 +29,7 @@ struct Light
 	bool		bIsCastShadow;
 };
 
-cbuffer PS_CONSTANT_BUFFER : register(b2)
+cbuffer PS_CONSTANT_BUFFER : register(b1)
 {
 	Light		light;
 	Matrix		mClipToView;

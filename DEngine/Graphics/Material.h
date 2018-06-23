@@ -4,7 +4,7 @@
 
 // Engine include
 #include "Math\simdmath.h"
-#include "Render\RenderTechnique.h"
+#include "Render\RenderPass.h"
 
 namespace DE
 {
@@ -22,22 +22,20 @@ public:
 	/********************************************************************************
 	*	--- Constructor:
 	*	Material()
-	*	This constructor will allocate memory for the default render technique
+	*	Empty constructor
 	*
 	*	--- Parameters:
 	*	@ void
 	********************************************************************************/
 	Material()
-		: m_hRenderTechnique(sizeof(RenderTechnique))
+		: m_vTextures(0)
 	{
-		new (m_hRenderTechnique) RenderTechnique();
 	};
 
 	/********************************************************************************
 	*	--- Constructor:
 	*	Material(Vector4 , Vector4, Vector4, float)
-	*	This constructor will set attribute value and allocate memory for render
-	*	technique
+	*	This constructor will set attribute value
 	*
 	*	--- Parameters:
 	*	@ emi: emissive factor
@@ -51,9 +49,8 @@ public:
 		, m_vSpecular(spec)
 		, m_fShininess(shin)
 		, m_TexFlag(NULL)
-		, m_hRenderTechnique(sizeof(RenderTechnique))
+		, m_vTextures(0)
 	{
-		new (m_hRenderTechnique) RenderTechnique();
 	}
 
 	/********************************************************************************
@@ -64,12 +61,11 @@ public:
 	*
 	*	--- Parameters:
 	*	@ filename: the name of material definition file
-	*	@ meshType: the mesh type which then controls the default render technique
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void ReadFromFile(const char* filename, int meshType);
+	void ReadFromFile(const char* filename);
 
 	/********************************************************************************
 	*	--- Function:
@@ -87,37 +83,8 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	BindToRenderer()
-	*	This function will bind all the value of this material to the constant buffer
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void BindToRenderer();
-
-	/********************************************************************************
-	*	--- Function:
-	*	GetRenderTechnique()
-	*	This function will return the pointer to the render technique of this material
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ RenderTechnique*: the pointer to the render technique of this material
-	********************************************************************************/
-	RenderTechnique* GetRenderTechnique()
-	{
-		return (RenderTechnique*) m_hRenderTechnique.Raw();
-	}
-
-	/********************************************************************************
-	*	--- Function:
 	*	Destruct()
-	*	This function will free the memory used by render technique
+	*	Empty destructor
 	*
 	*	--- Parameters:
 	*	@ void
@@ -127,23 +94,43 @@ public:
 	********************************************************************************/
 	void Destruct()
 	{
-		m_hRenderTechnique.Free();
+		//m_vTextures.Clear();
 	}
 
 	/********************************************************************************
 	*	--- Function:
-	*	AddPassToTechnique(RenderPass*)
-	*	This function will add a render pass to the render technique
+	*	BindToRenderer(Renderer*)
+	*	This function will bind the texture srv to renderer
 	*
 	*	--- Parameters:
-	*	@ pass: pointer to a render pass to be added
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void AddPassToTechnique(RenderPass* pass)
+	void BindToRenderer(Renderer* renderer);
+
+
+	/********************************************************************************
+	*	--- Function:
+	*	SetTexture(Texture*, unsigned int)
+	*	This function will set the texture at the given slot
+	*
+	*	--- Parameters:
+	*	@ tex: a pointer to a Texture class
+	*	@ slot: slot
+	*
+	*	--- Return:
+	*	@ void
+	********************************************************************************/
+	void SetTexture(Handle tex, unsigned int slot)
 	{
-		((RenderTechnique*)m_hRenderTechnique.Raw())->AddPass(pass);
+		m_vTextures.Add(tex);
+	}
+
+	void SetTextureCount(unsigned int count)
+	{
+		m_vTextures.Resize(count);
 	}
 
 	/********************************************************************************
@@ -193,12 +180,12 @@ private:
 		DISPLACEMENT = 0x10
 	};
 
-	Vector4						m_vEmissive;	// emissive factor
-	Vector4						m_vDiffuse;		// diffuse factor
-	Vector4						m_vSpecular;	// specular factor
-	float						m_fShininess;	// shininess factor
-	char						m_TexFlag;		// factors contained in a material definition file
-	Handle						m_hRenderTechnique;		// handle referring to a rendering technique
+	MyArray<Handle>							m_vTextures;	// texture array
+	Vector4									m_vEmissive;	// emissive factor
+	Vector4									m_vDiffuse;		// diffuse factor
+	Vector4									m_vSpecular;	// specular factor
+	float									m_fShininess;	// shininess factor
+	char									m_TexFlag;		// factors contained in a material definition file
 };
 
 };

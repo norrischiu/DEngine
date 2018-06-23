@@ -1,5 +1,5 @@
 // Engine include
-#include "D3D11Renderer.h"
+#include "D3D12Renderer.h"
 #include "VertexFormat.h"
 #include "Memory\Handle.h"
 
@@ -8,7 +8,7 @@ namespace DE
 
 /*
 *	CLASS: VertexBufferEngine
-*	VertexBufferEngine is the helper to create D3D11 vertex buffer
+*	VertexBufferEngine is the helper to create D3D vertex buffer
 *	from a file or a group of raw data. To allow more vertex format,
 *	define the way to read from file here
 */
@@ -33,7 +33,7 @@ public:
 	/********************************************************************************
 	*	--- Function:
 	*	CreateBufferFromRawData(void*, const int, const unsigned int, bool)
-	*	This function will create a D3D11 vertex buffer using the render device 
+	*	This function will create a D3D vertex buffer using the render device 
 	*	by the given data
 	*
 	*	--- Parameters:
@@ -45,14 +45,14 @@ public:
 	*	False of this vertex buffer will NOT be used as stream out target
 	*
 	*	--- Return:
-	*	@ ID3D11Buffer*: the vertex buffer created using the given data
+	*	@ void*: GPUVirtualAddress
 	********************************************************************************/
-	ID3D11Buffer* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut = false);
+	void* CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut = false);
 	
 	/********************************************************************************
 	*	--- Function:
 	*	CreateBuffer(const char* , int, unsigned int&)
-	*	This function will create a D3D11 vertex buffer using the render device
+	*	This function will create a D3D vertex buffer using the render device
 	*	by the given file
 	*
 	*	--- Parameters:
@@ -60,11 +60,12 @@ public:
 	*	(without "_vertex.bufa")
 	*	@ vertexFormat: the vertex format as defined in eVertexFormat
 	*	@ stride: the size of a vertex read from the file, return as output
+	*	@ bufferSize: the size of the vertex buffer in byte
 	*
 	*	--- Return:
-	*	@ void
+	*	@ void*: result as GPUVirtualAddress
 	********************************************************************************/
-	void* CreateBuffer(const char* filename, int vertexFormat, unsigned int& stride);
+	void* CreateBuffer(const char* filename, int vertexFormat, unsigned int& stride, unsigned int& bufferSize);
 
 	/********************************************************************************
 	*	--- Function:

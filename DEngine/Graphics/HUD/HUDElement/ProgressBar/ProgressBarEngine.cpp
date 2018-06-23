@@ -107,7 +107,7 @@ MeshComponent* ProgressBarEngine::makeProgress(ProgressBar* progressBar)
 			progressPass->SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 			if (i == 1) { progressPass->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST); }
 			meshComponent[i].m_pMeshData->m_Material.AddPassToTechnique(progressPass);
-			progressPass->SetRenderTargets(&D3D11Renderer::GetInstance()->m_backbuffer->GetRTV(), 1);
+			progressPass->SetRenderTargets(&((D3D11Renderer*)D3DRenderer::GetInstance())->m_backbuffer->GetRTV(), 1);
 			progressPass->SetDepthStencilState(State::DISABLE_DEPTH_DISABLE_STENCIL_DSS);
 			progressPass->SetRasterizerState(State::CULL_NONE_RS);
 

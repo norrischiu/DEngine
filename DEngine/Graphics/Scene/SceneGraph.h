@@ -2,19 +2,22 @@
 #define SCENEGRAPH_H_
 
 // Engine include
-#include "Object\CameraComponent.h"
+#include "Graphics\D3D12Renderer.h"
 #include "Graphics\Render\VSPerObjectCBuffer.h"
 #include "Graphics\Render\PSPerMaterialCBuffer.h"
 #include "Graphics\Render\VSMatrixPaletteCBuffer.h"
 #include "Graphics\Render\HSDSPerFrameCBuffer.h"
+#include "Graphics\Render\RenderPass.h"
 #include "Utilities\MyArray.h"
+
+#include <d3d12.h>
 
 namespace DE
 {
 
 // Engine include
+class CameraComponent;
 class MeshComponent;
-class RenderPass;
 
 /*
 *	CLASS: SceneGraph
@@ -57,7 +60,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void FrustumCulling(Frustum frustum);
+	void FrustumCulling(CameraComponent* camera);
 
 	/********************************************************************************
 	*	--- Function:
@@ -66,12 +69,12 @@ public:
 	*	and pass skinning matices for animated mesh
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
+	void Render(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:
@@ -85,7 +88,7 @@ public:
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void ShadowMapGeneration();
+	void ShadowMapGeneration(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Static Function:
@@ -131,15 +134,17 @@ public:
 
 private:
 
-
 	static SceneGraph*								m_pInstance;	// Singleton instance
 	MyArray<MeshComponent*>							m_tree;		// Spatial data structure to store all render component, currently a linear array only
 	MyArray<MeshComponent*>							DEBUG_DRAWING_TREE;		// Temp storage for debug drawing
 	VSPerObjectCBuffer								m_VSCBuffer;		// a default constant buffer interface for each object to be rendered
-	PSPerMaterialCBuffer							m_PSCBuffer;		// a default constant buffer interface for each material
-	HSDSPerFrameCBuffer								m_HSDSCBuffer;		// a default constant buffer interface for terrain rendering
 	VSMatrixPaletteCBuffer							m_MatrixPalette;	// a matrix palette constant buffer interface 
+	HSDSPerFrameCBuffer								m_HSDSCBuffer;		// a default constant buffer interface for terrain rendering
+	PSPerMaterialCBuffer							m_PSCBuffer;		// a default constant buffer interface for each material
 	RenderPass*										m_ShadowPass;	// a shadow render pass
+	RenderPass*										m_staticMeshGeometryPass;
+	RenderPass*										m_skeletalMeshGeometryPass;
+	ID3D12RootSignature*							m_pRootSignature; // root signature for D3D12 render
 };
 
 };

@@ -2,13 +2,15 @@
 #ifndef MESHDATA_H
 #define MESHDATA_H
 
-// D3D11 include
-#include <d3d11.h>
+// D3D12 include
+#include <d3d12.h>
 
 // Engine include
+#include "Graphics\D3D12Renderer.h"
 #include "Math\simdmath.h"
 #include "Material.h"
 #include "Physics\cdAABB.h"
+#include "GlobalInclude.h"
 
 namespace DE
 {
@@ -77,7 +79,7 @@ public:
 	/********************************************************************************
 	*	--- Destructor:
 	*	~MeshData()
-	*	This destructor will release the D3D11 buffer COM object
+	*	Empty destructor
 	********************************************************************************/
 	~MeshData();
 	
@@ -88,25 +90,12 @@ public:
 	*	the GPU and calling the appropriate draw call
 	*
 	*	--- Parameters:
-	*	@ void
+	*	@ Renderer*: pointer to renderer
 	*
 	*	--- Return:
 	*	@ void
 	********************************************************************************/
-	void Render();
-
-	/********************************************************************************
-	*	--- Function:
-	*	RenderUsingPass(RenderPass*)
-	*	This function will draw the mesh with a given render pass
-	*
-	*	--- Parameters:
-	*	@ pass: pointer to a render pass
-	*
-	*	--- Return:
-	*	@ void
-	********************************************************************************/
-	void RenderUsingPass(RenderPass* pass);
+	void Render(Renderer* renderer);
 
 	/********************************************************************************
 	*	--- Function:
@@ -160,24 +149,8 @@ public:
 
 	/********************************************************************************
 	*	--- Function:
-	*	GetVertexBuffer()
-	*	This function will return the pointer to the vertex buffer at GPU
-	*
-	*	--- Parameters:
-	*	@ void
-	*
-	*	--- Return:
-	*	@ ID3D11Buffer*: pointer to the D3D11 vertex buffer
-	********************************************************************************/
-	inline ID3D11Buffer* GetVertexBuffer()
-	{
-		return m_pVertexBuffer;
-	}
-
-	/********************************************************************************
-	*	--- Function:
 	*	Destruct()
-	*	This function will destruct the material and relase the D3D11 buffer COM object
+	*	Empty destructor
 	*
 	*	--- Parameters:
 	*	@ void
@@ -187,25 +160,22 @@ public:
 	********************************************************************************/
 	void Destruct()
 	{
-		m_Material.Destruct();
-		m_pVertexBuffer->Release();
-		m_pIndexBuffer->Release();
 	}
-
-	Material								m_Material;		// Mesh material
 
 private:
 
-	ID3D11Buffer*							m_pVertexBuffer;	// Pointer to vertex buffer
+	D3D12_VERTEX_BUFFER_VIEW				m_VBV;
+	D3D12_INDEX_BUFFER_VIEW					m_IBV;
+
 	unsigned int							m_iStride;		// Data size of a vertex
 	unsigned int							m_iVertexOffset;	// Offset in vertex buffer between first element and first to be used element
-	ID3D11Buffer*							m_pIndexBuffer;		// Pointer to index buffer
 	eMeshType								m_renderType;		// Render Type
 	unsigned int							m_iNumVerts;		// Number of vertices
 	unsigned int							m_iNumIndics;		// Number of indics
 	unsigned int							m_iStartIndexLocation;	// Start Index Location
 	bool									m_bStreamOut;		// Flag whether it is stream out result
 	AABB									m_BoundingBox;		// Simple bounding box for camera frustum culling
+
 };
 
 };

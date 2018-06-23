@@ -44,6 +44,7 @@
     <IntDir>..\Intermediate\DEngine\Debug\</IntDir>
     <TargetName>DEngine</TargetName>
     <TargetExt>.lib</TargetExt>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\Build\DEngine\Release\</OutDir>
@@ -56,7 +57,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\um;C:\Program Files (x86)\Windows Kits\10\Include\10.0.14393.0\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/Gm /sdl %(AdditionalOptions)</AdditionalOptions>
@@ -87,9 +88,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AI\PathFinding\AIController.h" />
-    <ClInclude Include="AI\PathFinding\FlowField.h" />
-    <ClInclude Include="AI\PathFinding\FlowFieldBuilder.h" />
     <ClInclude Include="DebugRenderer\DEBUG_RENDERER.h" />
     <ClInclude Include="DebugRenderer\debug.h" />
     <ClInclude Include="Event\EngineEvent.h" />
@@ -106,15 +104,13 @@
     <ClInclude Include="Graphics\Animation\BlendTree.h" />
     <ClInclude Include="Graphics\Animation\Joint.h" />
     <ClInclude Include="Graphics\Animation\Skeleton.h" />
-    <ClInclude Include="Graphics\D3D11Renderer.h" />
-    <ClInclude Include="Graphics\DDSLoader.h" />
+    <ClInclude Include="Graphics\D3D12Renderer.h" />
+    <ClInclude Include="Graphics\RendererBase.h" />
+    <ClInclude Include="Graphics\d3dx12.h" />
+    <ClInclude Include="Graphics\DDSTextureLoader12.h" />
     <ClInclude Include="Graphics\GBuffer.h" />
-    <ClInclude Include="Graphics\HUD\HUD.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\HUDElement.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextBox.h" />
-    <ClInclude Include="Graphics\HUD\HUDElement\TextBox\TextEngine.h" />
+    <ClInclude Include="Graphics\GPU\GPUCircularAllocator.h" />
+    <ClInclude Include="Graphics\GPU\GPUDataType.h" />
     <ClInclude Include="Graphics\IndexBufferEngine.h" />
     <ClInclude Include="Graphics\Material.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
@@ -130,7 +126,6 @@
     <ClInclude Include="Graphics\Render\PSPerLightCBuffer.h" />
     <ClInclude Include="Graphics\Render\PSPerMaterialCBuffer.h" />
     <ClInclude Include="Graphics\Render\RenderPass.h" />
-    <ClInclude Include="Graphics\Render\RenderTechnique.h" />
     <ClInclude Include="Graphics\Render\State.h" />
     <ClInclude Include="Graphics\Render\Texture.h" />
     <ClInclude Include="Graphics\Render\VSGSPSPerFrameCBuffer.h" />
@@ -138,9 +133,6 @@
     <ClInclude Include="Graphics\Render\VSPerObjectCBuffer.h" />
     <ClInclude Include="Graphics\Scene\SceneGraph.h" />
     <ClInclude Include="Graphics\ShaderManager.h" />
-    <ClInclude Include="Graphics\Skydome\SkydomeBuilder.h" />
-    <ClInclude Include="Graphics\Terrain\Terrain.h" />
-    <ClInclude Include="Graphics\Terrain\TerrainBuilder.h" />
     <ClInclude Include="Graphics\TextureManager.h" />
     <ClInclude Include="Graphics\VertexBufferEngine.h" />
     <ClInclude Include="Graphics\VertexFormat.h" />
@@ -185,9 +177,6 @@
     <ClInclude Include="Utilities\MyHashMap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI\PathFinding\AIController.cpp" />
-    <ClCompile Include="AI\PathFinding\FlowField.cpp" />
-    <ClCompile Include="AI\PathFinding\FlowFieldBuilder.cpp" />
     <ClCompile Include="DebugRenderer\DEBUG_RENDERER.cpp" />
     <ClCompile Include="DebugRenderer\Debug.cpp" />
     <ClCompile Include="Event\EventQueue.cpp" />
@@ -199,15 +188,9 @@
     <ClCompile Include="Graphics\Animation\AnimationStateMachine.cpp" />
     <ClCompile Include="Graphics\Animation\Joint.cpp" />
     <ClCompile Include="Graphics\Animation\Skeleton.cpp" />
-    <ClCompile Include="Graphics\D3D11Renderer.cpp" />
-    <ClCompile Include="Graphics\DDSLoader.cpp" />
+    <ClCompile Include="Graphics\D3D12Renderer.cpp" />
+    <ClCompile Include="Graphics\DDSTextureLoader12.cpp" />
     <ClCompile Include="Graphics\GBuffer.cpp" />
-    <ClCompile Include="Graphics\HUD\HUD.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\HUDElement.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBar.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\ProgressBar\ProgressBarEngine.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextBox.cpp" />
-    <ClCompile Include="Graphics\HUD\HUDElement\TextBox\TextEngine.cpp" />
     <ClCompile Include="Graphics\IndexBufferEngine.cpp" />
     <ClCompile Include="Graphics\Material.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
@@ -221,7 +204,6 @@
     <ClCompile Include="Graphics\Render\PSPerLightCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\PSPerMaterialCBuffer.cpp" />
     <ClCompile Include="Graphics\Render\RenderPass.cpp" />
-    <ClCompile Include="Graphics\Render\RenderTechnique.cpp" />
     <ClCompile Include="Graphics\Render\State.cpp" />
     <ClCompile Include="Graphics\Render\Texture.cpp" />
     <ClCompile Include="Graphics\Render\VSGSPSPerFrameCBuffer.cpp" />
@@ -229,9 +211,6 @@
     <ClCompile Include="Graphics\Render\VSPerObjectCBuffer.cpp" />
     <ClCompile Include="Graphics\Scene\SceneGraph.cpp" />
     <ClCompile Include="Graphics\ShaderManager.cpp" />
-    <ClCompile Include="Graphics\Skydome\SkydomeBuilder.cpp" />
-    <ClCompile Include="Graphics\Terrain\Terrain.cpp" />
-    <ClCompile Include="Graphics\Terrain\TerrainBuilder.cpp" />
     <ClCompile Include="Graphics\TextureManager.cpp" />
     <ClCompile Include="Graphics\VertexBufferEngine.cpp" />
     <ClCompile Include="Helpers\TextHelper.cpp" />

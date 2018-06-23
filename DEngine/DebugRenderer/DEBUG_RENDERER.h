@@ -7,6 +7,7 @@
 #include "Helpers\TextHelper.h"
 #include "Graphics\Scene\SceneGraph.h"
 #include "Utilities\MyArray.h"
+#include "Graphics\D3D12Renderer.h"
 
 namespace DE
 {
@@ -103,7 +104,7 @@ public:
 		// or directly add it in above functions
 	}
 
-	void Render()
+	void Render(Renderer* renderer)
 	{
 		m_VSCBuffer.BindToRenderer();
 		VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER* ptr = (VSPerObjectCBuffer::VS_PER_OBJECT_CBUFFER*) m_VSCBuffer.m_Memory._data;
@@ -111,13 +112,13 @@ public:
 		const unsigned int size = m_vDbgMeshs.Size();
 		for (int i = 0; i < size; ++i)
 		{
-			/*if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
+			if (m_vRenderFlags[i] == MESH3D_WIREFRAME)
 			{
 				m_3DRenderPass.SetVertexShader("../DEngine/Shaders/VS_vertex1P.hlsl");
 				m_3DRenderPass.SetPixelShader("../DEngine/Shaders/PS_red.hlsl");
 				m_3DRenderPass.SetRasterizerState(State::WIREFRAME_RS);
 
-				ptr->WVPTransform = D3D11Renderer::GetInstance()->GetCamera()->GetPVMatrix();
+				ptr->WVPTransform = renderer->GetCamera()->GetPVMatrix();
 				m_VSCBuffer.Update();
 			}
 			else if (m_vRenderFlags[i] == MESH2D_TEXTURE)
@@ -129,11 +130,12 @@ public:
 				ptr->WVPTransform = m_m2DProjection;
 				m_VSCBuffer.Update();
 			}
-			m_vDbgMeshs[i]->RenderUsingPass(&m_3DRenderPass);*/
+			m_3DRenderPass.BindToRenderer(renderer);
+			m_vDbgMeshs[i]->Render(renderer);
 		}
 		ptr->WVPTransform = m_m2DProjection;
 		m_VSCBuffer.Update();
-		hpMeterBorder->Render();
+		hpMeterBorder->Render(renderer);
 
 		// Demo purpose
 		Matrix4 trans, scale;
@@ -141,7 +143,7 @@ public:
 		trans.CreateTranslation(Vector3((boosHPWidth - 800.0f) / 2.0, 0.0f, 0.0f));
 		ptr->WVPTransform = m_m2DProjection * trans * scale;
 		m_VSCBuffer.Update();
-		hpMeter->Render();
+		hpMeter->Render(renderer);
 
 		Matrix4 trans2;
 		trans2.CreateTranslation(Vector3(830.0f, 0.0f, 0.0f));
@@ -149,14 +151,14 @@ public:
 		trans.CreateTranslation(Vector3(-830.0f + (PlayerStaminaWidth - 100.0f) / 2.0, 0.0f, 0.0f));
 		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
 		m_VSCBuffer.Update();
-		staminaMeter->Render();
+		staminaMeter->Render(renderer);
 
 		trans2.CreateTranslation(Vector3(805.0f, 0.0f, 0.0f));
 		scale.CreateScaleX(PlayerHpWidth / 150.0f);
 		trans.CreateTranslation(Vector3(-805.0f + (PlayerHpWidth - 150.0f) / 2.0, 0.0f, 0.0f));
 		ptr->WVPTransform = m_m2DProjection * trans * scale * trans2;
 		m_VSCBuffer.Update();
-		playerHpMeter->Render();
+		playerHpMeter->Render(renderer);
 
 		PostRender();
 	}
@@ -166,7 +168,7 @@ public:
 		const unsigned int size = m_vDbgMeshs.Size();
 		for (int i = 0; i < size; ++i)
 		{
-			m_vDbgMeshs[i]->m_Material.Destruct();
+			//m_vDbgMeshs[i]->m_Material.Destruct();
 			delete m_vDbgMeshs[i];
 		}
 		m_vDbgMeshs.Clear();

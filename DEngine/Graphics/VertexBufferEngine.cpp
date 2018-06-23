@@ -18,12 +18,11 @@ VertexBufferEngine* VertexBufferEngine::GetInstance()
 	return m_pInstance;
 }
 
-void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, unsigned int& stride)
+void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, unsigned int& stride, unsigned int& bufferSize)
 {
 	std::string sFileNmae(filename);
 	int iNumVerts;
 	HRESULT hr;
-	ID3D11Buffer* pVertexBuffer;
 	Handle hVertexData;
 
 	// Read vertices
@@ -61,26 +60,47 @@ void* VertexBufferEngine::CreateBuffer(const char * filename, int vertexFormat, 
 		break;
 	}
 
-	// Set vertex subresources data
-	D3D11_SUBRESOURCE_DATA vertexResourcesData;
-	vertexResourcesData.pSysMem = hVertexData.Raw();
-	vertexResourcesData.SysMemPitch = 0;
-	vertexResourcesData.SysMemSlicePitch = 0;
+	bufferSize = stride * iNumVerts;
+	ID3D12Resource* vertexBuffer;
+	Renderer* renderer = Renderer::GetInstance();
 
-	// Set vertex buffer description
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = stride * iNumVerts;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
+	renderer->m_pDevice->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&vertexBuffer));
+	vertexBuffer->SetName(L"Vertex Buffer Resource default Heap");
 
-	// Create the vertex buffer
-	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
-	assert(hr == S_OK);
+	ID3D12Resource* vBufferUploadHeap;
+	renderer->m_pDevice->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vBufferUploadHeap));
+	vBufferUploadHeap->SetName(L"Vertex Buffer Resource upload Heap");
+
+	D3D12_SUBRESOURCE_DATA vertexData = {};
+	vertexData.pData = hVertexData.Raw();
+	vertexData.RowPitch = bufferSize;
+	vertexData.SlicePitch = bufferSize;
+
+	UpdateSubresources(renderer->m_pCommandList, vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
+	renderer->m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+
+	renderer->m_pCommandList->Close();
+	ID3D12CommandList* ppCommandLists[] = { renderer->m_pCommandList };
+	renderer->m_pCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+	renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]++;
+	hr = renderer->m_pCommandQueue->Signal(renderer->m_pFence[renderer->m_iCurrFrameIndex], renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]);
+	renderer->ResetCommandAllocatorAndList();
 
 	hVertexData.Free();
-	return pVertexBuffer;
+	return (void*) vertexBuffer->GetGPUVirtualAddress();
 }
 
 void VertexBufferEngine::DestructandCleanUp() 
@@ -91,34 +111,49 @@ void VertexBufferEngine::DestructandCleanUp()
 	}
 }
 
-ID3D11Buffer* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut)
+void* VertexBufferEngine::CreateBufferFromRawData(void* pVertexData, const int iNumVerts, const unsigned int iDataSize, bool streamOut)
 {
 	HRESULT hr;
-	ID3D11Buffer* pVertexBuffer;
 
-	// Set vertex subresources data
-	D3D11_SUBRESOURCE_DATA vertexResourcesData;
-	vertexResourcesData.pSysMem = pVertexData;
-	vertexResourcesData.SysMemPitch = 0;
-	vertexResourcesData.SysMemSlicePitch = 0;
+	int bufferSize = iDataSize * iNumVerts;
+	ID3D12Resource* vertexBuffer;
+	Renderer* renderer = Renderer::GetInstance();
 
-	// Set vertex buffer description
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	if (streamOut)
-	{
-		vertexBufferDesc.BindFlags |= D3D11_BIND_STREAM_OUTPUT;
-	}
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = iDataSize * iNumVerts;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
+	renderer->m_pDevice->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&vertexBuffer));
 
-	// Create the vertex buffer
-	hr = D3D11Renderer::GetInstance()->m_pD3D11Device->CreateBuffer(&vertexBufferDesc, &vertexResourcesData, &pVertexBuffer);
-	assert(hr == S_OK);
+	ID3D12Resource* vBufferUploadHeap;
+	renderer->m_pDevice->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vBufferUploadHeap));
 
-	return pVertexBuffer;
+	D3D12_SUBRESOURCE_DATA vertexData = {};
+	vertexData.pData = pVertexData;
+	vertexData.RowPitch = bufferSize;
+	vertexData.SlicePitch = bufferSize;
+
+	UpdateSubresources(renderer->m_pCommandList, vertexBuffer, vBufferUploadHeap, 0, 0, 1, &vertexData);
+	renderer->m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+
+	renderer->m_pCommandList->Close();
+	ID3D12CommandList* ppCommandLists[] = { renderer->m_pCommandList };
+	renderer->m_pCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+	renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]++;
+	hr = renderer->m_pCommandQueue->Signal(renderer->m_pFence[renderer->m_iCurrFrameIndex], renderer->m_iFenceValue[renderer->m_iCurrFrameIndex]);
+
+	Renderer::GetInstance()->ResetCommandAllocatorAndList();
+
+	return (void*)vertexBuffer->GetGPUVirtualAddress();
 }
 
 void VertexBufferEngine::FillVertexData_POSITION(const char* filename, unsigned int vertsNum, Handle hVertexData)

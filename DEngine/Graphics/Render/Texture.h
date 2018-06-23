@@ -1,11 +1,12 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-// D3D11 include
-#include <d3d11.h>
+// D3D include
+#include <d3d12.h>
 
 // Engine include
 #include "Memory\Handle.h"
+#include "GlobalInclude.h"
 
 // C++ include
 #include <assert.h>
@@ -16,7 +17,7 @@ namespace DE
 /*
 *	CLASS: Texture
 *	This class serves as an interface and collection for GPU texture
-*	resources, it can contains different kind of D3D11 view resources.
+*	resources, it can contains different kind of D3D view resources.
 *	Currently it also contains pointer to the sampler state
 */
 class Texture
@@ -55,7 +56,7 @@ public:
 
 	/********************************************************************************
 	*	--- Constructor:
-	*	Texture(int, ID3D11Texture2D*);
+	*	Texture(int, ID3D12Resource*);
 	*	This constructor will construct an texture interface with a given pointer to
 	*	a GPU 2D texture
 	*
@@ -63,7 +64,7 @@ public:
 	*	@ type: the type of this texture as defined in the enum
 	*	@ texSrc: the texture pointer already defined in GPU
 	********************************************************************************/
-	Texture(int type, ID3D11Texture2D* texSrc);
+	Texture(int type, ID3D12Resource* texSrc);
 
 	/********************************************************************************
 	*	--- Function:
@@ -75,11 +76,10 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11ShaderResourceView*: pointer to a D3D11 shader resource view
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D shader resource view descriptor
 	********************************************************************************/
-	ID3D11ShaderResourceView* GetSRV()
+	D3D12_CPU_DESCRIPTOR_HANDLE	GetSRV()
 	{
-		assert(m_pSRV != nullptr);
 		return m_pSRV;
 	}
 
@@ -93,12 +93,10 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11ShaderResourceView*&: reference of pointer to a D3D11 render
-	*	target view
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D render target view descriptor
 	********************************************************************************/
-	ID3D11RenderTargetView*& GetRTV()
+	D3D12_CPU_DESCRIPTOR_HANDLE	GetRTV()
 	{
-		assert(m_pRTV != nullptr);
 		return m_pRTV;
 	}
 
@@ -112,11 +110,10 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11DepthStencilView*: pointer to a D3D11 depth stencil view
+	*	@ D3D12_CPU_DESCRIPTOR_HANDLE: D3D depth stencil view descriptor
 	********************************************************************************/
-	ID3D11DepthStencilView*	GetDSV()
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() // TODO: fix this
 	{
-		assert(m_pDSV != nullptr);
 		return m_pDSV;
 	}
 
@@ -129,9 +126,9 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11Texture2D*: pointer to a D3D11 texture 2D
+	*	@ ID3D12Resource*: pointer to a D3D texture 2D
 	********************************************************************************/
-	ID3D11Texture2D* GetTexture2D()
+	ID3D12Resource* GetTexture2D()
 	{
 		return m_pTexture;
 	}
@@ -145,28 +142,35 @@ public:
 	*	@ void
 	*
 	*	--- Return:
-	*	@ ID3D11SamplerState*: pointer to a D3D11 sampler state
+	*	@ int: index of the sampler state in default state array
 	********************************************************************************/
-	ID3D11SamplerState* GetSamplerState()
+	int GetSamplerDescIndex()
 	{
-		return m_pSampler;
+		return m_iSampler;
+	}
+
+	DXGI_FORMAT GetFormat()
+	{
+		return m_Format;
 	}
 
 private:
 
 	int											m_type;		// type of GPU texture resources stored
+	DXGI_FORMAT									m_Format;
+
 	union
 	{
-		ID3D11RenderTargetView*					m_pRTV;		// pointer to D3D11 render targer view, union with m_pDSV
-		ID3D11DepthStencilView*					m_pDSV;		// pointer to D3D11 depth stencil view, union with m_pRTV
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pRTV;		// pointer to D3D render targer view, union with m_pDSV
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pDSV;		// pointer to D3D depth stencil view, union with m_pRTV
 	};
 	union
 	{
-		ID3D11UnorderedAccessView*				m_pUAV;		// pointer to D3D11 unordered access view, union with m_pSRV
-		ID3D11ShaderResourceView*				m_pSRV;		// pointer to D3D11 shader resources view, union with m_pUAV
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pUAV;
+		D3D12_CPU_DESCRIPTOR_HANDLE				m_pSRV;
 	};
-	ID3D11SamplerState*							m_pSampler;		// pointer to D3D11 sampler state
-	ID3D11Texture2D*							m_pTexture;		// pointer to D3D11 texture 2D
+	int											m_iSampler;
+	ID3D12Resource*								m_pTexture;		// pointer to D3D12 texture 2D
 };
 
 };
